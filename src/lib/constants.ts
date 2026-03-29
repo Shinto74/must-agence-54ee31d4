@@ -3,13 +3,13 @@
 // Fallback data before Supabase connection
 // ═══════════════════════════════════════
 
-const GH = "https://raw.githubusercontent.com/Shinto74/must_agence/main/Images";
+const GH = "https://raw.githubusercontent.com/Shinto74/IMAGES/1ca68ce299df011d586098dc6c1a4202bd2d8dfb/must-agence";
 
 export const SITE = {
   name: "Must Agence",
   tagline: "Influence Agency",
-  logoWhite: `${GH}/logo_blanc.png`,
-  logoGreen: `${GH}/logo_vert.png`,
+  logoWhite: `${GH}/logos/logo_blanc.png`,
+  logoGreen: `${GH}/logos/logo_vert.png`,
   hero: {
     label: "Must Agence",
     titleLine1: "We don't follow",
@@ -92,35 +92,35 @@ export const ARTIST_REFERENCES = {
     {
       name: "Urbain", slug: "urbain",
       artists: [
-        { name: "Zola", image: `${GH}/Artistes/Zola.jpg` },
-        { name: "Vegedream", image: `${GH}/Artistes/Vegedream.jpg` },
-        { name: "Franglish", image: `${GH}/Artistes/Franglish.jpg` },
-        { name: "Keblack", image: `${GH}/Artistes/Keblack.jpg` },
-        { name: "Ridsa", image: `${GH}/Artistes/Ridsa.jpg` },
-        { name: "Uzi", image: `${GH}/Artistes/Uzi.jpg` },
-        { name: "Bouss", image: `${GH}/Artistes/Bouss.jpg` },
+        { name: "Zola", image: `${GH}/artistes/zola.jpg` },
+        { name: "Vegedream", image: `${GH}/artistes/vegedream.jpg` },
+        { name: "Franglish", image: `${GH}/artistes/franglish.jpg` },
+        { name: "Keblack", image: `${GH}/artistes/keblack.jpg` },
+        { name: "Ridsa", image: `${GH}/artistes/ridsa.jpg` },
+        { name: "Uzi", image: `${GH}/artistes/uzi.jpg` },
+        { name: "Bouss", image: `${GH}/artistes/bouss.jpg` },
       ],
     },
     {
       name: "Pop / Variété", slug: "pop",
       artists: [
-        { name: "Santa", image: `${GH}/Artistes/Santa.jpg` },
-        { name: "Pierre Garnier", image: `${GH}/Artistes/Pierre%20garnier.jpg` },
-        { name: "Héléna Bailly", image: `${GH}/Artistes/H%C3%A9l%C3%A9na%20Bailly.jpg` },
-        { name: "Jeck", image: `${GH}/Artistes/Jeck.jpg` },
+        { name: "Santa", image: `${GH}/artistes/santa.jpg` },
+        { name: "Pierre Garnier", image: `${GH}/artistes/pierre-garnier.jpg` },
+        { name: "Héléna Bailly", image: `${GH}/artistes/helena-bailly.jpg` },
+        { name: "Jeck", image: `${GH}/artistes/jeck.jpg` },
       ],
     },
     {
       name: "Électro / International", slug: "electro",
       artists: [
-        { name: "Diamond Platnumz", image: `${GH}/Artistes/Diamond%20Platnumz.jpeg` },
-        { name: "Beéle", image: `${GH}/Artistes/Be%C3%A9le.jpg` },
-        { name: "Benny Adam", image: `${GH}/Artistes/Benny%20Adam.jpg` },
-        { name: "Theodora", image: `${GH}/Artistes/Theodora.jfif` },
-        { name: "RnBoi", image: `${GH}/Artistes/RnBoi.jpg` },
-        { name: "Moral", image: `${GH}/Artistes/Moral.jfif` },
-        { name: "Ofenbach", image: `${GH}/Artistes/Ofenbach.jfif` },
-        { name: "The Avener", image: `${GH}/Artistes/The%20Avener.jfif` },
+        { name: "Diamond Platnumz", image: `${GH}/artistes/diamond-platnumz.jpeg` },
+        { name: "Beéle", image: `${GH}/artistes/beele.jpg` },
+        { name: "Benny Adam", image: `${GH}/artistes/benny-adam.jpg` },
+        { name: "Theodora", image: `${GH}/artistes/theodora.jfif` },
+        { name: "RnBoi", image: `${GH}/artistes/rnboi.jpg` },
+        { name: "Moral", image: `${GH}/artistes/moral.jfif` },
+        { name: "Ofenbach", image: `${GH}/artistes/ofenbach.jfif` },
+        { name: "The Avener", image: `${GH}/artistes/the-avener.jfif` },
       ],
     },
   ],
@@ -134,36 +134,36 @@ export const COMPANY_REFERENCES = {
     {
       name: "Hôtellerie & Luxe",
       clients: [
-        { name: "Novotel", logo: `${GH}/Logo/Novotel.webp` },
-        { name: "Hilton", logo: `${GH}/Logo/Hilton.webp` },
-        { name: "Jean Claude Biguine", logo: `${GH}/Logo/Jean_Claude_Biguine.png` },
+        { name: "Novotel", logo: `${GH}/clients/novotel.webp` },
+        { name: "Hilton", logo: `${GH}/clients/hilton.webp` },
+        { name: "Jean Claude Biguine", logo: `${GH}/clients/jean-claude-biguine.png` },
       ],
     },
     {
       name: "Lifestyle & Sport",
       clients: [
-        { name: "Fitness Park", logo: `${GH}/Logo/Fitness%20Park.webp` },
-        { name: "Basic-Fit", logo: `${GH}/Logo/Basic-Fit.webp` },
-        { name: "JD Sports", logo: `${GH}/Logo/JD%20SPORT.webp` },
+        { name: "Fitness Park", logo: `${GH}/clients/fitness-park.webp` },
+        { name: "Basic-Fit", logo: `${GH}/clients/basic-fit.webp` },
+        { name: "JD Sports", logo: `${GH}/clients/jd-sports.webp` },
       ],
     },
     {
       name: "Habitat & Services",
       clients: [
-        { name: "Leroy Merlin", logo: `${GH}/Logo/Leroy%20Merlin.webp` },
-        { name: "Point P", logo: `${GH}/Logo/Point%20P.webp` },
-        { name: "Leclerc", logo: `${GH}/Logo/Leclerc.webp` },
-        { name: "Norauto", logo: `${GH}/Logo/Norauto.webp` },
+        { name: "Leroy Merlin", logo: `${GH}/clients/leroy-merlin.webp` },
+        { name: "Point P", logo: `${GH}/clients/point-p.webp` },
+        { name: "Leclerc", logo: `${GH}/clients/leclerc.webp` },
+        { name: "Norauto", logo: `${GH}/clients/norauto.webp` },
       ],
     },
     {
       name: "Food & Restauration",
       clients: [
-        { name: "Les Grands Buffets", logo: `${GH}/Logo/Les%20Grands%20Buffets%20de%20Narbonne.jpg` },
-        { name: "Big Fernand", logo: `${GH}/Logo/Big%20Fernand.webp` },
-        { name: "Five Guys", logo: `${GH}/Logo/Five%20Guys.webp` },
-        { name: "Le Pain Quotidien", logo: `${GH}/Logo/Le%20Pain%20Quotidien.webp` },
-        { name: "Columbus Café & Co", logo: `${GH}/Logo/Columbus%20Cafe%20and%20Co.webp` },
+        { name: "Les Grands Buffets", logo: `${GH}/clients/grands-buffets-narbonne.jpg` },
+        { name: "Big Fernand", logo: `${GH}/clients/big-fernand.webp` },
+        { name: "Five Guys", logo: `${GH}/clients/five-guys.webp` },
+        { name: "Le Pain Quotidien", logo: `${GH}/clients/le-pain-quotidien.webp` },
+        { name: "Columbus Café & Co", logo: `${GH}/clients/columbus-cafe.webp` },
       ],
     },
   ],
