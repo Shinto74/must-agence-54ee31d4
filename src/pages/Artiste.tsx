@@ -52,6 +52,8 @@ const Artiste = () => {
         text={ARTISTE_PAGE.contact.text}
         subtext={ARTISTE_PAGE.contact.subtext}
         email={ARTISTE_PAGE.contact.email}
+        phone={SITE.contact.phone}
+        location={SITE.contact.location}
         whatsappUrl={SITE.contact.whatsappUrl}
         formOptions={ARTISTE_PAGE.contact.formOptions}
       />

@@ -36,6 +36,8 @@ const Index = () => {
         text={SITE.contact.text}
         subtext={SITE.contact.subtext}
         email={SITE.contact.email}
+        phone={SITE.contact.phone}
+        location={SITE.contact.location}
         whatsappUrl={SITE.contact.whatsappUrl}
         formOptions={["Pôle Artiste / Musique", "Pôle Corporate / Marque", "Autre"]}
       />

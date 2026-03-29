@@ -40,6 +40,8 @@ const Entreprise = () => {
         text={ENTREPRISE_PAGE.contact.text}
         subtext={ENTREPRISE_PAGE.contact.subtext}
         email={ENTREPRISE_PAGE.contact.email}
+        phone={SITE.contact.phone}
+        location={SITE.contact.location}
         whatsappUrl={SITE.contact.whatsappUrl}
         formOptions={ENTREPRISE_PAGE.contact.formOptions}
       />

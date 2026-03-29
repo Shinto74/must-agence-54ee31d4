@@ -9,7 +9,7 @@ const Footer = () => (
           <img src={SITE.logoGreen} alt={SITE.name} className="h-8 w-auto" />
           <div>
             <p className="font-clash font-semibold text-foreground">{SITE.name}</p>
-            <p className="text-xs text-muted-foreground font-mono">{SITE.tagline}</p>
+            <p className="text-xs text-muted-foreground font-mono">Agence d'influence spécialisée musique et marques. Paris.</p>
           </div>
         </div>
 
@@ -17,9 +17,12 @@ const Footer = () => (
           <Link to="/" className="hover:text-foreground transition-colors">Accueil</Link>
           <Link to="/artiste" className="hover:text-foreground transition-colors">Pôle Artiste</Link>
           <Link to="/entreprise" className="hover:text-foreground transition-colors">Pôle Entreprise</Link>
+          <a href="/#team" className="hover:text-foreground transition-colors">Équipe</a>
+          <a href="/#portfolio" className="hover:text-foreground transition-colors">Portfolio</a>
+          <a href="/#contact" className="hover:text-foreground transition-colors">Contact</a>
         </nav>
 
-        <p className="text-xs text-text-dim font-mono">
+        <p className="text-xs text-muted-foreground font-mono">
           © {new Date().getFullYear()} {SITE.name} — Tous droits réservés. Fait avec précision.
         </p>
       </div>
