@@ -32,9 +32,9 @@ const Header = () => {
         scrolled ? "bg-background/90 backdrop-blur-md border-b border-border" : "bg-transparent"
       }`}
     >
-      {/* Green diagonal corner */}
-      <div className="absolute top-0 left-0 w-20 h-20 md:w-28 md:h-28 overflow-hidden pointer-events-none">
-        <div className="absolute -top-10 -left-10 w-28 h-28 md:w-36 md:h-36 bg-primary rotate-[-45deg] origin-center" />
+      {/* Green diagonal corner — large triangle matching reference */}
+      <div className="absolute top-0 left-0 pointer-events-none" style={{ width: '140px', height: '300px', overflow: 'hidden' }}>
+        <div className="absolute bg-primary" style={{ width: '400px', height: '400px', top: '-200px', left: '-200px', transform: 'rotate(65deg)', transformOrigin: 'bottom right' }} />
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 flex items-center h-16 md:h-20">

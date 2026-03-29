@@ -23,6 +23,21 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   const isDragging = useRef(false);
   const startX = useRef(0);
 
+  const scrollToCategory = useCallback((slug: string) => {
+    setActiveSlug(slug);
+    const el = scrollRef.current;
+    if (!el) return;
+    const firstCard = el.querySelector(`[data-slug="${slug}"]`);
+    if (firstCard) {
+      const containerRect = el.getBoundingClientRect();
+      const cardRect = firstCard.getBoundingClientRect();
+      el.scrollTo({
+        left: el.scrollLeft + (cardRect.left - containerRect.left) - 24,
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
   const autoScroll = useCallback(() => {
     const el = scrollRef.current;
     if (!el || isDragging.current) {
@@ -59,7 +74,6 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   };
   const handleMouseUp = () => { isDragging.current = false; };
 
-  // Touch handlers for mobile drag
   const handleTouchStart = (e: React.TouchEvent) => { isDragging.current = true; startX.current = e.touches[0].pageX; };
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging.current || !scrollRef.current) return;
@@ -76,30 +90,22 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
           {ARTIST_REFERENCES.titleLine1} <br /><span className="text-primary">{ARTIST_REFERENCES.titleLine2}</span>
         </h2>
 
-        {/* Category tabs */}
-        <div className="rv flex justify-center gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
+        {/* Category tabs — rectangular, large, matching reference */}
+        <div className="rv flex justify-center gap-4 mt-8">
           {cats.map((cat) => (
             <button
               key={cat.slug}
-              onClick={() => {
-                setActiveSlug(cat.slug);
-                const firstCard = scrollRef.current?.querySelector(`[data-slug="${cat.slug}"]`);
-                if (firstCard && scrollRef.current) {
-                  const containerLeft = scrollRef.current.getBoundingClientRect().left;
-                  const cardLeft = firstCard.getBoundingClientRect().left;
-                  scrollRef.current.scrollTo({
-                    left: scrollRef.current.scrollLeft + (cardLeft - containerLeft) - 24,
-                    behavior: "smooth",
-                  });
-                }
-              }}
-              className={`relative shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-mono uppercase tracking-wider transition-all duration-300 border whitespace-nowrap ${
+              onClick={() => scrollToCategory(cat.slug)}
+              className={`relative px-8 py-3.5 text-xs sm:text-sm font-mono uppercase tracking-[0.15em] transition-all duration-300 border ${
                 activeSlug === cat.slug
-                  ? "border-primary text-primary bg-primary/10"
-                  : "border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
+                  ? "border-primary text-primary bg-primary/5"
+                  : "border-border text-muted-foreground hover:text-foreground hover:border-primary/40"
               }`}
             >
               {cat.name}
+              {activeSlug === cat.slug && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-primary" />
+              )}
             </button>
           ))}
         </div>

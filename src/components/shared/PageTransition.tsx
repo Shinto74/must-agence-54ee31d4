@@ -5,24 +5,23 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [displayChildren, setDisplayChildren] = useState(children);
   const [stage, setStage] = useState<"idle" | "slash-in" | "slash-out">("idle");
-  const isFirstRender = useRef(true);
+  const prevPathRef = useRef(location.pathname);
 
   useEffect(() => {
-    // Skip slash transition on initial page load
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+    // Only trigger on actual route changes, never on first render
+    if (location.pathname === prevPathRef.current) {
       setDisplayChildren(children);
       return;
     }
-    if (children !== displayChildren) {
-      setStage("slash-in");
-      setTimeout(() => {
-        setDisplayChildren(children);
-        window.scrollTo(0, 0);
-        setStage("slash-out");
-        setTimeout(() => setStage("idle"), 500);
-      }, 400);
-    }
+    prevPathRef.current = location.pathname;
+
+    setStage("slash-in");
+    setTimeout(() => {
+      setDisplayChildren(children);
+      window.scrollTo(0, 0);
+      setStage("slash-out");
+      setTimeout(() => setStage("idle"), 500);
+    }, 400);
   }, [children, location.pathname]);
 
   return (
@@ -45,9 +44,9 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
         <div
           className={`absolute inset-0 bg-background origin-top-right ${
             stage === "slash-in"
-              ? "animate-slashIn delay-75"
+              ? "animate-slashIn"
               : stage === "slash-out"
-              ? "animate-slashOut delay-75"
+              ? "animate-slashOut"
               : ""
           }`}
           style={{ animationDelay: stage === "slash-in" ? "80ms" : "50ms" }}
