@@ -75,10 +75,11 @@ export function useAdminCrud<T extends Record<string, any>>(table: string, optio
 
   const remove = async (pkValue: string) => {
     try {
-      const { error } = await supabase
+      const res = await supabase
         .from(table as any)
         .delete()
-        .eq(idField as any, pkValue);
+        .eq(idField, pkValue as any);
+      const error = res.error;
       if (error) throw error;
       toast.success("Élément supprimé ✓");
       qc.invalidateQueries({ queryKey: [`admin_${table}`] });
