@@ -65,15 +65,26 @@ const PackCards = ({ packs }: PackCardsProps) => {
 
 const PackCard = ({ pack }: { pack: Pack }) => (
   <div
-    className={`relative rounded-2xl p-6 md:p-8 transition-all duration-500 hover:-translate-y-1.5 ${
+    className={`relative rounded-2xl p-6 md:p-8 transition-all duration-500 hover:-translate-y-1.5 group/pack ${
       pack.featured
-        ? "border-2 border-primary bg-gradient-to-b from-primary/5 to-surface hover:shadow-[0_0_40px_hsl(var(--neon)/0.15)]"
-        : "border border-border bg-surface hover:border-border-light hover:shadow-[0_0_20px_hsl(var(--neon)/0.08)]"
+        ? "border-2 border-primary bg-gradient-to-b from-primary/5 to-surface hover:shadow-[0_0_50px_hsl(var(--neon)/0.25),0_0_100px_hsl(var(--neon)/0.1)]"
+        : "border border-border bg-surface hover:border-primary/30 hover:shadow-[0_0_30px_hsl(var(--neon)/0.12),0_0_60px_hsl(var(--neon)/0.06)]"
     }`}
     style={{
       backgroundImage: pack.featured
-        ? "radial-gradient(ellipse at top, hsl(73 100% 50% / 0.06), transparent 60%)"
+        ? "radial-gradient(ellipse at top, hsl(73 100% 50% / 0.08), transparent 60%)"
         : undefined,
+    }}
+    onMouseMove={(e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      e.currentTarget.style.backgroundImage = `radial-gradient(circle at ${x}px ${y}px, hsl(73 100% 50% / ${pack.featured ? '0.1' : '0.06'}), transparent 60%)`;
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.backgroundImage = pack.featured
+        ? "radial-gradient(ellipse at top, hsl(73 100% 50% / 0.08), transparent 60%)"
+        : "none";
     }}
   >
     {pack.badge && (
