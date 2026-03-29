@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Phone, MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -9,11 +9,13 @@ interface ContactSectionProps {
   text: string;
   subtext: string;
   email: string;
+  phone?: string;
+  location?: string;
   whatsappUrl: string;
   formOptions: string[];
 }
 
-const ContactSection = ({ heading, text, subtext, email, whatsappUrl, formOptions }: ContactSectionProps) => {
+const ContactSection = ({ heading, text, subtext, email, phone, location, whatsappUrl, formOptions }: ContactSectionProps) => {
   const ref = useScrollReveal();
   const [form, setForm] = useState({ type: formOptions[0], name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
@@ -45,6 +47,18 @@ const ContactSection = ({ heading, text, subtext, email, whatsappUrl, formOption
           <p className="rv text-sm text-muted-foreground mb-8 leading-relaxed">{subtext}</p>
           <div className="rv space-y-3 text-sm text-muted-foreground">
             <p>Email: <a href={`mailto:${email}`} className="text-primary hover:underline">{email}</a></p>
+            {phone && (
+              <p className="flex items-center gap-2">
+                <Phone size={14} className="text-primary" />
+                <a href={`tel:${phone}`} className="text-primary hover:underline">{phone}</a>
+              </p>
+            )}
+            {location && (
+              <p className="flex items-center gap-2">
+                <MapPin size={14} className="text-primary" />
+                {location}
+              </p>
+            )}
           </div>
           <a
             href={whatsappUrl} target="_blank" rel="noopener noreferrer"
