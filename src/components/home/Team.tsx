@@ -1,8 +1,21 @@
 import { TEAM } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const Team = () => {
+interface TeamMember {
+  name: string;
+  initials: string;
+  role: string;
+  description: string;
+  image_url?: string | null;
+}
+
+interface TeamProps {
+  members?: TeamMember[];
+}
+
+const Team = ({ members }: TeamProps) => {
   const ref = useScrollReveal();
+  const data = members || TEAM;
 
   return (
     <section ref={ref} className="py-20 px-6">
@@ -11,13 +24,9 @@ const Team = () => {
         <h2 className="rv font-clash text-3xl md:text-4xl font-bold text-foreground mb-10">
           Les cerveaux <span className="text-primary">derrière la machine.</span>
         </h2>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {TEAM.map((member) => (
-            <div
-              key={member.name}
-              className="rv rounded-xl border border-border bg-surface p-6 transition-all duration-500 hover:border-border-light hover:-translate-y-1"
-            >
+          {data.map((member) => (
+            <div key={member.name} className="rv rounded-xl border border-border bg-surface p-6 transition-all duration-500 hover:border-border-light hover:-translate-y-1">
               <div className="w-14 h-14 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-4">
                 <span className="font-clash font-bold text-primary text-lg">{member.initials}</span>
               </div>
