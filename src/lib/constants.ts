@@ -277,9 +277,9 @@ export const SERVICES_ENTREPRISE = [
 ];
 
 export const EXPERTISE_ARTISTE = [
-  { number: "01", title: "Viral Engineering", text: "L'algorithme n'est pas une loterie, c'est une science. On capture l'attention là où elle est la plus chère." },
-  { number: "02", title: "Icon Architecture", text: "On ne gère pas des carrières, on bâtit des dynasties. Branding, direction artistique, positionnement." },
-  { number: "03", title: "Monetization", text: "La hype sans revenus ne sert à rien. On convertit l'influence en business model pérenne." },
+  { number: "01", title: "Viral Engineering", text: "L'algorithme n'est pas une loterie, c'est une science. On capture l'attention là où elle est la plus chère. On ne cherche pas juste des vues, on crée de l'obsession." },
+  { number: "02", title: "Icon Architecture", text: "On ne gère pas des carrières, on bâtit des dynasties. Branding, direction artistique, positionnement : on transforme des personnalités en actifs intouchables." },
+  { number: "03", title: "Monetization", text: "La hype sans revenus ne sert à rien. On convertit l'influence en business model pérenne. Funnels, produits, partenariats : on maximise chaque pixel." },
 ];
 
 export const EXPERTISE_ENTREPRISE = [
