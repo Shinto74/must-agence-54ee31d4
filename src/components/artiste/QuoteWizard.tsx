@@ -139,7 +139,7 @@ const QuoteWizard = ({ steps }: QuoteWizardProps) => {
           )}
 
           {step.type === "checkbox" && step.options && (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {step.options.map((opt) => {
                 const selected = (answers[current] || []) as string[];
                 const isSelected = selected.includes(opt.label);
