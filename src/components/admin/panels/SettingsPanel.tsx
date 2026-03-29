@@ -21,10 +21,9 @@ const SETTING_GROUPS: Record<string, string> = {
 };
 
 export default function SettingsPanel() {
-  const crud = useAdminCrud("site_settings", "key");
+  const crud = useAdminCrud("site_settings", { idField: "key", orderBy: "key" });
 
   const getLabel = (key: string) => SETTING_GROUPS[key] || key;
-
   const isImage = (item: any) => item.type === "image" || item.key?.startsWith("logo_");
 
   return (
@@ -35,7 +34,7 @@ export default function SettingsPanel() {
         label="paramètre"
         onAdd={() => crud.setEditing({ key: "", value: "", type: "text" } as any)}
         onEdit={(item) => crud.setEditing(item)}
-        onDelete={(id) => crud.remove(id)}
+        onDelete={(pkValue) => crud.remove(pkValue)}
         idField="key"
         renderItem={(item) => (
           <div className="flex items-center gap-3">
