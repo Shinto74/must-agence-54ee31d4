@@ -35,8 +35,8 @@ export const SITE = {
   },
   vision: {
     label: "Notre vision",
-    titleLine1: "On ne suit pas",
-    titleLine2: "les tendances.",
+    titleLine1: "L'influence est",
+    titleLine2: "une science.",
     quote: "Dans un monde de bruit, nous créons le signal. Nous ne cherchons pas des influenceurs, nous bâtissons des marques durables.",
     text: "L'algorithme n'est pas une loterie, c'est une science. On capture l'attention là où elle est la plus chère, on transforme la hype en business model pérenne, et on construit des empires digitaux.",
   },
