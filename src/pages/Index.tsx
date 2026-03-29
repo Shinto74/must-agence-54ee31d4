@@ -9,29 +9,38 @@ import Team from "@/components/home/Team";
 import Portfolio from "@/components/home/Portfolio";
 import CtaBand from "@/components/home/CtaBand";
 import ContactSection from "@/components/home/ContactSection";
-import { SITE, STATS } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
+import { useStats, useTeam, useArtists, useClients, usePortfolio } from "@/hooks/useSupabaseData";
 
-const Index = () => (
-  <div>
-    <Hero />
-    <MarqueeText words={SITE.marqueeWords} />
-    <StatsCounter items={STATS.home} />
-    <PolesGateway />
-    <ArtistReferences />
-    <CompanyReferences />
-    <Vision />
-    <Team />
-    <Portfolio />
-    <CtaBand {...SITE.ctaBand} />
-    <ContactSection
-      heading={SITE.contact.heading}
-      text={SITE.contact.text}
-      subtext={SITE.contact.subtext}
-      email={SITE.contact.email}
-      whatsappUrl={SITE.contact.whatsappUrl}
-      formOptions={["Pôle Artiste / Musique", "Pôle Corporate / Marque", "Autre"]}
-    />
-  </div>
-);
+const Index = () => {
+  const { data: stats } = useStats("home");
+  const { data: team } = useTeam();
+  const { data: artists } = useArtists();
+  const { data: clients } = useClients();
+  const { data: portfolio } = usePortfolio();
+
+  return (
+    <div>
+      <Hero />
+      <MarqueeText words={SITE.marqueeWords} />
+      <StatsCounter items={stats || []} />
+      <PolesGateway />
+      <ArtistReferences categories={artists || []} />
+      <CompanyReferences categories={clients || []} />
+      <Vision />
+      <Team members={team || []} />
+      <Portfolio items={portfolio || []} />
+      <CtaBand {...SITE.ctaBand} />
+      <ContactSection
+        heading={SITE.contact.heading}
+        text={SITE.contact.text}
+        subtext={SITE.contact.subtext}
+        email={SITE.contact.email}
+        whatsappUrl={SITE.contact.whatsappUrl}
+        formOptions={["Pôle Artiste / Musique", "Pôle Corporate / Marque", "Autre"]}
+      />
+    </div>
+  );
+};
 
 export default Index;
