@@ -9,7 +9,6 @@ interface CrudOptions {
 }
 
 export function useAdminCrud<T extends Record<string, any>>(table: string, options?: CrudOptions | string) {
-  // backward compat: if options is a string, treat as orderBy
   const opts: CrudOptions = typeof options === "string" ? { orderBy: options } : options || {};
   const idField = opts.idField || "id";
   const orderBy = opts.orderBy || "display_order";
@@ -30,6 +29,11 @@ export function useAdminCrud<T extends Record<string, any>>(table: string, optio
     },
   });
 
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: [`admin_${table}`] });
+    qc.invalidateQueries({ queryKey: [table] });
+  };
+
   const save = async (record: T) => {
     setSaving(true);
     try {
@@ -38,33 +42,33 @@ export function useAdminCrud<T extends Record<string, any>>(table: string, optio
       delete (clean as any).updated_at;
 
       const pkValue = clean[idField];
+      const isExisting = pkValue && data.some((item) => item[idField] === pkValue);
 
-      if (pkValue && data.some((item) => item[idField] === pkValue)) {
-        // UPDATE existing
+      if (isExisting) {
         const updateData = { ...clean };
+        // Don't send PK in update body for uuid-type PKs
         if (idField === "id") delete (updateData as any).id;
-        
-        const res = await supabase
+
+        const { error, count } = await supabase
           .from(table as any)
           .update(updateData)
-          .eq(idField, pkValue as any);
-        const error = res.error;
+          .eq(idField, pkValue as any)
+          .select();
         if (error) throw error;
         toast.success("Modifications enregistrées ✓");
       } else {
         // INSERT new
         if (idField === "id") delete (clean as any).id;
-        
+
         const { error } = await supabase
           .from(table as any)
-          .insert(clean as any);
+          .insert(clean as any)
+          .select();
         if (error) throw error;
         toast.success("Élément ajouté ✓");
       }
       setEditing(null);
-      qc.invalidateQueries({ queryKey: [`admin_${table}`] });
-      // Also invalidate the public query keys so the site updates
-      qc.invalidateQueries({ queryKey: [table] });
+      invalidate();
     } catch (err: any) {
       console.error(`[Admin] Save error on ${table}:`, err);
       toast.error("Erreur : " + (err.message || "Impossible de sauvegarder"));
@@ -74,16 +78,25 @@ export function useAdminCrud<T extends Record<string, any>>(table: string, optio
   };
 
   const remove = async (pkValue: string) => {
+    console.log(`[Admin] Deleting from ${table} where ${idField} = ${pkValue}`);
     try {
-      const res = await supabase
+      const { data: deleted, error } = await supabase
         .from(table as any)
         .delete()
-        .eq(idField, pkValue as any);
-      const error = res.error;
+        .eq(idField, pkValue as any)
+        .select();
+
+      console.log(`[Admin] Delete result:`, { deleted, error });
+
       if (error) throw error;
+
+      if (!deleted || deleted.length === 0) {
+        toast.error("Suppression refusée — vérifiez vos permissions");
+        return;
+      }
+
       toast.success("Élément supprimé ✓");
-      qc.invalidateQueries({ queryKey: [`admin_${table}`] });
-      qc.invalidateQueries({ queryKey: [table] });
+      invalidate();
     } catch (err: any) {
       console.error(`[Admin] Delete error on ${table}:`, err);
       toast.error("Erreur : " + (err.message || "Impossible de supprimer"));
