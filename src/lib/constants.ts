@@ -8,8 +8,8 @@ const GH = "https://raw.githubusercontent.com/Shinto74/IMAGES/1ca68ce299df011d58
 export const SITE = {
   name: "Must Agence",
   tagline: "Influence Agency",
-  logoWhite: `${GH}/logo_blanc.png`,
-  logoGreen: `${GH}/logo_vert.png`,
+  logoWhite: `${GH}/logos/logo_blanc.png`,
+  logoGreen: `${GH}/logos/logo_vert.png`,
   hero: {
     label: "Must Agence",
     titleLine1: "We don't follow",
