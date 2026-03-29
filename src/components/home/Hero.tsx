@@ -24,10 +24,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section ref={(el) => {
-      (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
-      (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
-    }} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Parallax Orbs */}
       <div
         className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-primary/10 blur-[120px] animate-orbFloat1"
