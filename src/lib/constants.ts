@@ -174,9 +174,9 @@ export const PACKS = [
     number: "Pack 1", name: "L'Essentiel", subtitle: "La base solide pour un lancement réussi et une visibilité ciblée",
     price: "350€", priceSuffix: "HT", featured: false, badge: "",
     features: [
-      "Promotion Playlisting 1 mois (Spotify, Deezer, Apple Music)",
-      "Ads Pop-up Multi-plateformes (Google, Meta, TikTok)",
-      "DA & Stratégie Social Media",
+      "Promotion Playlisting (1 mois) : Placement sur Spotify, Deezer, Apple Music (Niches précises, trafic qualifié)",
+      "Ads « Pop-up » Multi-plateformes : Promotion d'un teaser (Google, Meta, TikTok) avec lien de redirection direct",
+      "DA & Stratégie Social Media : Planning éditorial personnalisé pour optimiser votre feed et l'algorithme",
     ],
     bonus: "1 mois d'abonnement The Artiste offert",
     reassurance: "Un interlocuteur dédié vous accompagne de A à Z pour garantir la cohérence de votre lancement",
