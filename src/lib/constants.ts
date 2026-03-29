@@ -35,8 +35,8 @@ export const SITE = {
   },
   vision: {
     label: "Notre vision",
-    titleLine1: "On ne suit pas",
-    titleLine2: "les tendances.",
+    titleLine1: "L'influence est",
+    titleLine2: "une science.",
     quote: "Dans un monde de bruit, nous créons le signal. Nous ne cherchons pas des influenceurs, nous bâtissons des marques durables.",
     text: "L'algorithme n'est pas une loterie, c'est une science. On capture l'attention là où elle est la plus chère, on transforme la hype en business model pérenne, et on construit des empires digitaux.",
   },
@@ -213,7 +213,7 @@ export const PACKS = [
 export const SERVICES_ARTISTE = [
   {
     number: "01", title: "Influence & TikTok Activation",
-    description: "Campagnes d'influence sur-mesure avec notre réseau exclusif de créateurs TikTok, Instagram Reels et YouTube Shorts.",
+    description: "Campagnes d'influence sur-mesure avec notre réseau exclusif de créateurs TikTok, Instagram Reels et YouTube Shorts. On seed votre son, on crée le buzz organique, on génère les vues qui comptent.",
     chips: ["TikTok Activation", "Creator Network", "Sound Seeding", "Viral Engineering"],
   },
   {
@@ -223,22 +223,22 @@ export const SERVICES_ARTISTE = [
   },
   {
     number: "03", title: "Stratégie de Lancement",
-    description: "Chaque sortie est un événement. Teasing multi-plateforme, rollout marketing calibré.",
+    description: "Chaque sortie est un événement. Teasing multi-plateforme, rollout marketing calibré, montée en puissance et suivi post-sortie. Singles ou albums, on orchestre l'impact.",
     chips: ["Rollout", "Teasing", "Release Strategy", "Multi-plateforme"],
   },
   {
     number: "04", title: "Campagnes Ads & RP",
-    description: "Ads haute performance sur Meta, Google, TikTok et Snapchat. Relations presse pour amplifier la portée.",
+    description: "Ads haute performance sur Meta, Google, TikTok et Snapchat. Chaque euro investi est tracké et optimisé. Relations presse pour amplifier la portée médiatique.",
     chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Relations Presse"],
   },
   {
     number: "05", title: "Brand Content & Storytelling",
-    description: "Construire une image iconique, raconter une histoire authentique. Stratégie de contenu long terme.",
+    description: "Construire une image iconique, raconter une histoire authentique. Stratégie de contenu, identité d'artiste et construction de marque long terme.",
     chips: ["Storytelling", "Brand Content", "Identité", "Long Terme"],
   },
   {
     number: "06", title: "Booking & Partenariats",
-    description: "On connecte les artistes aux marques. Collaborations stratégiques et opportunités business.",
+    description: "On connecte les artistes aux marques. Collaborations stratégiques, placements produits, événements et opportunités business pour monétiser l'influence.",
     chips: ["Booking", "Partenariats", "Placements", "Événements"],
   },
 ];
@@ -246,46 +246,46 @@ export const SERVICES_ARTISTE = [
 export const SERVICES_ENTREPRISE = [
   {
     number: "01", title: "Influencer Marketing",
-    description: "Campagnes d'influence end-to-end pour marques. Sélection de créateurs, brief, production UGC et suivi.",
+    description: "Campagnes d'influence end-to-end pour marques. Sélection de créateurs, brief, production UGC et suivi des performances sur TikTok, Instagram et YouTube.",
     chips: ["Campagnes Influence", "Creator Selection", "UGC Strategy", "Performance Tracking"],
   },
   {
     number: "02", title: "Social Media Management",
-    description: "Community management expert et gestion d'image de marque sur tous les réseaux sociaux.",
+    description: "Community management expert et gestion d'image de marque. Présence cohérente, engageante et stratégique sur tous les réseaux sociaux.",
     chips: ["Community Management", "Planning éditorial", "Gestion d'Image", "Modération"],
   },
   {
     number: "03", title: "Production de Contenu",
-    description: "Photographes et vidéastes mobiles. Contenu lifestyle, institutionnel et brand content premium.",
+    description: "Photographes et vidéastes mobiles, déplacement sur site. Contenu lifestyle, institutionnel et brand content premium pour raconter votre histoire.",
     chips: ["Photo Sur Site", "Vidéo Corporate", "Lifestyle", "Brand Content"],
   },
   {
     number: "04", title: "Growth Marketing",
-    description: "SEO, Google Ads et Social Ads. Stratégie d'acquisition complète, optimisation de funnels.",
+    description: "SEO, Google Ads et Social Ads. Stratégie d'acquisition complète, optimisation de funnels et conversion. Chaque euro tracké et optimisé pour le ROI max.",
     chips: ["SEO", "Google Ads", "Social Ads", "Conversion Funnels"],
   },
   {
     number: "05", title: "Branding & Design",
-    description: "Logos, chartes graphiques complètes et interfaces UI/UX. Identités visuelles qui marquent.",
+    description: "Logos, chartes graphiques complètes et interfaces UI/UX. On crée des identités visuelles qui marquent les esprits et génèrent de la confiance.",
     chips: ["Logo", "Charte Graphique", "UI/UX Design", "Identité Visuelle"],
   },
   {
     number: "06", title: "E-Réputation",
-    description: "Protégez et renforcez votre image digitale. Gestion proactive des avis et veille concurrentielle.",
+    description: "Protégez et renforcez votre image digitale. Gestion proactive des avis, veille concurrentielle et stratégie de présence en ligne irréprochable.",
     chips: ["Gestion Avis", "Image Digitale", "Veille", "Réputation Online"],
   },
 ];
 
 export const EXPERTISE_ARTISTE = [
-  { number: "01", title: "Viral Engineering", text: "L'algorithme n'est pas une loterie, c'est une science. On capture l'attention là où elle est la plus chère." },
-  { number: "02", title: "Icon Architecture", text: "On ne gère pas des carrières, on bâtit des dynasties. Branding, direction artistique, positionnement." },
-  { number: "03", title: "Monetization", text: "La hype sans revenus ne sert à rien. On convertit l'influence en business model pérenne." },
+  { number: "01", title: "Viral Engineering", text: "L'algorithme n'est pas une loterie, c'est une science. On capture l'attention là où elle est la plus chère. On ne cherche pas juste des vues, on crée de l'obsession." },
+  { number: "02", title: "Icon Architecture", text: "On ne gère pas des carrières, on bâtit des dynasties. Branding, direction artistique, positionnement : on transforme des personnalités en actifs intouchables." },
+  { number: "03", title: "Monetization", text: "La hype sans revenus ne sert à rien. On convertit l'influence en business model pérenne. Funnels, produits, partenariats : on maximise chaque pixel." },
 ];
 
 export const EXPERTISE_ENTREPRISE = [
-  { number: "01", title: "Influence Marketing", text: "Campagnes d'influence end-to-end. Sélection de créateurs, brief créatif, production et suivi des KPIs." },
-  { number: "02", title: "Growth Hacking", text: "Testing, itération et optimisation de vos funnels d'acquisition. SEO, SEA, Social Ads." },
-  { number: "03", title: "Brand Identity", text: "Positionnement, messaging et identité visuelle pour l'ère digitale. Des marques qui résonnent." },
+  { number: "01", title: "Influence Marketing", text: "Campagnes d'influence end-to-end. Sélection de créateurs, brief créatif, production et suivi des KPIs. On connecte votre marque aux bonnes audiences." },
+  { number: "02", title: "Growth Hacking", text: "Testing, itération et optimisation de vos funnels d'acquisition. SEO, SEA, Social Ads – on maximise le retour sur chaque investissement." },
+  { number: "03", title: "Brand Identity", text: "Positionnement, messaging et identité visuelle pour l'ère digitale. On crée des marques qui résonnent et convertissent." },
 ];
 
 export const PROCESS_ARTISTE = [
