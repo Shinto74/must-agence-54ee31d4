@@ -32,8 +32,14 @@ const Header = () => {
         scrolled ? "bg-background/90 backdrop-blur-md border-b border-border" : "bg-transparent"
       }`}
     >
-      <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between h-16 md:h-20">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
+      {/* Green diagonal corner */}
+      <div className="absolute top-0 left-0 w-20 h-20 md:w-28 md:h-28 overflow-hidden pointer-events-none">
+        <div className="absolute -top-10 -left-10 w-28 h-28 md:w-36 md:h-36 bg-primary rotate-[-45deg] origin-center" />
+      </div>
+
+      <div className="max-w-[1400px] mx-auto px-6 flex items-center h-16 md:h-20">
+        {/* Logo - left */}
+        <Link to="/" className="flex items-center gap-2 shrink-0 relative z-10">
           <img
             src={isArtiste ? SITE.logoWhite : SITE.logoGreen}
             alt={SITE.name}
@@ -41,8 +47,8 @@ const Header = () => {
           />
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        {/* Desktop nav - centered */}
+        <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.path}
@@ -58,10 +64,10 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Mobile toggle */}
+        {/* Mobile toggle - right */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden text-foreground p-2"
+          className="md:hidden text-foreground p-2 ml-auto"
           aria-label="Menu"
         >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}

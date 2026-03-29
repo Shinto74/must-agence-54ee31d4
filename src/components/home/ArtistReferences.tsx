@@ -76,24 +76,29 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
           {ARTIST_REFERENCES.titleLine1} <br /><span className="text-primary">{ARTIST_REFERENCES.titleLine2}</span>
         </h2>
 
-        {/* Category tabs - horizontal scroll on mobile, matching original site */}
-        <div className="rv flex gap-2 mt-6 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
+        {/* Category tabs */}
+        <div className="rv flex justify-center gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
           {cats.map((cat) => (
             <button
               key={cat.slug}
               onClick={() => {
                 setActiveSlug(cat.slug);
-                scrollRef.current?.querySelector(`[data-slug="${cat.slug}"]`)?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+                const firstCard = scrollRef.current?.querySelector(`[data-slug="${cat.slug}"]`);
+                if (firstCard && scrollRef.current) {
+                  const containerLeft = scrollRef.current.getBoundingClientRect().left;
+                  const cardLeft = firstCard.getBoundingClientRect().left;
+                  scrollRef.current.scrollTo({
+                    left: scrollRef.current.scrollLeft + (cardLeft - containerLeft) - 24,
+                    behavior: "smooth",
+                  });
+                }
               }}
-              className={`relative shrink-0 px-3 sm:px-4 py-2 rounded-lg text-[9px] sm:text-xs font-mono transition-all duration-300 border whitespace-nowrap ${
+              className={`relative shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-mono uppercase tracking-wider transition-all duration-300 border whitespace-nowrap ${
                 activeSlug === cat.slug
-                  ? "border-primary/40 text-primary bg-primary/5"
-                  : "border-border text-muted-foreground hover:text-foreground"
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
               }`}
             >
-              {activeSlug === cat.slug && (
-                <span className="absolute top-1 right-1 sm:top-1.5 sm:right-1.5 w-1.5 h-1.5 rounded-full bg-primary animate-tabPop" />
-              )}
               {cat.name}
             </button>
           ))}

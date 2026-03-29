@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [displayChildren, setDisplayChildren] = useState(children);
   const [stage, setStage] = useState<"idle" | "slash-in" | "slash-out">("idle");
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    // Skip slash transition on initial page load
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      setDisplayChildren(children);
+      return;
+    }
     if (children !== displayChildren) {
       setStage("slash-in");
       setTimeout(() => {
