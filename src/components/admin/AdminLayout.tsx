@@ -12,6 +12,7 @@ export type AdminTab =
   | "packs" | "stats" | "services" | "settings";
 
 const NAV: { key: AdminTab; label: string; icon: React.ElementType }[] = [
+  { key: "editeur", label: "Éditeur visuel", icon: Image },
   { key: "demandes", label: "Demandes", icon: MessageSquare },
   { key: "equipe", label: "Équipe", icon: Users },
   { key: "artistes", label: "Artistes", icon: Music },
