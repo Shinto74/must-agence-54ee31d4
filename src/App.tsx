@@ -32,7 +32,7 @@ const AnimatedRoutes = () => {
   }
 
   return (
-    <PageTransition key={location.pathname}>
+    <PageTransition>
       <Routes location={location}>
         <Route path="/" element={<Index />} />
         <Route path="/artiste" element={<Artiste />} />
