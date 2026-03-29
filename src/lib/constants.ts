@@ -213,7 +213,7 @@ export const PACKS = [
 export const SERVICES_ARTISTE = [
   {
     number: "01", title: "Influence & TikTok Activation",
-    description: "Campagnes d'influence sur-mesure avec notre réseau exclusif de créateurs TikTok, Instagram Reels et YouTube Shorts.",
+    description: "Campagnes d'influence sur-mesure avec notre réseau exclusif de créateurs TikTok, Instagram Reels et YouTube Shorts. On seed votre son, on crée le buzz organique, on génère les vues qui comptent.",
     chips: ["TikTok Activation", "Creator Network", "Sound Seeding", "Viral Engineering"],
   },
   {
@@ -223,22 +223,22 @@ export const SERVICES_ARTISTE = [
   },
   {
     number: "03", title: "Stratégie de Lancement",
-    description: "Chaque sortie est un événement. Teasing multi-plateforme, rollout marketing calibré.",
+    description: "Chaque sortie est un événement. Teasing multi-plateforme, rollout marketing calibré, montée en puissance et suivi post-sortie. Singles ou albums, on orchestre l'impact.",
     chips: ["Rollout", "Teasing", "Release Strategy", "Multi-plateforme"],
   },
   {
     number: "04", title: "Campagnes Ads & RP",
-    description: "Ads haute performance sur Meta, Google, TikTok et Snapchat. Relations presse pour amplifier la portée.",
+    description: "Ads haute performance sur Meta, Google, TikTok et Snapchat. Chaque euro investi est tracké et optimisé. Relations presse pour amplifier la portée médiatique.",
     chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Relations Presse"],
   },
   {
     number: "05", title: "Brand Content & Storytelling",
-    description: "Construire une image iconique, raconter une histoire authentique. Stratégie de contenu long terme.",
+    description: "Construire une image iconique, raconter une histoire authentique. Stratégie de contenu, identité d'artiste et construction de marque long terme.",
     chips: ["Storytelling", "Brand Content", "Identité", "Long Terme"],
   },
   {
     number: "06", title: "Booking & Partenariats",
-    description: "On connecte les artistes aux marques. Collaborations stratégiques et opportunités business.",
+    description: "On connecte les artistes aux marques. Collaborations stratégiques, placements produits, événements et opportunités business pour monétiser l'influence.",
     chips: ["Booking", "Partenariats", "Placements", "Événements"],
   },
 ];
