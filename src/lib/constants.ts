@@ -283,9 +283,9 @@ export const EXPERTISE_ARTISTE = [
 ];
 
 export const EXPERTISE_ENTREPRISE = [
-  { number: "01", title: "Influence Marketing", text: "Campagnes d'influence end-to-end. Sélection de créateurs, brief créatif, production et suivi des KPIs." },
-  { number: "02", title: "Growth Hacking", text: "Testing, itération et optimisation de vos funnels d'acquisition. SEO, SEA, Social Ads." },
-  { number: "03", title: "Brand Identity", text: "Positionnement, messaging et identité visuelle pour l'ère digitale. Des marques qui résonnent." },
+  { number: "01", title: "Influence Marketing", text: "Campagnes d'influence end-to-end. Sélection de créateurs, brief créatif, production et suivi des KPIs. On connecte votre marque aux bonnes audiences." },
+  { number: "02", title: "Growth Hacking", text: "Testing, itération et optimisation de vos funnels d'acquisition. SEO, SEA, Social Ads – on maximise le retour sur chaque investissement." },
+  { number: "03", title: "Brand Identity", text: "Positionnement, messaging et identité visuelle pour l'ère digitale. On crée des marques qui résonnent et convertissent." },
 ];
 
 export const PROCESS_ARTISTE = [
