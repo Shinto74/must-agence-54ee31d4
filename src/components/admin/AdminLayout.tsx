@@ -8,10 +8,11 @@ import {
 import { cn } from "@/lib/utils";
 
 export type AdminTab =
-  | "demandes" | "equipe" | "artistes" | "clients"
+  | "editeur" | "demandes" | "equipe" | "artistes" | "clients"
   | "packs" | "stats" | "services" | "settings";
 
 const NAV: { key: AdminTab; label: string; icon: React.ElementType }[] = [
+  { key: "editeur", label: "Éditeur visuel", icon: Image },
   { key: "demandes", label: "Demandes", icon: MessageSquare },
   { key: "equipe", label: "Équipe", icon: Users },
   { key: "artistes", label: "Artistes", icon: Music },
@@ -28,7 +29,7 @@ interface Props {
 
 export default function AdminLayout({ children }: Props) {
   const { user, isAdmin, loading, signOut } = useAuth();
-  const [tab, setTab] = useState<AdminTab>("demandes");
+  const [tab, setTab] = useState<AdminTab>("editeur");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   if (loading)
