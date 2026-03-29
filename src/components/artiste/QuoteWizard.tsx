@@ -115,7 +115,7 @@ const QuoteWizard = ({ steps }: QuoteWizardProps) => {
           <h3 className="font-clash text-xl font-semibold text-foreground mb-6">{step.question}</h3>
 
           {step.type === "radio" && step.options && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
               {step.options.map((opt) => (
                 <button key={opt.label} onClick={() => setAnswer(opt.label)}
                   className={`p-4 rounded-xl border text-left transition-all duration-300 ${
