@@ -20,17 +20,42 @@ const queryClient = new QueryClient();
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/admin");
+
+  if (isAdmin) {
+    return (
+      <Routes location={location}>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+      </Routes>
+    );
+  }
+
   return (
     <PageTransition key={location.pathname}>
       <Routes location={location}>
         <Route path="/" element={<Index />} />
         <Route path="/artiste" element={<Artiste />} />
         <Route path="/entreprise" element={<Entreprise />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </PageTransition>
+  );
+};
+
+const AppShell = () => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/admin");
+
+  return (
+    <>
+      {!isAdmin && <CustomCursor />}
+      {!isAdmin && <Header />}
+      <main className={isAdmin ? "" : "min-h-screen"}>
+        <AnimatedRoutes />
+      </main>
+      {!isAdmin && <Footer />}
+    </>
   );
 };
 
@@ -45,12 +70,7 @@ const App = () => {
         <Sonner />
         {!loaded && <InitialLoader onComplete={handleLoaded} />}
         <BrowserRouter>
-          <CustomCursor />
-          <Header />
-          <main className="min-h-screen">
-            <AnimatedRoutes />
-          </main>
-          <Footer />
+          <AppShell />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
