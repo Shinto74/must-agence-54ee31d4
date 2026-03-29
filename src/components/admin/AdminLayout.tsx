@@ -8,7 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 
 export type AdminTab =
-  | "demandes" | "equipe" | "artistes" | "clients"
+  | "editeur" | "demandes" | "equipe" | "artistes" | "clients"
   | "packs" | "stats" | "services" | "settings";
 
 const NAV: { key: AdminTab; label: string; icon: React.ElementType }[] = [
