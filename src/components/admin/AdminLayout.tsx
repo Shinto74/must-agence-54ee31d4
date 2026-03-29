@@ -29,7 +29,7 @@ interface Props {
 
 export default function AdminLayout({ children }: Props) {
   const { user, isAdmin, loading, signOut } = useAuth();
-  const [tab, setTab] = useState<AdminTab>("demandes");
+  const [tab, setTab] = useState<AdminTab>("editeur");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   if (loading)
