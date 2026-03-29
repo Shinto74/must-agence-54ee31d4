@@ -3,7 +3,7 @@
 // Fallback data before Supabase connection
 // ═══════════════════════════════════════
 
-const GH = "https://raw.githubusercontent.com/Shinto74/must_agence/main/Images";
+const GH = "https://raw.githubusercontent.com/Shinto74/IMAGES/1ca68ce299df011d586098dc6c1a4202bd2d8dfb/must-agence";
 
 export const SITE = {
   name: "Must Agence",
