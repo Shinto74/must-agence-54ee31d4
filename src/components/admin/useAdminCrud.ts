@@ -42,13 +42,13 @@ export function useAdminCrud<T extends Record<string, any>>(table: string, optio
       if (pkValue && data.some((item) => item[idField] === pkValue)) {
         // UPDATE existing
         const updateData = { ...clean };
-        // Don't send the PK in the update body if it's "id"
         if (idField === "id") delete (updateData as any).id;
         
-        const { error } = await supabase
+        const res = await supabase
           .from(table as any)
           .update(updateData)
-          .eq(idField as any, pkValue);
+          .eq(idField, pkValue as any);
+        const error = res.error;
         if (error) throw error;
         toast.success("Modifications enregistrées ✓");
       } else {
