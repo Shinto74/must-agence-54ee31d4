@@ -84,10 +84,20 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        slashIn: {
+          "0%": { transform: "scaleX(0) skewX(-15deg)", transformOrigin: "left" },
+          "100%": { transform: "scaleX(1) skewX(-15deg)", transformOrigin: "left" },
+        },
+        slashOut: {
+          "0%": { transform: "scaleX(1) skewX(-15deg)", transformOrigin: "right" },
+          "100%": { transform: "scaleX(0) skewX(-15deg)", transformOrigin: "right" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        slashIn: "slashIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        slashOut: "slashOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
     },
   },
