@@ -20,7 +20,7 @@ const Footer = () => (
         </nav>
 
         <p className="text-xs text-text-dim font-mono">
-          © {new Date().getFullYear()} {SITE.name} — Tous droits réservés.
+          © {new Date().getFullYear()} {SITE.name} — Tous droits réservés. Fait avec précision.
         </p>
       </div>
     </div>

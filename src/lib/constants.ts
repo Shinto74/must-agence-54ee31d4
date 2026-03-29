@@ -246,32 +246,32 @@ export const SERVICES_ARTISTE = [
 export const SERVICES_ENTREPRISE = [
   {
     number: "01", title: "Influencer Marketing",
-    description: "Campagnes d'influence end-to-end pour marques. Sélection de créateurs, brief, production UGC et suivi.",
+    description: "Campagnes d'influence end-to-end pour marques. Sélection de créateurs, brief, production UGC et suivi des performances sur TikTok, Instagram et YouTube.",
     chips: ["Campagnes Influence", "Creator Selection", "UGC Strategy", "Performance Tracking"],
   },
   {
     number: "02", title: "Social Media Management",
-    description: "Community management expert et gestion d'image de marque sur tous les réseaux sociaux.",
+    description: "Community management expert et gestion d'image de marque. Présence cohérente, engageante et stratégique sur tous les réseaux sociaux.",
     chips: ["Community Management", "Planning éditorial", "Gestion d'Image", "Modération"],
   },
   {
     number: "03", title: "Production de Contenu",
-    description: "Photographes et vidéastes mobiles. Contenu lifestyle, institutionnel et brand content premium.",
+    description: "Photographes et vidéastes mobiles, déplacement sur site. Contenu lifestyle, institutionnel et brand content premium pour raconter votre histoire.",
     chips: ["Photo Sur Site", "Vidéo Corporate", "Lifestyle", "Brand Content"],
   },
   {
     number: "04", title: "Growth Marketing",
-    description: "SEO, Google Ads et Social Ads. Stratégie d'acquisition complète, optimisation de funnels.",
+    description: "SEO, Google Ads et Social Ads. Stratégie d'acquisition complète, optimisation de funnels et conversion. Chaque euro tracké et optimisé pour le ROI max.",
     chips: ["SEO", "Google Ads", "Social Ads", "Conversion Funnels"],
   },
   {
     number: "05", title: "Branding & Design",
-    description: "Logos, chartes graphiques complètes et interfaces UI/UX. Identités visuelles qui marquent.",
+    description: "Logos, chartes graphiques complètes et interfaces UI/UX. On crée des identités visuelles qui marquent les esprits et génèrent de la confiance.",
     chips: ["Logo", "Charte Graphique", "UI/UX Design", "Identité Visuelle"],
   },
   {
     number: "06", title: "E-Réputation",
-    description: "Protégez et renforcez votre image digitale. Gestion proactive des avis et veille concurrentielle.",
+    description: "Protégez et renforcez votre image digitale. Gestion proactive des avis, veille concurrentielle et stratégie de présence en ligne irréprochable.",
     chips: ["Gestion Avis", "Image Digitale", "Veille", "Réputation Online"],
   },
 ];
