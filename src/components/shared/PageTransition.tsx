@@ -20,8 +20,8 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
       setDisplayChildren(children);
       window.scrollTo(0, 0);
       setStage("slash-out");
-      setTimeout(() => setStage("idle"), 500);
-    }, 400);
+      setTimeout(() => setStage("idle"), 800);
+    }, 650);
   }, [children, location.pathname]);
 
   return (

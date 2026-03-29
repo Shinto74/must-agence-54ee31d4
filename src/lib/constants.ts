@@ -18,7 +18,7 @@ export const SITE = {
     ctaPrimary: "Démarrer un projet",
     ctaSecondary: "Découvrir nos pôles",
   },
-  marqueeWords: ["INFLUENCE", "STRATÉGIE", "MUSIQUE", "TIKTOK", "BRANDING", "VIRAL", "CAMPAGNES", "CRÉATEURS", "DIGITAL", "GROWTH"],
+  marqueeWords: ["MUSIQUE", "INFLUENCE", "MARKETING", "PRODUCTION", "ARTISTES", "MARQUES", "SOCIAL MEDIA", "BOOKING", "PLAYLISTING", "IDENTITÉ VISUELLE"],
   poles: {
     artiste: {
       tag: "Pôle Artiste",

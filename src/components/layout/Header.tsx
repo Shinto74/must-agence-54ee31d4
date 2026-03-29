@@ -33,10 +33,10 @@ const Header = () => {
       }`}
     >
       {/* Green diagonal corner */}
-      <div className="fixed top-0 left-0 z-[55] h-[320px] w-[118px] pointer-events-none overflow-hidden">
+      <div className="fixed top-0 left-0 z-[55] h-[200px] w-[80px] pointer-events-none">
         <div
           className="absolute inset-0 bg-primary"
-          style={{ clipPath: "polygon(0 0, 100% 0, 36% 100%, 0 100%)" }}
+          style={{ clipPath: "polygon(0 0, 100% 0, 30% 100%, 0 100%)" }}
         />
       </div>
 
