@@ -92,13 +92,13 @@ export const ARTIST_REFERENCES = {
     {
       name: "Urbain", slug: "urbain",
       artists: [
-        { name: "Zola", image: `${GH}/Artistes/Zola.jpg` },
-        { name: "Vegedream", image: `${GH}/Artistes/Vegedream.jpg` },
-        { name: "Franglish", image: `${GH}/Artistes/Franglish.jpg` },
-        { name: "Keblack", image: `${GH}/Artistes/Keblack.jpg` },
-        { name: "Ridsa", image: `${GH}/Artistes/Ridsa.jpg` },
-        { name: "Uzi", image: `${GH}/Artistes/Uzi.jpg` },
-        { name: "Bouss", image: `${GH}/Artistes/Bouss.jpg` },
+        { name: "Zola", image: `${GH}/artistes/zola.jpg` },
+        { name: "Vegedream", image: `${GH}/artistes/vegedream.jpg` },
+        { name: "Franglish", image: `${GH}/artistes/franglish.jpg` },
+        { name: "Keblack", image: `${GH}/artistes/keblack.jpg` },
+        { name: "Ridsa", image: `${GH}/artistes/ridsa.jpg` },
+        { name: "Uzi", image: `${GH}/artistes/uzi.jpg` },
+        { name: "Bouss", image: `${GH}/artistes/bouss.jpg` },
       ],
     },
     {
