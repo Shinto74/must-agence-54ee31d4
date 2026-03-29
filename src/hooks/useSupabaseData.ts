@@ -202,6 +202,10 @@ export function useQuoteSteps() {
           .map((o) => ({ label: o.label, icon: o.icon })),
       }));
     },
-    placeholderData: QUOTE_STEPS,
+    placeholderData: QUOTE_STEPS.map((s) => ({
+      ...s,
+      placeholder: s.placeholder || "",
+      options: s.options || [],
+    })),
   });
 }
