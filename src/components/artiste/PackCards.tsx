@@ -30,24 +30,24 @@ const PackCards = ({ packs }: PackCardsProps) => {
           Choisissez la formule <span className="text-primary">adaptée à votre ambition.</span>
         </h2>
 
-        {/* Mobile tabs */}
-        <div className="rv flex gap-1 mt-6 mb-8 md:hidden bg-surface rounded-lg p-1">
+        {/* Mobile tabs — fond gris, onglet actif = fond vert + texte noir */}
+        <div className="rv flex gap-0 mt-6 mb-8 md:hidden bg-surface rounded-xl overflow-hidden border border-border">
           {packs.map((pack, i) => (
             <button
               key={pack.number}
               onClick={() => setActiveTab(i)}
-              className={`flex-1 py-2.5 rounded-md font-mono text-xs uppercase tracking-wider transition-all duration-300 ${
+              className={`flex-1 py-3 font-mono text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 ${
                 activeTab === i
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground"
+                  ? "bg-primary text-primary-foreground font-medium"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {pack.number}
+              {pack.name}
             </button>
           ))}
         </div>
 
-        {/* Cards */}
+        {/* Desktop cards */}
         <div className="hidden md:grid md:grid-cols-3 gap-6 mt-10">
           {packs.map((pack) => (
             <PackCard key={pack.number} pack={pack} />

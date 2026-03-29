@@ -59,6 +59,15 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   };
   const handleMouseUp = () => { isDragging.current = false; };
 
+  // Touch handlers for mobile drag
+  const handleTouchStart = (e: React.TouchEvent) => { isDragging.current = true; startX.current = e.touches[0].pageX; };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    scrollRef.current.scrollLeft -= e.touches[0].pageX - startX.current;
+    startX.current = e.touches[0].pageX;
+  };
+  const handleTouchEnd = () => { isDragging.current = false; };
+
   return (
     <section ref={sectionRef} className="py-20">
       <div className="max-w-[1400px] mx-auto px-6 mb-8">
@@ -66,7 +75,9 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
         <h2 className="rv font-clash text-3xl md:text-4xl font-bold text-foreground">
           {ARTIST_REFERENCES.titleLine1} <br /><span className="text-primary">{ARTIST_REFERENCES.titleLine2}</span>
         </h2>
-        <div className="rv flex gap-2 mt-6">
+
+        {/* Category tabs - horizontal scroll on mobile, matching original site */}
+        <div className="rv flex gap-2 mt-6 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
           {cats.map((cat) => (
             <button
               key={cat.slug}
@@ -74,28 +85,37 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
                 setActiveSlug(cat.slug);
                 scrollRef.current?.querySelector(`[data-slug="${cat.slug}"]`)?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
               }}
-              className={`relative px-4 py-2 rounded-lg text-xs font-mono transition-all duration-300 border ${
-                activeSlug === cat.slug ? "border-primary/40 text-primary bg-primary/5" : "border-border text-muted-foreground hover:text-foreground"
+              className={`relative shrink-0 px-3 sm:px-4 py-2 rounded-lg text-[9px] sm:text-xs font-mono transition-all duration-300 border whitespace-nowrap ${
+                activeSlug === cat.slug
+                  ? "border-primary/40 text-primary bg-primary/5"
+                  : "border-border text-muted-foreground hover:text-foreground"
               }`}
             >
-              {activeSlug === cat.slug && <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-primary animate-tabPop" />}
+              {activeSlug === cat.slug && (
+                <span className="absolute top-1 right-1 sm:top-1.5 sm:right-1.5 w-1.5 h-1.5 rounded-full bg-primary animate-tabPop" />
+              )}
               {cat.name}
             </button>
           ))}
         </div>
       </div>
+
+      {/* Artist cards strip */}
       <div
-        ref={scrollRef} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}
-        className="flex gap-4 overflow-x-auto px-6 cursor-grab active:cursor-grabbing pb-4 scrollbar-hide" style={{ scrollbarWidth: "none" }}
+        ref={scrollRef}
+        onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}
+        className="flex gap-3 sm:gap-4 overflow-x-auto px-4 sm:px-6 cursor-grab active:cursor-grabbing pb-4 scrollbar-hide"
+        style={{ scrollbarWidth: "none" }}
       >
         {[...allArtists, ...allArtists].map((artist, i) => (
-          <div key={`${artist.name}-${i}`} data-slug={artist.slug} className="shrink-0 w-[200px] md:w-[240px] group">
+          <div key={`${artist.name}-${i}`} data-slug={artist.slug} className="shrink-0 w-[165px] sm:w-[200px] md:w-[240px] group">
             <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-border transition-all duration-[550ms] group-hover:border-primary/30 group-hover:shadow-[0_0_20px_hsl(var(--neon)/0.12)]">
               <img src={artist.image} alt={artist.name} className="w-full h-full object-cover grayscale transition-all duration-[550ms] group-hover:grayscale-0 group-hover:scale-[1.06]" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <p className="font-clash font-semibold text-foreground text-sm">{artist.name}</p>
-                <p className="font-mono text-[10px] text-primary uppercase tracking-wider">{artist.category}</p>
+              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                <p className="font-clash font-semibold text-foreground text-xs sm:text-sm">{artist.name}</p>
+                <p className="font-mono text-[9px] sm:text-[10px] text-primary uppercase tracking-wider">{artist.category}</p>
               </div>
             </div>
           </div>
