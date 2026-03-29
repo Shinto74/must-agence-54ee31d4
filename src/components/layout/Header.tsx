@@ -32,9 +32,12 @@ const Header = () => {
         scrolled ? "bg-background/90 backdrop-blur-md border-b border-border" : "bg-transparent"
       }`}
     >
-      {/* Green diagonal corner — large triangle matching reference */}
-      <div className="absolute top-0 left-0 pointer-events-none" style={{ width: '140px', height: '300px', overflow: 'hidden' }}>
-        <div className="absolute bg-primary" style={{ width: '400px', height: '400px', top: '-200px', left: '-200px', transform: 'rotate(65deg)', transformOrigin: 'bottom right' }} />
+      {/* Green diagonal corner */}
+      <div className="fixed top-0 left-0 z-[55] h-[320px] w-[118px] pointer-events-none overflow-hidden">
+        <div
+          className="absolute inset-0 bg-primary"
+          style={{ clipPath: "polygon(0 0, 100% 0, 36% 100%, 0 100%)" }}
+        />
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 flex items-center h-16 md:h-20">
