@@ -1,14 +1,55 @@
+import { useRef, useEffect, useState } from "react";
 import { SITE } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const Hero = () => {
   const ref = useScrollReveal();
+  const sectionRef = useRef<HTMLElement>(null);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const cx = (e.clientX / window.innerWidth - 0.5) * 2;
+      const cy = (e.clientY / window.innerHeight - 0.5) * 2;
+      setMouse({ x: cx, y: cy });
+    };
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   return (
-    <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-primary/10 blur-[120px] animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-primary/8 blur-[100px] animate-pulse" style={{ animationDelay: "1s" }} />
+    <section ref={(el) => {
+      (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
+    }} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Parallax Orbs */}
+      <div
+        className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-primary/10 blur-[120px] animate-orbFloat1"
+        style={{
+          transform: `translate(${mouse.x * -30}px, ${mouse.y * -20 + scrollY * 0.15}px)`,
+          transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      />
+      <div
+        className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-primary/8 blur-[100px] animate-orbFloat2"
+        style={{
+          transform: `translate(${mouse.x * 20}px, ${mouse.y * 25 + scrollY * 0.1}px)`,
+          transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      />
+      <div
+        className="absolute top-1/2 left-1/2 w-[200px] h-[200px] rounded-full bg-primary/5 blur-[80px] animate-orbFloat3"
+        style={{
+          transform: `translate(${mouse.x * 15 - 100}px, ${mouse.y * -15 + scrollY * 0.08 - 100}px)`,
+          transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      />
 
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
         <p className="rv font-mono text-xs uppercase tracking-[0.3em] text-primary mb-6">
