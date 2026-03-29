@@ -104,10 +104,10 @@ export const ARTIST_REFERENCES = {
     {
       name: "Pop / Variété", slug: "pop",
       artists: [
-        { name: "Santa", image: `${GH}/Artistes/Santa.jpg` },
-        { name: "Pierre Garnier", image: `${GH}/Artistes/Pierre%20garnier.jpg` },
-        { name: "Héléna Bailly", image: `${GH}/Artistes/H%C3%A9l%C3%A9na%20Bailly.jpg` },
-        { name: "Jeck", image: `${GH}/Artistes/Jeck.jpg` },
+        { name: "Santa", image: `${GH}/artistes/santa.jpg` },
+        { name: "Pierre Garnier", image: `${GH}/artistes/pierre-garnier.jpg` },
+        { name: "Héléna Bailly", image: `${GH}/artistes/helena-bailly.jpg` },
+        { name: "Jeck", image: `${GH}/artistes/jeck.jpg` },
       ],
     },
     {
