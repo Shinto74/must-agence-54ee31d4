@@ -53,7 +53,7 @@ const AnimatedNumber = ({ target, suffix }: { target: number; suffix: string }) 
 
 const StatsCounter = ({ items, accentColor = "neon" }: StatsCounterProps) => (
   <section className="py-20 px-6">
-    <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+    <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
       {items.map((item, i) => (
         <div key={i} className="text-center">
           <div className={accentColor === "white" ? "text-foreground" : ""}>
