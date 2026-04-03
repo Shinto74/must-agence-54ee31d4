@@ -4,15 +4,17 @@ import ExpertisePillars from "@/components/shared/ExpertisePillars";
 import ServiceCards from "@/components/shared/ServiceCards";
 import ProcessSteps from "@/components/shared/ProcessSteps";
 import StatsCounter from "@/components/home/StatsCounter";
+import CompanyReferences from "@/components/home/CompanyReferences";
 import CtaBand from "@/components/home/CtaBand";
 import ContactSection from "@/components/home/ContactSection";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
 import {
-  useStats, useExpertiseEntreprise, useServicesEntreprise, useProcessEntreprise,
+  useStats, useClients, useExpertiseEntreprise, useServicesEntreprise, useProcessEntreprise,
 } from "@/hooks/useSupabaseData";
 
 const Entreprise = () => {
   const { data: stats } = useStats("entreprise");
+  const { data: clients } = useClients();
   const { data: expertise } = useExpertiseEntreprise();
   const { data: services } = useServicesEntreprise();
   const { data: process } = useProcessEntreprise();
@@ -34,6 +36,7 @@ const Entreprise = () => {
       <ServiceCards services={services || []} accentColor="white" />
       <ProcessSteps steps={process || []} accentColor="white" />
       <StatsCounter items={stats || []} accentColor="white" />
+      <CompanyReferences categories={clients || []} />
       <CtaBand {...ENTREPRISE_PAGE.ctaBand} />
       <ContactSection
         heading={ENTREPRISE_PAGE.contact.heading}

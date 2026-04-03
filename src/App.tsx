@@ -9,7 +9,7 @@ import Footer from "@/components/layout/Footer";
 import CustomCursor from "@/components/shared/CustomCursor";
 import InitialLoader from "@/components/shared/InitialLoader";
 import PageTransition from "@/components/shared/PageTransition";
-import Index from "./pages/Index";
+import GatewayPage from "./pages/GatewayPage";
 import Artiste from "./pages/Artiste";
 import Entreprise from "./pages/Entreprise";
 import Admin from "./pages/Admin";
@@ -21,6 +21,7 @@ const queryClient = new QueryClient();
 const AnimatedRoutes = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isGateway = location.pathname === "/";
 
   if (isAdmin) {
     return (
@@ -31,10 +32,17 @@ const AnimatedRoutes = () => {
     );
   }
 
+  if (isGateway) {
+    return (
+      <Routes location={location}>
+        <Route path="/" element={<GatewayPage />} />
+      </Routes>
+    );
+  }
+
   return (
     <PageTransition>
       <Routes location={location}>
-        <Route path="/" element={<Index />} />
         <Route path="/artiste" element={<Artiste />} />
         <Route path="/entreprise" element={<Entreprise />} />
         <Route path="*" element={<NotFound />} />
@@ -46,15 +54,16 @@ const AnimatedRoutes = () => {
 const AppShell = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isGateway = location.pathname === "/";
 
   return (
     <>
-      {!isAdmin && <CustomCursor />}
-      {!isAdmin && <Header />}
-      <main className={isAdmin ? "" : "min-h-screen"}>
+      {!isAdmin && !isGateway && <CustomCursor />}
+      {!isAdmin && !isGateway && <Header />}
+      <main className={isAdmin ? "" : isGateway ? "" : "min-h-screen"}>
         <AnimatedRoutes />
       </main>
-      {!isAdmin && <Footer />}
+      {!isAdmin && !isGateway && <Footer />}
     </>
   );
 };
