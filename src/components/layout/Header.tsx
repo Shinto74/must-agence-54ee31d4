@@ -32,25 +32,32 @@ const Header = () => {
         scrolled ? "bg-background/90 backdrop-blur-md border-b border-border" : "bg-transparent"
       }`}
     >
-      {/* Green diagonal corner */}
-      <div className="fixed top-0 left-0 z-[55] h-[200px] w-[80px] pointer-events-none">
+      {/* Coin vert triangle — propre, limité à la hauteur du header */}
+      <div
+        className="absolute top-0 left-0 z-[55] pointer-events-none"
+        style={{ width: 56, height: 64, overflow: "hidden" }}
+      >
         <div
           className="absolute inset-0 bg-primary"
-          style={{ clipPath: "polygon(0 0, 100% 0, 30% 100%, 0 100%)" }}
+          style={{ clipPath: "polygon(0 0, 100% 0, 0 100%)" }}
         />
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 flex items-center h-16 md:h-20">
-        {/* Logo - left */}
-        <Link to="/" className="flex items-center gap-2 shrink-0 relative z-10">
+
+        {/* Logo + MUST AGENCE — même style que GatewayPage */}
+        <Link to="/" className="flex items-center gap-3 shrink-0 relative z-10 group">
           <img
             src={isArtiste ? SITE.logoWhite : SITE.logoGreen}
             alt={SITE.name}
             className="h-8 md:h-10 w-auto"
           />
+          <span className="font-clash font-bold text-lg md:text-xl tracking-tight text-white group-hover:text-primary transition-colors duration-300">
+            MUST AGENCE
+          </span>
         </Link>
 
-        {/* Desktop nav - centered */}
+        {/* Nav desktop centré */}
         <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
           {NAV_ITEMS.map((item) => (
             <Link
@@ -67,7 +74,7 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Mobile toggle - right */}
+        {/* Mobile toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden text-foreground p-2 ml-auto"
@@ -85,9 +92,7 @@ const Header = () => {
               key={item.path}
               to={item.path}
               className={`block py-3 font-mono text-sm uppercase tracking-wider transition-colors ${
-                location.pathname === item.path
-                  ? "text-primary"
-                  : "text-muted-foreground"
+                location.pathname === item.path ? "text-primary" : "text-muted-foreground"
               }`}
             >
               {item.label}

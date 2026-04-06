@@ -20,7 +20,6 @@ const SubHero = ({ logo, tag, titleLine1, titleAccent, description, ctaPrimary, 
       {isNeon && (
         <div className="absolute top-1/3 right-1/4 w-[300px] h-[300px] rounded-full bg-primary/8 blur-[100px]" />
       )}
-
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 py-20">
         <img src={logo} alt="Must Agence" className="rv h-10 w-auto mb-6" />
         <span className={`rv font-mono text-xs uppercase tracking-[0.2em] ${isNeon ? "text-primary" : "text-foreground/70"}`}>

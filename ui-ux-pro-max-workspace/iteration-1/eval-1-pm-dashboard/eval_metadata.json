@@ -1,0 +1,31 @@
+{
+  "eval_id": 1,
+  "eval_name": "saas-pm-dashboard-design",
+  "prompt": "I'm building a SaaS dashboard for project management in React. The target audience is remote teams in tech companies. We want something modern and professional. Generate a complete design system for this.",
+  "assertions": [
+    {
+      "name": "includes_color_palette",
+      "description": "Response includes a complete color palette with primary, secondary, accent, and semantic colors with hex codes"
+    },
+    {
+      "name": "includes_typography",
+      "description": "Response specifies typography system with font names, weights, and sizes for headings, body, and captions"
+    },
+    {
+      "name": "domain_specific_guidance",
+      "description": "Response includes PM-specific component guidance (task lists, dashboards, status indicators, etc.)"
+    },
+    {
+      "name": "includes_anti_patterns",
+      "description": "Response includes do's and don'ts or anti-patterns specific to project management tools"
+    },
+    {
+      "name": "framework_aware",
+      "description": "Response mentions React-specific implementation guidance or component patterns"
+    },
+    {
+      "name": "structured_output",
+      "description": "Response is organized with clear sections (overview, colors, typography, components, etc.)"
+    }
+  ]
+}

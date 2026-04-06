@@ -1,0 +1,31 @@
+{
+  "eval_id": 3,
+  "eval_name": "healthcare-saas-design-system",
+  "prompt": "Design a landing page and marketing site design system for a B2B SaaS healthcare analytics platform. The audience is hospital administrators and data analysts. Professional, trustworthy, medical-appropriate aesthetic. We'll use Next.js.",
+  "assertions": [
+    {
+      "name": "includes_color_palette",
+      "description": "Response includes professional, trust-building color palette appropriate for healthcare"
+    },
+    {
+      "name": "includes_typography",
+      "description": "Response specifies professional typography suitable for healthcare and data presentation"
+    },
+    {
+      "name": "healthcare_compliance_aware",
+      "description": "Response includes healthcare-specific design considerations (HIPAA, trust, security perception)"
+    },
+    {
+      "name": "b2b_professional_tone",
+      "description": "Design recommendations reflect B2B professional tone for hospital administrators"
+    },
+    {
+      "name": "includes_data_visualization",
+      "description": "Response includes chart/data visualization recommendations for analytics platform"
+    },
+    {
+      "name": "nextjs_aware",
+      "description": "Response mentions Next.js specific implementation guidance"
+    }
+  ]
+}

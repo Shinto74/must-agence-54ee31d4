@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { supabase } from "@/integrations/supabase/client";
 import { SITE } from "@/lib/constants";
+import { ChevronLeft, ChevronRight, Mic, Building2, Briefcase, DollarSign, TrendingUp, Gem, Rocket, Volume2, BarChart3, Palette, Handshake } from "lucide-react";
 
 interface QuoteOption {
   label: string;
@@ -18,9 +19,140 @@ interface QuoteStep {
 
 interface QuoteWizardProps {
   steps: QuoteStep[];
+  onSubmitComplete?: () => void;
 }
 
-const QuoteWizard = ({ steps }: QuoteWizardProps) => {
+/* ─── MAPPING ICONES PAR OPTION ─── */
+const getIconForOption = (label: string) => {
+  const iconMap: Record<string, any> = {
+    // Étape 1: Profil
+    "Artiste Indépendant": Mic,
+    "Label": Building2,
+    "Entreprise": Briefcase,
+    // Étape 3: Budget
+    "Moins de 1k€": DollarSign,
+    "1k€ – 3k€": TrendingUp,
+    "3k€ – 5k€": Gem,
+    "+5k€": Rocket,
+    // Étape 5: Attentes
+    "Notoriété": Volume2,
+    "Ventes": BarChart3,
+    "Image de marque": Palette,
+    "Accompagnement humain": Handshake,
+  };
+  return iconMap[label] || Briefcase;
+};
+
+/* ─── DATE PICKER CALENDAR ─── */
+const DatePickerCalendar = ({ value, onChange }: { value: string; onChange: (date: string) => void }) => {
+  const [currentDate, setCurrentDate] = useState(new Date(value || new Date()));
+  
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  
+  const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+  const dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+  
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startingDayOfWeek = (firstDay.getDay() + 6) % 7;
+  
+  const days = [];
+  for (let i = 0; i < startingDayOfWeek; i++) {
+    days.push(null);
+  }
+  for (let i = 1; i <= daysInMonth; i++) {
+    days.push(i);
+  }
+
+  const selectedDate = new Date(value || new Date());
+  const isSelectedMonth = selectedDate.getMonth() === month && selectedDate.getFullYear() === year;
+  const selectedDay = isSelectedMonth ? selectedDate.getDate() : null;
+
+  const handleDayClick = (day: number) => {
+    const newDate = new Date(year, month, day);
+    setCurrentDate(newDate);
+    const formatted = newDate.toISOString().split("T")[0];
+    onChange(formatted);
+  };
+
+  const prevMonth = () => {
+    setCurrentDate(new Date(year, month - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(year, month + 1, 1));
+  };
+
+  const today = new Date();
+  const isToday = (day: number) => {
+    return day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+  };
+
+  return (
+    <div className="w-full rounded-xl border border-border bg-surface p-6">
+      <div className="flex items-center justify-between mb-6">
+        <button
+          onClick={prevMonth}
+          className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
+        >
+          <ChevronLeft size={20} className="text-primary" />
+        </button>
+        <div className="text-center">
+          <p className="font-mono text-xs text-muted-foreground uppercase mb-1">Sélectionner une date</p>
+          <h3 className="font-clash text-xl font-bold text-primary">
+            {monthNames[month]} {year}
+          </h3>
+        </div>
+        <button
+          onClick={nextMonth}
+          className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
+        >
+          <ChevronRight size={20} className="text-primary" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-7 gap-2 mb-3">
+        {dayNames.map((day) => (
+          <div key={day} className="h-8 flex items-center justify-center text-xs font-mono text-muted-foreground">
+            {day}
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-7 gap-2">
+        {days.map((day, idx) => (
+          <button
+            key={idx}
+            onClick={() => day && handleDayClick(day)}
+            disabled={!day}
+            className={`h-10 rounded-lg font-medium text-sm transition-all duration-200 ${
+              !day
+                ? "invisible"
+                : selectedDay === day
+                ? "bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/30"
+                : isToday(day)
+                ? "border border-primary/40 text-primary hover:bg-primary/10"
+                : "border border-border/50 text-foreground hover:border-primary/50 hover:bg-primary/5"
+            }`}
+          >
+            {day}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-border/50">
+        <p className="text-xs text-muted-foreground mb-2">Date sélectionnée</p>
+        <p className="font-clash text-lg font-bold text-primary">
+          {selectedDay ? `${selectedDay} ${monthNames[month]} ${year}` : "Aucune date"}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const QuoteWizard = ({ steps, onSubmitComplete }: QuoteWizardProps) => {
   const ref = useScrollReveal();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, any>>({});
@@ -51,6 +183,9 @@ const QuoteWizard = ({ steps }: QuoteWizardProps) => {
 
     setSending(false);
     setDone(true);
+    if (onSubmitComplete) {
+      setTimeout(onSubmitComplete, 1500);
+    }
   };
 
   const next = () => {
@@ -116,15 +251,20 @@ const QuoteWizard = ({ steps }: QuoteWizardProps) => {
 
           {step.type === "radio" && step.options && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
-              {step.options.map((opt) => (
-                <button key={opt.label} onClick={() => setAnswer(opt.label)}
-                  className={`p-4 rounded-xl border text-left transition-all duration-300 ${
-                    answers[current] === opt.label ? "border-primary bg-primary/5 text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-light"
-                  }`}>
-                  <span className="text-2xl block mb-2">{opt.icon}</span>
-                  <span className="text-sm font-medium">{opt.label}</span>
-                </button>
-              ))}
+              {step.options.map((opt) => {
+                const IconComponent = getIconForOption(opt.label);
+                return (
+                  <button key={opt.label} onClick={() => setAnswer(opt.label)}
+                    className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
+                      answers[current] === opt.label 
+                        ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
+                        : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+                    }`}>
+                    <IconComponent size={24} className={`mb-2 ${answers[current] === opt.label ? "text-primary" : "text-muted-foreground"}`} />
+                    <span className="text-sm font-medium">{opt.label}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -134,21 +274,23 @@ const QuoteWizard = ({ steps }: QuoteWizardProps) => {
           )}
 
           {step.type === "date" && (
-            <input type="date" value={answers[current] || ""} onChange={(e) => setAnswer(e.target.value)}
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary/40" />
+            <DatePickerCalendar value={answers[current] || ""} onChange={(date) => setAnswer(date)} />
           )}
 
           {step.type === "checkbox" && step.options && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {step.options.map((opt) => {
+                const IconComponent = getIconForOption(opt.label);
                 const selected = (answers[current] || []) as string[];
                 const isSelected = selected.includes(opt.label);
                 return (
                   <button key={opt.label} onClick={() => setAnswer(isSelected ? selected.filter((s) => s !== opt.label) : [...selected, opt.label])}
-                    className={`p-4 rounded-xl border text-left transition-all duration-300 ${
-                      isSelected ? "border-primary bg-primary/5 text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-light"
+                    className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
+                      isSelected 
+                        ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
+                        : "border-border bg-surface text-muted-foreground hover:border-primary/40"
                     }`}>
-                    <span className="text-2xl block mb-2">{opt.icon}</span>
+                    <IconComponent size={24} className={`mb-2 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
                     <span className="text-sm font-medium">{opt.label}</span>
                   </button>
                 );

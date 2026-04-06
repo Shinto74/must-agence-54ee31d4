@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { Music, Megaphone, Palette, ListMusic, Zap, Users, PenTool, Newspaper, Search, Target, MessageCircle, Youtube, Info, X, BarChart3, Lightbulb, Rocket, TrendingUp, Network } from "lucide-react";
+import { Music, Megaphone, Palette, ListMusic, Zap, Users, PenTool, Newspaper, Search, Target, MessageCircle, Youtube, Info, X, Lightbulb, Handshake, CheckCircle, Link2, Zap as ZapIcon, Search as SearchIcon } from "lucide-react";
 import QuoteWizard from "@/components/artiste/QuoteWizard";
 
 interface Pack {
@@ -23,15 +23,6 @@ interface PackCardsProps {
 }
 
 const getFeatureIcon = (feature: string) => {
-  // Pack 4 icones
-  if (feature.startsWith("Diagnostic Complet")) return BarChart3;
-  if (feature.startsWith("Stratégie Propriétaire")) return Lightbulb;
-  if (feature.startsWith("Exécution Full-Stack")) return Rocket;
-  if (feature.startsWith("Creative Direction")) return Palette;
-  if (feature.startsWith("Reporting & Analytics")) return TrendingUp;
-  if (feature.startsWith("Accès VIP War Room")) return Users;
-  if (feature.startsWith("Réseau Partenaires")) return Network;
-  // Pack 1-3 icones
   if (feature.startsWith("Promotion Playlisting") || feature.startsWith("Playlisting")) return Music;
   if (feature.startsWith("Pitch")) return Target;
   if (feature.startsWith("Ads") || feature.includes("« Pop-up »")) return Megaphone;
@@ -62,15 +53,6 @@ const TOOLTIPS: Record<string, Record<string, string>> = {
     "Relations Presse & Médias": "Campagne RP complète pendant 1 mois : pitches auprès de radios nationales, blogs spécialisés, magazines digitaux. Interviews et couverture presse pour asseoir votre légitimité.",
     "Ads Domination": "Teasers en rotation continue sur Meta (Facebook/Instagram), TikTok et Google avec redirection intelligente. Stratégie multi-plateforme synchronisée pour dominer le feed de votre audience cible.",
     "SEO Musique": "Référencement naturel optimisé sur toutes les plateformes de streaming (Spotify, Apple Music, YouTube Music). Bonnes catégories, métadonnées et algorithmes — trouvé naturellement sans dépenser en ads.",
-  },
-  "Pack 4": {
-    "Diagnostic Complet (Deep Dive)": "Audit de votre marché, analyse concurrents, identification opportunités cachées. On plonge dans les données, on détecte les gaps, on bâtit sur vos forces.",
-    "Stratégie Propriétaire": "Zéro off-the-shelf. Plan conçu 100% pour vous, itéré avec vous. Pas de template, juste votre solution unique.",
-    "Exécution Full-Stack": "De la playlisting curée à l'influence seeding, en passant par Meta/Google/TikTok Ads synchronisés. Tous les leviers activés en harmonie.",
-    "Creative Direction Personnalisée": "Visuel, narrative, storytelling — construire votre légende. Identité cohérente sur tous les fronts.",
-    "Reporting & Analytics Temps Réel": "Dashboard propriétaire, insights hebdomadaires, pivot strategy quand nécessaire. Transparence totale, décisions data-driven.",
-    "Accès VIP War Room": "Réunions bi-hebdomadaires, escalade rapide, décisions en 48h. Vous êtes dans notre équipe, pas juste un client.",
-    "Réseau Partenaires Déverrouillé": "Booking haut de gamme, collaborations marques premium, opportunités business. Portes ouvertes sur l'écosystème Must Agence.",
   },
 };
 
@@ -157,7 +139,7 @@ const TheArtistBonus = ({ text }: { text: string }) => (
 );
 
 /* ─── PACK CARD ─── */
-const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistText: string; onOpenQuote?: () => void }) => {
+const PackCard = ({ pack, theartistText }: { pack: Pack; theartistText: string }) => {
   const packTooltips = TOOLTIPS[pack.number] || {};
 
   // Matching: trouve le tooltip dont la feature commence par la clé
@@ -168,8 +150,6 @@ const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistT
     return undefined;
   };
 
-  const isQuotePack = pack.number === "Pack 4";
-
   return (
     <div
       className={`relative rounded-2xl p-6 md:p-8 transition-all duration-500 hover:-translate-y-1.5 group/pack flex flex-col ${
@@ -177,10 +157,14 @@ const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistT
           ? "border-2 border-primary bg-gradient-to-b from-primary/5 to-surface hover:shadow-[0_0_50px_hsl(var(--neon)/0.25),0_0_100px_hsl(var(--neon)/0.1)]"
           : "border border-border bg-surface hover:border-primary/30 hover:shadow-[0_0_30px_hsl(var(--neon)/0.12),0_0_60px_hsl(var(--neon)/0.06)]"
       }`}
-      style={{ backgroundImage: pack.featured ? "radial-gradient(ellipse at top, hsl(73 100% 50% / 0.08), transparent 60%)" : undefined }}
+      style={{
+        backgroundImage: pack.featured
+          ? "radial-gradient(ellipse at top, hsl(73 100% 50% / 0.08), transparent 60%)"
+          : undefined,
+      }}
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
-        e.currentTarget.style.backgroundImage = `radial-gradient(circle at ${e.clientX - rect.left}px ${e.clientY - rect.top}px, hsl(73 100% 50% / ${pack.featured ? "0.1" : "0.06"}), transparent 60%)`;
+        e.currentTarget.style.backgroundImage = `radial-gradient(circle at ${e.clientX - rect.left}px ${e.clientY - rect.top}px, hsl(73 100% 50% / ${pack.featured ? '0.1' : '0.06'}), transparent 60%)`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.backgroundImage = pack.featured
@@ -206,23 +190,15 @@ const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistT
       </ul>
       <TheArtistBonus text={theartistText} />
       <p className="text-[11px] text-muted-foreground italic mb-6">{pack.reassurance}</p>
-      {isQuotePack && onOpenQuote ? (
-        <button onClick={onOpenQuote}
-          className="block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 border border-border text-foreground hover:border-primary/40 hover:text-primary"
-        >
-          Obtenir un devis
-        </button>
-      ) : (
-        <a href="#contact"
-          className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
-            pack.featured
-              ? "bg-primary text-primary-foreground hover:brightness-110"
-              : "border border-border text-foreground hover:border-primary/40 hover:text-primary"
-          }`}
-        >
-          Nous contacter
-        </a>
-      )}
+      <a href="#contact"
+        className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
+          pack.featured
+            ? "bg-primary text-primary-foreground hover:brightness-110"
+            : "border border-border text-foreground hover:border-primary/40 hover:text-primary"
+        }`}
+      >
+        Nous contacter
+      </a>
     </div>
   );
 };
@@ -248,12 +224,22 @@ const DevisPersonnaliseCard = ({ onOpen }: { onOpen: () => void }) => (
       <span className="font-clash text-4xl font-bold text-primary">Sur devis</span>
     </div>
     <ul className="space-y-2.5 mb-6 flex-1">
-      {["Audit stratégique complet", "Plan 100% sur mesure", "Accompagnement dédié", "Résultats garantis", "Support prioritaire illimité", "Intégration des partenaires"].map((f, i) => (
-        <li key={i} className="flex items-start gap-2.5 text-sm text-foreground/90">
-          <Zap size={15} className="text-primary mt-0.5 shrink-0" />
-          {f}
-        </li>
-      ))}
+      {[
+        { icon: SearchIcon, text: "Audit stratégique complet" },
+        { icon: Lightbulb, text: "Plan 100% sur mesure" },
+        { icon: Handshake, text: "Accompagnement dédié" },
+        { icon: CheckCircle, text: "Résultats garantis" },
+        { icon: ZapIcon, text: "Support prioritaire illimité" },
+        { icon: Link2, text: "Intégration des partenaires" }
+      ].map((item, i) => {
+        const IconComponent = item.icon;
+        return (
+          <li key={i} className="flex items-start gap-2.5 text-sm text-foreground/90">
+            <IconComponent size={15} className="text-primary mt-0.5 shrink-0" />
+            {item.text}
+          </li>
+        );
+      })}
     </ul>
     <TheArtistBonus text="2 ans TheArtiste offert" />
     <p className="text-[11px] text-muted-foreground italic mb-6">Stratégie bâtie pour vos objectifs spécifiques</p>
@@ -274,12 +260,6 @@ const QuoteModal = ({ steps, onClose }: { steps: any[]; onClose: () => void }) =
         <X size={24} />
       </button>
       <div className="p-6 md:p-8">
-        <div className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">Devis sur mesure</p>
-          <h2 className="font-clash text-3xl font-bold text-foreground">
-            Construisons votre <span className="text-primary">stratégie</span> ensemble.
-          </h2>
-        </div>
         <QuoteWizard steps={steps} onSubmitComplete={onClose} />
       </div>
     </div>
@@ -296,7 +276,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
   const [activeTab, setActiveTab] = useState(0);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
 
-  const theartistTexts = ["3 mois TheArtist offert", "6 mois TheArtist offert", "1 an TheArtist offert", "2 ans TheArtist offert"];
+  const theartistTexts = ["3 mois TheArtiste offert", "6 mois TheArtiste offert", "1 an TheArtiste offert"];
 
   return (
     <>
@@ -308,7 +288,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
           </h2>
 
           {/* Mobile tabs */}
-          <div className="rv flex gap-0 mt-6 mb-8 md:hidden bg-surface rounded-xl overflow-hidden border border-border flex-wrap">
+          <div className="rv flex gap-0 mt-6 mb-8 md:hidden bg-surface rounded-xl overflow-hidden border border-border">
             {packs.map((pack, i) => (
               <button key={pack.number} onClick={() => setActiveTab(i)}
                 className={`flex-1 py-3 font-mono text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 ${
@@ -317,18 +297,28 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
                 {pack.name}
               </button>
             ))}
+            <button onClick={() => setActiveTab(packs.length)}
+              className={`flex-1 py-3 font-mono text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 ${
+                activeTab === packs.length ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:text-foreground"
+              }`}>
+              Devis
+            </button>
           </div>
 
           {/* Desktop */}
           <div className="hidden md:grid md:grid-cols-4 gap-6 mt-10">
             {packs.map((pack, idx) => (
-              <PackCard key={pack.number} pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
+              <PackCard key={pack.number} pack={pack} theartistText={theartistTexts[idx] || "TheArtiste offert"} />
             ))}
+            <DevisPersonnaliseCard onOpen={() => setShowQuoteModal(true)} />
           </div>
 
           {/* Mobile */}
           <div className="md:hidden animate-fadeSlide" key={activeTab}>
-            <PackCard pack={packs[activeTab]} theartistText={theartistTexts[activeTab] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
+            {activeTab < packs.length
+              ? <PackCard pack={packs[activeTab]} theartistText={theartistTexts[activeTab] || "TheArtiste offert"} />
+              : <DevisPersonnaliseCard onOpen={() => setShowQuoteModal(true)} />
+            }
           </div>
         </div>
       </section>

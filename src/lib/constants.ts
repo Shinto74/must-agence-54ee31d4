@@ -48,40 +48,9 @@ export const SITE = {
   contact: {
     email: "contact@mustagence.com",
     phone: "+33 6 00 00 00 00",
-    whatsappUrl: "https://wa.me/33600000000",
     location: "Paris, France",
-    heading: "Parlons de votre projet.",
-    text: "L'algorithme n'attend pas. Vous non plus.",
-    subtext: "Artiste, label, marque ou agence – décrivez votre ambition. On revient vers vous en 24h.",
+    whatsappUrl: "https://wa.me/33600000000",
   },
-};
-
-export const TEAM = [
-  { name: "Marving D.", initials: "MD", role: "Fondateur & CEO", description: "Fondateur visionnaire. De la musique au digital, il a bâti l'agence à partir de rien." },
-  { name: "Sofia L.", initials: "SL", role: "Directrice Artistique", description: "Créative obsessionnelle. Direction artistique, clips, identités visuelles." },
-  { name: "Maxime C.", initials: "MC", role: "Head of Growth", description: "Architecte de croissance. SEO, Ads, funnels – il optimise chaque euro." },
-  { name: "Nina D.", initials: "ND", role: "Social Media Lead", description: "Reine des tendances sociales. Contenus viraux, stratégie TikTok." },
-];
-
-export const STATS = {
-  home: [
-    { value: "500", label: "Vues générées", suffix: "M+" },
-    { value: "400", label: "Campagnes TikTok", suffix: "+" },
-    { value: "28", label: "Singles d'Or", suffix: "" },
-    { value: "5", label: "Singles Diamant", suffix: "" },
-  ],
-  artiste: [
-    { value: "50", label: "Artistes accompagnés", suffix: "+" },
-    { value: "400", label: "Campagnes lancées", suffix: "+" },
-    { value: "500", label: "Vues générées", suffix: "M" },
-    { value: "28", label: "Singles d'Or", suffix: "" },
-  ],
-  entreprise: [
-    { value: "100", label: "Clients entreprises", suffix: "+" },
-    { value: "8", label: "ROAS moyen", suffix: "x" },
-    { value: "45", label: "Réduction CPA", suffix: "%" },
-    { value: "98", label: "Renouvellement", suffix: "%" },
-  ],
 };
 
 export const ARTIST_REFERENCES = {
@@ -124,6 +93,60 @@ export const ARTIST_REFERENCES = {
       ],
     },
   ],
+};
+
+export const ARTIST_DETAILS: Record<string, {
+  strategie: string;
+  description: string;
+  plateformes: string[];
+  chiffre?: string;
+}> = {
+  "Zola": {
+    strategie: "Ingénierie Média & Visibilité",
+    description: "Élaboration et pilotage de stratégies média en synergie avec les relations presse. Croissance via YouTube Ads ciblées pour maximiser l'impact des sorties.",
+    plateformes: ["YouTube", "Spotify", "Presse"],
+  },
+  "Vegedream": {
+    strategie: "Stratégie Marketing 360°",
+    description: "Déploiement d'un écosystème promotionnel complet. Activation multi-plateformes et gestion budgétaire publicitaire pour une domination digitale totale.",
+    plateformes: ["YouTube", "Spotify", "TikTok", "Instagram"],
+  },
+  "Ridsa": {
+    strategie: "Direction Artistique & Lancement Album",
+    description: "Conception de l'identité visuelle pour deux albums studios. Orchestration de la stratégie de sortie 360° incluant marketing opérationnel et campagnes d'acquisition.",
+    plateformes: ["Spotify", "Instagram", "YouTube"],
+  },
+  "Benny Adam": {
+    strategie: "Développement Artiste & Viral",
+    description: "Accompagnement stratégique en amont du succès viral. Stratégie organique TikTok/IG, campagnes RP Radio/TV et déploiement publicitaire intensif.",
+    chiffre: "+20M streams",
+    plateformes: ["TikTok", "Instagram", "Spotify", "YouTube"],
+  },
+  "Diamond Platnumz": {
+    strategie: "Export & Rayonnement International",
+    description: "Pitch éditorial pour intégration dans les playlists majeures françaises. Campagnes TV et relations presse à l'échelle internationale.",
+    plateformes: ["Spotify", "YouTube", "Presse"],
+  },
+  "Beéle": {
+    strategie: "Export & Rayonnement International",
+    description: "Pitch éditorial pour intégration dans les playlists majeures françaises. Campagnes TV et relations presse à l'échelle internationale.",
+    plateformes: ["Spotify", "YouTube", "Presse"],
+  },
+  "Keblack": {
+    strategie: "Optimisation Stream & Performance",
+    description: "Spécialisation Playlist Game sur 2 mois. Maîtrise des outils publicitaires YouTube Ads, Spotify Ads et TikTok pour entrée en charts et rétention audience.",
+    plateformes: ["Spotify", "YouTube", "TikTok"],
+  },
+  "Uzi": {
+    strategie: "Optimisation Stream & Performance",
+    description: "Spécialisation Playlist Game sur 2 mois. Maîtrise des outils publicitaires YouTube Ads, Spotify Ads et TikTok pour entrée en charts et rétention audience.",
+    plateformes: ["Spotify", "YouTube", "TikTok"],
+  },
+  "Bouss": {
+    strategie: "Optimisation Stream & Performance",
+    description: "Spécialisation Playlist Game sur 2 mois. Maîtrise des outils publicitaires YouTube Ads, Spotify Ads et TikTok pour entrée en charts et rétention audience.",
+    plateformes: ["Spotify", "YouTube", "TikTok"],
+  },
 };
 
 export const COMPANY_REFERENCES = {
@@ -174,152 +197,54 @@ export const PACKS = [
     number: "Pack 1", name: "L'Essentiel", subtitle: "La base solide pour un lancement réussi et une visibilité ciblée",
     price: "350€", priceSuffix: "HT", featured: false, badge: "",
     features: [
-      "Promotion Playlisting (1 mois) : Placement sur Spotify, Deezer, Apple Music (Niches précises, trafic qualifié)",
-      "Ads « Pop-up » Multi-plateformes : Promotion d'un teaser (Google, Meta, TikTok) avec lien de redirection direct",
-      "DA & Stratégie Social Media : Planning éditorial personnalisé pour optimiser votre feed et l'algorithme",
+      "Promotion Playlisting (1 mois)",
+      "Ads « Pop-up » Multi-plateformes",
+      "DA & Stratégie Social Media",
     ],
-    bonus: "1 mois d'abonnement The Artiste offert",
+    bonus: "3 mois TheArtist offert",
     reassurance: "Un interlocuteur dédié vous accompagne de A à Z pour garantir la cohérence de votre lancement",
   },
   {
     number: "Pack 2", name: "L'Ascension", subtitle: "Une force de frappe supérieure pour transformer votre titre en succès",
     price: "550€", priceSuffix: "HT", featured: true, badge: "Recommandé",
     features: [
-      "Playlisting Étendu : Campagne massive auprès d'un réseau élargi de curateurs et playlists majeures",
-      "Double Impact Publicitaire : Promotion de 2 teasers publicitaires pour une visibilité omniprésente",
-      "Community Management (1 mois) : Un CM dédié s'immerge dans votre projet pour animer et engager votre communauté",
-      "Content Design : Création de visuels de résultats (Stats playlists, certifications, caps franchis)",
+      "Playlisting Étendu",
+      "Double Impact Publicitaire",
+      "Community Management (1 mois)",
+      "Content Design",
     ],
-    bonus: "2 mois d'abonnement The Artiste offert",
+    bonus: "6 mois TheArtist offert",
     reassurance: "Plus qu'une prestation, un véritable partenariat : votre équipe vit votre projet à vos côtés pour maximiser chaque opportunité",
   },
   {
     number: "Pack 3", name: "L'Explosion", subtitle: "La stratégie All-Inclusive pour installer votre carrière sur le long terme",
     price: "1 500€", priceSuffix: "HT", featured: false, badge: "",
     features: [
-      "Pitch Éditorial : Optimisation complète pour le Focus Track (Entrée en playlists officielles)",
-      "Playlisting Long Terme : Campagne poussée et suivie sur 3 mois consécutifs",
-      "YouTube & Google Ads : Campagne publicitaire ultra-ciblée sur votre Clip Officiel",
-      "Accompagnement VIP : 2 mois de Community Management avec groupe WhatsApp personnalisé",
-      "Relations Presse & Médias : Campagne RP (Radios / Blogs / Médias) pendant 1 mois",
-      "Ads Domination : Teasers en rotation continue sur Meta, TikTok et Google avec redirection intelligente",
-      "SEO Musique : Référencement naturel optimisé sur toutes les plateformes de streaming",
+      "Pitch Éditorial",
+      "Playlisting Long Terme",
+      "YouTube & Google Ads",
+      "Accompagnement VIP",
+      "Relations Presse & Médias",
+      "Ads Domination",
+      "SEO Musique",
     ],
-    bonus: "3 mois d'abonnement The Artiste offert",
+    bonus: "1 an TheArtist offert",
     reassurance: "Une War Room digitale à votre service : nous pilotons votre succès en temps réel avec une expertise 360°",
   },
-];
-
-export const SERVICES_ARTISTE = [
   {
-    number: "01", title: "Influence & TikTok Activation",
-    description: "Campagnes d'influence sur-mesure avec notre réseau exclusif de créateurs TikTok, Instagram Reels et YouTube Shorts. On seed votre son, on crée le buzz organique, on génère les vues qui comptent.",
-    chips: ["TikTok Activation", "Creator Network", "Sound Seeding", "Viral Engineering"],
-  },
-  {
-    number: "02", title: "Création Visuelle",
-    description: "Pochettes d'album, clips musicaux, visuels Instagram et contenus lifestyle premium.",
-    chips: ["Pochettes", "Clips", "Visuels", "Lifestyle"],
-  },
-  {
-    number: "03", title: "Stratégie de Lancement",
-    description: "Chaque sortie est un événement. Teasing multi-plateforme, rollout marketing calibré, montée en puissance et suivi post-sortie. Singles ou albums, on orchestre l'impact.",
-    chips: ["Rollout", "Teasing", "Release Strategy", "Multi-plateforme"],
-  },
-  {
-    number: "04", title: "Campagnes Ads & RP",
-    description: "Ads haute performance sur Meta, Google, TikTok et Snapchat. Chaque euro investi est tracké et optimisé. Relations presse pour amplifier la portée médiatique.",
-    chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Relations Presse"],
-  },
-  {
-    number: "05", title: "Brand Content & Storytelling",
-    description: "Construire une image iconique, raconter une histoire authentique. Stratégie de contenu, identité d'artiste et construction de marque long terme.",
-    chips: ["Storytelling", "Brand Content", "Identité", "Long Terme"],
-  },
-  {
-    number: "06", title: "Booking & Partenariats",
-    description: "On connecte les artistes aux marques. Collaborations stratégiques, placements produits, événements et opportunités business pour monétiser l'influence.",
-    chips: ["Booking", "Partenariats", "Placements", "Événements"],
-  },
-];
-
-export const SERVICES_ENTREPRISE = [
-  {
-    number: "01", title: "Influencer Marketing",
-    description: "Campagnes d'influence end-to-end pour marques. Sélection de créateurs, brief, production UGC et suivi des performances sur TikTok, Instagram et YouTube.",
-    chips: ["Campagnes Influence", "Creator Selection", "UGC Strategy", "Performance Tracking"],
-  },
-  {
-    number: "02", title: "Social Media Management",
-    description: "Community management expert et gestion d'image de marque. Présence cohérente, engageante et stratégique sur tous les réseaux sociaux.",
-    chips: ["Community Management", "Planning éditorial", "Gestion d'Image", "Modération"],
-  },
-  {
-    number: "03", title: "Production de Contenu",
-    description: "Photographes et vidéastes mobiles, déplacement sur site. Contenu lifestyle, institutionnel et brand content premium pour raconter votre histoire.",
-    chips: ["Photo Sur Site", "Vidéo Corporate", "Lifestyle", "Brand Content"],
-  },
-  {
-    number: "04", title: "Growth Marketing",
-    description: "SEO, Google Ads et Social Ads. Stratégie d'acquisition complète, optimisation de funnels et conversion. Chaque euro tracké et optimisé pour le ROI max.",
-    chips: ["SEO", "Google Ads", "Social Ads", "Conversion Funnels"],
-  },
-  {
-    number: "05", title: "Branding & Design",
-    description: "Logos, chartes graphiques complètes et interfaces UI/UX. On crée des identités visuelles qui marquent les esprits et génèrent de la confiance.",
-    chips: ["Logo", "Charte Graphique", "UI/UX Design", "Identité Visuelle"],
-  },
-  {
-    number: "06", title: "E-Réputation",
-    description: "Protégez et renforcez votre image digitale. Gestion proactive des avis, veille concurrentielle et stratégie de présence en ligne irréprochable.",
-    chips: ["Gestion Avis", "Image Digitale", "Veille", "Réputation Online"],
-  },
-];
-
-export const EXPERTISE_ARTISTE = [
-  { number: "01", title: "Viral Engineering", text: "L'algorithme n'est pas une loterie, c'est une science. On capture l'attention là où elle est la plus chère. On ne cherche pas juste des vues, on crée de l'obsession." },
-  { number: "02", title: "Icon Architecture", text: "On ne gère pas des carrières, on bâtit des dynasties. Branding, direction artistique, positionnement : on transforme des personnalités en actifs intouchables." },
-  { number: "03", title: "Monetization", text: "La hype sans revenus ne sert à rien. On convertit l'influence en business model pérenne. Funnels, produits, partenariats : on maximise chaque pixel." },
-];
-
-export const EXPERTISE_ENTREPRISE = [
-  { number: "01", title: "Influence Marketing", text: "Campagnes d'influence end-to-end. Sélection de créateurs, brief créatif, production et suivi des KPIs. On connecte votre marque aux bonnes audiences." },
-  { number: "02", title: "Growth Hacking", text: "Testing, itération et optimisation de vos funnels d'acquisition. SEO, SEA, Social Ads – on maximise le retour sur chaque investissement." },
-  { number: "03", title: "Brand Identity", text: "Positionnement, messaging et identité visuelle pour l'ère digitale. On crée des marques qui résonnent et convertissent." },
-];
-
-export const PROCESS_ARTISTE = [
-  { number: "01", title: "Brief & Audit", text: "Analyse de votre univers, audience, objectifs et potentiel viral." },
-  { number: "02", title: "Stratégie", text: "Plan sur mesure, sélection créateurs, budgets et KPIs." },
-  { number: "03", title: "Activation", text: "Lancement campagnes, seeding, production et diffusion." },
-  { number: "04", title: "Reporting", text: "Analytics temps réel, Shazam lifts, streaming impact." },
-];
-
-export const PROCESS_ENTREPRISE = [
-  { number: "01", title: "Audit Digital", text: "Analyse complète de votre présence, concurrents et opportunités marché." },
-  { number: "02", title: "Stratégie Data-Driven", text: "Plan chiffré, objectifs SMART, KPIs clairs et budgets optimisés." },
-  { number: "03", title: "Déploiement", text: "Lancement campagnes, production contenu, activation de tous les canaux." },
-  { number: "04", title: "Reporting & Scale", text: "Dashboards temps réel, optimisation continue et stratégie de scale." },
-];
-
-export const PORTFOLIO = [
-  {
-    icon: "🎵", tag: "Artiste – TikTok Activation",
-    title: "Lancement Single – Artiste Urban FR",
-    description: "Campagne d'influence TikTok, 50+ créateurs activés, teasing viral et Ads multi-plateforme.",
-    metrics: [{ value: "5M+", label: "Vues" }, { value: "+340%", label: "Streams" }, { value: "12x", label: "ROAS" }],
-  },
-  {
-    icon: "🏷️", tag: "Brand – Influence Campaign",
-    title: "Campagne Influence – Marque Mode",
-    description: "Stratégie d'influence Instagram & TikTok avec 30 créateurs pour lancement nouvelle collection.",
-    metrics: [{ value: "+180%", label: "CA en 6 mois" }, { value: "-45%", label: "CPA" }, { value: "8.5x", label: "ROAS" }],
-  },
-  {
-    icon: "⭐", tag: "Artiste – Brand Building",
-    title: "Repositionnement – Artiste Pop",
-    description: "Refonte storytelling, DA complète, contenus lifestyle et partenariats marques stratégiques.",
-    metrics: [{ value: "3", label: "Deals marques" }, { value: "+500%", label: "Engagement" }, { value: "Top 10", label: "Charts FR" }],
+    number: "Pack 4", name: "Devis sur mesure", subtitle: "Votre vision mérite une stratégie sans limite, construite entièrement pour vous.",
+    price: "Sur devis", priceSuffix: "", featured: false, badge: "Personnalisé",
+    features: [
+      "Diagnostic Complet (Deep Dive)",
+      "Stratégie Propriétaire",
+      "Exécution Full-Stack",
+      "Creative Direction Personnalisée",
+      "Reporting & Analytics Temps Réel",
+      "Accès VIP War Room",
+      "Réseau Partenaires Déverrouillé",
+    ],
+    bonus: "2 ans TheArtist offert",
+    reassurance: "Aucun devis standard. Juste votre solution, sur mesure.",
   },
 ];
 
@@ -368,7 +293,14 @@ export const ARTISTE_PAGE = {
     ctaPrimary: "Démarrer mon projet",
     ctaSecondary: "Nos services",
   },
-  marqueeWords: ["TIKTOK", "INFLUENCE", "CLIPS", "POCHETTES", "SOUND SEEDING", "RP", "BOOKING", "STORYTELLING", "ROLLOUT", "VIRAL"],
+  marqueeWords: ["SPOTIFY", "TIKTOK", "YOUTUBE", "UNIVERSAL MUSIC", "THE ARTIST"],
+  marqueeLogos: [
+    { name: "SPOTIFY", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" },
+    { name: "TIKTOK", logoUrl: "https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" },
+    { name: "YOUTUBE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" },
+    { name: "UNIVERSAL MUSIC", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg" },
+    { name: "THE ARTIST", logoUrl: "https://raw.githubusercontent.com/Shinto74/IMAGES/5cd68f68ab87bf75e69b4962ee444f69d4620d7f/theartist.png", label: "THEARTIST" },
+  ],
   ctaBand: {
     title: "Prêt à propulser votre carrière ?",
     subtitle: "On transforme votre talent en marque.",
@@ -378,12 +310,8 @@ export const ARTISTE_PAGE = {
     heading: "Parlons de votre musique.",
     text: "Votre talent mérite une stratégie.",
     subtext: "Single, album, clip, campagne TikTok ou repositionnement – décrivez votre projet. On revient vers vous en 24h.",
-    email: "artiste@mustagence.com",
-    formOptions: ["Campagne TikTok / Influence", "Lancement single/album", "Clip musical", "Branding complet", "Autre"],
-  },
-  customOffer: {
-    text: "Vous avez un projet hors-norme ou des besoins spécifiques pour votre entreprise ? Nous construisons votre stratégie à la carte.",
-    button: "Demander un devis personnalisé",
+    email: "contact@mustagence.com",
+    formOptions: ["Single", "Album", "Clip", "Campagne TikTok", "Autre"],
   },
 };
 
@@ -392,21 +320,37 @@ export const ENTREPRISE_PAGE = {
     tag: "Pôle Entreprise",
     titleLine1: "Corporate &",
     titleAccent: "Business",
-    description: "Marketing d'influence, growth hacking, social media et production de contenu premium. Approche 100% ROIste et data-driven pour des résultats mesurables et une croissance durable.",
+    description: "Marketing d'influence, growth hacking, social media et production de contenu premium. Approche 100% ROIste.",
     ctaPrimary: "Démarrer mon projet",
     ctaSecondary: "Nos services",
   },
-  marqueeWords: ["INFLUENCE", "SOCIAL MEDIA", "GROWTH", "BRANDING", "CONTENU", "E-RÉPUTATION", "SEO", "GOOGLE ADS", "UGC"],
+  marqueeWords: ["TIKTOK", "INSTAGRAM", "YOUTUBE", "GROWTH", "INFLUENCE"],
+  marqueeLogos: [
+    { name: "TIKTOK", logoUrl: "https://www.logo.wine/a/logo/TikTok/TikTok-Logo.wine.svg" },
+    { name: "INSTAGRAM", logoUrl: "https://www.logo.wine/a/logo/Instagram/Instagram-Logo.wine.svg" },
+    { name: "YOUTUBE", logoUrl: "https://www.logo.wine/a/logo/YouTube/YouTube-Logo.wine.svg" },
+  ],
   ctaBand: {
-    title: "Prêt à accélérer votre croissance ?",
-    subtitle: "On transforme votre budget en machine à résultats.",
-    button: "Lancer mon projet",
+    title: "Prêt à booster votre entreprise ?",
+    subtitle: "On transforme votre marque en leader d'influence.",
+    button: "Nous contacter",
   },
   contact: {
-    heading: "Parlons business.",
-    text: "Votre marque mérite de la performance.",
-    subtext: "Détaillez vos objectifs. On revient avec une stratégie sur mesure en 24h.",
-    email: "business@mustagence.com",
-    formOptions: ["Influencer Marketing", "Social Media", "Production Contenu", "Growth / SEO / Ads", "Branding & Design", "E-Réputation"],
+    heading: "Parlons de votre marque.",
+    text: "Votre entreprise mérite une stratégie digitale puissante.",
+    subtext: "Campagne influenceurs, social media, contenu premium – décrivez vos objectifs. On revient vers vous en 24h.",
+    email: "contact@mustagence.com",
+    formOptions: ["Influence Marketing", "Social Media", "Contenu Premium", "Growth Hacking", "Autre"],
   },
 };
+
+// Minimal exports to prevent import errors
+export const TEAM: any[] = [];
+export const STATS: any = { home: [], artiste: [], entreprise: [] };
+export const SERVICES_ARTISTE: any[] = [];
+export const SERVICES_ENTREPRISE: any[] = [];
+export const EXPERTISE_ARTISTE: any[] = [];
+export const EXPERTISE_ENTREPRISE: any[] = [];
+export const PROCESS_ARTISTE: any[] = [];
+export const PROCESS_ENTREPRISE: any[] = [];
+export const PORTFOLIO: any[] = [];

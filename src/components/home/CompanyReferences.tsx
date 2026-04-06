@@ -13,9 +13,9 @@ const LogoMarquee = ({ clients, direction }: { clients: { name: string; logo: st
         {tripled.map((c, i) => (
           <div key={`${c.name}-${i}`} className="flex items-center gap-3 shrink-0 group cursor-default">
             {c.logo && (
-              <img src={c.logo} alt={c.name} className="h-8 w-auto grayscale opacity-40 transition-all duration-[400ms] group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.08]" loading="lazy" />
+              <img src={c.logo} alt={c.name} className="h-8 w-auto grayscale opacity-40 transition-all duration-400 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.08]" loading="lazy" />
             )}
-            <span className="font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-[400ms]">{c.name}</span>
+            <span className="font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-400">{c.name}</span>
           </div>
         ))}
       </div>

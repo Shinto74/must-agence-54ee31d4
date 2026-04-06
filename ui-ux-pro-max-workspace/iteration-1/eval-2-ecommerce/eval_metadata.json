@@ -1,0 +1,31 @@
+{
+  "eval_id": 2,
+  "eval_name": "mobile-ecommerce-design-system",
+  "prompt": "I need a design system for a mobile-first e-commerce app (iOS and Android). The product is a sustainable fashion marketplace targeting young adults aged 18-35. We want something bold, colorful, and eco-conscious feeling. Target frameworks: React Native or Flutter.",
+  "assertions": [
+    {
+      "name": "includes_color_palette",
+      "description": "Response includes a complete color palette with vibrant/eco-conscious colors and hex codes"
+    },
+    {
+      "name": "includes_typography",
+      "description": "Response specifies typography system optimized for mobile displays"
+    },
+    {
+      "name": "ecommerce_specific",
+      "description": "Response includes e-commerce-specific guidance (product cards, shopping flows, reviews, etc.)"
+    },
+    {
+      "name": "mobile_framework_aware",
+      "description": "Response mentions React Native or Flutter specific guidance"
+    },
+    {
+      "name": "target_audience_alignment",
+      "description": "Response reflects understanding of target audience (young adults, sustainability-conscious)"
+    },
+    {
+      "name": "sustainability_reflection",
+      "description": "Design recommendations reflect eco-conscious/sustainable aesthetic"
+    }
+  ]
+}
