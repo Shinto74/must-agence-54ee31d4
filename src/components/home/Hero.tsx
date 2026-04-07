@@ -111,7 +111,7 @@ const Hero = () => {
               <span>GENCE</span>
             </motion.div>
             <h1
-              className="font-clash font-black text-foreground leading-[0.92] mt-2 text-center whitespace-nowrap"
+              className="font-clash font-black text-foreground leading-[0.92] mt-0 text-center whitespace-nowrap"
               style={{
                 fontSize: "clamp(1.1rem, 3.8vw, 4.5rem)",
                 letterSpacing: "0.04em",
