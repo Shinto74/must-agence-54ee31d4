@@ -143,23 +143,58 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
           <span className="text-primary">{ARTIST_REFERENCES.titleLine2}</span>
         </h2>
  
-        <div className="rv mt-8 flex justify-center gap-3 sm:gap-4">
-          {cats.map((cat) => (
-            <button
-              key={cat.slug}
-              onClick={() => scrollToCategory(cat.slug)}
-              className={`relative min-w-[110px] border px-6 py-4 text-center font-mono text-[11px] uppercase tracking-[0.22em] transition-all duration-300 sm:min-w-[220px] sm:px-8 sm:py-4 sm:text-sm ${
-                activeSlug === cat.slug
-                  ? "border-primary bg-primary/5 text-primary shadow-[0_0_0_1px_hsl(var(--primary))]"
-                  : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
-              }`}
-            >
-              {cat.name}
-              {activeSlug === cat.slug && (
-                <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" />
-              )}
-            </button>
-          ))}
+        <div className="rv mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
+          {cats.map((cat) => {
+            const isActive = activeSlug === cat.slug;
+            return (
+              <button
+                key={cat.slug}
+                onClick={() => scrollToCategory(cat.slug)}
+                className="relative overflow-hidden rounded-full font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-400 sm:text-[11px]"
+                style={{
+                  padding: "12px 28px",
+                  border: isActive
+                    ? "1px solid hsl(73 100% 50%)"
+                    : "1px solid hsla(0,0%,100%,0.1)",
+                  background: isActive
+                    ? "hsla(73,100%,50%,0.08)"
+                    : "hsla(0,0%,100%,0.03)",
+                  color: isActive
+                    ? "hsl(73 100% 50%)"
+                    : "hsla(0,0%,100%,0.5)",
+                  boxShadow: isActive
+                    ? "0 0 20px hsl(73 100% 50% / 0.15), inset 0 0 12px hsl(73 100% 50% / 0.05)"
+                    : "none",
+                  backdropFilter: "blur(8px)",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.borderColor = "hsla(73,100%,50%,0.4)";
+                    (e.currentTarget as HTMLElement).style.color = "hsla(0,0%,100%,0.85)";
+                    (e.currentTarget as HTMLElement).style.background = "hsla(0,0%,100%,0.06)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.borderColor = "hsla(0,0%,100%,0.1)";
+                    (e.currentTarget as HTMLElement).style.color = "hsla(0,0%,100%,0.5)";
+                    (e.currentTarget as HTMLElement).style.background = "hsla(0,0%,100%,0.03)";
+                  }
+                }}
+              >
+                {cat.name}
+                {isActive && (
+                  <span
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full"
+                    style={{
+                      background: "hsl(73 100% 50%)",
+                      boxShadow: "0 0 8px hsl(73 100% 50% / 0.6)",
+                    }}
+                  />
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
  
