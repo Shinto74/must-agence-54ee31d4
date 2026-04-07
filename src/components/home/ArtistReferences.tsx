@@ -25,6 +25,7 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   const [activeSlug, setActiveSlug] = useState(cats[0]?.slug || "");
   const rafRef = useRef<number>(0);
   const isDragging = useRef(false);
+  const didDrag = useRef(false);
   const startX = useRef(0);
   const pauseAutoScrollUntil = useRef(0);
 
