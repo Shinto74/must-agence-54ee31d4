@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TeamMember {
   name: string;
@@ -20,30 +21,10 @@ const IMAGES = [
 ];
 
 const FALLBACK: TeamMember[] = [
-  {
-    name: "Alexandre Martin",
-    initials: "AM",
-    role: "Creative Director",
-    description: "Architecte de la vision, gardien de l'âme créative de chaque projet.",
-  },
-  {
-    name: "Sofia Benali",
-    initials: "SB",
-    role: "Stratège Digital",
-    description: "Elle transforme les données brutes en stratégies qui marquent durablement.",
-  },
-  {
-    name: "Karim Daoudi",
-    initials: "KD",
-    role: "Head of Production",
-    description: "Le maestro derrière chaque contenu qui performe et qui émeut.",
-  },
-  {
-    name: "Léa Rousseau",
-    initials: "LR",
-    role: "Brand Designer",
-    description: "Elle habille les marques d'identités visuelles inoubliables.",
-  },
+  { name: "Alexandre Martin", initials: "AM", role: "Creative Director", description: "Architecte de la vision, gardien de l'âme créative de chaque projet." },
+  { name: "Sofia Benali", initials: "SB", role: "Stratège Digital", description: "Elle transforme les données brutes en stratégies qui marquent durablement." },
+  { name: "Karim Daoudi", initials: "KD", role: "Head of Production", description: "Le maestro derrière chaque contenu qui performe et qui émeut." },
+  { name: "Léa Rousseau", initials: "LR", role: "Brand Designer", description: "Elle habille les marques d'identités visuelles inoubliables." },
 ];
 
 function useScrollIndex(ref: React.RefObject<HTMLDivElement>, count: number) {
@@ -64,158 +45,177 @@ function useScrollIndex(ref: React.RefObject<HTMLDivElement>, count: number) {
   return index;
 }
 
+const contentVariants = {
+  enter: { opacity: 0, y: 40 },
+  center: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const, staggerChildren: 0.08 } },
+  exit: { opacity: 0, y: -30, transition: { duration: 0.3 } },
+};
+
+const childVariants = {
+  enter: { opacity: 0, y: 20 },
+  center: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } },
+  exit: { opacity: 0, y: -15 },
+};
+
+const imageVariants = {
+  enter: { opacity: 0, scale: 1.08, filter: "grayscale(100%) brightness(0.4)" },
+  center: { opacity: 1, scale: 1, filter: "grayscale(100%) contrast(1.15) brightness(0.85)", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
+  exit: { opacity: 0, scale: 0.95, transition: { duration: 0.3 } },
+};
+
 const V4Split = ({ data, label }: { data: TeamMember[]; label: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const i = useScrollIndex(ref, data.length);
   const m = data[i];
   const img = m.image_url || IMAGES[i % IMAGES.length];
 
+  const firstName = m.name.split(" ")[0];
+  const lastName = m.name.split(" ").slice(1).join(" ");
+
   return (
     <div ref={ref} style={{ height: `${data.length * 100}vh` }}>
-      {/* Label */}
-      <div className="py-3 px-8 bg-surface border-t border-border/30 flex items-center gap-4 sticky top-0 z-50">
-        <span className="font-clash text-sm font-bold text-foreground">{label}</span>
-      </div>
+      <div className="sticky top-0 overflow-hidden bg-background" style={{ height: "100vh" }}>
 
-      {/* Sticky container with flip animation */}
-      <div
-        key={`team-${i}`}
-        className="sticky overflow-hidden bg-background"
-        style={{
-          top: "4vh",
-          height: "88vh",
-          animation: "sectionFlip 400ms cubic-bezier(.16,1,.3,1) both",
-        }}
-      >
-        {/* Center vertical line */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border/20 z-10" />
+        {/* Section label */}
+        <div className="absolute top-0 left-0 right-0 z-30 px-8 pt-6">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-primary" style={{ boxShadow: "0 0 8px hsl(73 100% 50% / 0.5)" }} />
+            <span className="font-mono text-[9px] tracking-[.4em] uppercase text-primary/70">{label}</span>
+          </div>
+        </div>
 
         <div className="flex h-full">
-          {/* Left: Editorial text */}
-          <div className="w-1/2 h-full flex flex-col justify-center items-start pl-20 pr-10 relative overflow-hidden">
-            {/* Atmospheric neon halo */}
+          {/* LEFT — Text editorial */}
+          <div className="w-1/2 h-full flex flex-col justify-center pl-16 lg:pl-20 pr-10 relative overflow-hidden">
+            {/* Ambient glow */}
             <div
-              className="absolute pointer-events-none inset-0"
-              style={{
-                background: "radial-gradient(ellipse 70% 60% at 20% 80%, hsl(var(--neon) / 0.10) 0%, hsl(var(--neon) / 0.03) 45%, transparent 70%)",
-              }}
-            />
-            <div
-              className="absolute pointer-events-none inset-0"
-              style={{
-                background: "radial-gradient(ellipse 45% 40% at 55% 30%, hsl(var(--neon) / 0.05) 0%, transparent 65%)",
-              }}
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "radial-gradient(ellipse 60% 50% at 15% 75%, hsl(73 100% 50% / 0.07) 0%, transparent 65%)" }}
             />
 
-            <div className="relative z-10 w-full">
-              {/* Name - editorial: first name white / last name neon stroke */}
-              <div className="mb-6">
-                <h2
-                  className="font-clash font-black text-foreground block"
-                  style={{ fontSize: "clamp(2.8rem, 4.6vw, 6rem)", lineHeight: 0.9, letterSpacing: "-0.025em" }}
-                >
-                  {m.name.split(" ")[0]}
-                </h2>
-                {m.name.split(" ")[1] && (
-                  <h2
-                    className="font-clash font-black block"
-                    style={{
-                      fontSize: "clamp(2.8rem, 4.6vw, 6rem)",
-                      lineHeight: 0.9,
-                      letterSpacing: "-0.025em",
-                      color: "transparent",
-                      WebkitTextStroke: "1.5px hsl(var(--neon))",
-                    }}
-                  >
-                    {m.name.split(" ")[1]}
-                  </h2>
-                )}
-              </div>
-
-              {/* Role with accent line */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-6 h-px bg-primary" />
-                <p className="font-mono text-[9px] tracking-[.5em] uppercase text-primary font-medium">
-                  {m.role}
-                </p>
-              </div>
-
-              {/* Separator */}
-              <div className="w-full h-px mb-8 bg-gradient-to-r from-border/30 to-transparent" />
-
-              {/* Editorial quote */}
-              <p
-                className="font-outfit italic text-foreground/55 leading-[1.9] mb-10"
-                style={{ fontSize: "15px", maxWidth: "320px" }}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={i}
+                variants={contentVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="relative z-10"
               >
-                &ldquo;{m.description}&rdquo;
-              </p>
+                {/* Name */}
+                <motion.div variants={childVariants} className="mb-5">
+                  <h2
+                    className="font-clash font-black text-foreground"
+                    style={{ fontSize: "clamp(3rem, 5vw, 6.5rem)", lineHeight: 0.9, letterSpacing: "-0.03em" }}
+                  >
+                    {firstName}
+                  </h2>
+                  {lastName && (
+                    <h2
+                      className="font-clash font-black"
+                      style={{
+                        fontSize: "clamp(3rem, 5vw, 6.5rem)",
+                        lineHeight: 0.9,
+                        letterSpacing: "-0.03em",
+                        color: "transparent",
+                        WebkitTextStroke: "1.5px hsl(73 100% 50%)",
+                      }}
+                    >
+                      {lastName}
+                    </h2>
+                  )}
+                </motion.div>
 
-              {/* Progress bar */}
-              <div className="flex items-center gap-2 mb-8">
-                {data.map((_, idx) => (
-                  <div
-                    key={idx}
-                    className="h-[2px] rounded-full transition-all duration-700"
-                    style={{
-                      width: idx === i ? 40 : 8,
-                      background: idx === i ? "hsl(var(--neon))" : "hsl(var(--border))",
-                    }}
-                  />
-                ))}
-              </div>
+                {/* Role */}
+                <motion.div variants={childVariants} className="flex items-center gap-3 mb-8">
+                  <div className="w-8 h-px bg-primary" />
+                  <p className="font-mono text-[10px] tracking-[.4em] uppercase text-primary font-semibold">
+                    {m.role}
+                  </p>
+                </motion.div>
 
-              <p className="font-mono text-[7px] tracking-[.6em] uppercase text-muted-foreground/40">
-                SCROLL ↓
-              </p>
-            </div>
+                {/* Separator */}
+                <motion.div variants={childVariants} className="w-full h-px mb-8 bg-gradient-to-r from-border/40 to-transparent" />
+
+                {/* Description */}
+                <motion.p
+                  variants={childVariants}
+                  className="font-outfit italic text-foreground/50 leading-[1.8] mb-10"
+                  style={{ fontSize: 15, maxWidth: 340 }}
+                >
+                  &ldquo;{m.description}&rdquo;
+                </motion.p>
+
+                {/* Progress */}
+                <motion.div variants={childVariants} className="flex items-center gap-2 mb-4">
+                  {data.map((_, idx) => (
+                    <motion.div
+                      key={idx}
+                      animate={{
+                        width: idx === i ? 36 : 6,
+                        background: idx === i ? "hsl(73 100% 50%)" : "hsla(0,0%,100%,0.12)",
+                      }}
+                      transition={{ duration: 0.35 }}
+                      className="h-[2px] rounded-full"
+                      style={{ boxShadow: idx === i ? "0 0 8px hsl(73 100% 50% / 0.3)" : "none" }}
+                    />
+                  ))}
+                </motion.div>
+
+                <motion.p variants={childVariants} className="font-mono text-[7px] tracking-[.6em] uppercase text-muted-foreground/30">
+                  scroll ↓
+                </motion.p>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
-          {/* Right: Portrait */}
+          {/* RIGHT — Portrait */}
           <div className="w-1/2 h-full relative overflow-hidden flex items-center justify-center">
-            <div className="relative flex-shrink-0" style={{ width: "380px", height: "520px" }}>
-              <img
-                src={img}
-                alt={m.name}
-                className="absolute inset-0 w-full h-full object-cover object-top"
-                style={{
-                  filter: "grayscale(100%) contrast(1.2) brightness(0.8)",
-                }}
-              />
-              {/* Fade edges into background */}
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, hsl(var(--background)) 0%, transparent 20%)" }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 40%)" }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 20%)" }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to left, hsl(var(--background) / 0.4) 0%, transparent 25%)" }} />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={i}
+                variants={imageVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="relative"
+                style={{ width: "min(420px, 85%)", height: "min(580px, 80vh)" }}
+              >
+                <img
+                  src={img}
+                  alt={m.name}
+                  className="absolute inset-0 w-full h-full object-cover object-top rounded-sm"
+                />
+                {/* Edge fades */}
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to right, hsl(var(--background)) 0%, transparent 25%)" }} />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 35%)" }} />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 15%)" }} />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to left, hsl(var(--background) / 0.3) 0%, transparent 20%)" }} />
+
+                {/* Neon accent bottom line */}
+                <div
+                  className="absolute bottom-0 left-[15%] right-[15%] h-[1px]"
+                  style={{ background: "linear-gradient(to right, transparent, hsl(73 100% 50% / 0.3), transparent)" }}
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Member counter */}
+            <div className="absolute bottom-8 right-8 z-10">
+              <span className="font-mono text-[10px] tracking-[.3em] text-muted-foreground/30">
+                {String(i + 1).padStart(2, "0")} / {String(data.length).padStart(2, "0")}
+              </span>
             </div>
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes sectionFlip {
-          from {
-            opacity: 0;
-            transform: perspective(900px) rotateX(-35deg) translateY(80px);
-          }
-          to {
-            opacity: 1;
-            transform: perspective(900px) rotateX(0deg) translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 };
 
 const Team = ({ members }: TeamProps) => {
   const data = members && members.length > 0 ? members : FALLBACK;
-
-  return (
-    <div>
-      <V4Split data={data} label="L'équipe" />
-    </div>
-  );
+  return <V4Split data={data} label="L'équipe" />;
 };
 
 export default Team;
