@@ -330,8 +330,8 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
                 initial={{ opacity: 0, rotateY: -90, scale: 0.85 }}
                 animate={gridInView ? { opacity: 1, rotateY: 0, scale: 1 } : {}}
                 transition={{
-                  duration: 0.7,
-                  delay: idx * 0.2,
+                  duration: 1.2,
+                  delay: idx * 0.45,
                   ease: [0.16, 1, 0.3, 1] as const,
                 }}
                 style={{ transformOrigin: "left center", transformStyle: "preserve-3d" }}
