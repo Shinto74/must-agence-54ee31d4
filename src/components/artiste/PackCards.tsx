@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { motion, useInView } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Music, Megaphone, Palette, ListMusic, Zap, Users, PenTool, Newspaper, Search, Target, MessageCircle, Youtube, Info, X, BarChart3, Lightbulb, Rocket, TrendingUp, Network } from "lucide-react";
 import QuoteWizard from "@/components/artiste/QuoteWizard";
@@ -295,6 +296,8 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
   const ref = useScrollReveal();
   const [activeTab, setActiveTab] = useState(0);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const gridInView = useInView(gridRef, { once: true, margin: "-80px" });
 
   const theartistTexts = ["3 mois TheArtist offert", "6 mois TheArtist offert", "1 an TheArtist offert", "2 ans TheArtist offert"];
 
@@ -319,17 +322,34 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
             ))}
           </div>
 
-          {/* Desktop */}
-          <div className="hidden md:grid md:grid-cols-4 gap-6 mt-10">
+          {/* Desktop — staggered reveal */}
+          <div ref={gridRef} className="hidden md:grid md:grid-cols-4 gap-6 mt-10">
             {packs.map((pack, idx) => (
-              <PackCard key={pack.number} pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
+              <motion.div
+                key={pack.number}
+                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                animate={gridInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                transition={{
+                  duration: 0.6,
+                  delay: idx * 0.12,
+                  ease: [0.16, 1, 0.3, 1] as const,
+                }}
+              >
+                <PackCard pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
+              </motion.div>
             ))}
           </div>
 
           {/* Mobile */}
-          <div className="md:hidden animate-fadeSlide" key={activeTab}>
+          <motion.div
+            className="md:hidden"
+            key={activeTab}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+          >
             <PackCard pack={packs[activeTab]} theartistText={theartistTexts[activeTab] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
-          </div>
+          </motion.div>
         </div>
       </section>
 
