@@ -51,8 +51,8 @@ const Hero = () => {
           className="absolute inset-0 z-[1]"
           style={{
             background: `
-              linear-gradient(to bottom, rgba(7,7,7,0.65) 0%, rgba(7,7,7,0.35) 40%, rgba(7,7,7,0.5) 60%, rgba(7,7,7,0.92) 100%),
-              radial-gradient(ellipse 50% 50% at 50% 50%, transparent 0%, rgba(7,7,7,0.4) 100%)
+              linear-gradient(to bottom, rgba(7,7,7,0.45) 0%, rgba(7,7,7,0.18) 40%, rgba(7,7,7,0.3) 60%, rgba(7,7,7,0.85) 100%),
+              radial-gradient(ellipse 50% 50% at 50% 50%, transparent 0%, rgba(7,7,7,0.2) 100%)
             `,
           }}
         />
