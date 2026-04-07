@@ -7,20 +7,27 @@
 
 @layer base {
   :root {
+    /* ── Charte Graphique Mustagence v1.0 ── */
+    /* Background: #0A0A0A */
     --bg: 0 0% 4%;
+    /* Surface / Cards: #141414 */
     --sf: 0 0% 8%;
     --sf2: 0 0% 10%;
+    /* Borders */
     --bd: 0 0% 12%;
     --bdl: 0 0% 16.5%;
+    /* Neon Green: #CCFF00 */
     --neon: 73 100% 50%;
     --neon2: 75 100% 50%;
     --ng: 73 100% 50%;
     --ngs: 73 100% 50%;
+    /* Text hierarchy */
     --wh: 0 0% 100%;
     --mi: 0 0% 63%;
     --sm: 0 0% 40%;
     --dm: 0 0% 20%;
 
+    /* ── Semantic tokens (shadcn) ── */
     --background: 0 0% 4%;
     --foreground: 0 0% 100%;
     --card: 0 0% 8%;
@@ -42,6 +49,7 @@
     --ring: 73 100% 50%;
     --radius: 0.5rem;
 
+    /* Sidebar */
     --sidebar-background: 0 0% 6%;
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 73 100% 50%;
@@ -51,7 +59,12 @@
     --sidebar-border: 0 0% 12%;
     --sidebar-ring: 73 100% 50%;
 
+    /* ── Motion ── */
     --ez: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* ── Card hover (charte: translateY(-3px) + border-top gradient + box-shadow) ── */
+    --card-hover-shadow: 0 8px 30px -10px hsl(var(--neon) / 0.12), 0 0 60px hsl(var(--neon) / 0.06);
+    --card-hover-shadow-strong: 0 8px 30px -10px hsl(var(--neon) / 0.25), 0 0 80px hsl(var(--neon) / 0.1);
   }
 }
 
