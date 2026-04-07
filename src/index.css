@@ -8,14 +8,14 @@
 @layer base {
   :root {
     /* ── Charte Graphique Mustagence v1.0 ── */
-    /* Background: #0F0F0F */
-    --bg: 0 0% 6%;
-    /* Surface / Cards: #1A1A1A */
-    --sf: 0 0% 10%;
-    --sf2: 0 0% 13%;
+    /* Background: #141414 */
+    --bg: 0 0% 8%;
+    /* Surface / Cards: #1F1F1F */
+    --sf: 0 0% 12%;
+    --sf2: 0 0% 15%;
     /* Borders */
-    --bd: 0 0% 15%;
-    --bdl: 0 0% 20%;
+    --bd: 0 0% 18%;
+    --bdl: 0 0% 23%;
     /* Neon Green: #CCFF00 */
     --neon: 73 100% 50%;
     --neon2: 75 100% 50%;
@@ -28,24 +28,24 @@
     --dm: 0 0% 20%;
 
     /* ── Semantic tokens (shadcn) ── */
-    --background: 0 0% 6%;
+    --background: 0 0% 8%;
     --foreground: 0 0% 100%;
-    --card: 0 0% 10%;
+    --card: 0 0% 12%;
     --card-foreground: 0 0% 100%;
-    --popover: 0 0% 10%;
+    --popover: 0 0% 12%;
     --popover-foreground: 0 0% 100%;
     --primary: 73 100% 50%;
     --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 13%;
+    --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 15%;
+    --muted: 0 0% 18%;
     --muted-foreground: 0 0% 63%;
-    --accent: 0 0% 13%;
+    --accent: 0 0% 15%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
     --ring: 73 100% 50%;
     --radius: 0.5rem;
 
