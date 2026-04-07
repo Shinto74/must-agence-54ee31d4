@@ -116,15 +116,15 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           background: rgba(var(--brand-color), 0.06);
         }
 
-        /* All logos: grayscale + dim by default, color on hover */
+        /* All logos: white/grey by default, brand color on hover */
         .mq-logo--colored {
           height: 52px;
           max-width: 180px;
           width: auto;
           object-fit: contain;
-          filter: grayscale(1) brightness(0.7);
-          opacity: 0.4;
-          transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease, drop-shadow 0.4s ease;
+          filter: brightness(0) invert(1);
+          opacity: 0.5;
+          transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
           display: block;
         }
 
