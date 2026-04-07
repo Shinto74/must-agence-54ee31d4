@@ -218,7 +218,7 @@ const ArtisteServicesV4B = () => {
 
       {/* Conteneur sticky — reste visible pendant tout le scroll */}
       <div
-        className="sticky top-0 overflow-hidden bg-[#070707]"
+        className="sticky top-0 overflow-hidden bg-background"
         style={{ height: "100vh" }}
       >
         {/* Header superposé */}
