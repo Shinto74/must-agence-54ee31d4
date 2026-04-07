@@ -322,18 +322,19 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
             ))}
           </div>
 
-          {/* Desktop — staggered reveal */}
-          <div ref={gridRef} className="hidden md:grid md:grid-cols-4 gap-6 mt-10">
+          {/* Desktop — flip 3D reveal one by one */}
+          <div ref={gridRef} className="hidden md:grid md:grid-cols-4 gap-6 mt-10" style={{ perspective: "1200px" }}>
             {packs.map((pack, idx) => (
               <motion.div
                 key={pack.number}
-                initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                animate={gridInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                initial={{ opacity: 0, rotateY: -90, scale: 0.85 }}
+                animate={gridInView ? { opacity: 1, rotateY: 0, scale: 1 } : {}}
                 transition={{
-                  duration: 0.6,
-                  delay: idx * 0.12,
+                  duration: 0.7,
+                  delay: idx * 0.2,
                   ease: [0.16, 1, 0.3, 1] as const,
                 }}
+                style={{ transformOrigin: "left center", transformStyle: "preserve-3d" }}
               >
                 <PackCard pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
               </motion.div>
