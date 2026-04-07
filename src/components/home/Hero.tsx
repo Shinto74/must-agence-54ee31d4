@@ -110,7 +110,7 @@ const Hero = () => {
             <div
               className="font-clash font-black leading-[0.85] text-center flex items-center justify-center"
               style={{
-                fontSize: "clamp(3rem, 10vw, 9rem)",
+                fontSize: "clamp(2rem, 6vw, 5.5rem)",
                 letterSpacing: "-0.02em",
               }}
             >
