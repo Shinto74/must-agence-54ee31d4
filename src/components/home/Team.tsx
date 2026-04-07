@@ -67,7 +67,7 @@ const Team = ({ members }: TeamProps) => {
               src={img}
               alt={m.name}
               className="w-full h-full object-cover object-top"
-              style={{ filter: "grayscale(1) contrast(1.1) brightness(0.35)" }}
+              style={{ filter: "grayscale(1) contrast(1.1) brightness(0.35)", transform: "scale(0.55)" }}
             />
           </motion.div>
         </AnimatePresence>
