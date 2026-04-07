@@ -86,37 +86,45 @@ const Hero = () => {
             <div className="w-8 h-px bg-primary/50" />
           </motion.div>
 
-          {/* Title — MUST AGENCE in stroke, rest in white */}
-          <motion.h1
+          {/* Title — AGENCE MUST in stroke, then main title */}
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="font-clash font-black leading-[0.9] mb-6"
-            style={{ fontSize: "clamp(2.8rem, 7vw, 7.5rem)", letterSpacing: "-0.03em" }}
+            className="mb-6"
           >
             <span
+              className="font-clash font-black block leading-[0.95]"
               style={{
+                fontSize: "clamp(2rem, 5vw, 4.5rem)",
+                letterSpacing: "0.08em",
                 color: "transparent",
                 WebkitTextStroke: "2px hsl(73 100% 50%)",
-                display: "block",
                 filter: "drop-shadow(0 0 30px hsl(73 100% 50% / 0.15))",
               }}
             >
-              MUST AGENCE
+              AGENCE MUST
             </span>
-            <span className="text-foreground block mt-1">
-              {SITE.hero.titleLine1}
-            </span>
-            <span
-              className="block"
+            <h1
+              className="font-clash font-black text-foreground leading-[0.92] mt-2"
               style={{
-                color: "hsl(73 100% 50%)",
-                textShadow: "0 0 40px hsl(73 100% 50% / 0.2)",
+                fontSize: "clamp(3.2rem, 9vw, 9rem)",
+                letterSpacing: "-0.03em",
+                textShadow: "0 4px 60px hsla(0,0%,0%,0.5)",
               }}
             >
-              {SITE.hero.titleAccent}
-            </span>
-          </motion.h1>
+              {SITE.hero.titleLine1}
+              <br />
+              <span
+                style={{
+                  color: "hsl(73 100% 50%)",
+                  textShadow: "0 0 50px hsl(73 100% 50% / 0.25)",
+                }}
+              >
+                {SITE.hero.titleAccent}
+              </span>
+            </h1>
+          </motion.div>
 
           {/* Subtitle */}
           <motion.p
