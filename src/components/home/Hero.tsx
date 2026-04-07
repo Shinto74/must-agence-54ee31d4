@@ -1,20 +1,12 @@
 import { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { SITE } from "@/lib/constants";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-/*
-  VIDÉOS DISPONIBLES — changez VIDEO_URL pour tester :
-
-  A (actuelle) — Vidéo GitHub
-  https://cdn.jsdelivr.net/gh/Shinto74/IMAGES@ee9be1c404afd60483c0caf409121c884ae142f1/must-agence/14819394_1280_720_25fps.mp4
-*/
 const VIDEO_URL = "https://cdn.jsdelivr.net/gh/Shinto74/IMAGES@ee9be1c404afd60483c0caf409121c884ae142f1/must-agence/14819394_1280_720_25fps.mp4";
 
 const Hero = () => {
-  const ref = useScrollReveal();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [scrollY, setScrollY] = useState(0);
   const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
@@ -23,28 +15,17 @@ const Hero = () => {
       const cy = (e.clientY / window.innerHeight - 0.5) * 2;
       setMouse({ x: cx, y: cy });
     };
-    const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("mousemove", onMove);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  // Fallback: don't block the page forever if video is slow
   useEffect(() => {
     const t = setTimeout(() => setVideoReady(true), 3000);
     return () => clearTimeout(t);
   }, []);
 
-  const handleCanPlay = () => {
-    setVideoReady(true);
-  };
-
   return (
     <>
-      {/* Loader tant que la vidéo charge */}
       {!videoReady && (
         <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
@@ -54,83 +35,157 @@ const Hero = () => {
         </div>
       )}
 
-      <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-
-        {/* VIDEO FOND */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* VIDEO */}
         <video
           ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          onCanPlay={handleCanPlay}
+          autoPlay muted loop playsInline
+          onCanPlay={() => setVideoReady(true)}
           className="absolute inset-0 w-full h-full object-cover z-0"
-          style={{ opacity: 4 }}
         >
           <source src={VIDEO_URL} type="video/mp4" />
         </video>
 
-        {/* Overlay gradient par-dessus la vidéo */}
+        {/* Dark cinematic overlay */}
         <div
           className="absolute inset-0 z-[1]"
           style={{
-            background: "linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, rgba(10,10,10,0.2) 50%, rgba(10,10,10,0.9) 100%)",
+            background: `
+              linear-gradient(to bottom, rgba(7,7,7,0.65) 0%, rgba(7,7,7,0.35) 40%, rgba(7,7,7,0.5) 60%, rgba(7,7,7,0.92) 100%),
+              radial-gradient(ellipse 50% 50% at 50% 50%, transparent 0%, rgba(7,7,7,0.4) 100%)
+            `,
           }}
         />
 
-        {/* Parallax Orbs */}
+        {/* Subtle parallax orb */}
         <div
-          className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-primary/10 blur-[120px] animate-orbFloat1 z-[2]"
+          className="absolute w-[500px] h-[500px] rounded-full z-[2] pointer-events-none"
           style={{
-            transform: `translate(${mouse.x * -30}px, ${mouse.y * -20 + scrollY * 0.15}px)`,
-            transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-primary/8 blur-[100px] animate-orbFloat2 z-[2]"
-          style={{
-            transform: `translate(${mouse.x * 20}px, ${mouse.y * 25 + scrollY * 0.1}px)`,
-            transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+            background: "radial-gradient(circle, hsl(73 100% 50% / 0.06) 0%, transparent 60%)",
+            top: "30%",
+            left: "40%",
+            transform: `translate(${mouse.x * -25}px, ${mouse.y * -15}px)`,
+            transition: "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         />
 
-        {/* CONTENU */}
+        {/* CONTENT */}
         <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
 
-          {/* Titre principal avec MUST AGENCE en grand */}
-          <h1 className="rv font-clash text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-foreground leading-[0.95] mb-2">
-            <span className="text-primary">MUST AGENCE</span>
-            <br />
-            {SITE.hero.titleLine1}
-            <br />
-            <span className="text-primary">{SITE.hero.titleAccent}</span>
-          </h1>
+          {/* Label tag */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center justify-center gap-3 mb-8"
+          >
+            <div className="w-8 h-px bg-primary/50" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-primary/70">
+              {SITE.hero.label}
+            </span>
+            <div className="w-8 h-px bg-primary/50" />
+          </motion.div>
 
-          <p className="rv mt-6 text-muted-foreground text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+          {/* Title — MUST AGENCE in stroke, rest in white */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="font-clash font-black leading-[0.9] mb-6"
+            style={{ fontSize: "clamp(2.8rem, 7vw, 7.5rem)", letterSpacing: "-0.03em" }}
+          >
+            <span
+              style={{
+                color: "transparent",
+                WebkitTextStroke: "2px hsl(73 100% 50%)",
+                display: "block",
+                filter: "drop-shadow(0 0 30px hsl(73 100% 50% / 0.15))",
+              }}
+            >
+              MUST AGENCE
+            </span>
+            <span className="text-foreground block mt-1">
+              {SITE.hero.titleLine1}
+            </span>
+            <span
+              className="block"
+              style={{
+                color: "hsl(73 100% 50%)",
+                textShadow: "0 0 40px hsl(73 100% 50% / 0.2)",
+              }}
+            >
+              {SITE.hero.titleAccent}
+            </span>
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="font-outfit text-foreground/45 text-base md:text-lg max-w-lg mx-auto leading-relaxed italic"
+          >
             {SITE.hero.subtitle}
-          </p>
+          </motion.p>
 
-          <div className="rv mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
+          {/* Buttons — glass style */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <motion.a
               href="#contact"
-              className="px-8 py-3.5 rounded-pill bg-primary text-primary-foreground font-mono text-sm uppercase tracking-wider hover:brightness-110 transition-all duration-300"
+              whileHover={{ scale: 1.03, boxShadow: "0 0 30px hsl(73 100% 50% / 0.25)" }}
+              whileTap={{ scale: 0.97 }}
+              className="px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.15em] transition-all duration-300"
+              style={{
+                background: "hsl(73 100% 50%)",
+                color: "hsl(var(--primary-foreground))",
+                boxShadow: "0 0 20px hsl(73 100% 50% / 0.15), inset 0 1px 0 hsl(73 100% 70% / 0.3)",
+              }}
             >
               {SITE.hero.ctaPrimary}
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href="#poles"
-              className="px-8 py-3.5 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-primary/40 hover:text-primary transition-all duration-300"
+              whileHover={{ scale: 1.03, borderColor: "hsl(73 100% 50% / 0.5)" }}
+              whileTap={{ scale: 0.97 }}
+              className="px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.15em] transition-all duration-300"
+              style={{
+                background: "hsla(0,0%,100%,0.04)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid hsla(0,0%,100%,0.12)",
+                color: "hsla(0,0%,100%,0.7)",
+              }}
             >
               {SITE.hero.ctaSecondary}
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground z-10">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em]">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-muted-foreground to-transparent" />
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
+        >
+          <span className="font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/25">Scroll</span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            className="w-px h-8"
+            style={{ background: "linear-gradient(to bottom, hsl(73 100% 50% / 0.3), transparent)" }}
+          />
+        </motion.div>
+
+        {/* Bottom gradient for seamless transition */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-32 z-[3] pointer-events-none"
+          style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 100%)" }}
+        />
       </section>
     </>
   );
