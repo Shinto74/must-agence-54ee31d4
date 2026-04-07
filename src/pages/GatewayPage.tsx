@@ -1,211 +1,282 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SITE } from "@/lib/constants";
 
 type Side = "artiste" | "entreprise" | null;
 
+const IMG_ARTISTE =
+  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&q=80";
+const IMG_ENTREPRISE =
+  "https://images.unsplash.com/photo-1637137467932-844c5736adc3?w=1400&q=80";
+
 const GatewayPage = () => {
   const [hovered, setHovered] = useState<Side>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 200);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-
-      {/* NAVBAR */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between h-16 md:h-20">
-          <Link to="/" className="flex items-center gap-3 group">
-            <img src={SITE.logoWhite} alt={SITE.name} className="h-8 md:h-10 w-auto" />
-            <span className="font-clash font-bold text-xl md:text-2xl tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
-              MUST AGENCE
-            </span>
-          </Link>
-          <nav className="hidden lg:flex items-center gap-8">
-            {[
-              { label: "Pôle Artiste", path: "/artiste" },
-              { label: "Pôle Entreprise", path: "/entreprise" },
-            ].map((item) => (
-              <Link key={item.path} to={item.path} className="relative font-medium text-sm text-muted-foreground hover:text-foreground transition-colors group py-2">
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 ease-out group-hover:w-full" />
-              </Link>
-            ))}
-          </nav>
-          <Link to="/artiste#contact" className="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-full hover:brightness-105 transition-all duration-300 hover:scale-[1.02] active:scale-95 text-sm">
-            Nous Contacter
-          </Link>
-        </div>
-      </header>
-
-      {/* SPLIT SCREEN */}
-      <main className="flex-1">
-        <section className="relative h-[100svh] w-full flex flex-col md:flex-row overflow-hidden">
-
-          {/* LOGO CENTRÉ */}
+    <div className="fixed inset-0 bg-background text-foreground overflow-hidden select-none">
+      {/* ── Centred brand column ── */}
+      <div className="absolute inset-0 z-40 pointer-events-none flex flex-col items-center justify-center gap-6">
+        {/* Logo circle */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-20 h-20 md:w-24 md:h-24"
+        >
           <div
-            className="absolute z-30 pointer-events-none"
+            className="absolute inset-0 rounded-full"
             style={{
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 100,
-              height: 100,
+              border: `1.5px solid ${hovered === "entreprise" ? "rgba(255,255,255,0.45)" : "rgba(204,255,0,0.45)"}`,
+              boxShadow: hovered === "entreprise"
+                ? "0 0 30px rgba(255,255,255,0.12)"
+                : "0 0 30px rgba(204,255,0,0.15)",
+              background: hovered === "entreprise"
+                ? "rgba(255,255,255,0.04)"
+                : "rgba(204,255,0,0.04)",
+              transition: "all 0.5s ease",
             }}
+          />
+          <img
+            src={SITE.logoGreen}
+            alt={SITE.name}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-12 md:h-14 w-auto"
+            style={{
+              opacity: hovered === "entreprise" ? 0 : 1,
+              transition: "opacity 0.4s ease",
+            }}
+          />
+          <img
+            src={SITE.logoWhite}
+            alt={SITE.name}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-12 md:h-14 w-auto"
+            style={{
+              opacity: hovered === "entreprise" ? 1 : 0,
+              transition: "opacity 0.4s ease",
+            }}
+          />
+        </motion.div>
+
+        {/* Brand name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="font-clash font-black text-2xl md:text-3xl tracking-[0.12em] uppercase"
+          style={{
+            color: hovered === "entreprise" ? "rgba(255,255,255,0.9)" : "hsl(73 100% 50%)",
+            textShadow: hovered === "entreprise"
+              ? "0 0 30px rgba(255,255,255,0.15)"
+              : "0 0 30px rgba(204,255,0,0.2)",
+            transition: "color 0.5s ease, text-shadow 0.5s ease",
+          }}
+        >
+          MUST AGENCE
+        </motion.h1>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="font-mono text-[10px] md:text-xs uppercase tracking-[0.35em] text-foreground/30"
+        >
+          Choisissez votre univers
+        </motion.p>
+      </div>
+
+      {/* ── Split panels ── */}
+      <div className="relative h-full w-full flex flex-col md:flex-row">
+        {/* LEFT — Artiste */}
+        <motion.div
+          initial={{ x: "-100%" }}
+          animate={{ x: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="relative overflow-hidden cursor-pointer group"
+          style={{
+            flex: hovered === "artiste" ? 1.4 : hovered === "entreprise" ? 0.6 : 1,
+            transition: "flex 0.7s cubic-bezier(0.16,1,0.3,1)",
+          }}
+          onMouseEnter={() => setHovered("artiste")}
+          onMouseLeave={() => setHovered(null)}
+        >
+          {/* BG image */}
+          <div className="absolute inset-0">
+            <img
+              src={IMG_ARTISTE}
+              alt="Artiste"
+              className="w-full h-full object-cover"
+              style={{
+                opacity: hovered === "artiste" ? 0.55 : 0.3,
+                transform: hovered === "artiste" ? "scale(1.08)" : "scale(1)",
+                transition: "all 0.8s cubic-bezier(0.16,1,0.3,1)",
+              }}
+            />
+            {/* Gradient overlays */}
+            <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
+            {/* Green glow on hover */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "radial-gradient(ellipse at 50% 60%, rgba(204,255,0,0.08) 0%, transparent 60%)",
+                opacity: hovered === "artiste" ? 1 : 0,
+                transition: "opacity 0.6s ease",
+              }}
+            />
+          </div>
+
+          {/* Content */}
+          <Link
+            to="/artiste"
+            className="relative z-10 h-full flex flex-col items-center justify-end pb-[18vh] md:pb-[22vh] px-6"
           >
-            <div
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              animate={ready ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="font-clash font-black text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-3"
+            >
+              Pôle Artiste
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={ready ? { opacity: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="font-outfit text-xs md:text-sm text-foreground/40 mb-8 text-center max-w-xs"
+            >
+              Musique · Influence · Lancement
+            </motion.p>
+            <motion.span
+              initial={{ opacity: 0, y: 15 }}
+              animate={ready ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.12em]"
               style={{
-                position: "absolute",
-                inset: 0,
-                borderRadius: "50%",
-                background: hovered === "entreprise"
-                  ? "rgba(255,255,255,0.06)"
-                  : "rgba(204,255,0,0.06)",
-                transition: "background 0.4s ease",
+                background: "hsl(73 100% 50%)",
+                color: "hsl(var(--primary-foreground))",
+                boxShadow: hovered === "artiste"
+                  ? "0 0 40px rgba(204,255,0,0.35)"
+                  : "0 0 15px rgba(204,255,0,0.1)",
+                transform: hovered === "artiste" ? "scale(1.05)" : "scale(1)",
+                transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
               }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                borderRadius: "50%",
-                border: `1.5px solid ${hovered === "entreprise" ? "rgba(255,255,255,0.5)" : "rgba(204,255,0,0.5)"}`,
-                boxShadow: hovered === "entreprise"
-                  ? "0 0 20px rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.04)"
-                  : "0 0 20px rgba(204,255,0,0.2), inset 0 0 20px rgba(204,255,0,0.04)",
-                transition: "border-color 0.4s ease, box-shadow 0.4s ease",
-              }}
-            />
+            >
+              Je suis un Artiste
+              <ArrowRight className="w-4 h-4" />
+            </motion.span>
+          </Link>
+
+          {/* Vertical separator line */}
+          <div
+            className="absolute top-0 right-0 w-px h-full z-20"
+            style={{
+              background: "linear-gradient(to bottom, transparent 10%, rgba(204,255,0,0.15) 50%, transparent 90%)",
+            }}
+          />
+        </motion.div>
+
+        {/* RIGHT — Entreprise */}
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="relative overflow-hidden cursor-pointer group"
+          style={{
+            flex: hovered === "entreprise" ? 1.4 : hovered === "artiste" ? 0.6 : 1,
+            transition: "flex 0.7s cubic-bezier(0.16,1,0.3,1)",
+          }}
+          onMouseEnter={() => setHovered("entreprise")}
+          onMouseLeave={() => setHovered(null)}
+        >
+          {/* BG image */}
+          <div className="absolute inset-0">
             <img
-              src={SITE.logoGreen}
-              alt={SITE.name}
+              src={IMG_ENTREPRISE}
+              alt="Entreprise"
+              className="w-full h-full object-cover"
               style={{
-                height: 62,
-                width: "auto",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: `translate(-50%, -50%) scale(${hovered === "artiste" ? 1.08 : 1})`,
-                opacity: hovered === "entreprise" ? 0 : 1,
-                transition: "opacity 0.4s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1)",
+                opacity: hovered === "entreprise" ? 0.5 : 0.25,
+                transform: hovered === "entreprise" ? "scale(1.08)" : "scale(1)",
+                filter: hovered === "entreprise" ? "grayscale(0%)" : "grayscale(70%)",
+                transition: "all 0.8s cubic-bezier(0.16,1,0.3,1)",
               }}
             />
-            <img
-              src={SITE.logoWhite}
-              alt={SITE.name}
+            <div className="absolute inset-0 bg-gradient-to-l from-background/80 via-transparent to-background/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
+            <div
+              className="absolute inset-0"
               style={{
-                height: 62,
-                width: "auto",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: `translate(-50%, -50%) scale(${hovered === "entreprise" ? 1.08 : 1})`,
+                background: "radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.05) 0%, transparent 60%)",
                 opacity: hovered === "entreprise" ? 1 : 0,
-                transition: "opacity 0.4s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1)",
+                transition: "opacity 0.6s ease",
               }}
             />
           </div>
 
-          {/* GAUCHE — Artiste */}
-          <div
-            className="relative h-1/2 md:h-full overflow-hidden flex items-center justify-center cursor-pointer"
-            style={{
-              width: hovered === "artiste" ? "60%" : hovered === "entreprise" ? "40%" : "50%",
-              transition: "width 0.7s cubic-bezier(0.16,1,0.3,1)",
-            }}
-            onMouseEnter={() => setHovered("artiste")}
-            onMouseLeave={() => setHovered(null)}
+          {/* Content */}
+          <Link
+            to="/entreprise"
+            className="relative z-10 h-full flex flex-col items-center justify-end pb-[18vh] md:pb-[22vh] px-6"
           >
-            <div className="absolute inset-0 bg-background z-0">
-              <img
-                src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&q=80"
-                alt="Artist Performance"
-                className="w-full h-full object-cover"
-                style={{
-                  opacity: hovered === "artiste" ? 0.6 : 0.4,
-                  transform: hovered === "artiste" ? "scale(1.06)" : "scale(1)",
-                  transition: "opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)",
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: "radial-gradient(ellipse at 40% 60%, rgba(204,255,0,0.1) 0%, transparent 65%)",
-                  opacity: hovered === "artiste" ? 1 : 0,
-                  transition: "opacity 0.7s ease",
-                }}
-              />
-            </div>
-            <Link to="/artiste" className="relative z-10 text-center px-6 w-full h-full flex flex-col items-center justify-center">
-              <h2 className="font-clash text-4xl md:text-6xl font-bold text-foreground mb-6 tracking-tight">
-                Pôle Artiste
-              </h2>
-              <span
-                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-full"
-                style={{
-                  transform: hovered === "artiste" ? "scale(1.05)" : "scale(1)",
-                  boxShadow: hovered === "artiste" ? "0 0 30px rgba(204,255,0,0.4)" : "none",
-                  transition: "transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease",
-                }}
-              >
-                Je suis un Artiste
-                <ArrowRight className="w-5 h-5" />
-              </span>
-            </Link>
-          </div>
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              animate={ready ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.5 }}
+              className="font-clash font-black text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-3"
+            >
+              Pôle Entreprise
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={ready ? { opacity: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="font-outfit text-xs md:text-sm text-foreground/40 mb-8 text-center max-w-xs"
+            >
+              Influence · Growth · Branding
+            </motion.p>
+            <motion.span
+              initial={{ opacity: 0, y: 15 }}
+              animate={ready ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.12em]"
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.15)",
+                color: "rgba(255,255,255,0.8)",
+                boxShadow: hovered === "entreprise"
+                  ? "0 0 30px rgba(255,255,255,0.12)"
+                  : "none",
+                transform: hovered === "entreprise" ? "scale(1.05)" : "scale(1)",
+                transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
+              }}
+            >
+              Je suis une Entreprise
+              <ArrowRight className="w-4 h-4" />
+            </motion.span>
+          </Link>
+        </motion.div>
+      </div>
 
-          {/* DROITE — Entreprise */}
-          <div
-            className="relative h-1/2 md:h-full overflow-hidden flex items-center justify-center cursor-pointer"
-            style={{
-              width: hovered === "entreprise" ? "60%" : hovered === "artiste" ? "40%" : "50%",
-              transition: "width 0.7s cubic-bezier(0.16,1,0.3,1)",
-            }}
-            onMouseEnter={() => setHovered("entreprise")}
-            onMouseLeave={() => setHovered(null)}
-          >
-            <div className="absolute inset-0 bg-background z-0">
-              <img
-                src="https://images.unsplash.com/photo-1637137467932-844c5736adc3?w=1200&q=80"
-                alt="Brand Strategy"
-                className="w-full h-full object-cover"
-                style={{
-                  opacity: hovered === "entreprise" ? 0.55 : 0.35,
-                  transform: hovered === "entreprise" ? "scale(1.06)" : "scale(1)",
-                  filter: hovered === "entreprise" ? "grayscale(0%)" : "grayscale(80%)",
-                  transition: "opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.7s ease",
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: "radial-gradient(ellipse at 60% 60%, rgba(255,255,255,0.06) 0%, transparent 65%)",
-                  opacity: hovered === "entreprise" ? 1 : 0,
-                  transition: "opacity 0.7s ease",
-                }}
-              />
-            </div>
-            <Link to="/entreprise" className="relative z-10 text-center px-6 w-full h-full flex flex-col items-center justify-center">
-              <h2 className="font-clash text-4xl md:text-6xl font-bold text-foreground mb-6 tracking-tight">
-                Pôle Entreprise
-              </h2>
-              <span
-                className="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background font-semibold rounded-full"
-                style={{
-                  transform: hovered === "entreprise" ? "scale(1.05)" : "scale(1)",
-                  boxShadow: hovered === "entreprise" ? "0 0 30px rgba(255,255,255,0.2)" : "none",
-                  transition: "transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease",
-                }}
-              >
-                Je suis une Entreprise
-                <ArrowRight className="w-5 h-5" />
-              </span>
-            </Link>
-          </div>
-
-        </section>
-      </main>
+      {/* ── Bottom bar ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="absolute bottom-6 left-0 right-0 z-50 flex items-center justify-center"
+      >
+        <span className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/20">
+          Influence · Musique · Marques
+        </span>
+      </motion.div>
     </div>
   );
 };
