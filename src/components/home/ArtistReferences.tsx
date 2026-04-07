@@ -27,6 +27,7 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   const isDragging = useRef(false);
   const didDrag = useRef(false);
   const startX = useRef(0);
+  const originX = useRef(0);
   const pauseAutoScrollUntil = useRef(0);
 
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
