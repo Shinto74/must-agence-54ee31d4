@@ -242,7 +242,7 @@ const ArtisteServicesV4B = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="font-outfit text-white/40 mt-3 leading-relaxed"
+            className="font-outfit text-muted-foreground mt-3 leading-relaxed"
             style={{ fontSize: 13, maxWidth: 320 }}
           >
             De la création à la réussite, nous vous accompagnons à chaque étape pour structurer et développer votre carrière artistique.
