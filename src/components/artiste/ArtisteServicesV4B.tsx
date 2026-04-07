@@ -414,7 +414,7 @@ const ArtisteServicesV4B = () => {
             animate={{ opacity: 1 }}
             className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 hidden lg:flex flex-col items-center gap-1"
           >
-            <span className="font-mono text-[7px] uppercase tracking-[.5em] text-white/20">scroll</span>
+            <span className="font-mono text-[7px] uppercase tracking-[.5em] text-muted-foreground/40">scroll</span>
             <motion.div
               animate={{ y: [0, 5, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
