@@ -15,7 +15,7 @@ const Artiste = () => {
   const { data: artists } = useArtists();
 
   return (
-    <div>
+    <div className="page-bg page-bg--artiste">
       <Hero />
       <MarqueeText logos={ARTISTE_PAGE.marqueeLogos} />
       <ArtisteServicesV4B />

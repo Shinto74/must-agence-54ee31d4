@@ -81,6 +81,66 @@
   }
 }
 
+/* ── Atmospheric page backgrounds (charte: neon radial glow + subtle grid) ── */
+.page-bg {
+  position: relative;
+  background-color: hsl(var(--background));
+}
+.page-bg > * {
+  position: relative;
+  z-index: 1;
+}
+.page-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(135deg, hsl(var(--neon) / 0.03) 25%, transparent 25%),
+    linear-gradient(225deg, hsl(var(--neon) / 0.03) 25%, transparent 25%),
+    linear-gradient(315deg, hsl(var(--neon) / 0.03) 25%, transparent 25%),
+    linear-gradient(45deg, hsl(var(--neon) / 0.03) 25%, transparent 25%);
+  background-size: 60px 60px;
+  opacity: 0.4;
+}
+
+/* Artiste: neon glow top-left */
+.page-bg--artiste::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 20%, hsl(var(--neon) / 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 35% at 80% 80%, hsl(var(--neon) / 0.04) 0%, transparent 55%);
+}
+
+/* Entreprise: white glow right side */
+.page-bg--entreprise::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 50% 45% at 85% 30%, hsl(var(--foreground) / 0.04) 0%, transparent 55%),
+    radial-gradient(ellipse 35% 30% at 15% 75%, hsl(var(--foreground) / 0.02) 0%, transparent 50%);
+}
+
+/* Home: dual glow */
+.page-bg--home::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 55% 45% at 20% 30%, hsl(var(--neon) / 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 75% 70%, hsl(var(--neon) / 0.04) 0%, transparent 50%);
+}
+
 /* Scroll reveal */
 .rv {
   opacity: 0;

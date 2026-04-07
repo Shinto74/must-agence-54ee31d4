@@ -16,7 +16,7 @@ const Index = () => {
   const { data: clients } = useClients();
 
   return (
-    <div>
+    <div className="page-bg page-bg--home">
       <Hero />
       <MarqueeText words={SITE.marqueeWords} />
       <PolesGateway />
