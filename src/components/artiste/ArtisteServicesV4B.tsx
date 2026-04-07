@@ -99,11 +99,11 @@ const panelVariants = {
   enter: { opacity: 0, y: 32, scale: 0.96, filter: "blur(6px)" },
   center: {
     opacity: 1, y: 0, scale: 1, filter: "blur(0px)",
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
   },
   exit: {
     opacity: 0, y: -32, scale: 0.96, filter: "blur(6px)",
-    transition: { duration: 0.35, ease: [0.4, 0, 1, 1] },
+    transition: { duration: 0.35, ease: [0.4, 0, 1, 1] as const },
   },
 };
 
