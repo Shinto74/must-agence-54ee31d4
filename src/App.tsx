@@ -46,7 +46,7 @@ const AnimatedRoutes = () => {
       <Routes location={location}>
         <Route path="/artiste" element={<Artiste />} />
         <Route path="/entreprise" element={<Entreprise />} />
-        <Route path="/test/artiste-services" element={<ArtisteServicesTest />} />
+        
         <Route path="*" element={<NotFound />} />
       </Routes>
     </PageTransition>
