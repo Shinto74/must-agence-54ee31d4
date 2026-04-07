@@ -141,7 +141,7 @@ const Hero = () => {
             <h1
               className="font-clash font-black text-foreground leading-[0.95] mt-2 text-center"
               style={{
-                fontSize: "clamp(1.2rem, 3.2vw, 3.5rem)",
+                fontSize: "clamp(0.9rem, 2.5vw, 2.5rem)",
                 letterSpacing: "0.04em",
                 textShadow: "0 4px 60px hsla(0,0%,0%,0.5)",
               }}
