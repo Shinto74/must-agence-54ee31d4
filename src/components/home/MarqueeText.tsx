@@ -154,7 +154,7 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           letter-spacing: 0.3em;
           text-transform: uppercase;
           color: hsl(var(--foreground));
-          opacity: 0.4;
+          opacity: 0.5;
           white-space: nowrap;
           transition: opacity 0.4s ease, text-shadow 0.4s ease;
           flex-shrink: 0;
