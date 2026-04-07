@@ -86,6 +86,10 @@
   position: relative;
   background-color: hsl(var(--background));
 }
+.page-bg > * {
+  position: relative;
+  z-index: 1;
+}
 .page-bg::before {
   content: "";
   position: fixed;
