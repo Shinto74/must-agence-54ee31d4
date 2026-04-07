@@ -116,15 +116,15 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           background: rgba(var(--brand-color), 0.06);
         }
 
-        /* All logos: grayscale + dim by default, color on hover */
+        /* All logos: white/grey by default, brand color on hover */
         .mq-logo--colored {
           height: 52px;
           max-width: 180px;
           width: auto;
           object-fit: contain;
-          filter: grayscale(1) brightness(0.7);
-          opacity: 0.4;
-          transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease, drop-shadow 0.4s ease;
+          filter: brightness(0) invert(1);
+          opacity: 0.5;
+          transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
           display: block;
         }
 
@@ -137,8 +137,8 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           filter: grayscale(0) brightness(1);
           opacity: 1;
           transform: scale(1.08);
-          -webkit-filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(var(--brand-color), 0.4));
-          filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(var(--brand-color), 0.4));
+          -webkit-filter: grayscale(0) brightness(1) drop-shadow(0 0 14px rgba(var(--brand-color), 0.5));
+          filter: grayscale(0) brightness(1) drop-shadow(0 0 14px rgba(var(--brand-color), 0.5));
         }
 
         .mq-artist-container {
@@ -154,7 +154,7 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           letter-spacing: 0.3em;
           text-transform: uppercase;
           color: hsl(var(--foreground));
-          opacity: 0.4;
+          opacity: 0.5;
           white-space: nowrap;
           transition: opacity 0.4s ease, text-shadow 0.4s ease;
           flex-shrink: 0;
