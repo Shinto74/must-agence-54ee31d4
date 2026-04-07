@@ -135,6 +135,19 @@ const Hero = () => {
           >
             {SITE.hero.subtitle}
           </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.85 }}
+            className="font-outfit text-primary/0 text-sm md:text-base max-w-lg mx-auto leading-relaxed mt-2"
+            style={{
+              color: "transparent",
+              WebkitTextStroke: "0.5px hsl(73 100% 50% / 0.5)",
+              letterSpacing: "0.05em",
+            }}
+          >
+            {SITE.hero.subtitle2}
+          </motion.p>
 
           {/* Buttons — glass style */}
           <motion.div
