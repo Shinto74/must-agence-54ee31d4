@@ -5,23 +5,59 @@ const Vision = () => {
   const ref = useScrollReveal();
 
   return (
-    <section ref={ref} className="py-20 px-6">
-      <div className="max-w-[900px] mx-auto text-center">
-        <p className="rv font-mono text-xs uppercase tracking-[0.2em] text-primary mb-4">
+    <section ref={ref} className="py-24 px-6">
+      <div className="max-w-[1000px] mx-auto">
+        {/* Label */}
+        <p className="rv font-mono text-xs uppercase tracking-[0.2em] text-primary mb-6 text-center">
           {SITE.vision.label}
         </p>
-        <h2 className="rv font-clash text-3xl md:text-5xl font-bold text-foreground leading-tight mb-8">
+
+        {/* Titre */}
+        <h2 className="rv font-clash text-3xl md:text-5xl font-bold text-foreground leading-tight mb-12 text-center">
           {SITE.vision.titleLine1} <span className="text-primary">{SITE.vision.titleLine2}</span>
         </h2>
-        <blockquote className="rv border-l-2 border-primary pl-6 text-left mb-8">
-          <p className="text-lg md:text-xl text-foreground/90 italic leading-relaxed">
-            "{SITE.vision.quote}"
-          </p>
-        </blockquote>
-        <p className="rv text-muted-foreground leading-relaxed text-sm md:text-base">
+
+        {/* Citation — carte premium */}
+        <div className="rv relative rounded-2xl border border-border bg-surface p-8 md:p-12 mb-10 overflow-hidden group">
+          {/* Halo décoratif */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+            style={{
+              background: "radial-gradient(ellipse 60% 50% at 30% 50%, hsl(var(--neon) / 0.06) 0%, transparent 60%)",
+            }}
+          />
+
+          {/* Guillemet géant décoratif */}
+          <div
+            className="absolute top-4 left-6 font-clash font-black text-primary/[0.06] select-none pointer-events-none"
+            style={{ fontSize: "clamp(8rem, 14vw, 14rem)", lineHeight: 0.8 }}
+          >
+            "
+          </div>
+
+          {/* Ligne accent top */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+          <div className="relative z-10">
+            <blockquote className="border-l-2 border-primary pl-6 md:pl-8">
+              <p className="text-lg md:text-2xl text-foreground/90 italic leading-relaxed font-clash font-light">
+                "{SITE.vision.quote}"
+              </p>
+            </blockquote>
+          </div>
+        </div>
+
+        {/* Texte explicatif */}
+        <p className="rv text-muted-foreground leading-relaxed text-sm md:text-base text-center max-w-[700px] mx-auto mb-10">
           {SITE.vision.text}
         </p>
-        <img src={SITE.logoGreen} alt={SITE.name} className="rv mx-auto mt-10 h-10 w-auto opacity-60" />
+
+        {/* Logo signature */}
+        <div className="rv flex items-center justify-center gap-3">
+          <div className="w-8 h-px bg-gradient-to-r from-transparent to-primary/30" />
+          <img src={SITE.logoGreen} alt={SITE.name} className="h-8 w-auto opacity-50" />
+          <div className="w-8 h-px bg-gradient-to-l from-transparent to-primary/30" />
+        </div>
       </div>
     </section>
   );
