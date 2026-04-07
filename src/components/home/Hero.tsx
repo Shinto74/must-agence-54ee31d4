@@ -163,7 +163,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.9 }}
-            className="font-outfit text-sm md:text-base max-w-lg mx-auto leading-relaxed"
+            className="font-outfit text-sm md:text-base max-w-lg mx-auto leading-relaxed mt-16"
             style={{
               color: "transparent",
               WebkitTextStroke: "0.5px hsl(73 100% 50% / 0.45)",
