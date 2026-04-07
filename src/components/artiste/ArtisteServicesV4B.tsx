@@ -358,7 +358,7 @@ const ArtisteServicesV4B = () => {
                     >
                       Voir les packs <span>&#8594;</span>
                     </motion.a>
-                    <span className="font-mono text-[8px] uppercase tracking-[.4em] text-white/20">
+                    <span className="font-mono text-[8px] uppercase tracking-[.4em] text-muted-foreground/40">
                       {activeIndex + 1} / {PILLARS.length}
                     </span>
                   </div>
