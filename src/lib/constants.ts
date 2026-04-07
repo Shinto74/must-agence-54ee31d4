@@ -12,8 +12,8 @@ export const SITE = {
   logoGreen: `${GH}/logos/logo_vert.png`,
   hero: {
     label: "Must Agence",
-    titleLine1: "On ne suit pas les tendances,",
-    titleAccent: "on les crée.",
+    titleLine1: "On ne suit pas les tendances",
+    titleAccent: "on les crée",
     subtitle: "On ne suit pas les tendances, on les crée.",
     subtitle2: "\n",
     ctaPrimary: "Démarrer un projet",
