@@ -137,8 +137,8 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           filter: grayscale(0) brightness(1);
           opacity: 1;
           transform: scale(1.08);
-          -webkit-filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(var(--brand-color), 0.4));
-          filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(var(--brand-color), 0.4));
+          -webkit-filter: grayscale(0) brightness(1) drop-shadow(0 0 14px rgba(var(--brand-color), 0.5));
+          filter: grayscale(0) brightness(1) drop-shadow(0 0 14px rgba(var(--brand-color), 0.5));
         }
 
         .mq-artist-container {
