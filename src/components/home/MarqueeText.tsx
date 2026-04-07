@@ -9,14 +9,14 @@ interface MarqueeTextProps {
   logos?: LogoItem[];
 }
 
-const SPACING = 96;
+const SPACING = 80;
 
-// Brand colors for hover glow
+// Brand colors for hover glow (RGB)
 const BRAND_COLORS: Record<string, string> = {
   "SPOTIFY": "30, 215, 96",
   "TIKTOK": "255, 0, 80",
   "YOUTUBE": "255, 0, 0",
-  "UNIVERSAL MUSIC": "0, 100, 210",
+  "UNIVERSAL MUSIC": "0, 51, 160",
   "THE ARTIST": "130, 100, 255",
   "INSTAGRAM": "225, 48, 108",
   "GOOGLE": "66, 133, 244",
@@ -34,30 +34,18 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
             className="mq-item"
             style={{ "--brand-color": brandColor } as React.CSSProperties}
           >
-            {logo.name === "THE ARTIST" ? (
-              <div className="mq-artist-container">
-                {logo.logoUrl && (
-                  <img
-                    src={logo.logoUrl}
-                    alt={logo.name}
-                    className="mq-logo mq-logo--colored"
-                    loading="lazy"
-                    draggable={false}
-                  />
-                )}
-                <span className="mq-artist-label">{logo.label || logo.name}</span>
-              </div>
-            ) : logo.logoUrl ? (
-              <img
-                src={logo.logoUrl}
-                alt={logo.name}
-                className={`mq-logo mq-logo--colored ${logo.name === "UNIVERSAL MUSIC" ? "mq-logo--universal" : ""}`}
-                loading="lazy"
-                draggable={false}
-              />
-            ) : (
-              <span className="mq-word">{logo.label || logo.name}</span>
-            )}
+            <div className="mq-partner">
+              {logo.logoUrl && (
+                <img
+                  src={logo.logoUrl}
+                  alt={logo.name}
+                  className={`mq-logo ${logo.name === "UNIVERSAL MUSIC" ? "mq-logo--large" : ""}`}
+                  loading="lazy"
+                  draggable={false}
+                />
+              )}
+              <span className="mq-label">{logo.label || logo.name}</span>
+            </div>
           </div>
         );
       })
@@ -79,18 +67,18 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
         .mq-root {
           width: 100%;
           overflow: hidden;
-          padding: 36px 0;
+          padding: 40px 0;
           border-top: 1px solid hsl(var(--border));
           border-bottom: 1px solid hsl(var(--border));
           background: hsl(var(--background));
-          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-          mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
         }
 
         .mq-track {
           display: flex;
           width: max-content;
-          animation: mq-scroll 45s linear infinite;
+          animation: mq-scroll 50s linear infinite;
           will-change: transform;
         }
 
@@ -107,62 +95,61 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           justify-content: center;
           flex-shrink: 0;
           position: relative;
-          padding: 8px 12px;
+          padding: 10px 16px;
           border-radius: 12px;
           transition: background 0.4s ease;
+          cursor: default;
         }
 
         .mq-item:hover {
-          background: rgba(var(--brand-color), 0.06);
+          background: rgba(var(--brand-color), 0.08);
         }
 
-        /* All logos: white/grey by default, brand color on hover */
-        .mq-logo--colored {
-          height: 52px;
-          max-width: 180px;
+        .mq-partner {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+
+        .mq-logo {
+          height: 40px;
+          max-width: 160px;
           width: auto;
           object-fit: contain;
           filter: brightness(0) invert(1);
-          opacity: 0.5;
+          opacity: 0.55;
           transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
           display: block;
-        }
-
-        .mq-logo--universal {
-          height: 64px;
-          max-width: 200px;
-        }
-
-        .mq-item:hover .mq-logo--colored {
-          filter: grayscale(0) brightness(1);
-          opacity: 1;
-          transform: scale(1.08);
-          -webkit-filter: grayscale(0) brightness(1) drop-shadow(0 0 14px rgba(var(--brand-color), 0.5));
-          filter: grayscale(0) brightness(1) drop-shadow(0 0 14px rgba(var(--brand-color), 0.5));
-        }
-
-        .mq-artist-container {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .mq-artist-label {
-          font-family: 'Clash Display', sans-serif;
-          font-size: 22px;
-          font-weight: 700;
-          letter-spacing: 0.3em;
-          text-transform: uppercase;
-          color: hsl(var(--foreground));
-          opacity: 0.5;
-          white-space: nowrap;
-          transition: opacity 0.4s ease, text-shadow 0.4s ease;
           flex-shrink: 0;
         }
 
-        .mq-item:hover .mq-artist-label {
+        .mq-logo--large {
+          height: 52px;
+          max-width: 190px;
+        }
+
+        .mq-item:hover .mq-logo {
+          filter: grayscale(0) brightness(1) drop-shadow(0 0 16px rgba(var(--brand-color), 0.55));
           opacity: 1;
-          text-shadow: 0 0 20px rgba(var(--brand-color), 0.4);
+          transform: scale(1.06);
+        }
+
+        .mq-label {
+          font-family: 'Clash Display', sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          color: hsl(var(--foreground));
+          opacity: 0.55;
+          white-space: nowrap;
+          transition: opacity 0.4s ease, text-shadow 0.4s ease, color 0.4s ease;
+          flex-shrink: 0;
+        }
+
+        .mq-item:hover .mq-label {
+          opacity: 1;
+          text-shadow: 0 0 24px rgba(var(--brand-color), 0.45);
         }
 
         .mq-word {
@@ -183,14 +170,17 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
 
         @keyframes mq-scroll {
           0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          100% { transform: translateX(-33.333%); }
         }
 
         @media (max-width: 768px) {
           .mq-root { padding: 24px 0; }
-          .mq-logo--colored { height: 38px; }
-          .mq-item { margin-right: 56px; }
-          .mq-track { animation-duration: 36s; }
+          .mq-logo { height: 30px; max-width: 120px; }
+          .mq-logo--large { height: 38px; }
+          .mq-label { font-size: 14px; letter-spacing: 0.18em; }
+          .mq-item { margin-right: 48px; padding: 8px 10px; }
+          .mq-track { animation-duration: 38s; }
+          .mq-partner { gap: 10px; }
         }
       `}</style>
     </div>
