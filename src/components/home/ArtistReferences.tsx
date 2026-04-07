@@ -27,6 +27,7 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   const isDragging = useRef(false);
   const didDrag = useRef(false);
   const startX = useRef(0);
+  const originX = useRef(0);
   const pauseAutoScrollUntil = useRef(0);
 
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
@@ -71,16 +72,17 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
     return () => cancelAnimationFrame(rafRef.current);
   }, [autoScroll]);
 
-  const handleMouseDown = (e: React.MouseEvent) => { isDragging.current = true; didDrag.current = false; startX.current = e.pageX; pauseAutoScrollUntil.current = Date.now() + 1200; };
-  const handleMouseMove = (e: React.MouseEvent) => { if (!isDragging.current || !scrollRef.current) return; const dx = e.pageX - startX.current; if (Math.abs(dx) > 3) didDrag.current = true; scrollRef.current.scrollLeft -= dx; startX.current = e.pageX; };
+  const handleMouseDown = (e: React.MouseEvent) => { isDragging.current = true; didDrag.current = false; startX.current = e.pageX; originX.current = e.pageX; pauseAutoScrollUntil.current = Date.now() + 1200; };
+  const handleMouseMove = (e: React.MouseEvent) => { if (!isDragging.current || !scrollRef.current) return; if (Math.abs(e.pageX - originX.current) > 8) didDrag.current = true; scrollRef.current.scrollLeft -= e.pageX - startX.current; startX.current = e.pageX; };
   const handleMouseUp = () => { isDragging.current = false; };
-  const handleTouchStart = (e: React.TouchEvent) => { isDragging.current = true; didDrag.current = false; startX.current = e.touches[0].pageX; pauseAutoScrollUntil.current = Date.now() + 1200; };
-  const handleTouchMove = (e: React.TouchEvent) => { if (!isDragging.current || !scrollRef.current) return; const dx = e.touches[0].pageX - startX.current; if (Math.abs(dx) > 3) didDrag.current = true; scrollRef.current.scrollLeft -= dx; startX.current = e.touches[0].pageX; };
+  const handleTouchStart = (e: React.TouchEvent) => { isDragging.current = true; didDrag.current = false; startX.current = e.touches[0].pageX; originX.current = e.touches[0].pageX; pauseAutoScrollUntil.current = Date.now() + 1200; };
+  const handleTouchMove = (e: React.TouchEvent) => { if (!isDragging.current || !scrollRef.current) return; if (Math.abs(e.touches[0].pageX - originX.current) > 8) didDrag.current = true; scrollRef.current.scrollLeft -= e.touches[0].pageX - startX.current; startX.current = e.touches[0].pageX; };
   const handleTouchEnd = () => { isDragging.current = false; };
 
   const handleArtistClick = (artistName: string) => {
+    console.log("Artist click:", artistName, "didDrag:", didDrag.current, "hasDetails:", !!ARTIST_DETAILS[artistName]);
     if (didDrag.current) return;
-    if (ARTIST_DETAILS[artistName]) setSelectedArtist(artistName);
+    setSelectedArtist(ARTIST_DETAILS[artistName] ? artistName : null);
   };
 
   const closeModal = () => setSelectedArtist(null);
