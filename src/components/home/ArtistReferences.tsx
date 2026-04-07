@@ -79,6 +79,7 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   const handleTouchEnd = () => { isDragging.current = false; };
 
   const handleArtistClick = (artistName: string) => {
+    if (didDrag.current) return;
     if (ARTIST_DETAILS[artistName]) setSelectedArtist(artistName);
   };
 
