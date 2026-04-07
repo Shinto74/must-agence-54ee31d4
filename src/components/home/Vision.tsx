@@ -27,10 +27,10 @@ const Vision = () => {
             }}
           />
 
-          {/* Guillemet géant décoratif */}
+          {/* Guillemet géant décoratif — très subtil pour ne pas gêner la lecture */}
           <div
-            className="absolute top-4 left-6 font-clash font-black text-primary/[0.06] select-none pointer-events-none"
-            style={{ fontSize: "clamp(8rem, 14vw, 14rem)", lineHeight: 0.8 }}
+            className="absolute top-4 left-6 font-clash font-black text-primary/[0.03] select-none pointer-events-none hidden md:block"
+            style={{ fontSize: "clamp(6rem, 10vw, 10rem)", lineHeight: 0.8 }}
           >
             "
           </div>
