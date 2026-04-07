@@ -225,7 +225,7 @@ const ArtisteServicesV4B = () => {
         <div
           ref={headerRef}
           className="absolute top-0 left-0 w-1/2 z-20 px-14 pt-24 pb-6 hidden lg:block"
-          style={{ background: "linear-gradient(to bottom, #070707 65%, transparent)" }}
+          style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 65%, transparent)" }}
         >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
