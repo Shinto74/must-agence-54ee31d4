@@ -11,9 +11,9 @@ export const SITE = {
   logoWhite: `${GH}/logos/logo_blanc.png`,
   logoGreen: `${GH}/logos/logo_vert.png`,
   hero: {
-    label: "Must Agence",
-    titleLine1: "We don't follow",
-    titleAccent: "the algorithm.",
+    label: "Agence Must",
+    titleLine1: "Nous ne suivons pas",
+    titleAccent: "l'algorithme.",
     subtitle: "On ne suit pas les tendances, on les crée. Agence d'influence spécialisée musique et marques.",
     ctaPrimary: "Démarrer un projet",
     ctaSecondary: "Découvrir nos pôles",
