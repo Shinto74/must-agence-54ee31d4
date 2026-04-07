@@ -4,6 +4,20 @@ import { SITE } from "@/lib/constants";
 
 const VIDEO_URL = "https://cdn.jsdelivr.net/gh/Shinto74/IMAGES@ee9be1c404afd60483c0caf409121c884ae142f1/must-agence/14819394_1280_720_25fps.mp4";
 
+const BRAND_LETTERS = [
+  { char: "M", color: "hsl(0 0% 100%)" },
+  { char: "U", color: "hsl(0 0% 100%)" },
+  { char: "S", color: "hsl(0 0% 100%)" },
+  { char: "T", color: "hsl(0 0% 100%)" },
+  { char: "\u00A0", color: "transparent" },
+  { char: "A", color: "hsl(73 100% 50%)" },
+  { char: "G", color: "hsl(0 0% 100%)" },
+  { char: "E", color: "hsl(0 0% 100%)" },
+  { char: "N", color: "hsl(0 0% 100%)" },
+  { char: "C", color: "hsl(0 0% 100%)" },
+  { char: "E", color: "hsl(0 0% 100%)" },
+];
+
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
@@ -70,7 +84,7 @@ const Hero = () => {
         />
 
         {/* CONTENT */}
-        <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
+        <div className="relative z-10 text-center w-full max-w-6xl mx-auto px-6">
 
           {/* Label tag */}
           <motion.div
@@ -81,36 +95,53 @@ const Hero = () => {
           >
             <div className="w-8 h-px bg-primary/50" />
             <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-primary/70">
-              {SITE.hero.label}
+              Influence Artistique
             </span>
             <div className="w-8 h-px bg-primary/50" />
           </motion.div>
 
-          {/* Title — AGENCE MUST in stroke, then main title */}
+          {/* MUST AGENCE — letter by letter animation */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-6"
+            className="mb-4"
           >
-            <motion.div
-              className="font-clash font-black block leading-[0.85] text-center whitespace-nowrap"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            <div
+              className="font-clash font-black leading-[0.85] text-center flex items-center justify-center"
               style={{
-                fontSize: "clamp(2.5rem, 8vw, 8rem)",
-                color: "hsl(0 0% 100%)",
-                textShadow: "0 4px 60px hsla(0,0%,0%,0.5)",
+                fontSize: "clamp(3rem, 10vw, 9rem)",
                 letterSpacing: "-0.02em",
               }}
             >
-              MUST <span style={{ color: "hsl(73 100% 50%)", textShadow: "0 0 40px hsl(73 100% 50% / 0.35)" }}>A</span>GENCE
-            </motion.div>
+              {BRAND_LETTERS.map((letter, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 40, rotateX: -90 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.5 + i * 0.06,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  style={{
+                    color: letter.color,
+                    textShadow: letter.color.includes("73")
+                      ? "0 0 40px hsl(73 100% 50% / 0.35)"
+                      : "0 4px 60px hsla(0,0%,0%,0.5)",
+                    display: "inline-block",
+                  }}
+                >
+                  {letter.char}
+                </motion.span>
+              ))}
+            </div>
+
+            {/* Main title */}
             <h1
-              className="font-clash font-black text-foreground leading-[0.92] mt-0 text-center whitespace-nowrap"
+              className="font-clash font-black text-foreground leading-[0.95] mt-2 text-center"
               style={{
-                fontSize: "clamp(1.1rem, 3.8vw, 4.5rem)",
+                fontSize: "clamp(1.2rem, 3.2vw, 3.5rem)",
                 letterSpacing: "0.04em",
                 textShadow: "0 4px 60px hsla(0,0%,0%,0.5)",
               }}
@@ -127,26 +158,26 @@ const Hero = () => {
             </h1>
           </motion.div>
 
-          {/* Subtitle */}
+          {/* Signature subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="font-outfit text-sm md:text-base max-w-lg mx-auto leading-relaxed text-destructive-foreground"
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="font-outfit text-sm md:text-base max-w-lg mx-auto leading-relaxed"
             style={{
               color: "transparent",
-              WebkitTextStroke: "0.5px hsl(73 100% 50% / 0.5)",
-              letterSpacing: "0.05em",
+              WebkitTextStroke: "0.5px hsl(73 100% 50% / 0.45)",
+              letterSpacing: "0.06em",
             }}
           >
-            {SITE.hero.subtitle2}
+            Agence d'influence spécialisée musique et marques.
           </motion.p>
 
-          {/* Buttons — glass style */}
+          {/* Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
             className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <motion.a
@@ -183,7 +214,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
+          transition={{ delay: 1.4 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
         >
           <span className="font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/25">Scroll</span>
@@ -195,7 +226,7 @@ const Hero = () => {
           />
         </motion.div>
 
-        {/* Bottom gradient for seamless transition */}
+        {/* Bottom gradient */}
         <div
           className="absolute bottom-0 left-0 right-0 h-32 z-[3] pointer-events-none"
           style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 100%)" }}
