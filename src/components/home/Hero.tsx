@@ -160,13 +160,12 @@ const Hero = () => {
 
           {/* Signature subtitle */}
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 1, 0, 0] }}
+            initial={{ opacity: 0.3 }}
+            animate={{ opacity: [0.3, 1, 1, 0.3] }}
             transition={{
-              duration: 5,
+              duration: 4,
               repeat: Infinity,
               ease: "easeInOut",
-              times: [0, 0.15, 0.65, 0.85, 1],
             }}
             className="font-outfit text-base md:text-lg max-w-xl mx-auto leading-relaxed mt-16"
             style={{
