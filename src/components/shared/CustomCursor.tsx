@@ -26,8 +26,8 @@ const CustomCursor = () => {
     const animate = () => {
       const dx = mouse.current.x - ringPos.current.x;
       const dy = mouse.current.y - ringPos.current.y;
-      ringPos.current.x += dx * 0.15;
-      ringPos.current.y += dy * 0.15;
+      ringPos.current.x += dx * 0.35;
+      ringPos.current.y += dy * 0.35;
 
       if (ringRef.current) {
         const size = isHover ? 52 : 32;
