@@ -72,15 +72,16 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   }, [autoScroll]);
 
   const handleMouseDown = (e: React.MouseEvent) => { isDragging.current = true; didDrag.current = false; startX.current = e.pageX; pauseAutoScrollUntil.current = Date.now() + 1200; };
-  const handleMouseMove = (e: React.MouseEvent) => { if (!isDragging.current || !scrollRef.current) return; const dx = e.pageX - startX.current; if (Math.abs(dx) > 3) didDrag.current = true; scrollRef.current.scrollLeft -= dx; startX.current = e.pageX; };
+  const handleMouseMove = (e: React.MouseEvent) => { if (!isDragging.current || !scrollRef.current) return; const dx = e.pageX - startX.current; if (Math.abs(dx) > 5) didDrag.current = true; scrollRef.current.scrollLeft -= dx; startX.current = e.pageX; };
   const handleMouseUp = () => { isDragging.current = false; };
   const handleTouchStart = (e: React.TouchEvent) => { isDragging.current = true; didDrag.current = false; startX.current = e.touches[0].pageX; pauseAutoScrollUntil.current = Date.now() + 1200; };
-  const handleTouchMove = (e: React.TouchEvent) => { if (!isDragging.current || !scrollRef.current) return; const dx = e.touches[0].pageX - startX.current; if (Math.abs(dx) > 3) didDrag.current = true; scrollRef.current.scrollLeft -= dx; startX.current = e.touches[0].pageX; };
+  const handleTouchMove = (e: React.TouchEvent) => { if (!isDragging.current || !scrollRef.current) return; const dx = e.touches[0].pageX - startX.current; if (Math.abs(dx) > 5) didDrag.current = true; scrollRef.current.scrollLeft -= dx; startX.current = e.touches[0].pageX; };
   const handleTouchEnd = () => { isDragging.current = false; };
 
   const handleArtistClick = (artistName: string) => {
+    console.log("Artist click:", artistName, "didDrag:", didDrag.current, "hasDetails:", !!ARTIST_DETAILS[artistName]);
     if (didDrag.current) return;
-    if (ARTIST_DETAILS[artistName]) setSelectedArtist(artistName);
+    setSelectedArtist(ARTIST_DETAILS[artistName] ? artistName : null);
   };
 
   const closeModal = () => setSelectedArtist(null);
