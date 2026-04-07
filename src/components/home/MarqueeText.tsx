@@ -9,41 +9,58 @@ interface MarqueeTextProps {
   logos?: LogoItem[];
 }
 
-const SPACING = 96; // px entre chaque item
+const SPACING = 96;
+
+// Brand colors for hover glow
+const BRAND_COLORS: Record<string, string> = {
+  "SPOTIFY": "30, 215, 96",
+  "TIKTOK": "255, 0, 80",
+  "YOUTUBE": "255, 0, 0",
+  "UNIVERSAL MUSIC": "255, 255, 255",
+  "THE ARTIST": "130, 100, 255",
+  "INSTAGRAM": "225, 48, 108",
+  "GOOGLE": "66, 133, 244",
+  "META": "24, 119, 242",
+  "SNAPCHAT": "255, 252, 0",
+};
 
 const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
   const items = logos
-    ? logos.map((logo, i) => (
-        <div key={i} className="mq-item">
-          {logo.name === "THE ARTIST" ? (
-            // THE ARTIST: logo + label
-            <div className="mq-artist-container">
-              {logo.logoUrl && (
-                <img
-                  src={logo.logoUrl}
-                  alt={logo.name}
-                  className="mq-logo mq-logo--artist"
-                  loading="lazy"
-                  draggable={false}
-                />
-              )}
-              <span className="mq-artist-label">{logo.label || logo.name}</span>
-            </div>
-          ) : logo.logoUrl ? (
-            // Regular logo
-            <img
-              src={logo.logoUrl}
-              alt={logo.name}
-              className={`mq-logo ${logo.name === "UNIVERSAL MUSIC" ? "mq-logo--universal" : ""} ${logo.name === "YOUTUBE" ? "mq-logo--youtube" : ""}`}
-              loading="lazy"
-              draggable={false}
-            />
-          ) : (
-            // Logo without URL (e.g., UNIVERSAL MUSIC): show label
-            <span className="mq-word">{logo.label || logo.name}</span>
-          )}
-        </div>
-      ))
+    ? logos.map((logo, i) => {
+        const brandColor = BRAND_COLORS[logo.name] || "255, 255, 255";
+        return (
+          <div
+            key={i}
+            className="mq-item"
+            style={{ "--brand-color": brandColor } as React.CSSProperties}
+          >
+            {logo.name === "THE ARTIST" ? (
+              <div className="mq-artist-container">
+                {logo.logoUrl && (
+                  <img
+                    src={logo.logoUrl}
+                    alt={logo.name}
+                    className="mq-logo mq-logo--colored"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                )}
+                <span className="mq-artist-label">{logo.label || logo.name}</span>
+              </div>
+            ) : logo.logoUrl ? (
+              <img
+                src={logo.logoUrl}
+                alt={logo.name}
+                className={`mq-logo mq-logo--colored ${logo.name === "UNIVERSAL MUSIC" ? "mq-logo--universal" : ""}`}
+                loading="lazy"
+                draggable={false}
+              />
+            ) : (
+              <span className="mq-word">{logo.label || logo.name}</span>
+            )}
+          </div>
+        );
+      })
     : words?.map((word, i) => (
         <div key={i} className="mq-item">
           <span className="mq-word">{word}</span>
@@ -83,23 +100,31 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           flex-shrink: 0;
         }
 
-        /* margin-right sur chaque item = espace uniforme y compris après le dernier */
         .mq-item {
           margin-right: ${SPACING}px;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
+          position: relative;
+          padding: 8px 12px;
+          border-radius: 12px;
+          transition: background 0.4s ease;
         }
 
-        .mq-logo {
+        .mq-item:hover {
+          background: rgba(var(--brand-color), 0.06);
+        }
+
+        /* All logos: grayscale + dim by default, color on hover */
+        .mq-logo--colored {
           height: 52px;
           max-width: 180px;
           width: auto;
           object-fit: contain;
-          filter: brightness(0) invert(1);
-          opacity: 0.5;
-          transition: opacity 0.35s ease;
+          filter: grayscale(1) brightness(0.7);
+          opacity: 0.4;
+          transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease, drop-shadow 0.4s ease;
           display: block;
         }
 
@@ -108,25 +133,18 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           max-width: 200px;
         }
 
-        .mq-logo--youtube {
-          filter: brightness(0) invert(1) hue-rotate(180deg) contrast(1.3);
+        .mq-item:hover .mq-logo--colored {
+          filter: grayscale(0) brightness(1);
+          opacity: 1;
+          transform: scale(1.08);
+          -webkit-filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(var(--brand-color), 0.4));
+          filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(var(--brand-color), 0.4));
         }
 
         .mq-artist-container {
           display: flex;
           align-items: center;
           gap: 12px;
-        }
-
-        .mq-logo--artist {
-          height: 48px;
-          max-width: 140px;
-          width: auto;
-          object-fit: contain;
-          filter: grayscale(1);
-          opacity: 0.6;
-          transition: opacity 0.35s ease, filter 0.35s ease;
-          display: block;
         }
 
         .mq-artist-label {
@@ -136,23 +154,15 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           letter-spacing: 0.3em;
           text-transform: uppercase;
           color: hsl(var(--foreground));
-          opacity: 0.6;
+          opacity: 0.4;
           white-space: nowrap;
-          transition: opacity 0.35s ease;
+          transition: opacity 0.4s ease, text-shadow 0.4s ease;
           flex-shrink: 0;
-        }
-
-        .mq-item:hover .mq-logo {
-          opacity: 1;
-        }
-
-        .mq-item:hover .mq-logo--artist {
-          opacity: 1;
-          filter: grayscale(0.3);
         }
 
         .mq-item:hover .mq-artist-label {
           opacity: 1;
+          text-shadow: 0 0 20px rgba(var(--brand-color), 0.4);
         }
 
         .mq-word {
@@ -178,8 +188,7 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
 
         @media (max-width: 768px) {
           .mq-root { padding: 24px 0; }
-          .mq-logo { height: 38px; }
-          .mq-logo--artist { height: 44px; }
+          .mq-logo--colored { height: 38px; }
           .mq-item { margin-right: 56px; }
           .mq-track { animation-duration: 36s; }
         }
