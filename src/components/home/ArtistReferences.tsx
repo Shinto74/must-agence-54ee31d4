@@ -135,11 +135,11 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   return (
     <section ref={sectionRef} className="py-20">
       <div className="max-w-[1400px] mx-auto px-6 mb-8">
-        <p className="rv mb-2 font-mono text-xs uppercase tracking-[0.2em] text-primary">
+        <p className="rv mb-3 font-mono text-xs uppercase tracking-[0.2em] text-primary">
           {ARTIST_REFERENCES.label}
         </p>
-        <h2 className="rv font-clash text-3xl font-bold text-foreground md:text-4xl">
-          {ARTIST_REFERENCES.titleLine1} <br />
+        <h2 className="rv font-clash text-3xl font-bold text-foreground md:text-4xl tracking-tight">
+          {ARTIST_REFERENCES.titleLine1}{" "}
           <span className="text-primary">{ARTIST_REFERENCES.titleLine2}</span>
         </h2>
  
