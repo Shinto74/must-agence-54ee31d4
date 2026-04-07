@@ -44,7 +44,6 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
                   draggable={false}
                 />
               )}
-              <span className="mq-label">{logo.label || logo.name}</span>
             </div>
           </div>
         );
