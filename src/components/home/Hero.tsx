@@ -94,21 +94,18 @@ const Hero = () => {
             className="mb-6"
           >
             <motion.div
-              className="font-clash font-black block leading-[0.85] text-center"
+              className="font-clash font-black block leading-[0.85] text-center whitespace-nowrap"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                fontSize: "clamp(4rem, 12vw, 10rem)",
+                fontSize: "clamp(2.5rem, 8vw, 8rem)",
                 color: "hsl(0 0% 100%)",
                 textShadow: "0 4px 60px hsla(0,0%,0%,0.5)",
                 letterSpacing: "-0.02em",
               }}
             >
-              <span>MUST&nbsp;</span>
-              <span style={{ color: "hsl(73 100% 50%)", textShadow: "0 0 40px hsl(73 100% 50% / 0.35)" }}>A</span>
-              <br />
-              <span>GENCE</span>
+              MUST <span style={{ color: "hsl(73 100% 50%)", textShadow: "0 0 40px hsl(73 100% 50% / 0.35)" }}>A</span>GENCE
             </motion.div>
             <h1
               className="font-clash font-black text-foreground leading-[0.92] mt-0 text-center whitespace-nowrap"
