@@ -141,6 +141,32 @@
   box-shadow: 0 0 20px hsl(var(--ngs) / 0.28), 0 0 60px hsl(var(--ngs) / 0.14);
 }
 
+/* Card hover effect per charte: translateY(-3px) + top accent border + shadow */
+.card-hover {
+  transition: transform 0.45s var(--ez), box-shadow 0.45s var(--ez), border-color 0.45s var(--ez);
+  position: relative;
+  overflow: hidden;
+}
+.card-hover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, hsl(var(--neon)), hsl(var(--neon2)));
+  transform: scaleX(0);
+  transition: transform 0.45s var(--ez);
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--card-hover-shadow);
+  border-color: hsl(var(--bdl));
+}
+.card-hover:hover::before {
+  transform: scaleX(1);
+}
+
 /* Hide scrollbar utility */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
