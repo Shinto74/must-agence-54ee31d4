@@ -111,12 +111,12 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
         }
 
         .mq-logo {
-          height: 40px;
-          max-width: 160px;
+          height: 50px;
+          max-width: 180px;
           width: auto;
           object-fit: contain;
           filter: brightness(0) invert(1);
-          opacity: 0.55;
+          opacity: 0.7;
           transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
           display: block;
           flex-shrink: 0;
