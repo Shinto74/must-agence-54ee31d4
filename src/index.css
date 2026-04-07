@@ -8,14 +8,14 @@
 @layer base {
   :root {
     /* ── Charte Graphique Mustagence v1.0 ── */
-    /* Background: #0A0A0A */
-    --bg: 0 0% 4%;
-    /* Surface / Cards: #141414 */
-    --sf: 0 0% 8%;
-    --sf2: 0 0% 10%;
+    /* Background: #0F0F0F */
+    --bg: 0 0% 6%;
+    /* Surface / Cards: #1A1A1A */
+    --sf: 0 0% 10%;
+    --sf2: 0 0% 13%;
     /* Borders */
-    --bd: 0 0% 12%;
-    --bdl: 0 0% 16.5%;
+    --bd: 0 0% 15%;
+    --bdl: 0 0% 20%;
     /* Neon Green: #CCFF00 */
     --neon: 73 100% 50%;
     --neon2: 75 100% 50%;
