@@ -328,7 +328,7 @@ const ArtisteServicesV4B = () => {
                         className="flex items-center gap-3"
                       >
                         <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                        <span className="font-mono text-[11px] text-white/55 tracking-wide">{item}</span>
+                        <span className="font-mono text-[11px] text-muted-foreground tracking-wide">{item}</span>
                       </motion.div>
                     ))}
                   </div>
