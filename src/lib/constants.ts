@@ -15,7 +15,7 @@ export const SITE = {
     titleLine1: "On ne suit pas les tendances,",
     titleAccent: "on les crée.",
     subtitle: "On ne suit pas les tendances, on les crée.",
-    subtitle2: "Agence d'influence spécialisée musique et marques.",
+    subtitle2: "\n",
     ctaPrimary: "Démarrer un projet",
     ctaSecondary: "Découvrir nos pôles",
   },
