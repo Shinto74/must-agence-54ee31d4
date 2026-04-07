@@ -50,13 +50,13 @@
     --radius: 0.5rem;
 
     /* Sidebar */
-    --sidebar-background: 0 0% 6%;
+    --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 73 100% 50%;
     --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent: 0 0% 13%;
     --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 0 0% 12%;
+    --sidebar-border: 0 0% 15%;
     --sidebar-ring: 73 100% 50%;
 
     /* ── Motion ── */
