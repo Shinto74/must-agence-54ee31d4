@@ -46,6 +46,9 @@ export const SITE = {
     button: "Nous contacter",
   },
   contact: {
+    heading: "Parlons de votre projet.",
+    text: "Votre projet mérite une stratégie sur mesure.",
+    subtext: "Musique, influence ou branding — décrivez vos objectifs. On revient vers vous en 24h.",
     email: "contact@mustagence.com",
     phone: "+33 6 00 00 00 00",
     location: "Paris, France",

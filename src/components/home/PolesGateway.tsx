@@ -17,7 +17,7 @@ const PolesGateway = () => {
           <Link
             key={pole.path}
             to={pole.path}
-            className="rv group relative rounded-2xl border border-border bg-surface p-8 md:p-10 transition-all duration-500 hover:border-border-light hover:-translate-y-1.5 hover:shadow-[0_0_30px_hsl(var(--neon)/0.08)]"
+            className="rv group card-hover rounded-2xl border border-border bg-surface p-8 md:p-10"
           >
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">{pole.tag}</span>
             <h3 className="font-clash text-3xl md:text-4xl font-bold text-foreground mt-3 mb-4">{pole.title}</h3>

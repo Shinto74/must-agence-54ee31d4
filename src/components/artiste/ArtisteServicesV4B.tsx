@@ -101,11 +101,11 @@ const panelVariants = {
   enter: { opacity: 0, y: 28, scale: 0.97 },
   center: {
     opacity: 1, y: 0, scale: 1,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
   },
   exit: {
     opacity: 0, y: -28, scale: 0.97,
-    transition: { duration: 0.3, ease: [0.4, 0, 1, 1] },
+    transition: { duration: 0.3, ease: [0.4, 0, 1, 1] as const },
   },
 };
 
@@ -218,14 +218,14 @@ const ArtisteServicesV4B = () => {
 
       {/* Conteneur sticky — reste visible pendant tout le scroll */}
       <div
-        className="sticky top-0 overflow-hidden bg-[#070707]"
+        className="sticky top-0 overflow-hidden bg-background"
         style={{ height: "100vh" }}
       >
         {/* Header superposé */}
         <div
           ref={headerRef}
           className="absolute top-0 left-0 w-1/2 z-20 px-14 pt-24 pb-6 hidden lg:block"
-          style={{ background: "linear-gradient(to bottom, #070707 65%, transparent)" }}
+          style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 65%, transparent)" }}
         >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -242,7 +242,7 @@ const ArtisteServicesV4B = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="font-outfit text-white/40 mt-3 leading-relaxed"
+            className="font-outfit text-muted-foreground mt-3 leading-relaxed"
             style={{ fontSize: 13, maxWidth: 320 }}
           >
             De la création à la réussite, nous vous accompagnons à chaque étape pour structurer et développer votre carrière artistique.
@@ -328,7 +328,7 @@ const ArtisteServicesV4B = () => {
                         className="flex items-center gap-3"
                       >
                         <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                        <span className="font-mono text-[11px] text-white/55 tracking-wide">{item}</span>
+                        <span className="font-mono text-[11px] text-muted-foreground tracking-wide">{item}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -358,7 +358,7 @@ const ArtisteServicesV4B = () => {
                     >
                       Voir les packs <span>&#8594;</span>
                     </motion.a>
-                    <span className="font-mono text-[8px] uppercase tracking-[.4em] text-white/20">
+                    <span className="font-mono text-[8px] uppercase tracking-[.4em] text-muted-foreground/40">
                       {activeIndex + 1} / {PILLARS.length}
                     </span>
                   </div>
@@ -414,7 +414,7 @@ const ArtisteServicesV4B = () => {
             animate={{ opacity: 1 }}
             className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 hidden lg:flex flex-col items-center gap-1"
           >
-            <span className="font-mono text-[7px] uppercase tracking-[.5em] text-white/20">scroll</span>
+            <span className="font-mono text-[7px] uppercase tracking-[.5em] text-muted-foreground/40">scroll</span>
             <motion.div
               animate={{ y: [0, 5, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}

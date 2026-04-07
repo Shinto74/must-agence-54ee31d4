@@ -15,7 +15,7 @@ import Entreprise from "./pages/Entreprise";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import NotFound from "./pages/NotFound";
-import ArtisteServicesTest from "./pages/ArtisteServicesTest";
+
 
 const queryClient = new QueryClient();
 
@@ -46,7 +46,7 @@ const AnimatedRoutes = () => {
       <Routes location={location}>
         <Route path="/artiste" element={<Artiste />} />
         <Route path="/entreprise" element={<Entreprise />} />
-        <Route path="/test/artiste-services" element={<ArtisteServicesTest />} />
+        
         <Route path="*" element={<NotFound />} />
       </Routes>
     </PageTransition>
