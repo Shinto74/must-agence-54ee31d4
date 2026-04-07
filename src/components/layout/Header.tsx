@@ -31,9 +31,9 @@ const Header = () => {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled
-          ? "hsla(0,0%,6%,0.82)"
-          : "linear-gradient(to bottom, hsla(0,0%,6%,0.6) 0%, hsla(0,0%,6%,0.3) 100%)",
-        backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "blur(10px)",
+          ? "hsla(73,100%,50%,0.08)"
+          : "transparent",
+        backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "none",
         borderBottom: scrolled ? "1px solid hsla(0,0%,100%,0.06)" : "1px solid transparent",
       }}
     >
