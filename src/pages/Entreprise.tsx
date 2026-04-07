@@ -20,7 +20,7 @@ const Entreprise = () => {
   const { data: process } = useProcessEntreprise();
 
   return (
-    <div>
+    <div className="page-bg page-bg--entreprise">
       <SubHero
         logo={SITE.logoGreen}
         tag={ENTREPRISE_PAGE.hero.tag}
