@@ -1,4 +1,4 @@
-import { useRef, useEffect, useLayoutEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 interface TeamMember {
   name: string;
@@ -64,8 +64,7 @@ function useScrollIndex(ref: React.RefObject<HTMLDivElement>, count: number) {
   return index;
 }
 
-// ── V4 Split avec animation flip du conteneur ──────────────────────────────
-const V4Split = ({ data, label, sublabel }: { data: TeamMember[]; label: string; sublabel: string }) => {
+const V4Split = ({ data, label }: { data: TeamMember[]; label: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const i = useScrollIndex(ref, data.length);
   const m = data[i];
@@ -73,52 +72,46 @@ const V4Split = ({ data, label, sublabel }: { data: TeamMember[]; label: string;
 
   return (
     <div ref={ref} style={{ height: `${data.length * 100}vh` }}>
-      {/* Label variante */}
-      <div className="py-3 px-8 bg-[#0d0d0d] border-t border-white/8 flex items-center gap-4 sticky top-0 z-50">
-        <span className="font-clash text-sm font-bold text-white">{label}</span>
+      {/* Label */}
+      <div className="py-3 px-8 bg-surface border-t border-border/30 flex items-center gap-4 sticky top-0 z-50">
+        <span className="font-clash text-sm font-bold text-foreground">{label}</span>
       </div>
 
-      {/* Sticky container avec animation flip */}
+      {/* Sticky container with flip animation */}
       <div
         key={`team-${i}`}
-        className="sticky overflow-hidden bg-[#080808]"
+        className="sticky overflow-hidden bg-background"
         style={{
           top: "4vh",
           height: "88vh",
           animation: "sectionFlip 400ms cubic-bezier(.16,1,.3,1) both",
         }}
       >
-        {/* Ligne centrale verticale */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/[0.06] z-10" />
+        {/* Center vertical line */}
+        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border/20 z-10" />
 
         <div className="flex h-full">
-
-          {/* ── Gauche : Texte Editorial ── */}
+          {/* Left: Editorial text */}
           <div className="w-1/2 h-full flex flex-col justify-center items-start pl-20 pr-10 relative overflow-hidden">
-
-            {/* Halo vert atmosphérique — effet fond theArtist */}
+            {/* Atmospheric neon halo */}
             <div
-              className="absolute pointer-events-none"
+              className="absolute pointer-events-none inset-0"
               style={{
-                inset: 0,
-                background: "radial-gradient(ellipse 70% 60% at 20% 80%, hsla(73,100%,50%,0.10) 0%, hsla(73,100%,50%,0.03) 45%, transparent 70%)",
+                background: "radial-gradient(ellipse 70% 60% at 20% 80%, hsl(var(--neon) / 0.10) 0%, hsl(var(--neon) / 0.03) 45%, transparent 70%)",
               }}
             />
-            {/* Halo secondaire plus haut pour profondeur */}
             <div
-              className="absolute pointer-events-none"
+              className="absolute pointer-events-none inset-0"
               style={{
-                inset: 0,
-                background: "radial-gradient(ellipse 45% 40% at 55% 30%, hsla(73,100%,50%,0.05) 0%, transparent 65%)",
+                background: "radial-gradient(ellipse 45% 40% at 55% 30%, hsl(var(--neon) / 0.05) 0%, transparent 65%)",
               }}
             />
 
             <div className="relative z-10 w-full">
-
-              {/* Nom — mise en page éditoriale : prénom blanc / nom en stroke vert */}
+              {/* Name - editorial: first name white / last name neon stroke */}
               <div className="mb-6">
                 <h2
-                  className="font-clash font-black text-white block"
+                  className="font-clash font-black text-foreground block"
                   style={{ fontSize: "clamp(2.8rem, 4.6vw, 6rem)", lineHeight: 0.9, letterSpacing: "-0.025em" }}
                 >
                   {m.name.split(" ")[0]}
@@ -131,7 +124,7 @@ const V4Split = ({ data, label, sublabel }: { data: TeamMember[]; label: string;
                       lineHeight: 0.9,
                       letterSpacing: "-0.025em",
                       color: "transparent",
-                      WebkitTextStroke: "1.5px hsl(73 100% 50%)",
+                      WebkitTextStroke: "1.5px hsl(var(--neon))",
                     }}
                   >
                     {m.name.split(" ")[1]}
@@ -139,7 +132,7 @@ const V4Split = ({ data, label, sublabel }: { data: TeamMember[]; label: string;
                 )}
               </div>
 
-              {/* Rôle avec ligne accent verte */}
+              {/* Role with accent line */}
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-6 h-px bg-primary" />
                 <p className="font-mono text-[9px] tracking-[.5em] uppercase text-primary font-medium">
@@ -147,12 +140,12 @@ const V4Split = ({ data, label, sublabel }: { data: TeamMember[]; label: string;
                 </p>
               </div>
 
-              {/* Séparateur fin */}
-              <div className="w-full h-px mb-8" style={{ background: "linear-gradient(to right, rgba(255,255,255,0.08) 0%, transparent 60%)" }} />
+              {/* Separator */}
+              <div className="w-full h-px mb-8 bg-gradient-to-r from-border/30 to-transparent" />
 
-              {/* Citation éditoriale */}
+              {/* Editorial quote */}
               <p
-                className="font-outfit italic text-white/55 leading-[1.9] mb-10"
+                className="font-outfit italic text-foreground/55 leading-[1.9] mb-10"
                 style={{ fontSize: "15px", maxWidth: "320px" }}
               >
                 &ldquo;{m.description}&rdquo;
@@ -166,22 +159,20 @@ const V4Split = ({ data, label, sublabel }: { data: TeamMember[]; label: string;
                     className="h-[2px] rounded-full transition-all duration-700"
                     style={{
                       width: idx === i ? 40 : 8,
-                      background: idx === i ? "hsl(73 100% 50%)" : "rgba(255,255,255,.07)",
+                      background: idx === i ? "hsl(var(--neon))" : "hsl(var(--border))",
                     }}
                   />
                 ))}
               </div>
 
-              <p className="font-mono text-[7px] tracking-[.6em] uppercase text-white/20">
+              <p className="font-mono text-[7px] tracking-[.6em] uppercase text-muted-foreground/40">
                 SCROLL ↓
               </p>
             </div>
           </div>
 
-          {/* ── Droite : Portrait centré et réduit ── */}
+          {/* Right: Portrait */}
           <div className="w-1/2 h-full relative overflow-hidden flex items-center justify-center">
-
-            {/* Conteneur portrait — taille fixe et réduite */}
             <div className="relative flex-shrink-0" style={{ width: "380px", height: "520px" }}>
               <img
                 src={img}
@@ -191,16 +182,13 @@ const V4Split = ({ data, label, sublabel }: { data: TeamMember[]; label: string;
                   filter: "grayscale(100%) contrast(1.2) brightness(0.8)",
                 }}
               />
-
-              {/* Fondus pour fusion avec fond */}
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, #080808 0%, transparent 20%)" }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #080808 0%, transparent 40%)" }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, #080808 0%, transparent 20%)" }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to left, rgba(8,8,8,.4) 0%, transparent 25%)" }} />
+              {/* Fade edges into background */}
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, hsl(var(--background)) 0%, transparent 20%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 40%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 20%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to left, hsl(var(--background) / 0.4) 0%, transparent 25%)" }} />
             </div>
-
           </div>
-
         </div>
       </div>
 
@@ -220,17 +208,12 @@ const V4Split = ({ data, label, sublabel }: { data: TeamMember[]; label: string;
   );
 };
 
-// ── Main ──────────────────────────────────────────────────────────────────────
 const Team = ({ members }: TeamProps) => {
   const data = members && members.length > 0 ? members : FALLBACK;
 
   return (
     <div>
-      <V4Split
-        data={data}
-        label="L'équipe"
-        sublabel="Basculement 3D — Split Net"
-      />
+      <V4Split data={data} label="L'équipe" />
     </div>
   );
 };
