@@ -108,7 +108,7 @@ const Hero = () => {
               MUST AGENCE
             </motion.span>
             <h1
-              className="font-clash font-black text-foreground leading-[0.92] mt-2"
+              className="font-clash font-black text-foreground leading-[0.92] mt-2 text-center"
               style={{
                 fontSize: "clamp(2.8rem, 7vw, 7rem)",
                 letterSpacing: "-0.03em",
@@ -133,7 +133,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="font-outfit text-sm md:text-base max-w-lg mx-auto leading-relaxed"
+            className="font-outfit text-sm md:text-base max-w-lg mx-auto leading-relaxed text-destructive-foreground"
             style={{
               color: "transparent",
               WebkitTextStroke: "0.5px hsl(73 100% 50% / 0.5)",
