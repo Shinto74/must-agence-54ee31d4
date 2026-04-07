@@ -139,8 +139,10 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
           {ARTIST_REFERENCES.label}
         </p>
         <h2 className="rv font-clash text-3xl font-bold text-foreground md:text-4xl tracking-tight" style={{ wordSpacing: "0.15em" }}>
-          {ARTIST_REFERENCES.titleLine1}{" "}
-          <span className="text-primary">{ARTIST_REFERENCES.titleLine2}</span>
+          {ARTIST_REFERENCES.titleLine1}
+        </h2>
+        <h2 className="rv font-clash text-3xl font-bold text-primary md:text-4xl tracking-tight" style={{ wordSpacing: "0.15em" }}>
+          {ARTIST_REFERENCES.titleLine2}
         </h2>
  
         <div className="rv mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
