@@ -108,7 +108,7 @@ const Hero = () => {
             <h1
               className="font-clash font-black text-foreground leading-[0.92] mt-2"
               style={{
-                fontSize: "clamp(3.2rem, 9vw, 9rem)",
+                fontSize: "clamp(2.8rem, 7vw, 7rem)",
                 letterSpacing: "-0.03em",
                 textShadow: "0 4px 60px hsla(0,0%,0%,0.5)",
               }}
@@ -131,15 +131,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="font-outfit text-foreground/45 text-base md:text-lg max-w-lg mx-auto leading-relaxed italic"
-          >
-            {SITE.hero.subtitle}
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.85 }}
-            className="font-outfit text-primary/0 text-sm md:text-base max-w-lg mx-auto leading-relaxed mt-2"
+            className="font-outfit text-sm md:text-base max-w-lg mx-auto leading-relaxed"
             style={{
               color: "transparent",
               WebkitTextStroke: "0.5px hsl(73 100% 50% / 0.5)",
