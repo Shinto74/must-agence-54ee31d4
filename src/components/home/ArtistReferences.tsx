@@ -267,83 +267,138 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
         })}
       </div>
  
-      {/* MODALE Centrée */}
+      {/* MODALE Glassmorphism */}
       {selectedArtist && currentArtist && currentDetails && createPortal(
         <>
           {/* Backdrop */}
           <div
-            className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
-              selectedArtist ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
+            className="fixed inset-0 z-40 transition-opacity duration-400"
             onClick={closeModal}
-            style={{ backdropFilter: selectedArtist ? "blur(8px)" : "none" }}
+            style={{
+              background: "hsla(0,0%,0%,0.6)",
+              backdropFilter: "blur(16px) saturate(1.2)",
+            }}
           />
- 
-          {/* Modal Container */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-y-auto">
+
+          {/* Modal */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-y-auto" onClick={closeModal}>
             <div
-              className={`relative w-full max-w-2xl rounded-2xl border border-border bg-surface transition-all duration-300 ${
-                selectedArtist
-                  ? "scale-100 opacity-100"
-                  : "scale-95 opacity-0 pointer-events-none"
-              }`}
+              className="relative w-full max-w-2xl rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "hsla(0,0%,6%,0.75)",
+                backdropFilter: "blur(40px) saturate(1.3)",
+                border: "1px solid hsla(73,100%,50%,0.12)",
+                boxShadow: "0 0 60px hsla(73,100%,50%,0.06), 0 25px 50px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(0,0%,100%,0.05)",
+              }}
             >
-              {/* Close Button */}
+              {/* Neon accent top border */}
+              <div
+                className="absolute top-0 left-0 right-0 h-[1px]"
+                style={{ background: "linear-gradient(to right, transparent, hsl(73 100% 50% / 0.4), transparent)" }}
+              />
+
+              {/* Close */}
               <button
                 onClick={closeModal}
-                className="absolute right-6 top-6 p-2 text-muted-foreground hover:text-primary transition-colors hover:bg-primary/5 rounded-lg z-10"
+                className="absolute right-5 top-5 p-2 rounded-full z-10 transition-all duration-300"
+                style={{
+                  background: "hsla(0,0%,100%,0.06)",
+                  border: "1px solid hsla(0,0%,100%,0.08)",
+                  color: "hsla(0,0%,100%,0.5)",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "hsla(73,100%,50%,0.1)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "hsla(73,100%,50%,0.3)";
+                  (e.currentTarget as HTMLElement).style.color = "hsl(73 100% 50%)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "hsla(0,0%,100%,0.06)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "hsla(0,0%,100%,0.08)";
+                  (e.currentTarget as HTMLElement).style.color = "hsla(0,0%,100%,0.5)";
+                }}
                 aria-label="Fermer"
               >
-                <X size={24} />
+                <X size={18} />
               </button>
- 
-              {/* Content */}
-              <div className="p-6 md:p-8">
+
+              <div className="p-7 md:p-9">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Photo */}
-                  <div>
-                    <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-border">
+                  {/* Photo with neon frame */}
+                  <div className="relative">
+                    <div
+                      className="relative aspect-[3/4] overflow-hidden rounded-xl"
+                      style={{
+                        border: "1px solid hsla(73,100%,50%,0.15)",
+                        boxShadow: "0 0 30px hsla(73,100%,50%,0.08), inset 0 0 20px hsla(0,0%,0%,0.3)",
+                      }}
+                    >
                       <img
                         src={currentArtist.image}
                         alt={currentArtist.name}
                         className="h-full w-full object-cover"
                       />
+                      {/* Photo overlay gradient */}
+                      <div className="absolute inset-0" style={{
+                        background: "linear-gradient(to top, hsla(0,0%,0%,0.4) 0%, transparent 40%)",
+                      }} />
                     </div>
+                    {/* Glow behind photo */}
+                    <div className="absolute -inset-3 -z-10 rounded-2xl" style={{
+                      background: "radial-gradient(circle, hsl(73 100% 50% / 0.06) 0%, transparent 70%)",
+                    }} />
                   </div>
- 
+
                   {/* Info */}
                   <div className="flex flex-col justify-between">
                     <div>
-                      <h3 className="font-clash text-2xl font-bold text-foreground mb-2">
+                      <h3 className="font-clash text-2xl font-bold text-foreground mb-1">
                         {currentArtist.name}
                       </h3>
-                      <p className="font-mono text-sm uppercase tracking-wider text-primary mb-6">
-                        {currentDetails.strategie}
-                      </p>
-                      <p className="text-foreground/80 leading-relaxed mb-6">
+                      <div className="flex items-center gap-2 mb-6">
+                        <div className="w-5 h-px" style={{ background: "hsl(73 100% 50% / 0.5)" }} />
+                        <p className="font-mono text-[10px] uppercase tracking-[.2em]" style={{ color: "hsl(73 100% 50%)" }}>
+                          {currentDetails.strategie}
+                        </p>
+                      </div>
+
+                      {/* Separator */}
+                      <div className="w-full h-px mb-5" style={{ background: "linear-gradient(to right, hsla(73,100%,50%,0.15), transparent)" }} />
+
+                      <p className="leading-relaxed mb-6" style={{ color: "hsla(0,0%,100%,0.65)", fontSize: "14px" }}>
                         {currentDetails.description}
                       </p>
- 
+
                       {currentDetails.chiffre && (
-                        <div className="mb-6 p-4 rounded-lg border border-primary/20 bg-primary/5">
-                          <p className="font-clash text-lg font-bold text-primary">
+                        <div
+                          className="mb-6 p-4 rounded-lg"
+                          style={{
+                            background: "hsla(73,100%,50%,0.04)",
+                            border: "1px solid hsla(73,100%,50%,0.12)",
+                          }}
+                        >
+                          <p className="font-clash text-lg font-bold" style={{ color: "hsl(73 100% 50%)" }}>
                             {currentDetails.chiffre}
                           </p>
                         </div>
                       )}
                     </div>
- 
+
                     {/* Plateformes */}
                     <div>
-                      <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-3">
+                      <p className="font-mono text-[9px] uppercase tracking-[.25em] mb-3" style={{ color: "hsla(0,0%,100%,0.3)" }}>
                         Plateformes
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {currentDetails.plateformes.map((plateforme) => (
                           <span
                             key={plateforme}
-                            className="px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-mono uppercase tracking-wider"
+                            className="px-3 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-[.15em]"
+                            style={{
+                              background: "hsla(73,100%,50%,0.06)",
+                              border: "1px solid hsla(73,100%,50%,0.15)",
+                              color: "hsl(73 100% 50% / 0.8)",
+                            }}
                           >
                             {plateforme}
                           </span>
@@ -353,6 +408,12 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
                   </div>
                 </div>
               </div>
+
+              {/* Bottom neon line */}
+              <div
+                className="absolute bottom-0 left-0 right-0 h-[1px]"
+                style={{ background: "linear-gradient(to right, transparent, hsl(73 100% 50% / 0.2), transparent)" }}
+              />
             </div>
           </div>
         </>,
