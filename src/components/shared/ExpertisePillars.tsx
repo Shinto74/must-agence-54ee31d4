@@ -27,7 +27,7 @@ const ExpertisePillars = ({ items, accentColor }: ExpertisePillarsProps) => {
 
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((item) => (
-            <div key={item.number} className="rv rounded-xl border border-border bg-surface p-6 md:p-8">
+            <div key={item.number} className="rv card-hover rounded-xl border border-border bg-surface p-6 md:p-8">
               <span className={`font-mono text-xs ${isNeon ? "text-primary" : "text-foreground/50"}`}>
                 {item.number}.
               </span>

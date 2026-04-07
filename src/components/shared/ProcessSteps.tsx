@@ -31,7 +31,7 @@ const ProcessSteps = ({ steps, accentColor }: ProcessStepsProps) => {
               {i < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-border -translate-x-4" />
               )}
-              <div className="rounded-xl border border-border bg-surface p-6">
+              <div className="card-hover rounded-xl border border-border bg-surface p-6">
                 <span className={`font-clash text-3xl font-bold ${isNeon ? "text-primary/30" : "text-foreground/10"}`}>
                   {step.number}
                 </span>

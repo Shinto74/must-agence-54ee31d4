@@ -191,7 +191,7 @@ const GatewayPage = () => {
                 Pôle Entreprise
               </h2>
               <span
-                className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-semibold rounded-full"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background font-semibold rounded-full"
                 style={{
                   transform: hovered === "entreprise" ? "scale(1.05)" : "scale(1)",
                   boxShadow: hovered === "entreprise" ? "0 0 30px rgba(255,255,255,0.2)" : "none",

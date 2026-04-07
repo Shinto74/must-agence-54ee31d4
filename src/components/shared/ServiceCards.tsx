@@ -30,7 +30,7 @@ const ServiceCards = ({ services, accentColor }: ServiceCardsProps) => {
           {services.map((svc) => (
             <div
               key={svc.number}
-              className="rv rounded-xl border border-border bg-surface p-6 transition-all duration-500 hover:border-border-light hover:-translate-y-1"
+              className="rv card-hover rounded-xl border border-border bg-surface p-6"
             >
               <span className={`font-mono text-xs ${isNeon ? "text-primary" : "text-foreground/50"}`}>
                 {svc.number}.
