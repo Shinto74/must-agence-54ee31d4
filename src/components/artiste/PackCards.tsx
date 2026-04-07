@@ -95,7 +95,7 @@ const FeatureTooltip = ({ text, triggerRef }: { text: string; triggerRef: React.
     >
       <div className="bg-surface border border-primary/40 rounded-xl p-4 text-xs text-foreground/90 leading-relaxed shadow-[0_0_30px_hsl(var(--neon)/0.08),0_8px_32px_rgba(0,0,0,0.6)]">
         {text}
-        <div className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#0f0f0f] border-r border-b border-primary/40 rotate-45" />
+        <div className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-surface border-r border-b border-primary/40 rotate-45" />
       </div>
     </div>,
     document.body
