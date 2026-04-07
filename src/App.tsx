@@ -15,7 +15,7 @@ import Entreprise from "./pages/Entreprise";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import NotFound from "./pages/NotFound";
-import ArtisteServicesTest from "./pages/ArtisteServicesTest";
+
 
 const queryClient = new QueryClient();
 
