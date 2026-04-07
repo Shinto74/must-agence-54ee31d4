@@ -108,7 +108,7 @@ const Hero = () => {
               MUST AGENCE
             </motion.span>
             <h1
-              className="font-clash font-black text-foreground leading-[0.92] mt-2"
+              className="font-clash font-black text-foreground leading-[0.92] mt-2 text-center"
               style={{
                 fontSize: "clamp(2.8rem, 7vw, 7rem)",
                 letterSpacing: "-0.03em",
