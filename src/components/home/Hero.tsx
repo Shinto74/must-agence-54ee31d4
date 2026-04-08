@@ -100,11 +100,11 @@ const Hero = () => {
             <div className="w-8 h-px bg-primary/50" />
           </motion.div>
 
-          {/* MUST AGENCE — letter by letter animation */}
+          {/* MUST AGENCE — typewriter néon */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
             className="mb-4"
           >
             <div
@@ -114,27 +114,73 @@ const Hero = () => {
                 letterSpacing: "-0.02em",
               }}
             >
-              {BRAND_LETTERS.map((letter, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 40, rotateX: -90 }}
-                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.5 + i * 0.06,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  style={{
-                    color: letter.color,
-                    textShadow: letter.color.includes("73")
-                      ? "0 0 40px hsl(73 100% 50% / 0.35)"
-                      : "0 4px 60px hsla(0,0%,0%,0.5)",
-                    display: "inline-block",
-                  }}
-                >
-                  {letter.char}
-                </motion.span>
-              ))}
+              {BRAND_LETTERS.map((letter, i) => {
+                const isNeon = letter.color.includes("73");
+                const baseDelay = 0.5 + i * 0.09;
+                return (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      duration: 0.05,
+                      delay: baseDelay,
+                    }}
+                    style={{
+                      color: letter.color,
+                      display: "inline-block",
+                      position: "relative",
+                    }}
+                  >
+                    {/* Neon flash on the A */}
+                    {isNeon && (
+                      <motion.span
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          textShadow: "0 0 60px hsl(73 100% 50% / 0.8), 0 0 120px hsl(73 100% 50% / 0.4), 0 0 200px hsl(73 100% 50% / 0.2)",
+                          color: "hsl(73 100% 50%)",
+                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 1, 0.3, 1, 0.6] }}
+                        transition={{
+                          duration: 0.6,
+                          delay: baseDelay,
+                          times: [0, 0.2, 0.4, 0.6, 1],
+                        }}
+                      >
+                        {letter.char}
+                      </motion.span>
+                    )}
+                    {/* Cursor blink after each letter */}
+                    <motion.span
+                      className="absolute -right-[2px] top-[5%] bottom-[5%] w-[3px]"
+                      style={{ background: isNeon ? "hsl(73 100% 50%)" : "hsl(0 0% 80%)" }}
+                      initial={{ opacity: 1 }}
+                      animate={{ opacity: 0 }}
+                      transition={{ duration: 0.1, delay: baseDelay + 0.09 }}
+                    />
+                    <span style={{
+                      textShadow: isNeon
+                        ? "0 0 40px hsl(73 100% 50% / 0.35)"
+                        : "0 4px 60px hsla(0,0%,0%,0.5)",
+                    }}>
+                      {letter.char}
+                    </span>
+                  </motion.span>
+                );
+              })}
+              {/* Final blinking cursor */}
+              <motion.span
+                className="inline-block w-[3px] self-stretch ml-1"
+                style={{ background: "hsl(73 100% 50%)" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 0, 1, 0] }}
+                transition={{
+                  duration: 1.2,
+                  delay: 0.5 + BRAND_LETTERS.length * 0.09,
+                  repeat: 2,
+                }}
+              />
             </div>
 
             {/* Main title */}
