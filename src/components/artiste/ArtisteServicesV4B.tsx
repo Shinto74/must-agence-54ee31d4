@@ -363,7 +363,7 @@ const ArtisteServicesV4B = () => {
                         className="flex items-center gap-3"
                       >
                         <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" style={{ boxShadow: "0 0 8px hsl(73 100% 50% / 0.4)" }} />
-                        <span className="font-mono text-[12px] text-foreground/70 tracking-wide">{item}</span>
+                        <span className="font-mono text-[13px] text-foreground/70 tracking-wide">{item}</span>
                       </motion.div>
                     ))}
                   </div>
