@@ -18,6 +18,28 @@ const TheArtistShowcase = () => {
   return (
     <section ref={sectionRef} className="py-20 md:py-28 px-6 relative overflow-hidden">
       <div className="max-w-4xl mx-auto relative">
+        {/* ── Big "A" with neon purple-green glow ── */}
+        <motion.div
+          className="flex justify-center mb-8"
+          initial={{ opacity: 0, scale: 0.5 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+        >
+          <div className="relative">
+            <div className="absolute inset-[-30px] rounded-full blur-[50px] opacity-40 animate-pulse" style={{ background: "radial-gradient(circle, #6C3CE1 0%, hsl(var(--primary)) 100%)" }} />
+            <span
+              className="relative font-clash text-7xl md:text-9xl font-black select-none"
+              style={{
+                color: "#6C3CE1",
+                textShadow: "0 0 30px rgba(108,60,225,0.6), 0 0 60px rgba(108,60,225,0.3), 0 0 90px hsl(var(--primary) / 0.2)",
+              }}
+            >
+              A
+            </span>
+          </div>
+        </motion.div>
+
         {/* ── Compact header ── */}
         <div className="rv text-center mb-10">
           <motion.img
