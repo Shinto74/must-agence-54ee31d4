@@ -299,13 +299,20 @@ const ClipPortugal = () => {
                 transition={{ delay: idx * 0.12, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 viewport={{ once: true }}
               >
-                {/* Neon top line on hover */}
-                <motion.div
-                  className="absolute top-0 left-0 right-0 h-[2px]"
-                  style={{ background: "linear-gradient(90deg, transparent, hsl(var(--neon)), transparent)" }}
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.4 }}
+                {/* Neon top line — always visible, subtle */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-[1px] opacity-30 group-hover/card:opacity-100 transition-opacity duration-500"
+                  style={{ background: "linear-gradient(90deg, transparent 5%, hsl(var(--neon) / 0.6) 50%, transparent 95%)" }}
+                />
+                {/* Neon left accent line */}
+                <div
+                  className="absolute top-2 bottom-2 left-0 w-[2px] rounded-full opacity-0 group-hover/card:opacity-100 transition-all duration-500"
+                  style={{ background: "linear-gradient(180deg, transparent, hsl(var(--neon) / 0.5), transparent)" }}
+                />
+                {/* Shimmer sweep on hover */}
+                <div
+                  className="absolute inset-0 -translate-x-full group-hover/card:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"
+                  style={{ background: "linear-gradient(90deg, transparent, hsl(var(--neon) / 0.04), transparent)" }}
                 />
                 {/* Glow orb behind icon on hover */}
                 <div
@@ -316,8 +323,8 @@ const ClipPortugal = () => {
                   className="relative w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-500"
                   style={{
                     background: "hsl(var(--neon) / 0.06)",
-                    border: "1px solid hsl(var(--neon) / 0.12)",
-                    boxShadow: "0 0 0px hsl(var(--neon) / 0)",
+                    border: "1px solid hsl(var(--neon) / 0.15)",
+                    boxShadow: "0 0 8px hsl(var(--neon) / 0.05)",
                   }}
                   whileHover={{
                     scale: 1.12,
