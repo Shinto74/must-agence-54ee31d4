@@ -322,12 +322,37 @@ const ClipPortugal = () => {
                       >
                         {/* Header */}
                         <div className="mb-8">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-6 h-[2px] rounded-full" style={{ background: "hsl(var(--neon))" }} />
+                          <motion.div
+                            className="flex items-center gap-2 mb-3"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.15, duration: 0.5 }}
+                          >
+                            <motion.div
+                              className="w-6 h-[2px] rounded-full"
+                              style={{ background: "hsl(var(--neon))" }}
+                              initial={{ scaleX: 0 }}
+                              animate={{ scaleX: 1 }}
+                              transition={{ delay: 0.3, duration: 0.6 }}
+                            />
                             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">Clip au Portugal</span>
-                          </div>
-                          <h3 className="font-clash text-2xl font-bold text-foreground mb-2">Commencez l'aventure</h3>
-                          <p className="text-muted-foreground text-sm">Remplissez ce formulaire et notre équipe vous recontactera sous 48h.</p>
+                          </motion.div>
+                          <motion.h3
+                            className="font-clash text-2xl font-bold text-foreground mb-2"
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                          >
+                            Commencez l'aventure
+                          </motion.h3>
+                          <motion.p
+                            className="text-muted-foreground text-sm"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.25, duration: 0.5 }}
+                          >
+                            Remplissez ce formulaire et notre équipe vous recontactera sous 48h.
+                          </motion.p>
                         </div>
 
                         {/* Form fields */}
