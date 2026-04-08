@@ -384,18 +384,9 @@ const ArtisteServicesV4B = () => {
                     ))}
                   </div>
 
-                  {/* CTA */}
-                  <div className="flex items-center gap-4 mt-8">
-                    <motion.a
-                      href="#packs"
-                      whileHover={{ scale: 1.04, boxShadow: "0 0 20px hsl(73 100% 50% / 0.3)" }}
-                      whileTap={{ scale: 0.97 }}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-clash font-semibold text-xs text-background bg-primary"
-                      style={{ transition: "box-shadow 0.3s" }}
-                    >
-                      Voir les packs <span>&#8594;</span>
-                    </motion.a>
-                    <span className="font-mono text-[9px] uppercase tracking-[.35em] text-muted-foreground/50">
+                  {/* Counter */}
+                  <div className="mt-8">
+                    <span className="font-mono text-[10px] uppercase tracking-[.35em] text-muted-foreground/50">
                       {activeIndex + 1} / {PILLARS.length}
                     </span>
                   </div>
