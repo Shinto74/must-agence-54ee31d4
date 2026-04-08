@@ -519,7 +519,7 @@ const ClipPortugal = () => {
                             <label className={labelClass} style={{ color: "hsl(var(--foreground) / 0.7)" }}>Budget estimé</label>
                             <select
                               className={inputClass}
-                              style={{ ...inputStyle, appearance: "none" as const }}
+                              style={{ ...inputStyle, appearance: "none" as const, colorScheme: "dark" }}
                               value={form.budget}
                               onChange={e => setForm(f => ({ ...f, budget: e.target.value }))}
                             >
