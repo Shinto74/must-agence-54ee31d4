@@ -55,7 +55,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
         <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full" style={{ background: "radial-gradient(ellipse, hsl(var(--neon) / 0.04) 0%, transparent 70%)" }} />
       </div>
 
-      <div className="max-w-[1400px] mx-auto grid md:grid-cols-2 gap-20 relative">
+      <div className="max-w-[1400px] mx-auto grid md:grid-cols-2 gap-16 items-start relative">
         {/* Left */}
         <div>
           <motion.p
