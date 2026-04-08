@@ -327,6 +327,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
             {packs.map((pack, idx) => (
               <motion.div
                 key={pack.number}
+                className="h-full"
                 initial={{ opacity: 0, rotateY: -90, scale: 0.85 }}
                 animate={gridInView ? { opacity: 1, rotateY: 0, scale: 1 } : {}}
                 transition={{
