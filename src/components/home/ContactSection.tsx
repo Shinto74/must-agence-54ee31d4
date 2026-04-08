@@ -138,7 +138,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
 
       <div className="max-w-[1400px] mx-auto relative">
         {/* Top row: heading + form side by side */}
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div className="grid md:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
           {/* Left column */}
           <div className="flex flex-col h-full">
             {/* Header area */}
@@ -346,23 +346,18 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                 {/* Submit */}
                 <motion.button
                   type="submit" disabled={sending}
-                  className="w-full rounded-2xl py-4.5 font-mono text-sm uppercase tracking-[0.15em] font-bold transition-all duration-300 disabled:opacity-50 group cursor-pointer relative overflow-hidden"
+                  className="w-full mt-2 py-5 font-mono text-sm uppercase tracking-[0.15em] font-bold disabled:opacity-50 group cursor-pointer relative overflow-hidden"
                   style={{
                     background: "hsl(var(--primary))",
                     color: "hsl(var(--primary-foreground))",
-                    boxShadow: "0 0 35px hsl(var(--neon) / 0.25), 0 8px 25px hsla(0,0%,0%,0.3)",
+                    borderRadius: "16px",
+                    boxShadow: "0 0 30px hsl(var(--neon) / 0.2)",
+                    border: "none",
                   }}
-                  whileHover={{ y: -3, boxShadow: "0 0 60px hsl(var(--neon) / 0.4), 0 12px 35px hsla(0,0%,0%,0.4)" }}
+                  whileHover={{ y: -2, boxShadow: "0 0 50px hsl(var(--neon) / 0.35), 0 10px 30px hsla(0,0%,0%,0.3)" }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 >
-                  {/* Shimmer effect */}
-                  <motion.div
-                    className="absolute inset-0 opacity-20"
-                    style={{ background: "linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.3), transparent)" }}
-                    animate={{ x: ["-100%", "200%"] }}
-                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
-                  />
                   <span className="flex items-center justify-center gap-3 relative z-10">
                     {sending ? (
                       <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 1.2, repeat: Infinity }}>
