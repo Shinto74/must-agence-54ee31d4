@@ -136,40 +136,46 @@ const FeatureItem = ({ feature, tooltip }: { feature: string; tooltip?: string }
 /* ─── THEARTIST BONUS ─── */
 
 const TheArtistBonus = ({ text }: { text: string }) => (
-  <div className="rounded-xl overflow-hidden mb-4 relative group/tooltip border border-primary/20 bg-gradient-to-r from-primary/8 via-primary/4 to-primary/8">
-    {/* Header bar */}
-    <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 border-b border-primary/15">
-      <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-primary/70">Partenaire officiel</span>
-    </div>
+  <div className="rounded-xl overflow-hidden mb-4 relative group/ta border border-primary/30 bg-gradient-to-br from-primary/10 via-transparent to-primary/5">
+    {/* Animated glow border */}
+    <div className="absolute inset-0 rounded-xl opacity-0 group-hover/ta:opacity-100 transition-opacity duration-500" style={{ boxShadow: "inset 0 0 20px hsl(var(--neon) / 0.1), 0 0 15px hsl(var(--neon) / 0.08)" }} />
+    
     {/* Content */}
-    <div className="flex items-center gap-3 px-3 py-3">
-      <img
-        src={theartistIcon}
-        alt="TheArtist"
-        className="w-7 h-7 shrink-0"
-        style={{ filter: "invert(1)" }}
-      />
-      <div className="flex-1 min-w-0">
+    <div className="relative flex items-center gap-3.5 px-4 py-3.5">
+      {/* Logo icon with glow */}
+      <div className="relative shrink-0">
+        <div className="absolute inset-0 rounded-lg bg-primary/20 blur-md animate-pulse" />
         <img
-          src={theartistTextLogo}
-          alt="THE ARTIST"
-          className="h-3.5 mb-1"
-          style={{ filter: "invert(1)" }}
+          src={theartistIcon}
+          alt="TheArtist"
+          className="relative w-8 h-8"
+          style={{ filter: "invert(1) drop-shadow(0 0 6px hsl(var(--neon) / 0.5))" }}
         />
-        <p className="text-xs font-bold text-primary font-mono">{text}</p>
       </div>
-      <button className="text-primary/60 hover:text-primary transition-colors shrink-0 cursor-help">
-        <Info size={14} />
-      </button>
-    </div>
-    {/* Tooltip */}
-    <div className="absolute bottom-full right-0 mb-3 z-50 w-72 bg-surface border border-primary/40 rounded-xl p-4 text-xs text-foreground shadow-[0_0_30px_hsl(var(--neon)/0.1),0_8px_32px_rgba(0,0,0,0.6)] opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 pointer-events-none">
-      <div className="flex items-center gap-2.5 mb-3">
-        <img src={theartistIcon} alt="TheArtist" className="w-6 h-6" style={{ filter: "invert(1)" }} />
-        <img src={theartistTextLogo} alt="THE ARTIST" className="h-4" style={{ filter: "invert(1)" }} />
+      
+      {/* Text content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-0.5">
+          <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-primary/60 leading-none">Partenaire officiel</span>
+        </div>
+        <p className="text-sm font-bold text-primary font-clash tracking-wide">{text}</p>
       </div>
-      <p className="leading-relaxed text-foreground/80">Réseau pro-social pour artistes. Profil portfolio, fil d'actualité, booking et messagerie pour développer votre carrière artistique.</p>
-      <div className="absolute -bottom-[5px] right-4 w-2.5 h-2.5 bg-surface border-r border-b border-primary/40 rotate-45" />
+      
+      {/* Info button */}
+      <div className="relative group/info shrink-0">
+        <button className="w-7 h-7 rounded-full border border-primary/30 flex items-center justify-center text-primary/50 hover:text-primary hover:border-primary/60 hover:bg-primary/10 transition-all duration-300 cursor-help">
+          <Info size={12} />
+        </button>
+        {/* Tooltip */}
+        <div className="absolute bottom-full right-0 mb-3 z-50 w-64 bg-surface border border-primary/30 rounded-xl p-4 text-xs text-foreground shadow-[0_0_30px_hsl(var(--neon)/0.1),0_8px_32px_rgba(0,0,0,0.6)] opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all duration-300 pointer-events-none">
+          <div className="flex items-center gap-2 mb-2">
+            <img src={theartistIcon} alt="TheArtist" className="w-5 h-5" style={{ filter: "invert(1)" }} />
+            <span className="font-clash font-bold text-primary text-sm">TheArtist</span>
+          </div>
+          <p className="leading-relaxed text-foreground/70">Réseau pro-social pour artistes. Profil portfolio, fil d'actualité, booking et messagerie pour développer votre carrière.</p>
+          <div className="absolute -bottom-[5px] right-4 w-2.5 h-2.5 bg-surface border-r border-b border-primary/30 rotate-45" />
+        </div>
+      </div>
     </div>
   </div>
 );
