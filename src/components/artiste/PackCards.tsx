@@ -273,7 +273,7 @@ const DevisPersonnaliseCard = ({ onOpen }: { onOpen: () => void }) => (
         </li>
       ))}
     </ul>
-    <TheArtistBonus text="2 ans TheArtiste offert" />
+    <TheArtistBonus text="1 an TheArtist offert" />
     <p className="text-[11px] text-muted-foreground italic mb-6">Stratégie bâtie pour vos objectifs spécifiques</p>
     <button onClick={onOpen}
       className="block w-full text-center py-3 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-primary/40 hover:text-primary transition-all duration-300"
