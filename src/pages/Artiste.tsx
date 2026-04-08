@@ -6,6 +6,7 @@ import Team from "@/components/home/Team";
 import PackCards from "@/components/artiste/PackCards";
 import ArtisteServicesV4B from "@/components/artiste/ArtisteServicesV4B";
 import ClipPortugal from "@/components/artiste/ClipPortugal";
+import TheArtistShowcase from "@/components/artiste/TheArtistShowcase";
 import CtaBand from "@/components/home/CtaBand";
 import ContactSection from "@/components/home/ContactSection";
 import { SITE, ARTISTE_PAGE, PACKS, QUOTE_STEPS } from "@/lib/constants";
@@ -22,6 +23,7 @@ const Artiste = () => {
       <ArtisteServicesV4B />
       <ArtistReferences categories={artists || []} />
       <PackCards packs={PACKS} quoteSteps={QUOTE_STEPS} />
+      <TheArtistShowcase />
       <ClipPortugal />
       <Vision />
       <Team members={team || []} />
