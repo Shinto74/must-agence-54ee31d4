@@ -11,7 +11,7 @@ const ClipPortugal = () => {
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ nom: "", prenom: "", age: "", budget: "", idees: "", email: "" });
+  const [form, setForm] = useState({ nom: "", prenom: "", age: "", budget: "", idees: "", email: "", telephone: "" });
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handlePlay = () => {
