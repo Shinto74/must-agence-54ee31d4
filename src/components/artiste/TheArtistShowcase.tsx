@@ -48,7 +48,7 @@ const TheArtistShowcase = () => {
             Partenaire officiel
           </motion.p>
           <h2 className="rv font-clash text-xl md:text-2xl font-bold text-foreground">
-            Le réseau social <span className="text-primary">des artistes.</span>
+            Le réseau pro-social <span className="text-primary">dédié au monde artistique.</span>
           </h2>
         </div>
 
