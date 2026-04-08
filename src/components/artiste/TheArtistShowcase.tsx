@@ -27,28 +27,18 @@ const TheArtistShowcase = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
         >
           <div className="relative">
-            <div className="absolute inset-[-30px] rounded-full blur-[50px] opacity-40 animate-pulse" style={{ background: "radial-gradient(circle, #6C3CE1 0%, hsl(var(--primary)) 100%)" }} />
             <img
               src={theartistALogo}
-              alt="A"
-              className="relative w-24 h-24 md:w-36 md:h-36 drop-shadow-[0_0_30px_rgba(108,60,225,0.6)]"
-              style={{ filter: "drop-shadow(0 0 40px rgba(108,60,225,0.4)) drop-shadow(0 0 80px hsl(var(--primary) / 0.15))" }}
+              alt="TheArtist"
+              className="relative w-40 h-40 md:w-56 md:h-56"
+              style={{ filter: "invert(1)" }}
             />
           </div>
         </motion.div>
 
         {/* ── Compact header ── */}
         <div className="rv text-center mb-10">
-          <motion.img
-            src={theartistLogoColor}
-            alt="THEARTIST"
-            className="h-7 md:h-9 mx-auto mb-3"
-            style={{ filter: "invert(1)" }}
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          />
+          <motion.p
           <motion.p
             className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary mb-4"
             initial={{ opacity: 0 }}
