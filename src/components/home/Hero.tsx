@@ -116,7 +116,7 @@ const Hero = () => {
             >
               {BRAND_LETTERS.map((letter, i) => {
                 const isNeon = letter.color.includes("73");
-                const baseDelay = 0.5 + i * 0.09;
+                const baseDelay = 0.8 + i * 0.15;
                 return (
                   <motion.span
                     key={i}
