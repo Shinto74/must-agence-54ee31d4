@@ -134,8 +134,6 @@ const FeatureItem = ({ feature, tooltip }: { feature: string; tooltip?: string }
 };
 
 /* ─── THEARTIST BONUS ─── */
-import theartistIcon from "@/assets/theartist-icon.png";
-import theartistTextLogo from "@/assets/theartist-text.png";
 
 const TheArtistBonus = ({ text }: { text: string }) => (
   <div className="rounded-xl overflow-hidden mb-4 relative group/tooltip border border-primary/20 bg-gradient-to-r from-primary/8 via-primary/4 to-primary/8">
