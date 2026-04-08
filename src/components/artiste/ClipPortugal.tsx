@@ -40,7 +40,7 @@ const ClipPortugal = () => {
   const resetForm = () => {
     setShowForm(false);
     setSubmitted(false);
-    setForm({ nom: "", prenom: "", age: "", budget: "", idees: "", email: "" });
+    setForm({ nom: "", prenom: "", age: "", budget: "", idees: "", email: "", telephone: "" });
   };
 
   const features = [
