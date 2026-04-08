@@ -224,13 +224,13 @@ const GatewayPage = () => {
           {/* Content */}
           <Link
             to="/entreprise"
-            className="relative z-10 h-full flex flex-col items-center justify-end pb-[18vh] md:pb-[22vh] px-6"
+            className="relative z-10 h-full flex flex-col items-end justify-end pb-[12vh] md:pb-[16vh] px-8 md:px-14"
           >
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="font-clash font-black text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-3"
+              className="font-clash font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-3 text-right"
             >
               Pôle Entreprise
             </motion.h2>
@@ -238,7 +238,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0 }}
               animate={ready ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="font-outfit text-xs md:text-sm text-foreground/40 mb-8 text-center max-w-xs"
+              className="font-outfit text-xs md:text-sm text-foreground/40 mb-8 text-right max-w-xs"
             >
               Influence · Growth · Branding
             </motion.p>
