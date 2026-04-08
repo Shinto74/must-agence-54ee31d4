@@ -60,9 +60,9 @@ const Particle = ({ angle, delay, radius }: { angle: number; delay: number; radi
       }}
       viewport={{ once: true }}
       transition={{
-        duration: 0.8,
+        duration: 1.5,
         delay: delay,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.25, 0.8, 0.25, 1],
       }}
     />
   );
