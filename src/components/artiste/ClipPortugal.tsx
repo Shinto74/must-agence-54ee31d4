@@ -30,7 +30,7 @@ const ClipPortugal = () => {
         name: `${form.prenom} ${form.nom}`,
         email: form.email,
         type: "clip-portugal",
-        message: `Âge: ${form.age}\nBudget: ${form.budget}\nIdées: ${form.idees}`,
+        message: `Téléphone: ${form.telephone}\nÂge: ${form.age}\nBudget: ${form.budget}\nIdées: ${form.idees}`,
       });
     } catch (e) { /* silent */ }
     setLoading(false);
