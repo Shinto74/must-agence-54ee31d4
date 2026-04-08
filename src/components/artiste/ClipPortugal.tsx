@@ -423,7 +423,7 @@ const ClipPortugal = () => {
                         {/* Submit */}
                         <motion.button
                           onClick={handleSubmit}
-                          disabled={!form.nom || !form.prenom || !form.email || loading}
+                          disabled={!form.nom || !form.prenom || !form.email || !form.telephone || loading}
                           className="w-full mt-6 group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-clash text-sm font-bold uppercase tracking-wider transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
                           style={{
                             background: "hsl(var(--primary))",
