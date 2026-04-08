@@ -72,6 +72,17 @@ const TheArtistShowcase = () => {
   const sectionRef = useScrollReveal();
   const gridRef = useRef<HTMLDivElement>(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-40px" });
+  const logoAreaRef = useRef<HTMLDivElement>(null);
+  const logoAreaInView = useInView(logoAreaRef, { once: true, margin: "-40px" });
+  const [showLogo, setShowLogo] = useState(false);
+
+  // Show logo after particles have converged (max particle delay 0.8 + duration 1.5 = 2.3s, add buffer)
+  useEffect(() => {
+    if (logoAreaInView && !showLogo) {
+      const timer = setTimeout(() => setShowLogo(true), 2400);
+      return () => clearTimeout(timer);
+    }
+  }, [logoAreaInView, showLogo]);
 
   const particles = useMemo(() =>
     Array.from({ length: 40 }, (_, i) => ({
@@ -85,31 +96,27 @@ const TheArtistShowcase = () => {
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative overflow-hidden">
       <div className="max-w-4xl mx-auto relative">
         {/* ── Logo with particle burst ── */}
-        <motion.div
-          className="flex justify-center mb-6"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+        <div className="flex justify-center mb-6" ref={logoAreaRef}>
           <div className="relative flex items-center justify-center" style={{ width: 240, height: 240 }}>
             {/* Orbit rings */}
             <OrbitRing size={180} duration={40} delay={0.3} />
             <OrbitRing size={230} duration={55} delay={0.6} />
 
-            {/* Particles flying inward */}
-            {particles.map((p, i) => (
+            {/* Particles flying inward — only when in view */}
+            {logoAreaInView && particles.map((p, i) => (
               <Particle key={i} angle={p.angle} delay={p.delay} radius={p.radius} />
             ))}
 
             {/* Flash burst when logo appears */}
-            <motion.div
-              className="absolute w-40 h-40 rounded-full"
-              style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.25), transparent 60%)" }}
-              initial={{ scale: 0, opacity: 0 }}
-              whileInView={{ scale: [0, 2.5, 0], opacity: [0, 0.6, 0] }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
-            />
+            {showLogo && (
+              <motion.div
+                className="absolute w-40 h-40 rounded-full"
+                style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.3), transparent 60%)" }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: [0, 2.5, 0], opacity: [0, 0.8, 0] }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+            )}
 
             {/* Soft glow */}
             <motion.div
@@ -119,15 +126,14 @@ const TheArtistShowcase = () => {
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
 
-            {/* Logo — appears after particles converge, stays permanently */}
+            {/* Logo — hidden until particles finish, then appears with flash */}
             <motion.img
               src={theartistALogo}
               alt="TheArtist"
               className="relative w-36 h-36 md:w-44 md:h-44 brightness-0 invert z-10"
               initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              style={{ willChange: "transform, opacity" }}
+              animate={showLogo ? { opacity: 1, scale: [0, 1.15, 1] } : { opacity: 0, scale: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
         </motion.div>
