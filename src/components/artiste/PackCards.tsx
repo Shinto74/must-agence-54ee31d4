@@ -323,7 +323,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
           </div>
 
           {/* Desktop — flip 3D reveal one by one */}
-          <div ref={gridRef} className="hidden md:grid md:grid-cols-4 gap-6 mt-10" style={{ perspective: "1200px" }}>
+          <div ref={gridRef} className="hidden md:grid md:grid-cols-4 gap-6 mt-10 items-stretch" style={{ perspective: "1200px" }}>
             {packs.map((pack, idx) => (
               <motion.div
                 key={pack.number}
