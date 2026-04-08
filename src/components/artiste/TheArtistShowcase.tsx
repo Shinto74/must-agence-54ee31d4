@@ -33,7 +33,6 @@ const OrbitRing = ({ size, duration, delay }: { size: number; duration: number; 
       animate={{ rotate: 360 }}
       transition={{ duration, repeat: Infinity, ease: "linear" }}
     />
-    />
   </motion.div>
 );
 
