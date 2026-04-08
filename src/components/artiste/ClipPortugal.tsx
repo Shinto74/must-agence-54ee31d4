@@ -87,11 +87,13 @@ const ClipPortugal = () => {
     },
   ];
 
-  const inputClass = "w-full px-4 py-3 rounded-xl text-sm font-outfit text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-300 focus:shadow-[0_0_20px_hsl(var(--neon)/0.12)]";
+  const inputClass = "w-full px-4 py-3.5 rounded-xl text-sm font-outfit text-foreground placeholder:text-foreground/30 outline-none transition-all duration-300 focus:shadow-[0_0_20px_hsl(var(--neon)/0.15)] focus:border-primary/50";
   const inputStyle = {
-    background: "hsl(var(--sf))",
-    border: "1px solid hsl(var(--border))",
+    background: "hsl(var(--background) / 0.6)",
+    border: "1px solid hsl(var(--foreground) / 0.15)",
+    color: "hsl(var(--foreground))",
   };
+  const labelClass = "block font-mono text-[11px] uppercase tracking-[0.15em] mb-2.5 font-medium";
 
   return (
     <section ref={sectionRef} className="py-24 md:py-32 relative overflow-hidden">
