@@ -4,6 +4,8 @@ import { motion, useInView } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Music, Megaphone, Palette, ListMusic, Zap, Users, PenTool, Newspaper, Search, Target, MessageCircle, Youtube, Info, X, BarChart3, Lightbulb, Rocket, TrendingUp, Network } from "lucide-react";
 import QuoteWizard from "@/components/artiste/QuoteWizard";
+import theartistIcon from "@/assets/theartist-icon.png";
+import theartistTextLogo from "@/assets/theartist-text.png";
 
 interface Pack {
   number: string;
