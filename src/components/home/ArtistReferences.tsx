@@ -205,135 +205,211 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}
+              transition={{ duration: 0.4 }}
               className="fixed inset-0 z-50"
             >
-              <div
+              {/* Backdrop */}
+              <motion.div
                 className="absolute inset-0"
                 onClick={closeModal}
-                style={{
-                  background: "hsla(0,0%,0%,0.75)",
-                  backdropFilter: "blur(20px)",
-                }}
+                initial={{ backdropFilter: "blur(0px)" }}
+                animate={{ backdropFilter: "blur(24px)" }}
+                exit={{ backdropFilter: "blur(0px)" }}
+                transition={{ duration: 0.5 }}
+                style={{ background: "hsla(0,0%,0%,0.8)" }}
               />
 
               <div className="relative flex min-h-full items-center justify-center overflow-y-auto p-4 sm:p-6">
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9, y: 40 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9, y: 40 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative w-full max-w-2xl rounded-3xl overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.85, y: 60, rotateX: 8 }}
+                  animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative w-full max-w-[720px] rounded-3xl overflow-hidden"
                   onClick={(e) => e.stopPropagation()}
                   style={{
-                    background: "linear-gradient(160deg, hsl(0 0% 9%) 0%, hsl(0 0% 4%) 100%)",
-                    border: "1px solid hsla(0,0%,100%,0.07)",
+                    background: "linear-gradient(160deg, hsl(0 0% 11%) 0%, hsl(0 0% 5%) 100%)",
+                    border: "1px solid hsla(0,0%,100%,0.08)",
                     boxShadow: `
-                      0 50px 100px hsla(0,0%,0%,0.7),
-                      0 0 80px hsl(73 100% 50% / 0.05),
-                      inset 0 1px 0 hsla(0,0%,100%,0.06)
+                      0 60px 120px hsla(0,0%,0%,0.8),
+                      0 0 100px hsl(73 100% 50% / 0.06),
+                      inset 0 1px 0 hsla(0,0%,100%,0.08)
                     `,
+                    perspective: "1000px",
                   }}
                 >
-                  {/* Top neon line */}
-                  <div
-                    className="absolute top-0 left-0 right-0 h-px"
-                    style={{ background: "linear-gradient(to right, transparent 10%, hsl(73 100% 50% / 0.5) 50%, transparent 90%)" }}
+                  {/* Animated top neon line */}
+                  <motion.div
+                    className="absolute top-0 left-0 right-0 h-[2px] z-10"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background: "linear-gradient(to right, transparent 5%, hsl(73 100% 50% / 0.7) 50%, transparent 95%)",
+                      transformOrigin: "center",
+                    }}
                   />
 
+                  {/* Corner glow effects */}
+                  <div className="absolute -top-20 -left-20 w-60 h-60 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, hsl(73 100% 50% / 0.04) 0%, transparent 70%)" }} />
+                  <div className="absolute -bottom-20 -right-20 w-60 h-60 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, hsl(73 100% 50% / 0.06) 0%, transparent 70%)" }} />
+
                   {/* Close button */}
-                  <button
+                  <motion.button
                     onClick={closeModal}
+                    initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.4, delay: 0.3 }}
                     className="absolute right-5 top-5 z-10 p-2.5 rounded-full transition-all duration-300"
                     style={{
-                      background: "hsla(0,0%,100%,0.04)",
-                      border: "1px solid hsla(0,0%,100%,0.1)",
+                      background: "hsla(0,0%,100%,0.05)",
+                      border: "1px solid hsla(0,0%,100%,0.12)",
                       backdropFilter: "blur(8px)",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.5)";
-                      e.currentTarget.style.boxShadow = "0 0 18px hsl(73 100% 50% / 0.15)";
+                      e.currentTarget.style.boxShadow = "0 0 20px hsl(73 100% 50% / 0.2)";
+                      e.currentTarget.style.background = "hsla(73,100%,50%,0.08)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "hsla(0,0%,100%,0.1)";
+                      e.currentTarget.style.borderColor = "hsla(0,0%,100%,0.12)";
                       e.currentTarget.style.boxShadow = "none";
+                      e.currentTarget.style.background = "hsla(0,0%,100%,0.05)";
                     }}
                     aria-label="Fermer"
                   >
-                    <X size={18} className="text-foreground/60" />
-                  </button>
+                    <X size={18} className="text-foreground/70" />
+                  </motion.button>
 
                   {/* Content */}
                   <div className="p-6 md:p-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      {/* Photo */}
-                      <div className="relative">
+                      {/* Photo with reveal animation */}
+                      <motion.div
+                        className="relative"
+                        initial={{ opacity: 0, x: -40, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                      >
                         <div
                           className="relative aspect-[3/4] overflow-hidden rounded-2xl"
                           style={{
-                            border: "1px solid hsla(0,0%,100%,0.06)",
-                            boxShadow: "0 25px 50px hsla(0,0%,0%,0.5), 0 0 40px hsl(73 100% 50% / 0.04)",
+                            border: "1px solid hsla(0,0%,100%,0.08)",
+                            boxShadow: "0 30px 60px hsla(0,0%,0%,0.6), 0 0 50px hsl(73 100% 50% / 0.05)",
                           }}
                         >
-                          <img
+                          <motion.img
                             src={currentArtist.image}
                             alt={currentArtist.name}
                             className="h-full w-full object-cover"
+                            initial={{ scale: 1.15 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                           />
-                          <div
-                            className="absolute inset-0"
-                            style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.35) 0%, transparent 40%)" }}
-                          />
+                          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.4) 0%, transparent 50%)" }} />
+                          
+                          {/* Category badge on image */}
+                          <motion.div
+                            className="absolute bottom-4 left-4"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.5 }}
+                          >
+                            <span
+                              className="px-3 py-1.5 rounded-full font-mono text-[9px] uppercase tracking-[0.2em]"
+                              style={{
+                                background: "hsl(73 100% 50% / 0.12)",
+                                border: "1px solid hsl(73 100% 50% / 0.3)",
+                                color: "hsl(73 100% 50%)",
+                                backdropFilter: "blur(12px)",
+                              }}
+                            >
+                              {currentArtist.category}
+                            </span>
+                          </motion.div>
                         </div>
-                        {/* Decorative corner glow */}
-                        <div
-                          className="absolute -bottom-6 -right-6 w-40 h-40 rounded-full pointer-events-none"
-                          style={{ background: "radial-gradient(circle, hsl(73 100% 50% / 0.07) 0%, transparent 70%)" }}
+
+                        {/* Decorative glow */}
+                        <motion.div
+                          className="absolute -bottom-8 -right-8 w-48 h-48 rounded-full pointer-events-none"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 1, delay: 0.4 }}
+                          style={{ background: "radial-gradient(circle, hsl(73 100% 50% / 0.08) 0%, transparent 70%)" }}
                         />
-                      </div>
+                      </motion.div>
 
                       {/* Info */}
                       <div className="flex flex-col justify-between">
                         <div>
                           <motion.h3
-                            initial={{ opacity: 0, x: 20 }}
+                            initial={{ opacity: 0, x: 30 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: 0.15 }}
-                            className="font-clash text-2xl md:text-3xl font-black text-foreground mb-1 tracking-tight"
+                            transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                            className="font-clash text-3xl md:text-4xl font-black text-foreground mb-2 tracking-tight"
                           >
                             {currentArtist.name}
                           </motion.h3>
+
+                          <motion.div
+                            initial={{ opacity: 0, width: 0 }}
+                            animate={{ opacity: 1, width: "3rem" }}
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                            className="h-[2px] mb-4"
+                            style={{ background: "hsl(73 100% 50%)" }}
+                          />
+
                           <motion.p
-                            initial={{ opacity: 0, x: 20 }}
+                            initial={{ opacity: 0, x: 30 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: 0.2 }}
-                            className="font-mono text-xs uppercase tracking-[0.2em] mb-6"
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                            className="font-mono text-[11px] uppercase tracking-[0.2em] mb-5"
                             style={{ color: "hsl(73 100% 50%)" }}
                           >
                             {currentDetails.strategie}
                           </motion.p>
-                          <motion.p
-                            initial={{ opacity: 0, y: 15 }}
+
+                          {/* Description with animated bullet */}
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.25 }}
-                            className="text-foreground/65 leading-relaxed text-sm mb-6"
+                            transition={{ duration: 0.5, delay: 0.35 }}
+                            className="flex gap-3 mb-6"
                           >
-                            {currentDetails.description}
-                          </motion.p>
+                            <motion.div
+                              className="mt-2 w-2 h-2 rounded-full shrink-0"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ duration: 0.3, delay: 0.5, type: "spring", stiffness: 300 }}
+                              style={{
+                                background: "hsl(73 100% 50%)",
+                                boxShadow: "0 0 10px hsl(73 100% 50% / 0.5)",
+                              }}
+                            />
+                            <p className="text-foreground/70 leading-relaxed text-[13px]">
+                              {currentDetails.description}
+                            </p>
+                          </motion.div>
 
                           {currentDetails.chiffre && (
                             <motion.div
-                              initial={{ opacity: 0, y: 15 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.4, delay: 0.3 }}
-                              className="mb-6 p-4 rounded-xl"
+                              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              transition={{ duration: 0.5, delay: 0.4 }}
+                              className="mb-6 p-5 rounded-xl relative overflow-hidden"
                               style={{
-                                background: "hsl(73 100% 50% / 0.05)",
-                                border: "1px solid hsl(73 100% 50% / 0.12)",
-                                boxShadow: "inset 0 0 25px hsl(73 100% 50% / 0.03)",
+                                background: "hsl(73 100% 50% / 0.04)",
+                                border: "1px solid hsl(73 100% 50% / 0.15)",
                               }}
                             >
-                              <p className="font-clash text-lg font-bold text-primary">
+                              <motion.div
+                                className="absolute inset-0"
+                                initial={{ x: "-100%" }}
+                                animate={{ x: "100%" }}
+                                transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
+                                style={{ background: "linear-gradient(90deg, transparent, hsl(73 100% 50% / 0.06), transparent)" }}
+                              />
+                              <p className="font-clash text-xl font-bold text-primary relative z-10">
                                 {currentDetails.chiffre}
                               </p>
                             </motion.div>
@@ -342,20 +418,26 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
 
                         {/* Plateformes */}
                         <motion.div
-                          initial={{ opacity: 0, y: 15 }}
+                          initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: 0.35 }}
+                          transition={{ duration: 0.5, delay: 0.45 }}
                         >
-                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/35 mb-3">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-3">
                             Plateformes
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {currentDetails.plateformes.map((plateforme, idx) => (
                               <motion.span
                                 key={plateforme}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.3, delay: 0.4 + idx * 0.06 }}
+                                initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{
+                                  duration: 0.4,
+                                  delay: 0.5 + idx * 0.08,
+                                  type: "spring",
+                                  stiffness: 200,
+                                  damping: 15,
+                                }}
                                 className="px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-[0.15em] transition-all duration-300 cursor-default"
                                 style={{
                                   border: "1px solid hsl(73 100% 50% / 0.2)",
@@ -363,14 +445,16 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
                                   background: "hsl(73 100% 50% / 0.04)",
                                 }}
                                 onMouseEnter={(e) => {
-                                  e.currentTarget.style.background = "hsl(73 100% 50% / 0.1)";
-                                  e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.4)";
-                                  e.currentTarget.style.boxShadow = "0 0 15px hsl(73 100% 50% / 0.12)";
+                                  e.currentTarget.style.background = "hsl(73 100% 50% / 0.12)";
+                                  e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.5)";
+                                  e.currentTarget.style.boxShadow = "0 0 18px hsl(73 100% 50% / 0.15)";
+                                  e.currentTarget.style.transform = "translateY(-2px)";
                                 }}
                                 onMouseLeave={(e) => {
                                   e.currentTarget.style.background = "hsl(73 100% 50% / 0.04)";
                                   e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.2)";
                                   e.currentTarget.style.boxShadow = "none";
+                                  e.currentTarget.style.transform = "translateY(0)";
                                 }}
                               >
                                 {plateforme}
@@ -382,10 +466,16 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
                     </div>
                   </div>
 
-                  {/* Bottom neon line */}
-                  <div
-                    className="absolute bottom-0 left-0 right-0 h-px"
-                    style={{ background: "linear-gradient(to right, transparent 20%, hsl(73 100% 50% / 0.15) 50%, transparent 80%)" }}
+                  {/* Animated bottom neon line */}
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-[2px]"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background: "linear-gradient(to right, transparent 10%, hsl(73 100% 50% / 0.3) 50%, transparent 90%)",
+                      transformOrigin: "center",
+                    }}
                   />
                 </motion.div>
               </div>
