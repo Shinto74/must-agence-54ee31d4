@@ -157,7 +157,7 @@ const Hero = () => {
                       style={{ background: isNeon ? "hsl(73 100% 50%)" : "hsl(0 0% 80%)" }}
                       initial={{ opacity: 1 }}
                       animate={{ opacity: 0 }}
-                      transition={{ duration: 0.1, delay: baseDelay + 0.09 }}
+                      transition={{ duration: 0.15, delay: baseDelay + 0.15 }}
                     />
                     <span style={{
                       textShadow: isNeon
