@@ -430,8 +430,8 @@ const ClipPortugal = () => {
                             color: "hsl(var(--primary-foreground))",
                             boxShadow: "0 0 30px hsl(var(--neon) / 0.2)",
                           }}
-                          whileHover={form.nom && form.prenom && form.email ? { y: -2, boxShadow: "0 0 50px hsl(73 100% 50% / 0.4)" } : {}}
-                          whileTap={form.nom && form.prenom && form.email ? { scale: 0.97 } : {}}
+                          whileHover={form.nom && form.prenom && form.email && form.telephone ? { y: -2, boxShadow: "0 0 50px hsl(73 100% 50% / 0.4)" } : {}}
+                          whileTap={form.nom && form.prenom && form.email && form.telephone ? { scale: 0.97 } : {}}
                         >
                           {loading ? (
                             <Loader2 size={18} className="animate-spin" />
