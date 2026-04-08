@@ -23,7 +23,7 @@ const ClipPortugal = () => {
   };
 
   const handleSubmit = async () => {
-    if (!form.nom || !form.prenom || !form.email) return;
+    if (!form.nom || !form.prenom || !form.email || !form.telephone) return;
     setLoading(true);
     try {
       await supabase.from("contact_submissions").insert({
