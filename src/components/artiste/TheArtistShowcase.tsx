@@ -13,7 +13,7 @@ const FEATURES = [
 /* Subtle orbit ring */
 const OrbitRing = ({ size, duration, delay }: { size: number; duration: number; delay: number }) => (
   <motion.div
-    className="absolute rounded-full border border-primary/[0.06]"
+    className="absolute rounded-full border border-primary/20"
     style={{
       width: size,
       height: size,
@@ -28,7 +28,7 @@ const OrbitRing = ({ size, duration, delay }: { size: number; duration: number; 
     transition={{ opacity: { duration: 1.5, delay }, scale: { duration: 2, delay, ease: [0.16, 1, 0.3, 1] } }}
   >
     <motion.div
-      className="absolute w-1 h-1 rounded-full bg-primary/40"
+      className="absolute w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.6)]"
       style={{ top: -2, left: "50%", marginLeft: -2, transformOrigin: `2px ${size / 2 + 2}px` }}
       animate={{ rotate: 360 }}
       transition={{ duration, repeat: Infinity, ease: "linear" }}
