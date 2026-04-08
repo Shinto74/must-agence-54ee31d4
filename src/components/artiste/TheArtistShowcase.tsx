@@ -119,16 +119,15 @@ const TheArtistShowcase = () => {
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
 
-            {/* Logo — appears after particles converge */}
+            {/* Logo — appears after particles converge, stays permanently */}
             <motion.img
               src={theartistALogo}
               alt="TheArtist"
               className="relative w-36 h-36 md:w-44 md:h-44 brightness-0 invert z-10"
               initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: [0, 1.1, 1] }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.05 }}
+              style={{ willChange: "transform, opacity" }}
             />
           </div>
         </motion.div>
