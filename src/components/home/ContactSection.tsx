@@ -138,7 +138,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
 
       <div className="max-w-[1400px] mx-auto relative">
         {/* Top row: heading + form side by side */}
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div className="grid md:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
           {/* Left column */}
           <div className="flex flex-col h-full">
             {/* Header area */}
