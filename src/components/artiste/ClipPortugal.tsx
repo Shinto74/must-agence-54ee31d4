@@ -216,23 +216,51 @@ const ClipPortugal = () => {
             {features.map((item, idx) => (
               <motion.div
                 key={item.title}
-                className="rv p-5 rounded-xl flex gap-4 items-start card-hover"
+                className="rv group/card relative p-5 rounded-xl flex gap-4 items-start overflow-hidden cursor-default"
                 style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
                 initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
+                whileHover={{
+                  borderColor: "hsl(73 100% 50% / 0.3)",
+                  boxShadow: "0 0 35px hsl(73 100% 50% / 0.08), inset 0 0 30px hsl(73 100% 50% / 0.03)",
+                  y: -3,
+                }}
                 transition={{ delay: idx * 0.12, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 viewport={{ once: true }}
               >
+                {/* Neon top line on hover */}
                 <motion.div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                  style={{ background: "hsl(var(--neon) / 0.08)", border: "1px solid hsl(var(--neon) / 0.15)" }}
-                  whileHover={{ rotate: 8, scale: 1.1 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  className="absolute top-0 left-0 right-0 h-[2px]"
+                  style={{ background: "linear-gradient(90deg, transparent, hsl(var(--neon)), transparent)" }}
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.4 }}
+                />
+                {/* Glow orb behind icon on hover */}
+                <div
+                  className="absolute top-3 left-3 w-14 h-14 rounded-full opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none"
+                  style={{ background: "hsl(var(--neon) / 0.15)" }}
+                />
+                <motion.div
+                  className="relative w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-500"
+                  style={{
+                    background: "hsl(var(--neon) / 0.06)",
+                    border: "1px solid hsl(var(--neon) / 0.12)",
+                    boxShadow: "0 0 0px hsl(var(--neon) / 0)",
+                  }}
+                  whileHover={{
+                    scale: 1.12,
+                    rotate: 6,
+                    boxShadow: "0 0 25px hsl(73 100% 50% / 0.25)",
+                    borderColor: "hsl(73 100% 50% / 0.5)",
+                    background: "hsl(73 100% 50% / 0.12)",
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 >
                   {item.icon}
                 </motion.div>
                 <div>
-                  <h4 className="font-clash text-sm font-bold text-foreground mb-1">{item.title}</h4>
+                  <h4 className="font-clash text-sm font-bold text-foreground mb-1 group-hover/card:text-primary transition-colors duration-300">{item.title}</h4>
                   <p className="text-muted-foreground text-xs leading-relaxed">{item.desc}</p>
                 </div>
               </motion.div>
