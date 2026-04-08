@@ -39,7 +39,6 @@ const TheArtistShowcase = () => {
         {/* ── Compact header ── */}
         <div className="rv text-center mb-10">
           <motion.p
-          <motion.p
             className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary mb-4"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
