@@ -173,7 +173,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistT
 
   return (
     <div
-      className={`relative rounded-2xl p-6 md:p-8 transition-all duration-500 hover:-translate-y-1.5 group/pack flex flex-col ${
+      className={`relative rounded-2xl p-6 md:p-8 transition-all duration-500 hover:-translate-y-1.5 group/pack flex flex-col h-full ${
         pack.featured
           ? "border-2 border-primary bg-gradient-to-b from-primary/5 to-surface hover:shadow-[0_0_50px_hsl(var(--neon)/0.25),0_0_100px_hsl(var(--neon)/0.1)]"
           : "border border-border bg-surface hover:border-primary/30 hover:shadow-[0_0_30px_hsl(var(--neon)/0.12),0_0_60px_hsl(var(--neon)/0.06)]"
@@ -323,10 +323,11 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
           </div>
 
           {/* Desktop — flip 3D reveal one by one */}
-          <div ref={gridRef} className="hidden md:grid md:grid-cols-4 gap-6 mt-10" style={{ perspective: "1200px" }}>
+          <div ref={gridRef} className="hidden md:grid md:grid-cols-4 gap-6 mt-10 items-stretch" style={{ perspective: "1200px" }}>
             {packs.map((pack, idx) => (
               <motion.div
                 key={pack.number}
+                className="h-full"
                 initial={{ opacity: 0, rotateY: -90, scale: 0.85 }}
                 animate={gridInView ? { opacity: 1, rotateY: 0, scale: 1 } : {}}
                 transition={{
