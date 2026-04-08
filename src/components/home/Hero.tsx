@@ -177,7 +177,7 @@ const Hero = () => {
                 animate={{ opacity: [0, 1, 0, 1, 0] }}
                 transition={{
                   duration: 1.2,
-                  delay: 0.5 + BRAND_LETTERS.length * 0.09,
+                  delay: 0.8 + BRAND_LETTERS.length * 0.15,
                   repeat: 2,
                 }}
               />
