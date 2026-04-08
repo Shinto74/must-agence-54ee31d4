@@ -210,7 +210,7 @@ const TheArtistShowcase = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <p className="text-[13px] text-muted-foreground/80 mb-4">
+          <p className="text-[11px] text-muted-foreground/80 mb-4">
             Offert avec nos packs — jusqu'à <strong className="text-primary">8 mois</strong> d'accès
           </p>
           <motion.a
