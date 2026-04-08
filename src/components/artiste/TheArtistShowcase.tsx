@@ -80,15 +80,19 @@ const TheArtistShowcase = () => {
 
         {/* ── Header — bigger text ── */}
         <div className="rv text-center mb-8">
-          <motion.p
-            className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary mb-4"
+          <motion.div
+            className="flex items-center justify-center gap-4 mb-4"
             initial={{ opacity: 0, filter: "blur(4px)" }}
             whileInView={{ opacity: 1, filter: "blur(0px)" }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            Partenaire officiel
-          </motion.p>
+            <span className="w-8 h-px bg-primary/50" />
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary">
+              Partenaire officiel
+            </p>
+            <span className="w-8 h-px bg-primary/50" />
+          </motion.div>
 
           <motion.h2
             className="font-clash text-2xl md:text-4xl font-bold text-foreground"
