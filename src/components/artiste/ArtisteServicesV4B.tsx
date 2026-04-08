@@ -339,7 +339,7 @@ const ArtisteServicesV4B = () => {
                   {/* Titre éditorial */}
                   <h3
                     className="font-clash font-bold text-foreground mb-3"
-                    style={{ fontSize: "clamp(1.5rem, 2.2vw, 2.2rem)", lineHeight: 1.1 }}
+                    style={{ fontSize: "clamp(1.8rem, 2.6vw, 2.6rem)", lineHeight: 1.1 }}
                   >
                     {activePillar.leftTitle}
                   </h3>
@@ -347,7 +347,7 @@ const ArtisteServicesV4B = () => {
                   {/* Statement */}
                   <p
                     className="font-outfit leading-relaxed mb-6"
-                    style={{ fontSize: 15, color: "hsla(0,0%,100%,0.55)", maxWidth: 360, fontStyle: "italic" }}
+                    style={{ fontSize: 16, color: "hsla(0,0%,100%,0.55)", maxWidth: 400, fontStyle: "italic" }}
                   >
                     {activePillar.statement}
                   </p>
@@ -363,7 +363,7 @@ const ArtisteServicesV4B = () => {
                         className="flex items-center gap-3"
                       >
                         <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" style={{ boxShadow: "0 0 8px hsl(73 100% 50% / 0.4)" }} />
-                        <span className="font-mono text-[12px] text-foreground/70 tracking-wide">{item}</span>
+                        <span className="font-mono text-[13px] text-foreground/70 tracking-wide">{item}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -384,18 +384,9 @@ const ArtisteServicesV4B = () => {
                     ))}
                   </div>
 
-                  {/* CTA */}
-                  <div className="flex items-center gap-4 mt-8">
-                    <motion.a
-                      href="#packs"
-                      whileHover={{ scale: 1.04, boxShadow: "0 0 20px hsl(73 100% 50% / 0.3)" }}
-                      whileTap={{ scale: 0.97 }}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-clash font-semibold text-xs text-background bg-primary"
-                      style={{ transition: "box-shadow 0.3s" }}
-                    >
-                      Voir les packs <span>&#8594;</span>
-                    </motion.a>
-                    <span className="font-mono text-[9px] uppercase tracking-[.35em] text-muted-foreground/50">
+                  {/* Counter */}
+                  <div className="mt-8">
+                    <span className="font-mono text-[10px] uppercase tracking-[.35em] text-muted-foreground/50">
                       {activeIndex + 1} / {PILLARS.length}
                     </span>
                   </div>
