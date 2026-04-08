@@ -339,7 +339,7 @@ const ArtisteServicesV4B = () => {
                   {/* Titre éditorial */}
                   <h3
                     className="font-clash font-bold text-foreground mb-3"
-                    style={{ fontSize: "clamp(1.5rem, 2.2vw, 2.2rem)", lineHeight: 1.1 }}
+                    style={{ fontSize: "clamp(1.8rem, 2.6vw, 2.6rem)", lineHeight: 1.1 }}
                   >
                     {activePillar.leftTitle}
                   </h3>
