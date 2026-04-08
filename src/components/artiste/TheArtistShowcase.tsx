@@ -74,10 +74,10 @@ const TheArtistShowcase = () => {
   const gridInView = useInView(gridRef, { once: true, margin: "-40px" });
 
   const particles = useMemo(() =>
-    Array.from({ length: 20 }, (_, i) => ({
-      angle: (360 / 20) * i + Math.random() * 10,
-      delay: 0.1 + Math.random() * 0.5,
-      radius: 100 + Math.random() * 60,
+    Array.from({ length: 40 }, (_, i) => ({
+      angle: (360 / 40) * i + Math.random() * 8,
+      delay: 0.1 + Math.random() * 0.8,
+      radius: 90 + Math.random() * 80,
     })),
   []);
 
