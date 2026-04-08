@@ -196,8 +196,8 @@ const TheArtistShowcase = () => {
                 }}
                 transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
               />
-              <span className="font-clash text-sm font-semibold text-foreground relative z-10">{feat.title}</span>
-              <span className="text-xs text-muted-foreground hidden sm:inline relative z-10">{feat.desc}</span>
+              <span className="font-clash text-[13px] font-semibold text-foreground relative z-10">{feat.title}</span>
+              <span className="text-[11px] text-muted-foreground hidden sm:inline relative z-10">{feat.desc}</span>
             </motion.div>
           ))}
         </div>
@@ -210,7 +210,7 @@ const TheArtistShowcase = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <p className="text-sm text-muted-foreground/80 mb-4">
+          <p className="text-[13px] text-muted-foreground/80 mb-4">
             Offert avec nos packs — jusqu'à <strong className="text-primary">8 mois</strong> d'accès
           </p>
           <motion.a
