@@ -29,10 +29,10 @@ const OrbitRing = ({ size, duration, delay }: { size: number; duration: number; 
   >
     <motion.div
       className="absolute w-1 h-1 rounded-full bg-primary/40"
-      style={{ top: -2, left: "50%", marginLeft: -2 }}
+      style={{ top: -2, left: "50%", marginLeft: -2, transformOrigin: `2px ${size / 2 + 2}px` }}
       animate={{ rotate: 360 }}
       transition={{ duration, repeat: Infinity, ease: "linear" }}
-      style={{ transformOrigin: `2px ${size / 2 + 2}px` }}
+    />
     />
   </motion.div>
 );
