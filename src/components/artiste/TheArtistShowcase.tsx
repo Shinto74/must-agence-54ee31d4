@@ -127,7 +127,7 @@ const TheArtistShowcase = () => {
               initial={{ opacity: 0, scale: 0 }}
               whileInView={{ opacity: 1, scale: [0, 1.1, 1] }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ scale: 1.05 }}
             />
           </div>
