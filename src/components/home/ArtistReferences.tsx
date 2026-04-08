@@ -80,7 +80,6 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   const handleTouchEnd = () => { isDragging.current = false; };
 
   const handleArtistClick = (artistName: string) => {
-    console.log("Artist click:", artistName, "didDrag:", didDrag.current, "hasDetails:", !!ARTIST_DETAILS[artistName]);
     if (didDrag.current) return;
     setSelectedArtist(ARTIST_DETAILS[artistName] ? artistName : null);
   };
@@ -198,202 +197,203 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
       </div>
 
       {/* ═══ PREMIUM MODAL ═══ */}
-      <AnimatePresence>
-        {selectedArtist && currentArtist && currentDetails && createPortal(
-          <>
-            {/* Backdrop */}
+      {typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {selectedArtist && currentArtist && currentDetails ? (
             <motion.div
+              key={selectedArtist}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
-              className="fixed inset-0 z-40"
-              onClick={closeModal}
-              style={{
-                background: "hsla(0,0%,0%,0.75)",
-                backdropFilter: "blur(20px)",
-              }}
-            />
-
-            {/* Modal */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 40 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+              className="fixed inset-0 z-50"
             >
               <div
-                className="relative w-full max-w-2xl rounded-3xl overflow-hidden"
-                onClick={(e) => e.stopPropagation()}
+                className="absolute inset-0"
+                onClick={closeModal}
                 style={{
-                  background: "linear-gradient(160deg, hsl(0 0% 9%) 0%, hsl(0 0% 4%) 100%)",
-                  border: "1px solid hsla(0,0%,100%,0.07)",
-                  boxShadow: `
-                    0 50px 100px hsla(0,0%,0%,0.7),
-                    0 0 80px hsl(73 100% 50% / 0.05),
-                    inset 0 1px 0 hsla(0,0%,100%,0.06)
-                  `,
+                  background: "hsla(0,0%,0%,0.75)",
+                  backdropFilter: "blur(20px)",
                 }}
-              >
-                {/* Top neon line */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-px"
-                  style={{ background: "linear-gradient(to right, transparent 10%, hsl(73 100% 50% / 0.5) 50%, transparent 90%)" }}
-                />
+              />
 
-                {/* Close button */}
-                <button
-                  onClick={closeModal}
-                  className="absolute right-5 top-5 z-10 p-2.5 rounded-full transition-all duration-300"
+              <div className="relative flex min-h-full items-center justify-center overflow-y-auto p-4 sm:p-6">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 40 }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative w-full max-w-2xl rounded-3xl overflow-hidden"
+                  onClick={(e) => e.stopPropagation()}
                   style={{
-                    background: "hsla(0,0%,100%,0.04)",
-                    border: "1px solid hsla(0,0%,100%,0.1)",
-                    backdropFilter: "blur(8px)",
+                    background: "linear-gradient(160deg, hsl(0 0% 9%) 0%, hsl(0 0% 4%) 100%)",
+                    border: "1px solid hsla(0,0%,100%,0.07)",
+                    boxShadow: `
+                      0 50px 100px hsla(0,0%,0%,0.7),
+                      0 0 80px hsl(73 100% 50% / 0.05),
+                      inset 0 1px 0 hsla(0,0%,100%,0.06)
+                    `,
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.5)";
-                    e.currentTarget.style.boxShadow = "0 0 18px hsl(73 100% 50% / 0.15)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "hsla(0,0%,100%,0.1)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                  aria-label="Fermer"
                 >
-                  <X size={18} className="text-foreground/60" />
-                </button>
+                  {/* Top neon line */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-px"
+                    style={{ background: "linear-gradient(to right, transparent 10%, hsl(73 100% 50% / 0.5) 50%, transparent 90%)" }}
+                  />
 
-                {/* Content */}
-                <div className="p-6 md:p-10">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Photo */}
-                    <div className="relative">
-                      <div
-                        className="relative aspect-[3/4] overflow-hidden rounded-2xl"
-                        style={{
-                          border: "1px solid hsla(0,0%,100%,0.06)",
-                          boxShadow: "0 25px 50px hsla(0,0%,0%,0.5), 0 0 40px hsl(73 100% 50% / 0.04)",
-                        }}
-                      >
-                        <img
-                          src={currentArtist.image}
-                          alt={currentArtist.name}
-                          className="h-full w-full object-cover"
-                        />
+                  {/* Close button */}
+                  <button
+                    onClick={closeModal}
+                    className="absolute right-5 top-5 z-10 p-2.5 rounded-full transition-all duration-300"
+                    style={{
+                      background: "hsla(0,0%,100%,0.04)",
+                      border: "1px solid hsla(0,0%,100%,0.1)",
+                      backdropFilter: "blur(8px)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.5)";
+                      e.currentTarget.style.boxShadow = "0 0 18px hsl(73 100% 50% / 0.15)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "hsla(0,0%,100%,0.1)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                    aria-label="Fermer"
+                  >
+                    <X size={18} className="text-foreground/60" />
+                  </button>
+
+                  {/* Content */}
+                  <div className="p-6 md:p-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {/* Photo */}
+                      <div className="relative">
                         <div
-                          className="absolute inset-0"
-                          style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.35) 0%, transparent 40%)" }}
+                          className="relative aspect-[3/4] overflow-hidden rounded-2xl"
+                          style={{
+                            border: "1px solid hsla(0,0%,100%,0.06)",
+                            boxShadow: "0 25px 50px hsla(0,0%,0%,0.5), 0 0 40px hsl(73 100% 50% / 0.04)",
+                          }}
+                        >
+                          <img
+                            src={currentArtist.image}
+                            alt={currentArtist.name}
+                            className="h-full w-full object-cover"
+                          />
+                          <div
+                            className="absolute inset-0"
+                            style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.35) 0%, transparent 40%)" }}
+                          />
+                        </div>
+                        {/* Decorative corner glow */}
+                        <div
+                          className="absolute -bottom-6 -right-6 w-40 h-40 rounded-full pointer-events-none"
+                          style={{ background: "radial-gradient(circle, hsl(73 100% 50% / 0.07) 0%, transparent 70%)" }}
                         />
                       </div>
-                      {/* Decorative corner glow */}
-                      <div
-                        className="absolute -bottom-6 -right-6 w-40 h-40 rounded-full pointer-events-none"
-                        style={{ background: "radial-gradient(circle, hsl(73 100% 50% / 0.07) 0%, transparent 70%)" }}
-                      />
-                    </div>
 
-                    {/* Info */}
-                    <div className="flex flex-col justify-between">
-                      <div>
-                        <motion.h3
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.4, delay: 0.15 }}
-                          className="font-clash text-2xl md:text-3xl font-black text-foreground mb-1 tracking-tight"
-                        >
-                          {currentArtist.name}
-                        </motion.h3>
-                        <motion.p
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.4, delay: 0.2 }}
-                          className="font-mono text-xs uppercase tracking-[0.2em] mb-6"
-                          style={{ color: "hsl(73 100% 50%)" }}
-                        >
-                          {currentDetails.strategie}
-                        </motion.p>
-                        <motion.p
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: 0.25 }}
-                          className="text-foreground/65 leading-relaxed text-sm mb-6"
-                        >
-                          {currentDetails.description}
-                        </motion.p>
-
-                        {currentDetails.chiffre && (
-                          <motion.div
+                      {/* Info */}
+                      <div className="flex flex-col justify-between">
+                        <div>
+                          <motion.h3
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, delay: 0.15 }}
+                            className="font-clash text-2xl md:text-3xl font-black text-foreground mb-1 tracking-tight"
+                          >
+                            {currentArtist.name}
+                          </motion.h3>
+                          <motion.p
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, delay: 0.2 }}
+                            className="font-mono text-xs uppercase tracking-[0.2em] mb-6"
+                            style={{ color: "hsl(73 100% 50%)" }}
+                          >
+                            {currentDetails.strategie}
+                          </motion.p>
+                          <motion.p
                             initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.3 }}
-                            className="mb-6 p-4 rounded-xl"
-                            style={{
-                              background: "hsl(73 100% 50% / 0.05)",
-                              border: "1px solid hsl(73 100% 50% / 0.12)",
-                              boxShadow: "inset 0 0 25px hsl(73 100% 50% / 0.03)",
-                            }}
+                            transition={{ duration: 0.4, delay: 0.25 }}
+                            className="text-foreground/65 leading-relaxed text-sm mb-6"
                           >
-                            <p className="font-clash text-lg font-bold text-primary">
-                              {currentDetails.chiffre}
-                            </p>
-                          </motion.div>
-                        )}
-                      </div>
+                            {currentDetails.description}
+                          </motion.p>
 
-                      {/* Plateformes */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.35 }}
-                      >
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/35 mb-3">
-                          Plateformes
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {currentDetails.plateformes.map((plateforme, idx) => (
-                            <motion.span
-                              key={plateforme}
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ duration: 0.3, delay: 0.4 + idx * 0.06 }}
-                              className="px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-[0.15em] transition-all duration-300 cursor-default"
+                          {currentDetails.chiffre && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 15 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.4, delay: 0.3 }}
+                              className="mb-6 p-4 rounded-xl"
                               style={{
-                                border: "1px solid hsl(73 100% 50% / 0.2)",
-                                color: "hsl(73 100% 50% / 0.85)",
-                                background: "hsl(73 100% 50% / 0.04)",
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.background = "hsl(73 100% 50% / 0.1)";
-                                e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.4)";
-                                e.currentTarget.style.boxShadow = "0 0 15px hsl(73 100% 50% / 0.12)";
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.background = "hsl(73 100% 50% / 0.04)";
-                                e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.2)";
-                                e.currentTarget.style.boxShadow = "none";
+                                background: "hsl(73 100% 50% / 0.05)",
+                                border: "1px solid hsl(73 100% 50% / 0.12)",
+                                boxShadow: "inset 0 0 25px hsl(73 100% 50% / 0.03)",
                               }}
                             >
-                              {plateforme}
-                            </motion.span>
-                          ))}
+                              <p className="font-clash text-lg font-bold text-primary">
+                                {currentDetails.chiffre}
+                              </p>
+                            </motion.div>
+                          )}
                         </div>
-                      </motion.div>
+
+                        {/* Plateformes */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 0.35 }}
+                        >
+                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/35 mb-3">
+                            Plateformes
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {currentDetails.plateformes.map((plateforme, idx) => (
+                              <motion.span
+                                key={plateforme}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.3, delay: 0.4 + idx * 0.06 }}
+                                className="px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-[0.15em] transition-all duration-300 cursor-default"
+                                style={{
+                                  border: "1px solid hsl(73 100% 50% / 0.2)",
+                                  color: "hsl(73 100% 50% / 0.85)",
+                                  background: "hsl(73 100% 50% / 0.04)",
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = "hsl(73 100% 50% / 0.1)";
+                                  e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.4)";
+                                  e.currentTarget.style.boxShadow = "0 0 15px hsl(73 100% 50% / 0.12)";
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = "hsl(73 100% 50% / 0.04)";
+                                  e.currentTarget.style.borderColor = "hsl(73 100% 50% / 0.2)";
+                                  e.currentTarget.style.boxShadow = "none";
+                                }}
+                              >
+                                {plateforme}
+                              </motion.span>
+                            ))}
+                          </div>
+                        </motion.div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Bottom neon line */}
-                <div
-                  className="absolute bottom-0 left-0 right-0 h-px"
-                  style={{ background: "linear-gradient(to right, transparent 20%, hsl(73 100% 50% / 0.15) 50%, transparent 80%)" }}
-                />
+                  {/* Bottom neon line */}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 h-px"
+                    style={{ background: "linear-gradient(to right, transparent 20%, hsl(73 100% 50% / 0.15) 50%, transparent 80%)" }}
+                  />
+                </motion.div>
               </div>
             </motion.div>
-          </>,
-          document.body
-        )}
-      </AnimatePresence>
+          ) : null}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   );
 };
