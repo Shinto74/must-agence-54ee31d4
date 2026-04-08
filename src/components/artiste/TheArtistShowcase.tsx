@@ -60,9 +60,9 @@ const Particle = ({ angle, delay, radius }: { angle: number; delay: number; radi
       }}
       viewport={{ once: true }}
       transition={{
-        duration: 0.8,
+        duration: 1.5,
         delay: delay,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.25, 0.8, 0.25, 1],
       }}
     />
   );
@@ -74,10 +74,10 @@ const TheArtistShowcase = () => {
   const gridInView = useInView(gridRef, { once: true, margin: "-40px" });
 
   const particles = useMemo(() =>
-    Array.from({ length: 20 }, (_, i) => ({
-      angle: (360 / 20) * i + Math.random() * 10,
-      delay: 0.1 + Math.random() * 0.5,
-      radius: 100 + Math.random() * 60,
+    Array.from({ length: 40 }, (_, i) => ({
+      angle: (360 / 40) * i + Math.random() * 8,
+      delay: 0.1 + Math.random() * 0.8,
+      radius: 90 + Math.random() * 80,
     })),
   []);
 
@@ -127,7 +127,7 @@ const TheArtistShowcase = () => {
               initial={{ opacity: 0, scale: 0 }}
               whileInView={{ opacity: 1, scale: [0, 1.1, 1] }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ scale: 1.05 }}
             />
           </div>
