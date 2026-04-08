@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import theartistLogoColor from "@/assets/theartist-logo-color.png";
+import theartistALogo from "@/assets/theartist-a-logo.png";
 
 const FEATURES = [
   { title: "Feed", desc: "Partage & découvre" },
@@ -28,15 +29,12 @@ const TheArtistShowcase = () => {
         >
           <div className="relative">
             <div className="absolute inset-[-30px] rounded-full blur-[50px] opacity-40 animate-pulse" style={{ background: "radial-gradient(circle, #6C3CE1 0%, hsl(var(--primary)) 100%)" }} />
-            <span
-              className="relative font-clash text-7xl md:text-9xl font-black select-none"
-              style={{
-                color: "#6C3CE1",
-                textShadow: "0 0 30px rgba(108,60,225,0.6), 0 0 60px rgba(108,60,225,0.3), 0 0 90px hsl(var(--primary) / 0.2)",
-              }}
-            >
-              A
-            </span>
+            <img
+              src={theartistALogo}
+              alt="A"
+              className="relative w-24 h-24 md:w-36 md:h-36 drop-shadow-[0_0_30px_rgba(108,60,225,0.6)]"
+              style={{ filter: "drop-shadow(0 0 40px rgba(108,60,225,0.4)) drop-shadow(0 0 80px hsl(var(--primary) / 0.15))" }}
+            />
           </div>
         </motion.div>
 
