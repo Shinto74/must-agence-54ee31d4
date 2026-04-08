@@ -30,8 +30,7 @@ const TheArtistShowcase = () => {
             <img
               src={theartistALogo}
               alt="TheArtist"
-              className="relative w-40 h-40 md:w-56 md:h-56"
-              style={{ filter: "invert(1)" }}
+              className="relative w-40 h-40 md:w-56 md:h-56 brightness-0 invert"
             />
           </div>
         </motion.div>
