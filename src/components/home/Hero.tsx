@@ -116,7 +116,7 @@ const Hero = () => {
             >
               {BRAND_LETTERS.map((letter, i) => {
                 const isNeon = letter.color.includes("73");
-                const baseDelay = 0.5 + i * 0.09;
+                const baseDelay = 0.8 + i * 0.15;
                 return (
                   <motion.span
                     key={i}
@@ -157,7 +157,7 @@ const Hero = () => {
                       style={{ background: isNeon ? "hsl(73 100% 50%)" : "hsl(0 0% 80%)" }}
                       initial={{ opacity: 1 }}
                       animate={{ opacity: 0 }}
-                      transition={{ duration: 0.1, delay: baseDelay + 0.09 }}
+                      transition={{ duration: 0.15, delay: baseDelay + 0.15 }}
                     />
                     <span style={{
                       textShadow: isNeon
@@ -177,7 +177,7 @@ const Hero = () => {
                 animate={{ opacity: [0, 1, 0, 1, 0] }}
                 transition={{
                   duration: 1.2,
-                  delay: 0.5 + BRAND_LETTERS.length * 0.09,
+                  delay: 0.8 + BRAND_LETTERS.length * 0.15,
                   repeat: 2,
                 }}
               />
