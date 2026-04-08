@@ -1,6 +1,6 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, ArrowRight, X, Send, CheckCircle, Loader2 } from "lucide-react";
+import { Play, Pause, ArrowRight, X, Send, CheckCircle, Loader2, Phone } from "lucide-react";
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +11,7 @@ const ClipPortugal = () => {
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ nom: "", prenom: "", age: "", budget: "", idees: "", email: "" });
+  const [form, setForm] = useState({ nom: "", prenom: "", age: "", budget: "", idees: "", email: "", telephone: "" });
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handlePlay = () => {
@@ -23,14 +23,14 @@ const ClipPortugal = () => {
   };
 
   const handleSubmit = async () => {
-    if (!form.nom || !form.prenom || !form.email) return;
+    if (!form.nom || !form.prenom || !form.email || !form.telephone) return;
     setLoading(true);
     try {
       await supabase.from("contact_submissions").insert({
         name: `${form.prenom} ${form.nom}`,
         email: form.email,
         type: "clip-portugal",
-        message: `Âge: ${form.age}\nBudget: ${form.budget}\nIdées: ${form.idees}`,
+        message: `Téléphone: ${form.telephone}\nÂge: ${form.age}\nBudget: ${form.budget}\nIdées: ${form.idees}`,
       });
     } catch (e) { /* silent */ }
     setLoading(false);
@@ -40,7 +40,7 @@ const ClipPortugal = () => {
   const resetForm = () => {
     setShowForm(false);
     setSubmitted(false);
-    setForm({ nom: "", prenom: "", age: "", budget: "", idees: "", email: "" });
+    setForm({ nom: "", prenom: "", age: "", budget: "", idees: "", email: "", telephone: "" });
   };
 
   const features = [
@@ -322,12 +322,37 @@ const ClipPortugal = () => {
                       >
                         {/* Header */}
                         <div className="mb-8">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-6 h-[2px] rounded-full" style={{ background: "hsl(var(--neon))" }} />
+                          <motion.div
+                            className="flex items-center gap-2 mb-3"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.15, duration: 0.5 }}
+                          >
+                            <motion.div
+                              className="w-6 h-[2px] rounded-full"
+                              style={{ background: "hsl(var(--neon))" }}
+                              initial={{ scaleX: 0 }}
+                              animate={{ scaleX: 1 }}
+                              transition={{ delay: 0.3, duration: 0.6 }}
+                            />
                             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">Clip au Portugal</span>
-                          </div>
-                          <h3 className="font-clash text-2xl font-bold text-foreground mb-2">Commencez l'aventure</h3>
-                          <p className="text-muted-foreground text-sm">Remplissez ce formulaire et notre équipe vous recontactera sous 48h.</p>
+                          </motion.div>
+                          <motion.h3
+                            className="font-clash text-2xl font-bold text-foreground mb-2"
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                          >
+                            Commencez l'aventure
+                          </motion.h3>
+                          <motion.p
+                            className="text-muted-foreground text-sm"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.25, duration: 0.5 }}
+                          >
+                            Remplissez ce formulaire et notre équipe vous recontactera sous 48h.
+                          </motion.p>
                         </div>
 
                         {/* Form fields */}
@@ -368,16 +393,28 @@ const ClipPortugal = () => {
                               />
                             </motion.div>
                             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }}>
-                              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Âge</label>
+                              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Téléphone *</label>
                               <input
+                                type="tel"
                                 className={inputClass}
                                 style={inputStyle}
-                                placeholder="Votre âge"
-                                value={form.age}
-                                onChange={e => setForm(f => ({ ...f, age: e.target.value }))}
+                                placeholder="+33 6 12 34 56 78"
+                                value={form.telephone}
+                                onChange={e => setForm(f => ({ ...f, telephone: e.target.value }))}
                               />
                             </motion.div>
                           </div>
+
+                          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}>
+                            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Âge</label>
+                            <input
+                              className={inputClass}
+                              style={inputStyle}
+                              placeholder="Votre âge"
+                              value={form.age}
+                              onChange={e => setForm(f => ({ ...f, age: e.target.value }))}
+                            />
+                          </motion.div>
 
                           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                             <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Budget estimé</label>
@@ -411,15 +448,15 @@ const ClipPortugal = () => {
                         {/* Submit */}
                         <motion.button
                           onClick={handleSubmit}
-                          disabled={!form.nom || !form.prenom || !form.email || loading}
+                          disabled={!form.nom || !form.prenom || !form.email || !form.telephone || loading}
                           className="w-full mt-6 group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-clash text-sm font-bold uppercase tracking-wider transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
                           style={{
                             background: "hsl(var(--primary))",
                             color: "hsl(var(--primary-foreground))",
                             boxShadow: "0 0 30px hsl(var(--neon) / 0.2)",
                           }}
-                          whileHover={form.nom && form.prenom && form.email ? { y: -2, boxShadow: "0 0 50px hsl(73 100% 50% / 0.4)" } : {}}
-                          whileTap={form.nom && form.prenom && form.email ? { scale: 0.97 } : {}}
+                          whileHover={form.nom && form.prenom && form.email && form.telephone ? { y: -2, boxShadow: "0 0 50px hsl(73 100% 50% / 0.4)" } : {}}
+                          whileTap={form.nom && form.prenom && form.email && form.telephone ? { scale: 0.97 } : {}}
                         >
                           {loading ? (
                             <Loader2 size={18} className="animate-spin" />
