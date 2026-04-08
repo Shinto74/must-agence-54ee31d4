@@ -120,7 +120,7 @@ const TheArtistShowcase = () => {
                 y: -3,
                 borderColor: "hsl(var(--primary) / 0.4)",
               }}
-              className="group relative flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/[0.04] backdrop-blur-sm cursor-default overflow-hidden"
+              className="group relative flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-primary/25 bg-primary/[0.06] backdrop-blur-sm cursor-default overflow-hidden shadow-[0_0_12px_hsl(var(--primary)/0.06)]"
             >
               {/* Shimmer sweep on hover */}
               <motion.div
