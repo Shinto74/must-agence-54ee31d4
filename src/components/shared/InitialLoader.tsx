@@ -39,6 +39,8 @@ const InitialLoader = ({ onComplete }: { onComplete: () => void }) => {
         background: "hsl(var(--background))",
       }}
     >
+      {/* Radial glow overlay */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 40%, hsl(var(--neon) / 0.06) 0%, transparent 55%)" }} />
       {/* Ambient floating orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
