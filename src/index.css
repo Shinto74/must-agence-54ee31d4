@@ -9,13 +9,13 @@
   :root {
     /* ── Charte Graphique Mustagence v1.0 ── */
     /* Background: #141414 */
-    --bg: 0 0% 8%;
-    /* Surface / Cards: #1F1F1F */
-    --sf: 0 0% 12%;
-    --sf2: 0 0% 15%;
+    --bg: 0 0% 10%;
+    /* Surface / Cards */
+    --sf: 0 0% 14%;
+    --sf2: 0 0% 17%;
     /* Borders */
-    --bd: 0 0% 18%;
-    --bdl: 0 0% 23%;
+    --bd: 0 0% 20%;
+    --bdl: 0 0% 26%;
     /* Neon Green: #CCFF00 */
     --neon: 73 100% 50%;
     --neon2: 75 100% 50%;
@@ -23,9 +23,9 @@
     --ngs: 73 100% 50%;
     /* Text hierarchy */
     --wh: 0 0% 100%;
-    --mi: 0 0% 63%;
-    --sm: 0 0% 40%;
-    --dm: 0 0% 20%;
+    --mi: 0 0% 70%;
+    --sm: 0 0% 48%;
+    --dm: 0 0% 25%;
 
     /* ── Semantic tokens (shadcn) ── */
     --background: 0 0% 8%;
