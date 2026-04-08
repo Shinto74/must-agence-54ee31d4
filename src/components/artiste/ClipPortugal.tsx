@@ -142,13 +142,24 @@ const ClipPortugal = () => {
           au Portugal
         </motion.h2>
         <motion.p
-          className="rv text-muted-foreground text-sm md:text-base max-w-xl leading-relaxed mb-14"
+          className="rv max-w-xl text-sm md:text-base leading-[1.8] mb-14"
+          style={{ color: "hsl(var(--mi))" }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          Des décors de rêve entre Lisbonne, l'Algarve et Porto. Une production clé en main : réalisation, logistique, hébergement. Concentrez-vous sur votre art, on gère le reste.
+          Des décors de rêve entre{" "}
+          <span className="text-foreground font-medium">Lisbonne</span>,{" "}
+          <span className="text-foreground font-medium">l'Algarve</span> et{" "}
+          <span className="text-foreground font-medium">Porto</span>.
+          <br className="hidden md:block" />{" "}
+          Une production clé en main :{" "}
+          <span style={{ color: "hsl(var(--neon) / 0.85)" }}>réalisation</span>,{" "}
+          <span style={{ color: "hsl(var(--neon) / 0.85)" }}>logistique</span>,{" "}
+          <span style={{ color: "hsl(var(--neon) / 0.85)" }}>hébergement</span>.
+          <br className="hidden md:block" />{" "}
+          Concentrez-vous sur votre art, <span className="text-foreground font-semibold">on gère le reste</span>.
         </motion.p>
 
         {/* Video + Info Grid */}
