@@ -3,17 +3,12 @@ import { motion, useInView } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import theartistIcon from "@/assets/theartist-icon.png";
 import theartistLogoColor from "@/assets/theartist-logo-color.png";
-import theartistMockup from "@/assets/theartist-mockup.png";
 
-/* Hybrid palette: TheArtist purple × Must neon green */
+/* Palette: subtle purple accent, primary neon green dominates */
 const TA = {
   purple: "#6C3CE1",
-  purpleLight: "#A78BFA",
-  neon: "#CCFF00",
-  gradient: "linear-gradient(135deg, #6C3CE1, #7CCC00)",
-  gradientPure: "linear-gradient(135deg, #6C3CE1, #E040A0)",
-  gradientSubtle: "linear-gradient(135deg, rgba(108,60,225,0.10), rgba(124,204,0,0.06))",
-  glow: "0 0 40px rgba(108,60,225,0.20), 0 0 80px rgba(204,255,0,0.08)",
+  purpleSubtle: "rgba(108,60,225,0.12)",
+  gradientSubtle: "linear-gradient(135deg, rgba(108,60,225,0.08), rgba(204,255,0,0.04))",
 };
 
 const FEATURES = [
@@ -30,100 +25,65 @@ const TheArtistShowcase = () => {
 
   return (
     <section ref={sectionRef} className="py-24 md:py-32 px-6 relative overflow-hidden">
-      {/* Ambient background */}
+      {/* Ambient background — very subtle purple */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-[0.05]" style={{ background: "radial-gradient(ellipse, #6C3CE1, transparent 70%)" }} />
-        <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] opacity-[0.04]" style={{ background: `radial-gradient(circle, hsl(73 100% 50%), transparent 70%)` }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-[0.04]" style={{ background: `radial-gradient(ellipse, ${TA.purple}, transparent 70%)` }} />
       </div>
 
-      <div className="max-w-6xl mx-auto relative">
-        {/* ── Hero: Logo + Mockup side by side ── */}
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 mb-16">
-          {/* Left: Text content */}
-          <div className="rv text-center lg:text-left flex-1">
-            <motion.div
-              className="flex items-center justify-center lg:justify-start mb-8"
-              initial={{ opacity: 0, scale: 0.6 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
-            >
-              <div className="relative">
-                <div className="absolute inset-[-24px] rounded-3xl blur-3xl opacity-50 animate-pulse" style={{ background: TA.gradient }} />
-                <div
-                  className="relative w-28 h-28 md:w-36 md:h-36 rounded-3xl flex items-center justify-center border border-white/10 backdrop-blur-sm"
-                  style={{ background: TA.gradientSubtle, boxShadow: TA.glow }}
-                >
-                  <img
-                    src={theartistIcon}
-                    alt="TheArtist"
-                    className="w-16 h-16 md:w-24 md:h-24"
-                    style={{ filter: "invert(1) drop-shadow(0 0 16px rgba(108,60,225,0.5))" }}
-                  />
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.img
-              src={theartistLogoColor}
-              alt="THEARTIST"
-              className="h-8 md:h-10 mx-auto lg:mx-0 mb-4"
-              style={{ filter: "invert(1) drop-shadow(0 0 16px rgba(108,60,225,0.3))" }}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            />
-
-            <motion.p
-              className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary mb-6"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              Partenaire officiel Must Agence
-            </motion.p>
-
-            <h2 className="rv font-clash text-2xl md:text-4xl font-bold text-foreground mb-3">
-              Le réseau pro-social{" "}
-              <span style={{ background: TA.gradient, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                dédié aux artistes.
-              </span>
-            </h2>
-            <p className="rv text-muted-foreground max-w-lg text-sm md:text-base">
-              Instagram × LinkedIn × Booking — en une seule app.
-            </p>
-          </div>
-
-          {/* Right: Phone mockup */}
+      <div className="max-w-5xl mx-auto relative">
+        {/* ── Hero: Logo + Text centered ── */}
+        <div className="rv text-center mb-14">
           <motion.div
-            className="relative flex-shrink-0"
-            initial={{ opacity: 0, y: 40, rotateY: -10 }}
-            whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+            className="flex items-center justify-center mb-8"
+            initial={{ opacity: 0, scale: 0.6 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] as const, delay: 0.2 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
           >
-            {/* Glow behind phone */}
-            <div
-              className="absolute inset-[-30px] rounded-[60px] blur-[60px] opacity-30"
-              style={{ background: TA.gradient }}
-            />
-            {/* Floating animation */}
-            <motion.div
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <img
-                src={theartistMockup}
-                alt="TheArtist App"
-                loading="lazy"
-                width={512}
-                height={1024}
-                className="relative w-[220px] md:w-[280px] drop-shadow-2xl"
-              />
-            </motion.div>
+            <div className="relative">
+              <div className="absolute inset-[-20px] rounded-3xl blur-3xl opacity-30 animate-pulse bg-primary/20" />
+              <div
+                className="relative w-28 h-28 md:w-36 md:h-36 rounded-3xl flex items-center justify-center border border-border backdrop-blur-sm"
+                style={{ background: TA.gradientSubtle }}
+              >
+                <img
+                  src={theartistIcon}
+                  alt="TheArtist"
+                  className="w-16 h-16 md:w-24 md:h-24"
+                  style={{ filter: "invert(1) drop-shadow(0 0 12px rgba(108,60,225,0.4))" }}
+                />
+              </div>
+            </div>
           </motion.div>
+
+          <motion.img
+            src={theartistLogoColor}
+            alt="THEARTIST"
+            className="h-8 md:h-10 mx-auto mb-4"
+            style={{ filter: "invert(1) drop-shadow(0 0 12px rgba(108,60,225,0.2))" }}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          />
+
+          <motion.p
+            className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary mb-6"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            Partenaire officiel Must Agence
+          </motion.p>
+
+          <h2 className="rv font-clash text-2xl md:text-4xl font-bold text-foreground mb-3">
+            Le réseau pro-social{" "}
+            <span className="text-primary">dédié aux artistes.</span>
+          </h2>
+          <p className="rv text-muted-foreground max-w-lg mx-auto text-sm md:text-base">
+            Instagram × LinkedIn × Booking — en une seule app.
+          </p>
         </div>
 
         {/* ── Feature cards ── */}
@@ -134,18 +94,12 @@ const TheArtistShowcase = () => {
               initial={{ opacity: 0, y: 24 }}
               animate={gridInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] as const }}
-              className="group rounded-2xl p-5 border border-border transition-all duration-500 hover:border-primary/20"
+              className="group rounded-2xl p-5 border border-border transition-all duration-500 hover:border-primary/30"
               style={{ background: TA.gradientSubtle }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = "0 0 30px rgba(108,60,225,0.08), 0 0 20px hsl(73 100% 50% / 0.04)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "none";
-              }}
             >
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center mb-3 text-[10px] font-mono font-bold text-white/90 border border-white/10"
-                style={{ background: TA.gradientPure }}
+                className="w-8 h-8 rounded-full flex items-center justify-center mb-3 text-[10px] font-mono font-bold border border-white/10"
+                style={{ background: TA.purpleSubtle, color: TA.purple }}
               >
                 0{i + 1}
               </div>
@@ -155,7 +109,7 @@ const TheArtistShowcase = () => {
           ))}
         </div>
 
-        {/* ── CTA ── */}
+        {/* ── CTA — neon green dominant ── */}
         <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 15 }}
@@ -170,20 +124,13 @@ const TheArtistShowcase = () => {
             href="https://www.theartist.life/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-foreground font-clash font-bold text-sm uppercase tracking-wider transition-all duration-300 hover:-translate-y-0.5"
-            style={{ background: TA.gradient, boxShadow: "0 0 25px rgba(108,60,225,0.15), 0 0 40px hsl(73 100% 50% / 0.08)" }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 40px rgba(108,60,225,0.3), 0 0 60px hsl(73 100% 50% / 0.15)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 0 25px rgba(108,60,225,0.15), 0 0 40px hsl(73 100% 50% / 0.08)"; }}
+            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-primary text-primary-foreground font-clash font-bold text-sm uppercase tracking-wider transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]"
           >
             <img src={theartistIcon} alt="" className="w-5 h-5" style={{ filter: "invert(1)" }} />
             Découvrir TheArtist
           </a>
         </motion.div>
       </div>
-
-      {/* Decorative lines */}
-      <div className="absolute top-1/3 left-0 w-px h-32 opacity-10" style={{ background: TA.gradient }} />
-      <div className="absolute bottom-1/4 right-0 w-px h-24 opacity-10" style={{ background: TA.gradient }} />
     </section>
   );
 };
