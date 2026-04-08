@@ -316,7 +316,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-80px" });
 
-  const theartistTexts = ["3 mois TheArtist offert", "6 mois TheArtist offert", "1 an TheArtist offert", "2 ans TheArtist offert"];
+  const theartistTexts = ["2 mois TheArtist offert", "5 mois TheArtist offert", "8 mois TheArtist offert", "2 ans TheArtist offert"];
 
   return (
     <>
