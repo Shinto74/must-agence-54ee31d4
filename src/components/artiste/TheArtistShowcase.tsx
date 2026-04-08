@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import theartistLogoColor from "@/assets/theartist-logo-color.png";
 import theartistALogo from "@/assets/theartist-a-logo.png";
 
 const FEATURES = [
