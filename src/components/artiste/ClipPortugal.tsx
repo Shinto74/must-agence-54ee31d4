@@ -1,6 +1,6 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, ArrowRight, X, Send, CheckCircle, Loader2 } from "lucide-react";
+import { Play, Pause, ArrowRight, X, Send, CheckCircle, Loader2, Phone } from "lucide-react";
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { supabase } from "@/integrations/supabase/client";
