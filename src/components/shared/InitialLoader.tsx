@@ -36,7 +36,7 @@ const InitialLoader = ({ onComplete }: { onComplete: () => void }) => {
         fadeOut ? "opacity-0 scale-105" : "opacity-100 scale-100"
       }`}
       style={{
-        background: "radial-gradient(ellipse at 50% 40%, hsl(var(--neon) / 0.06) 0%, hsl(var(--background)) 55%)",
+        background: "hsl(var(--background))",
       }}
     >
       {/* Ambient floating orbs */}
