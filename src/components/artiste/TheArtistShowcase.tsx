@@ -192,17 +192,3 @@ const TheArtistShowcase = () => {
 };
 
 export default TheArtistShowcase;
-              y: -2,
-            }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 300, damping: 15 }}
-          >
-            Découvrir TheArtist
-          </motion.a>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-export default TheArtistShowcase;
