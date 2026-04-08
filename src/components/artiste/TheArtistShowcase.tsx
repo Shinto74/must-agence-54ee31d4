@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { motion, useInView } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import theartistALogo from "@/assets/theartist-a-logo.png";
@@ -36,15 +36,55 @@ const OrbitRing = ({ size, duration, delay }: { size: number; duration: number; 
   </motion.div>
 );
 
+/* Particle that flies inward then fades */
+const Particle = ({ angle, delay, radius }: { angle: number; delay: number; radius: number }) => {
+  const rad = (angle * Math.PI) / 180;
+  const startX = Math.cos(rad) * radius;
+  const startY = Math.sin(rad) * radius;
+
+  return (
+    <motion.div
+      className="absolute w-1 h-1 rounded-full bg-primary"
+      style={{
+        top: "50%",
+        left: "50%",
+        marginTop: -2,
+        marginLeft: -2,
+      }}
+      initial={{ x: startX, y: startY, opacity: 1, scale: 1.5 }}
+      whileInView={{
+        x: 0,
+        y: 0,
+        opacity: [1, 1, 0],
+        scale: [1.5, 0.8, 0],
+      }}
+      viewport={{ once: true }}
+      transition={{
+        duration: 0.8,
+        delay: delay,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+    />
+  );
+};
+
 const TheArtistShowcase = () => {
   const sectionRef = useScrollReveal();
   const gridRef = useRef<HTMLDivElement>(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-40px" });
 
+  const particles = useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      angle: (360 / 20) * i + Math.random() * 10,
+      delay: 0.1 + Math.random() * 0.5,
+      radius: 100 + Math.random() * 60,
+    })),
+  []);
+
   return (
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative overflow-hidden">
       <div className="max-w-4xl mx-auto relative">
-        {/* ── Logo with subtle orbits ── */}
+        {/* ── Logo with particle burst ── */}
         <motion.div
           className="flex justify-center mb-6"
           initial={{ opacity: 0 }}
@@ -52,9 +92,24 @@ const TheArtistShowcase = () => {
           viewport={{ once: true }}
         >
           <div className="relative flex items-center justify-center" style={{ width: 240, height: 240 }}>
-            {/* Orbit rings — slow & subtle */}
+            {/* Orbit rings */}
             <OrbitRing size={180} duration={40} delay={0.3} />
             <OrbitRing size={230} duration={55} delay={0.6} />
+
+            {/* Particles flying inward */}
+            {particles.map((p, i) => (
+              <Particle key={i} angle={p.angle} delay={p.delay} radius={p.radius} />
+            ))}
+
+            {/* Flash burst when logo appears */}
+            <motion.div
+              className="absolute w-40 h-40 rounded-full"
+              style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.25), transparent 60%)" }}
+              initial={{ scale: 0, opacity: 0 }}
+              whileInView={{ scale: [0, 2.5, 0], opacity: [0, 0.6, 0] }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
+            />
 
             {/* Soft glow */}
             <motion.div
@@ -64,15 +119,15 @@ const TheArtistShowcase = () => {
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
 
-            {/* Logo */}
+            {/* Logo — appears after particles converge */}
             <motion.img
               src={theartistALogo}
               alt="TheArtist"
               className="relative w-36 h-36 md:w-44 md:h-44 brightness-0 invert z-10"
-              initial={{ opacity: 0, scale: 0.4, rotateY: -90 }}
-              whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: [0, 1.1, 1] }}
               viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.6, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ scale: 1.05 }}
             />
           </div>
