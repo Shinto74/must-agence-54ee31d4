@@ -13,7 +13,7 @@ const FEATURES = [
 /* Subtle orbit ring */
 const OrbitRing = ({ size, duration, delay }: { size: number; duration: number; delay: number }) => (
   <motion.div
-    className="absolute rounded-full border border-primary/20"
+    className="absolute rounded-full border border-primary/10"
     style={{
       width: size,
       height: size,
@@ -28,7 +28,7 @@ const OrbitRing = ({ size, duration, delay }: { size: number; duration: number; 
     transition={{ opacity: { duration: 1.5, delay }, scale: { duration: 2, delay, ease: [0.16, 1, 0.3, 1] } }}
   >
     <motion.div
-      className="absolute w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.6)]"
+      className="absolute w-1.5 h-1.5 rounded-full bg-primary/30 shadow-[0_0_4px_hsl(var(--primary)/0.3)]"
       style={{ top: -2, left: "50%", marginLeft: -2, transformOrigin: `2px ${size / 2 + 2}px` }}
       animate={{ rotate: 360 }}
       transition={{ duration, repeat: Infinity, ease: "linear" }}
@@ -120,7 +120,7 @@ const TheArtistShowcase = () => {
                 y: -3,
                 borderColor: "hsl(var(--primary) / 0.4)",
               }}
-              className="group relative flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/[0.04] backdrop-blur-sm cursor-default overflow-hidden"
+              className="group relative flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-primary/25 bg-primary/[0.06] backdrop-blur-sm cursor-default overflow-hidden shadow-[0_0_12px_hsl(var(--primary)/0.06)]"
             >
               {/* Shimmer sweep on hover */}
               <motion.div
