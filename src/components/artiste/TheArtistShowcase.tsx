@@ -136,7 +136,7 @@ const TheArtistShowcase = () => {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
-        </motion.div>
+        </div>
 
         {/* ── Header — bigger text ── */}
         <div className="rv text-center mb-8">
