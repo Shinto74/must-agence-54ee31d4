@@ -136,13 +136,15 @@ const FeatureItem = ({ feature, tooltip }: { feature: string; tooltip?: string }
 /* ─── THEARTIST BONUS ─── */
 
 const TheArtistBonus = ({ text }: { text: string }) => (
-  <div className="rounded-lg mb-4 relative group/ta border border-primary/20 overflow-hidden">
+  <div className="rounded-lg mb-4 relative group/ta border border-primary/20 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_20px_hsl(var(--neon)/0.08)]">
+    {/* Shimmer animation */}
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.06] to-transparent -translate-x-full animate-[ta-shimmer_3s_ease-in-out_infinite]" />
     {/* Subtle gradient bg */}
     <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.04] to-transparent" />
     
     <div className="relative flex items-center gap-3 px-3 py-2.5">
-      {/* Logo A with subtle glow */}
-      <div className="w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center shrink-0 border border-primary/15">
+      {/* Logo A with pulse glow */}
+      <div className="w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center shrink-0 border border-primary/15 animate-[ta-glow_2.5s_ease-in-out_infinite]">
         <img
           src={theartistIcon}
           alt="TheArtist"
@@ -169,6 +171,17 @@ const TheArtistBonus = ({ text }: { text: string }) => (
         </div>
       </div>
     </div>
+    
+    <style>{`
+      @keyframes ta-shimmer {
+        0% { transform: translateX(-100%); }
+        50%, 100% { transform: translateX(100%); }
+      }
+      @keyframes ta-glow {
+        0%, 100% { box-shadow: 0 0 0px hsl(var(--neon) / 0); }
+        50% { box-shadow: 0 0 12px hsl(var(--neon) / 0.2); }
+      }
+    `}</style>
   </div>
 );
 
