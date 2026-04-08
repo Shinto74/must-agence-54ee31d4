@@ -368,16 +368,28 @@ const ClipPortugal = () => {
                               />
                             </motion.div>
                             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }}>
-                              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Âge</label>
+                              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Téléphone *</label>
                               <input
+                                type="tel"
                                 className={inputClass}
                                 style={inputStyle}
-                                placeholder="Votre âge"
-                                value={form.age}
-                                onChange={e => setForm(f => ({ ...f, age: e.target.value }))}
+                                placeholder="+33 6 12 34 56 78"
+                                value={form.telephone}
+                                onChange={e => setForm(f => ({ ...f, telephone: e.target.value }))}
                               />
                             </motion.div>
                           </div>
+
+                          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}>
+                            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Âge</label>
+                            <input
+                              className={inputClass}
+                              style={inputStyle}
+                              placeholder="Votre âge"
+                              value={form.age}
+                              onChange={e => setForm(f => ({ ...f, age: e.target.value }))}
+                            />
+                          </motion.div>
 
                           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                             <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Budget estimé</label>
