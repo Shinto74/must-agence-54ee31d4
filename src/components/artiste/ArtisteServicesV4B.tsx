@@ -347,7 +347,7 @@ const ArtisteServicesV4B = () => {
                   {/* Statement */}
                   <p
                     className="font-outfit leading-relaxed mb-6"
-                    style={{ fontSize: 15, color: "hsla(0,0%,100%,0.55)", maxWidth: 360, fontStyle: "italic" }}
+                    style={{ fontSize: 16, color: "hsla(0,0%,100%,0.55)", maxWidth: 400, fontStyle: "italic" }}
                   >
                     {activePillar.statement}
                   </p>
