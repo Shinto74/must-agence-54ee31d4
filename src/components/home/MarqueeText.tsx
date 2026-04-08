@@ -9,9 +9,8 @@ interface MarqueeTextProps {
   logos?: LogoItem[];
 }
 
-const SPACING = 80;
+const SPACING = 100;
 
-// Brand colors for hover glow (RGB)
 const BRAND_COLORS: Record<string, string> = {
   "SPOTIFY": "30, 215, 96",
   "TIKTOK": "255, 0, 80",
@@ -66,18 +65,24 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
         .mq-root {
           width: 100%;
           overflow: hidden;
-          padding: 40px 0;
-          border-top: 1px solid hsl(var(--border));
-          border-bottom: 1px solid hsl(var(--border));
-          background: hsl(var(--background));
-          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
-          mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+          padding: 48px 0;
+          border-top: 1px solid hsl(var(--foreground) / 0.08);
+          border-bottom: 1px solid hsl(var(--foreground) / 0.08);
+          background: linear-gradient(
+            180deg,
+            hsl(var(--background)) 0%,
+            hsl(var(--foreground) / 0.03) 50%,
+            hsl(var(--background)) 100%
+          );
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+          position: relative;
         }
 
         .mq-track {
           display: flex;
           width: max-content;
-          animation: mq-scroll 50s linear infinite;
+          animation: mq-scroll 55s linear infinite;
           will-change: transform;
         }
 
@@ -94,14 +99,15 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           justify-content: center;
           flex-shrink: 0;
           position: relative;
-          padding: 10px 16px;
-          border-radius: 12px;
-          transition: background 0.4s ease;
+          padding: 14px 24px;
+          border-radius: 16px;
+          transition: background 0.4s ease, box-shadow 0.4s ease;
           cursor: default;
         }
 
         .mq-item:hover {
-          background: rgba(var(--brand-color), 0.08);
+          background: rgba(var(--brand-color), 0.06);
+          box-shadow: 0 0 40px rgba(var(--brand-color), 0.08);
         }
 
         .mq-partner {
@@ -111,26 +117,26 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
         }
 
         .mq-logo {
-          height: 50px;
-          max-width: 180px;
+          height: 60px;
+          max-width: 200px;
           width: auto;
           object-fit: contain;
           filter: brightness(0) invert(1);
-          opacity: 0.7;
-          transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+          opacity: 0.85;
+          transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
           display: block;
           flex-shrink: 0;
         }
 
         .mq-logo--large {
-          height: 52px;
-          max-width: 190px;
+          height: 65px;
+          max-width: 220px;
         }
 
         .mq-item:hover .mq-logo {
-          filter: grayscale(0) brightness(1) drop-shadow(0 0 16px rgba(var(--brand-color), 0.55));
+          filter: grayscale(0) brightness(1) drop-shadow(0 0 20px rgba(var(--brand-color), 0.5));
           opacity: 1;
-          transform: scale(1.06);
+          transform: scale(1.1);
         }
 
         .mq-label {
@@ -140,9 +146,9 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           letter-spacing: 0.25em;
           text-transform: uppercase;
           color: hsl(var(--foreground));
-          opacity: 0.55;
+          opacity: 0.6;
           white-space: nowrap;
-          transition: opacity 0.4s ease, text-shadow 0.4s ease, color 0.4s ease;
+          transition: opacity 0.4s ease, text-shadow 0.4s ease;
           flex-shrink: 0;
         }
 
@@ -158,7 +164,7 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
           letter-spacing: 0.22em;
           text-transform: uppercase;
           color: hsl(var(--foreground));
-          opacity: 0.4;
+          opacity: 0.45;
           white-space: nowrap;
           transition: opacity 0.35s ease;
         }
@@ -173,12 +179,12 @@ const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
         }
 
         @media (max-width: 768px) {
-          .mq-root { padding: 24px 0; }
-          .mq-logo { height: 30px; max-width: 120px; }
-          .mq-logo--large { height: 38px; }
+          .mq-root { padding: 28px 0; }
+          .mq-logo { height: 38px; max-width: 140px; }
+          .mq-logo--large { height: 44px; max-width: 160px; }
           .mq-label { font-size: 14px; letter-spacing: 0.18em; }
-          .mq-item { margin-right: 48px; padding: 8px 10px; }
-          .mq-track { animation-duration: 38s; }
+          .mq-item { margin-right: 56px; padding: 10px 14px; }
+          .mq-track { animation-duration: 40s; }
           .mq-partner { gap: 10px; }
         }
       `}</style>
