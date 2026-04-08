@@ -28,7 +28,7 @@ const OrbitRing = ({ size, duration, delay }: { size: number; duration: number; 
     transition={{ opacity: { duration: 1.5, delay }, scale: { duration: 2, delay, ease: [0.16, 1, 0.3, 1] } }}
   >
     <motion.div
-      className="absolute w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.6)]"
+      className="absolute w-1.5 h-1.5 rounded-full bg-primary/30 shadow-[0_0_4px_hsl(var(--primary)/0.3)]"
       style={{ top: -2, left: "50%", marginLeft: -2, transformOrigin: `2px ${size / 2 + 2}px` }}
       animate={{ rotate: 360 }}
       transition={{ duration, repeat: Infinity, ease: "linear" }}
