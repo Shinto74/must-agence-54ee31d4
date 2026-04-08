@@ -111,25 +111,34 @@ const TheArtistShowcase = () => {
               animate={gridInView ? { opacity: 1, y: 0, scale: 1 } : {}}
               transition={{ type: "spring", stiffness: 180, damping: 18, delay: i * 0.1 }}
               whileHover={{
-                scale: 1.04,
-                boxShadow: "0 0 20px hsl(var(--primary) / 0.12)",
-                y: -2,
+                scale: 1.06,
+                boxShadow: "0 0 25px hsl(var(--primary) / 0.15), inset 0 0 20px hsl(var(--primary) / 0.05)",
+                y: -3,
+                borderColor: "hsl(var(--primary) / 0.4)",
               }}
-              className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/[0.04] backdrop-blur-sm cursor-default"
+              className="group relative flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/[0.04] backdrop-blur-sm cursor-default overflow-hidden"
             >
+              {/* Shimmer sweep on hover */}
+              <motion.div
+                className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
+                style={{
+                  background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.08), transparent)",
+                }}
+              />
               <motion.span
-                className="w-1.5 h-1.5 rounded-full bg-primary"
+                className="w-1.5 h-1.5 rounded-full bg-primary relative z-10"
                 animate={{
                   boxShadow: [
                     "0 0 3px hsl(var(--primary) / 0.3)",
-                    "0 0 8px hsl(var(--primary) / 0.6)",
+                    "0 0 10px hsl(var(--primary) / 0.7)",
                     "0 0 3px hsl(var(--primary) / 0.3)",
                   ],
+                  scale: [1, 1.3, 1],
                 }}
-                transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4 }}
+                transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
               />
-              <span className="font-clash text-xs font-semibold text-foreground">{feat.title}</span>
-              <span className="text-[10px] text-muted-foreground hidden sm:inline">{feat.desc}</span>
+              <span className="font-clash text-xs font-semibold text-foreground relative z-10">{feat.title}</span>
+              <span className="text-[10px] text-muted-foreground hidden sm:inline relative z-10">{feat.desc}</span>
             </motion.div>
           ))}
         </div>
@@ -149,10 +158,40 @@ const TheArtistShowcase = () => {
             href="https://www.theartist.life/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-primary text-primary-foreground font-clash font-bold text-xs uppercase tracking-wider"
+            className="group relative inline-flex items-center gap-2 px-7 py-3 rounded-full bg-primary text-primary-foreground font-clash font-bold text-xs uppercase tracking-wider overflow-hidden"
             whileHover={{
-              scale: 1.05,
-              boxShadow: "0 0 30px hsl(var(--primary) / 0.35)",
+              scale: 1.06,
+              boxShadow: "0 0 35px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.15)",
+              y: -2,
+            }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 300, damping: 15 }}
+            animate={{
+              boxShadow: [
+                "0 0 10px hsl(var(--primary) / 0.1)",
+                "0 0 20px hsl(var(--primary) / 0.25)",
+                "0 0 10px hsl(var(--primary) / 0.1)",
+              ],
+            }}
+          >
+            {/* Shimmer sweep */}
+            <motion.div
+              className="absolute inset-0 -translate-x-full"
+              style={{
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
+              }}
+              animate={{ translateX: ["-100%", "100%"] }}
+              transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+            />
+            <span className="relative z-10">Découvrir TheArtist</span>
+          </motion.a>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default TheArtistShowcase;
               y: -2,
             }}
             whileTap={{ scale: 0.97 }}
