@@ -458,7 +458,7 @@ const ClipPortugal = () => {
                         <div className="space-y-4">
                           <div className="grid grid-cols-2 gap-4">
                             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
-                              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Prénom *</label>
+                              <label className={labelClass} style={{ color: "hsl(var(--foreground) / 0.7)" }}>Prénom *</label>
                               <input
                                 className={inputClass}
                                 style={inputStyle}
@@ -468,7 +468,7 @@ const ClipPortugal = () => {
                               />
                             </motion.div>
                             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }}>
-                              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Nom *</label>
+                              <label className={labelClass} style={{ color: "hsl(var(--foreground) / 0.7)" }}>Nom *</label>
                               <input
                                 className={inputClass}
                                 style={inputStyle}
@@ -481,7 +481,7 @@ const ClipPortugal = () => {
 
                           <div className="grid grid-cols-2 gap-4">
                             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-                              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Email *</label>
+                              <label className={labelClass} style={{ color: "hsl(var(--foreground) / 0.7)" }}>Email *</label>
                               <input
                                 type="email"
                                 className={inputClass}
@@ -492,7 +492,7 @@ const ClipPortugal = () => {
                               />
                             </motion.div>
                             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }}>
-                              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Téléphone *</label>
+                              <label className={labelClass} style={{ color: "hsl(var(--foreground) / 0.7)" }}>Téléphone *</label>
                               <input
                                 type="tel"
                                 className={inputClass}
@@ -505,7 +505,7 @@ const ClipPortugal = () => {
                           </div>
 
                           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}>
-                            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Âge</label>
+                            <label className={labelClass} style={{ color: "hsl(var(--foreground) / 0.7)" }}>Âge</label>
                             <input
                               className={inputClass}
                               style={inputStyle}
@@ -516,7 +516,7 @@ const ClipPortugal = () => {
                           </motion.div>
 
                           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Budget estimé</label>
+                            <label className={labelClass} style={{ color: "hsl(var(--foreground) / 0.7)" }}>Budget estimé</label>
                             <select
                               className={inputClass}
                               style={{ ...inputStyle, appearance: "none" as const }}
@@ -532,7 +532,7 @@ const ClipPortugal = () => {
                           </motion.div>
 
                           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-                            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Vos idées / vision du clip</label>
+                            <label className={labelClass} style={{ color: "hsl(var(--foreground) / 0.7)" }}>Vos idées / vision du clip</label>
                             <textarea
                               className={`${inputClass} resize-none`}
                               style={inputStyle}
