@@ -161,20 +161,47 @@ const ClipPortugal = () => {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
           >
-            <div
+            <motion.div
               className="relative aspect-video rounded-2xl overflow-hidden cursor-pointer group"
               onClick={handlePlay}
               style={{
                 border: "1px solid hsl(var(--border))",
                 boxShadow: "0 30px 80px hsla(0,0%,0%,0.5), 0 0 60px hsl(var(--neon) / 0.04)",
               }}
+              whileHover={{
+                borderColor: "hsl(73 100% 50% / 0.35)",
+                boxShadow: "0 30px 80px hsla(0,0%,0%,0.5), 0 0 80px hsl(73 100% 50% / 0.1), inset 0 0 40px hsl(73 100% 50% / 0.03)",
+              }}
+              transition={{ duration: 0.5 }}
             >
+              {/* Neon border lines */}
+              <motion.div
+                className="absolute top-0 left-0 right-0 h-[2px] z-10"
+                style={{ background: "linear-gradient(90deg, transparent, hsl(var(--neon)), transparent)" }}
+                initial={{ scaleX: 0, opacity: 0 }}
+                whileHover={{ scaleX: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              />
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 h-[2px] z-10"
+                style={{ background: "linear-gradient(90deg, transparent, hsl(var(--neon) / 0.5), transparent)" }}
+                initial={{ scaleX: 0, opacity: 0 }}
+                whileHover={{ scaleX: 1, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              />
+
+              {/* Corner glow accents */}
+              <div className="absolute top-0 left-0 w-32 h-32 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-10" style={{ background: "radial-gradient(circle at top left, hsl(var(--neon) / 0.12), transparent 70%)" }} />
+              <div className="absolute bottom-0 right-0 w-32 h-32 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-10" style={{ background: "radial-gradient(circle at bottom right, hsl(var(--neon) / 0.08), transparent 70%)" }} />
+
               <video
                 ref={videoRef}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 poster="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1200&q=80"
                 loop playsInline muted
               />
+
+              {/* Gradient overlay */}
               <div
                 className="absolute inset-0 transition-opacity duration-500"
                 style={{
@@ -182,33 +209,64 @@ const ClipPortugal = () => {
                   opacity: isPlaying ? 0.2 : 1,
                 }}
               />
+
+              {/* Play/Pause button */}
               <motion.div
-                className="absolute inset-0 flex items-center justify-center"
+                className="absolute inset-0 flex items-center justify-center z-10"
                 initial={false}
                 animate={{ opacity: isPlaying ? 0 : 1 }}
               >
                 <motion.div
-                  className="w-20 h-20 rounded-full flex items-center justify-center"
+                  className="relative w-22 h-22 rounded-full flex items-center justify-center"
                   style={{
-                    background: "hsl(var(--neon) / 0.1)",
-                    border: "2px solid hsl(var(--neon) / 0.4)",
+                    background: "hsl(var(--neon) / 0.08)",
+                    border: "2px solid hsl(var(--neon) / 0.35)",
                     backdropFilter: "blur(16px)",
-                    boxShadow: "0 0 40px hsl(var(--neon) / 0.15)",
+                    boxShadow: "0 0 40px hsl(var(--neon) / 0.15), 0 0 80px hsl(var(--neon) / 0.05)",
+                    width: 88,
+                    height: 88,
                   }}
-                  whileHover={{ scale: 1.15 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  whileHover={{
+                    scale: 1.15,
+                    boxShadow: "0 0 60px hsl(73 100% 50% / 0.3), 0 0 120px hsl(73 100% 50% / 0.1)",
+                    borderColor: "hsl(73 100% 50% / 0.6)",
+                  }}
+                  whileTap={{ scale: 0.92 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 >
-                  {isPlaying ? <Pause size={28} className="text-primary" /> : <Play size={28} className="text-primary ml-1" fill="hsl(73 100% 50%)" />}
+                  {/* Pulsing ring */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    style={{ border: "1px solid hsl(var(--neon) / 0.2)" }}
+                    animate={{ scale: [1, 1.4, 1.4], opacity: [0.5, 0, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                  />
+                  {isPlaying ? (
+                    <Pause size={30} className="text-primary" />
+                  ) : (
+                    <Play size={30} className="text-primary ml-1" fill="hsl(73 100% 50%)" />
+                  )}
                 </motion.div>
               </motion.div>
-              <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">
+
+              {/* Bottom label */}
+              <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between z-10">
                 <div>
-                  <p className="font-clash text-base font-bold text-foreground">Must Agence × Portugal</p>
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-primary">Clip & Production</p>
+                  <p className="font-clash text-base font-bold text-foreground group-hover:text-primary transition-colors duration-500">Must Agence × Portugal</p>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-primary/70 group-hover:text-primary transition-colors duration-500">Clip & Production</p>
                 </div>
+                <motion.div
+                  className="px-3 py-1.5 rounded-full font-mono text-[9px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: "hsl(var(--neon) / 0.1)",
+                    border: "1px solid hsl(var(--neon) / 0.25)",
+                    color: "hsl(var(--neon))",
+                  }}
+                >
+                  ▶ Regarder
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Info cards */}
