@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { SITE } from "@/lib/constants";
 
 type Side = "artiste" | "entreprise" | null;
@@ -22,82 +22,11 @@ const GatewayPage = () => {
 
   return (
     <div className="fixed inset-0 bg-background text-foreground overflow-hidden select-none">
-      {/* ── Centred brand column ── */}
-      <div className="absolute inset-0 z-40 pointer-events-none flex flex-col items-center justify-center gap-6">
-        {/* Logo circle */}
+      <div className="relative h-full w-full flex flex-col md:flex-row">
+        {/* TOP/LEFT — Artiste */}
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-20 h-20 md:w-24 md:h-24"
-        >
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              border: `1.5px solid ${hovered === "entreprise" ? "rgba(255,255,255,0.45)" : "rgba(204,255,0,0.45)"}`,
-              boxShadow: hovered === "entreprise"
-                ? "0 0 30px rgba(255,255,255,0.12)"
-                : "0 0 30px rgba(204,255,0,0.15)",
-              background: hovered === "entreprise"
-                ? "rgba(255,255,255,0.04)"
-                : "rgba(204,255,0,0.04)",
-              transition: "all 0.5s ease",
-            }}
-          />
-          <img
-            src={SITE.logoGreen}
-            alt={SITE.name}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-12 md:h-14 w-auto"
-            style={{
-              opacity: hovered === "entreprise" ? 0 : 1,
-              transition: "opacity 0.4s ease",
-            }}
-          />
-          <img
-            src={SITE.logoWhite}
-            alt={SITE.name}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-12 md:h-14 w-auto"
-            style={{
-              opacity: hovered === "entreprise" ? 1 : 0,
-              transition: "opacity 0.4s ease",
-            }}
-          />
-        </motion.div>
-
-        {/* Brand name */}
-        <motion.h1
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="font-clash font-black text-2xl md:text-3xl tracking-[0.12em] uppercase"
-          style={{
-            color: hovered === "entreprise" ? "rgba(255,255,255,0.9)" : "hsl(73 100% 50%)",
-            textShadow: hovered === "entreprise"
-              ? "0 0 30px rgba(255,255,255,0.15)"
-              : "0 0 30px rgba(204,255,0,0.2)",
-            transition: "color 0.5s ease, text-shadow 0.5s ease",
-          }}
-        >
-          MUST AGENCE
-        </motion.h1>
-
-        {/* Tagline */}
-        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="font-mono text-[10px] md:text-xs uppercase tracking-[0.35em] text-foreground/30"
-        >
-          Choisissez votre univers
-        </motion.p>
-      </div>
-
-      {/* ── Split panels ── */}
-      <div className="relative h-full w-full flex flex-col md:flex-row">
-        {/* LEFT — Artiste */}
-        <motion.div
-          initial={{ x: "-100%" }}
-          animate={{ x: 0 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="relative overflow-hidden cursor-pointer group"
           style={{
@@ -107,7 +36,6 @@ const GatewayPage = () => {
           onMouseEnter={() => setHovered("artiste")}
           onMouseLeave={() => setHovered(null)}
         >
-          {/* BG image */}
           <div className="absolute inset-0">
             <img
               src={IMG_ARTISTE}
@@ -119,10 +47,8 @@ const GatewayPage = () => {
                 transition: "all 0.8s cubic-bezier(0.16,1,0.3,1)",
               }}
             />
-            {/* Gradient overlays */}
             <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/60" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
-            {/* Green glow on hover */}
             <div
               className="absolute inset-0"
               style={{
@@ -133,16 +59,15 @@ const GatewayPage = () => {
             />
           </div>
 
-          {/* Content */}
           <Link
             to="/artiste"
-            className="relative z-10 h-full flex flex-col items-start justify-end pb-[12vh] md:pb-[16vh] px-8 md:px-14"
+            className="relative z-10 h-full flex flex-col items-start justify-end pb-6 md:pb-[16vh] px-6 md:px-14"
           >
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.4 }}
-              className="font-clash font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-3"
+              className="font-clash font-black text-2xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-2 md:mb-3"
             >
               Pôle Artiste
             </motion.h2>
@@ -150,7 +75,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0 }}
               animate={ready ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="font-outfit text-xs md:text-sm text-foreground/40 mb-8 max-w-xs"
+              className="font-outfit text-xs md:text-sm text-foreground/40 mb-4 md:mb-8 max-w-xs"
             >
               Musique · Influence · Lancement
             </motion.p>
@@ -158,7 +83,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.12em]"
+              className="inline-flex items-center gap-3 px-6 md:px-8 py-3 md:py-3.5 rounded-full font-mono text-xs md:text-sm uppercase tracking-[0.12em]"
               style={{
                 background: "hsl(73 100% 50%)",
                 color: "hsl(var(--primary-foreground))",
@@ -173,21 +98,78 @@ const GatewayPage = () => {
               <ArrowRight className="w-4 h-4" />
             </motion.span>
           </Link>
+        </motion.div>
 
-          {/* Vertical separator line */}
+        {/* ── Central brand strip ── */}
+        <div className="relative z-40 flex items-center justify-center py-5 md:py-0 md:w-0 shrink-0">
           <div
-            className="absolute top-0 right-0 w-px h-full z-20"
+            className="absolute inset-0 md:hidden"
+            style={{ background: "hsl(var(--background))" }}
+          />
+          <div
+            className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-px h-full"
             style={{
               background: "linear-gradient(to bottom, transparent 10%, rgba(204,255,0,0.15) 50%, transparent 90%)",
             }}
           />
-        </motion.div>
 
-        {/* RIGHT — Entreprise */}
+          <div className="relative z-10 flex items-center gap-3 md:flex-col md:gap-2">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-12 h-12 md:w-24 md:h-24"
+            >
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  border: `1.5px solid ${hovered === "entreprise" ? "rgba(255,255,255,0.45)" : "rgba(204,255,0,0.45)"}`,
+                  boxShadow: hovered === "entreprise"
+                    ? "0 0 30px rgba(255,255,255,0.12)"
+                    : "0 0 30px rgba(204,255,0,0.15)",
+                  background: hovered === "entreprise"
+                    ? "rgba(255,255,255,0.04)"
+                    : "rgba(204,255,0,0.04)",
+                  transition: "all 0.5s ease",
+                }}
+              />
+              <img
+                src={SITE.logoGreen}
+                alt={SITE.name}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-7 md:h-14 w-auto"
+                style={{ opacity: hovered === "entreprise" ? 0 : 1, transition: "opacity 0.4s ease" }}
+              />
+              <img
+                src={SITE.logoWhite}
+                alt={SITE.name}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-7 md:h-14 w-auto"
+                style={{ opacity: hovered === "entreprise" ? 1 : 0, transition: "opacity 0.4s ease" }}
+              />
+            </motion.div>
+
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="font-clash font-black text-base md:text-2xl tracking-[0.12em] uppercase"
+              style={{
+                color: hovered === "entreprise" ? "rgba(255,255,255,0.9)" : "hsl(73 100% 50%)",
+                textShadow: hovered === "entreprise"
+                  ? "0 0 30px rgba(255,255,255,0.15)"
+                  : "0 0 30px rgba(204,255,0,0.2)",
+                transition: "color 0.5s ease, text-shadow 0.5s ease",
+              }}
+            >
+              MUST AGENCE
+            </motion.span>
+          </div>
+        </div>
+
+        {/* BOTTOM/RIGHT — Entreprise */}
         <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="relative overflow-hidden cursor-pointer group"
           style={{
             flex: hovered === "entreprise" ? 1.4 : hovered === "artiste" ? 0.6 : 1,
@@ -196,7 +178,6 @@ const GatewayPage = () => {
           onMouseEnter={() => setHovered("entreprise")}
           onMouseLeave={() => setHovered(null)}
         >
-          {/* BG image */}
           <div className="absolute inset-0">
             <img
               src={IMG_ENTREPRISE}
@@ -221,16 +202,15 @@ const GatewayPage = () => {
             />
           </div>
 
-          {/* Content */}
           <Link
             to="/entreprise"
-            className="relative z-10 h-full flex flex-col items-end justify-end pb-[12vh] md:pb-[16vh] px-8 md:px-14"
+            className="relative z-10 h-full flex flex-col items-start md:items-end justify-start pt-6 md:justify-end md:pt-0 md:pb-[16vh] px-6 md:px-14"
           >
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="font-clash font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-3 text-right"
+              className="font-clash font-black text-2xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-2 md:mb-3 md:text-right"
             >
               Pôle Entreprise
             </motion.h2>
@@ -238,7 +218,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0 }}
               animate={ready ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="font-outfit text-xs md:text-sm text-foreground/40 mb-8 text-right max-w-xs"
+              className="font-outfit text-xs md:text-sm text-foreground/40 mb-4 md:mb-8 md:text-right max-w-xs"
             >
               Influence · Growth · Branding
             </motion.p>
@@ -246,7 +226,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.8 }}
-              className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.12em]"
+              className="inline-flex items-center gap-3 px-6 md:px-8 py-3 md:py-3.5 rounded-full font-mono text-xs md:text-sm uppercase tracking-[0.12em]"
               style={{
                 background: "rgba(255,255,255,0.08)",
                 backdropFilter: "blur(12px)",
@@ -271,7 +251,7 @@ const GatewayPage = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="absolute bottom-6 left-0 right-0 z-50 flex items-center justify-center"
+        className="absolute bottom-4 md:bottom-6 left-0 right-0 z-50 flex items-center justify-center"
       >
         <span className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/20">
           Influence · Musique · Marques
