@@ -1,6 +1,10 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Video, Share2, Rocket, Search } from "lucide-react";
+import svcBgContent from "@/assets/svc-bg-content.jpg";
+import svcBgSocial from "@/assets/svc-bg-social.jpg";
+import svcBgAds from "@/assets/svc-bg-ads.jpg";
+import svcBgSeo from "@/assets/svc-bg-seo.jpg";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -12,8 +16,8 @@ const SERVICES = [
     description:
       "Production de photos et vidéos professionnelles haute définition pour sublimer votre image de marque.",
     chips: ["Photo HD", "Vidéo corporate", "Motion design", "Drone"],
-    // Contextual bg keyword for atmosphere
     bgGradient: "radial-gradient(ellipse 60% 50% at 70% 30%, hsl(30 40% 60% / 0.06) 0%, transparent 70%)",
+    bgImage: svcBgContent,
   },
   {
     icon: <Share2 size={28} />,
@@ -23,6 +27,7 @@ const SERVICES = [
       "Gestion professionnelle de vos réseaux sociaux pour fédérer et engager votre communauté.",
     chips: ["Instagram", "TikTok", "LinkedIn", "Planning éditorial"],
     bgGradient: "radial-gradient(ellipse 55% 45% at 30% 60%, hsl(280 30% 50% / 0.04) 0%, transparent 70%)",
+    bgImage: svcBgSocial,
   },
   {
     icon: <Rocket size={28} />,
@@ -32,6 +37,7 @@ const SERVICES = [
       "Création et pilotage de campagnes ultra-performantes sur Google Ads, Meta Ads et TikTok Ads.",
     chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Retargeting"],
     bgGradient: "radial-gradient(ellipse 50% 50% at 60% 40%, hsl(20 50% 55% / 0.05) 0%, transparent 70%)",
+    bgImage: svcBgAds,
   },
   {
     icon: <Search size={28} />,
@@ -41,6 +47,7 @@ const SERVICES = [
       "Optimisation de votre visibilité sur les moteurs de recherche pour attirer un trafic qualifié.",
     chips: ["Audit SEO", "Netlinking", "Content SEO", "Local SEO"],
     bgGradient: "radial-gradient(ellipse 50% 55% at 40% 50%, hsl(200 30% 50% / 0.04) 0%, transparent 70%)",
+    bgImage: svcBgSeo,
   },
 ];
 
@@ -151,6 +158,28 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
               scaleX: useTransform(glowOpacity, [0, 1], [0, 1]),
             }}
           />
+
+          {/* Contextual background image — heavily blurred atmosphere */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.5rem]">
+            <img
+              src={svc.bgImage}
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{
+                filter: "blur(25px) saturate(0.4)",
+                opacity: 0.08,
+                transform: "scale(1.15)",
+              }}
+            />
+            {/* Light overlay for readability */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(155deg, hsl(40 20% 97% / 0.88) 0%, hsl(40 15% 95% / 0.82) 50%, hsl(40 10% 92% / 0.9) 100%)",
+              }}
+            />
+          </div>
 
           {/* Bottom accent line — mirrored */}
           <motion.div
