@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import {
-  Video, Share2, Rocket, Search, ArrowRight, ChevronRight,
+  ArrowRight, ChevronRight,
 } from "lucide-react";
 import ContactSection from "@/components/home/ContactSection";
 import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
