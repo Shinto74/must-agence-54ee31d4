@@ -27,14 +27,14 @@ const Header = () => {
   const isArtiste = location.pathname === "/artiste";
   const isEntreprise = location.pathname === "/entreprise";
   const accentHsl = isEntreprise ? "var(--burgundy-light)" : "73 100% 50%";
-  const accentHslFull = isEntreprise ? "hsl(var(--burgundy-light))" : "hsl(73 100% 50%)";
+  const accentHslFull = isEntreprise ? "hsl(43 55% 55%)" : "hsl(73 100% 50%)";
 
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled
-          ? isEntreprise ? "hsla(345,78%,25%,0.05)" : "hsla(73,100%,50%,0.03)"
+          ? isEntreprise ? "hsla(43,52%,39%,0.05)" : "hsla(73,100%,50%,0.03)"
           : "transparent",
         backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "none",
         borderBottom: scrolled ? "1px solid hsla(0,0%,100%,0.06)" : "1px solid transparent",
