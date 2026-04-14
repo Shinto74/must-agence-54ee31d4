@@ -332,9 +332,9 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
                     animate={isHovered ? { y: -2, scale: 1.03 } : { y: 0, scale: 1 }}
                     transition={{ duration: 0.35, delay: ci * 0.04, ease: EASE }}
                     style={{
-                      background: isHovered ? "hsl(43 55% 55% / 0.18)" : "hsl(43 55% 55% / 0.12)",
-                      border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.4)" : "hsl(43 55% 55% / 0.25)"}`,
-                      color: "hsl(43 52% 39%)",
+                      background: isHovered ? "hsl(43 55% 55% / 0.15)" : "hsl(43 55% 55% / 0.1)",
+                      border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.35)" : "hsl(43 55% 55% / 0.2)"}`,
+                      color: "hsl(0 0% 25%)",
                       transition: "background 0.4s ease, border-color 0.4s ease",
                     }}
                   >
