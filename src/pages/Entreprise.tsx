@@ -301,8 +301,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       >
         <motion.div
           className="relative overflow-hidden rounded-[1.5rem]"
-          animate={shouldReduceMotion ? {} : isLit ? { y: -12, scale: 1.03 } : { y: 0, scale: 0.92 }}
-          transition={{ duration: 0.8, ease: EASE }}
+          animate={shouldReduceMotion ? {} : isLit ? { y: -10, scale: 1.015 } : { y: 8, scale: 0.97 }}
+          transition={{ duration: 0.9, ease: EASE }}
         >
           {/* Animated border trace — draws itself around the card */}
           <svg
