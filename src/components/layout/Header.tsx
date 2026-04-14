@@ -25,13 +25,16 @@ const Header = () => {
   }, [location.pathname]);
 
   const isArtiste = location.pathname === "/artiste";
+  const isEntreprise = location.pathname === "/entreprise";
+  const accentHsl = isEntreprise ? "var(--burgundy-light)" : "73 100% 50%";
+  const accentHslFull = isEntreprise ? "hsl(var(--burgundy-light))" : "hsl(73 100% 50%)";
 
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled
-          ? "hsla(73,100%,50%,0.03)"
+          ? isEntreprise ? "hsla(345,78%,25%,0.05)" : "hsla(73,100%,50%,0.03)"
           : "transparent",
         backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "none",
         borderBottom: scrolled ? "1px solid hsla(0,0%,100%,0.06)" : "1px solid transparent",
@@ -42,7 +45,7 @@ const Header = () => {
         className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
         style={{
           background: scrolled
-            ? "linear-gradient(to right, hsl(73 100% 50% / 0.3), transparent 30%, transparent 70%, hsl(73 100% 50% / 0.15))"
+            ? `linear-gradient(to right, ${accentHslFull.replace(')', ' / 0.3)')}, transparent 30%, transparent 70%, ${accentHslFull.replace(')', ' / 0.15)')})`
             : "transparent",
           transition: "background 0.5s",
         }}
@@ -53,7 +56,7 @@ const Header = () => {
         <Link to="/" className="flex items-center gap-3 shrink-0 relative z-10 group">
           <div className="relative">
             <img
-              src={isArtiste ? SITE.logoWhite : SITE.logoGreen}
+              src={isEntreprise ? SITE.logoWhite : isArtiste ? SITE.logoWhite : SITE.logoGreen}
               alt={SITE.name}
               className="h-7 md:h-9 w-auto relative z-10 transition-transform duration-300 group-hover:scale-105"
             />
@@ -88,9 +91,9 @@ const Header = () => {
                 to={item.path}
                 className="relative px-5 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.15em] transition-all duration-300"
                 style={{
-                  color: isActive ? "hsl(var(--primary-foreground))" : "hsla(0,0%,100%,0.45)",
-                  background: isActive ? "hsl(73 100% 50%)" : "transparent",
-                  boxShadow: isActive ? "0 0 16px hsl(73 100% 50% / 0.3), 0 2px 8px hsl(73 100% 50% / 0.15)" : "none",
+                  color: isActive ? (isEntreprise ? "#fff" : "hsl(var(--primary-foreground))") : "hsla(0,0%,100%,0.45)",
+                  background: isActive ? accentHslFull : "transparent",
+                  boxShadow: isActive ? `0 0 16px ${accentHslFull.replace(')', ' / 0.3)')}, 0 2px 8px ${accentHslFull.replace(')', ' / 0.15)')}` : "none",
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
@@ -117,18 +120,18 @@ const Header = () => {
             href="#contact"
             className="px-5 py-2 rounded-full font-mono text-[10px] uppercase tracking-[0.15em] transition-all duration-300"
             style={{
-              border: "1px solid hsla(73,100%,50%,0.25)",
-              color: "hsl(73 100% 50%)",
-              background: "hsla(73,100%,50%,0.05)",
+              border: `1px solid ${isEntreprise ? "hsl(var(--burgundy-light) / 0.3)" : "hsla(73,100%,50%,0.25)"}`,
+              color: accentHslFull,
+              background: isEntreprise ? "hsl(var(--burgundy) / 0.08)" : "hsla(73,100%,50%,0.05)",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "hsl(73 100% 50%)";
-              (e.currentTarget as HTMLElement).style.color = "hsl(var(--primary-foreground))";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px hsl(73 100% 50% / 0.3)";
+              (e.currentTarget as HTMLElement).style.background = accentHslFull;
+              (e.currentTarget as HTMLElement).style.color = "#fff";
+              (e.currentTarget as HTMLElement).style.boxShadow = `0 0 20px ${accentHslFull.replace(')', ' / 0.3)')}`;
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "hsla(73,100%,50%,0.05)";
-              (e.currentTarget as HTMLElement).style.color = "hsl(73 100% 50%)";
+              (e.currentTarget as HTMLElement).style.background = isEntreprise ? "hsl(var(--burgundy) / 0.08)" : "hsla(73,100%,50%,0.05)";
+              (e.currentTarget as HTMLElement).style.color = accentHslFull;
               (e.currentTarget as HTMLElement).style.boxShadow = "none";
             }}
           >

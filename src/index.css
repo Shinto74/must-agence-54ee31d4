@@ -87,7 +87,7 @@
   }
 }
 
-/* ── Atmospheric page backgrounds (charte: neon radial glow + subtle grid) ── */
+/* ── Atmospheric page backgrounds ── */
 .page-bg {
   position: relative;
   background-color: hsl(var(--background));
@@ -102,16 +102,16 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background-image:
-    linear-gradient(135deg, hsl(var(--neon) / 0.03) 25%, transparent 25%),
-    linear-gradient(225deg, hsl(var(--neon) / 0.03) 25%, transparent 25%),
-    linear-gradient(315deg, hsl(var(--neon) / 0.03) 25%, transparent 25%),
-    linear-gradient(45deg, hsl(var(--neon) / 0.03) 25%, transparent 25%);
-  background-size: 60px 60px;
-  opacity: 0.4;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, hsl(var(--foreground) / 0.02) 0%, transparent 50%);
+  opacity: 1;
 }
 
 /* Artiste: neon glow top-left */
+.page-bg--artiste::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, hsl(var(--neon) / 0.03) 0%, transparent 50%);
+}
 .page-bg--artiste::after {
   content: "";
   position: fixed;
@@ -123,7 +123,15 @@
     radial-gradient(ellipse 40% 35% at 80% 80%, hsl(var(--neon) / 0.04) 0%, transparent 55%);
 }
 
-/* Entreprise: burgundy glow */
+/* Entreprise: warm burgundy atmosphere */
+.page-bg--entreprise {
+  background-color: hsl(var(--background));
+}
+.page-bg--entreprise::before {
+  background:
+    radial-gradient(ellipse 70% 50% at 70% 0%, hsl(var(--burgundy) / 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 0% 50%, hsl(var(--burgundy) / 0.03) 0%, transparent 50%);
+}
 .page-bg--entreprise::after {
   content: "";
   position: fixed;
@@ -131,8 +139,8 @@
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 50% 45% at 85% 30%, hsl(var(--burgundy) / 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 35% 30% at 15% 75%, hsl(var(--burgundy) / 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 45% 40% at 90% 20%, hsl(var(--burgundy) / 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 35% 30% at 10% 80%, hsl(var(--burgundy) / 0.04) 0%, transparent 50%);
 }
 
 /* Home: dual glow */
