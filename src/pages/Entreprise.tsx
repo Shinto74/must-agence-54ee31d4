@@ -12,6 +12,7 @@ import sectorBeaute from "@/assets/sector-beaute.jpg";
 import sectorSport from "@/assets/sector-sport.jpg";
 import sectorAutomobile from "@/assets/sector-automobile.jpg";
 import sectorDistribution from "@/assets/sector-distribution.jpg";
+import heroVideoAsset from "@/assets/entreprise-hero-video.mp4.asset.json";
 
 /* ═══ ANIMATION HELPERS ═══ */
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -54,35 +55,39 @@ const AnimatedCounter = ({ value, suffix = "" }: { value: string; suffix?: strin
   return <span ref={ref}>{isNaN(num) ? value : display}{suffix}</span>;
 };
 
-/* ═══ HERO ═══ */
+/* ═══ HERO WITH VIDEO ═══ */
 const EntrepriseHero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
   const yText = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Layered atmospheric glows */}
-      <motion.div
-        className="absolute top-[-10%] right-[-5%] w-[700px] h-[700px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, hsl(var(--burgundy) / 0.12) 0%, transparent 70%)" }}
-        animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, hsl(var(--burgundy) / 0.06) 0%, transparent 70%)" }}
-        animate={{ scale: [1, 1.08, 1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
-      {/* Grain texture overlay */}
-      <div className="absolute inset-0 pointer-events-none z-[2] opacity-[0.015]"
-        style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
+      {/* Video background */}
+      <motion.div className="absolute inset-0 z-0" style={{ scale: videoScale }}>
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          src={heroVideoAsset.url}
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/30" />
+        {/* Burgundy tint overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsl(var(--burgundy) / 0.25) 0%, transparent 60%)" }} />
+        {/* Bottom gradient fade to cream */}
+        <div className="absolute bottom-0 left-0 right-0 h-40" style={{ background: "linear-gradient(to bottom, transparent, #FAF9F6)" }} />
+      </motion.div>
 
-      {/* Subtle horizontal lines */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
-        style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 80px, hsl(0 0% 0% / 0.08) 80px, hsl(0 0% 0% / 0.08) 81px)" }} />
+      {/* Grain texture overlay */}
+      <div className="absolute inset-0 pointer-events-none z-[2] opacity-[0.03]"
+        style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
 
       <motion.div style={{ y: yText, opacity }} className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 py-32">
         <motion.div
@@ -91,29 +96,29 @@ const EntrepriseHero = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, ease: EASE }}
         >
-          <motion.div className="w-12 h-[1.5px] bg-burgundy-light"
+          <motion.div className="w-12 h-[1.5px] bg-white/70"
             initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
             transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
             style={{ transformOrigin: "left" }}
           />
-          <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-burgundy-light font-medium">
+          <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-white/80 font-medium">
             Pôle Entreprise
           </span>
         </motion.div>
 
         <motion.h1
-          className="font-clash text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] font-black text-foreground leading-[0.92] mb-8 max-w-5xl"
+          className="font-clash text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] font-black text-white leading-[0.92] mb-8 max-w-5xl drop-shadow-lg"
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.15, ease: EASE }}
         >
           Une stratégie digitale
           <br />
-          <span className="text-burgundy-light">pensée pour performer</span>
+          <span className="text-burgundy-light" style={{ textShadow: "0 0 40px hsl(var(--burgundy) / 0.5)" }}>pensée pour performer</span>
         </motion.h1>
 
         <motion.p
-          className="text-muted-foreground text-base md:text-lg lg:text-xl max-w-2xl leading-relaxed mb-12 font-light"
+          className="text-white/75 text-base md:text-lg lg:text-xl max-w-2xl leading-relaxed mb-12 font-light"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35, ease: EASE }}
@@ -145,11 +150,11 @@ const EntrepriseHero = () => {
             <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
           </motion.a>
           <motion.a href="#services"
-            className="group px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-foreground/60 hover:text-foreground"
-            style={{ border: "1px solid hsl(var(--foreground) / 0.1)" }}
+            className="group px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-white/60 hover:text-white"
+            style={{ border: "1px solid rgba(255,255,255,0.2)" }}
             whileHover={{
-              borderColor: "hsl(var(--burgundy-light) / 0.3)",
-              background: "hsl(var(--burgundy) / 0.05)",
+              borderColor: "rgba(255,255,255,0.4)",
+              background: "rgba(255,255,255,0.05)",
             }}
           >
             Découvrir nos services
@@ -159,7 +164,7 @@ const EntrepriseHero = () => {
         {/* Stats bar */}
         <motion.div
           className="mt-20 pt-10 flex flex-wrap gap-12 md:gap-20"
-          style={{ borderTop: "1px solid hsl(var(--foreground) / 0.06)" }}
+          style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.75, ease: EASE }}
@@ -170,10 +175,10 @@ const EntrepriseHero = () => {
             { value: "3", suffix: "M+", label: "Vues générées" },
           ].map((stat) => (
             <div key={stat.label}>
-              <p className="font-clash text-3xl md:text-4xl font-black text-burgundy-light mb-1">
+              <p className="font-clash text-3xl md:text-4xl font-black text-burgundy-light mb-1 drop-shadow-md">
                 <AnimatedCounter value={stat.value} suffix={stat.suffix} />
               </p>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{stat.label}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50">{stat.label}</p>
             </div>
           ))}
         </motion.div>
