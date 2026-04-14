@@ -203,109 +203,245 @@ const MarqueeSep = () => (
   </div>
 );
 
-/* ═══ SERVICES ═══ */
+/* ═══ SERVICES — 3D IMMERSIVE ═══ */
 const SERVICES = [
   {
-    icon: <Video size={24} />,
+    icon: <Video size={28} />,
     num: "01",
     title: "Création de Contenu Premium",
     description: "Production de photos et vidéos professionnelles haute définition pour sublimer votre image de marque.",
     chips: ["Photo HD", "Vidéo corporate", "Motion design", "Drone"],
+    gradient: "from-amber-900/20 to-yellow-800/10",
   },
   {
-    icon: <Share2 size={24} />,
+    icon: <Share2 size={28} />,
     num: "02",
     title: "Social Media Management",
     description: "Gestion professionnelle de vos réseaux sociaux pour fédérer et engager votre communauté.",
     chips: ["Instagram", "TikTok", "LinkedIn", "Planning éditorial"],
+    gradient: "from-orange-900/15 to-amber-800/10",
   },
   {
-    icon: <Rocket size={24} />,
+    icon: <Rocket size={28} />,
     num: "03",
     title: "Campagnes Publicitaires",
     description: "Création et pilotage de campagnes ultra-performantes sur Google Ads, Meta Ads et TikTok Ads.",
     chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Retargeting"],
+    gradient: "from-yellow-900/20 to-orange-800/10",
   },
   {
-    icon: <Search size={24} />,
+    icon: <Search size={28} />,
     num: "04",
     title: "SEO & Référencement",
     description: "Optimisation de votre visibilité sur les moteurs de recherche pour attirer un trafic qualifié.",
     chips: ["Audit SEO", "Netlinking", "Content SEO", "Local SEO"],
+    gradient: "from-amber-800/15 to-yellow-900/10",
   },
 ];
+
+/* 3D Tilt Card */
+const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: y * -12, y: x * 12 });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+    setIsHovered(false);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className="rv group relative cursor-default"
+      style={{ perspective: "1200px" }}
+      initial={{ opacity: 0, y: 80, rotateX: 8 }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 1, delay: index * 0.15, ease: EASE }}
+    >
+      <motion.div
+        className="relative rounded-[1.5rem] overflow-hidden"
+        style={{
+          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+          transition: "transform 0.4s cubic-bezier(0.03,0.98,0.52,0.99)",
+          transformStyle: "preserve-3d",
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Card surface */}
+        <div
+          className="relative p-8 md:p-10 lg:p-12"
+          style={{
+            background: isHovered
+              ? "linear-gradient(145deg, hsl(40 20% 96%) 0%, hsl(43 25% 93%) 100%)"
+              : "linear-gradient(145deg, hsl(40 15% 96%) 0%, hsl(40 10% 94%) 100%)",
+            border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.35)" : "hsl(var(--foreground) / 0.07)"}`,
+            boxShadow: isHovered
+              ? "0 30px 60px -15px hsl(43 52% 39% / 0.2), 0 0 50px hsl(43 55% 55% / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
+              : "0 4px 20px -5px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
+            transition: "all 0.6s cubic-bezier(0.03,0.98,0.52,0.99)",
+          }}
+        >
+          {/* Spotlight follow cursor */}
+          {isHovered && (
+            <div
+              className="absolute inset-0 pointer-events-none opacity-60 transition-opacity duration-500"
+              style={{
+                background: `radial-gradient(600px circle at ${(tilt.y / 12 + 0.5) * 100}% ${(-tilt.x / 12 + 0.5) * 100}%, hsl(43 55% 55% / 0.12), transparent 50%)`,
+              }}
+            />
+          )}
+
+          {/* Decorative orb */}
+          <div
+            className="absolute -top-16 -right-16 w-[200px] h-[200px] rounded-full pointer-events-none transition-all duration-700"
+            style={{
+              background: `radial-gradient(circle, hsl(43 55% 55% / ${isHovered ? 0.12 : 0.04}) 0%, transparent 70%)`,
+              transform: `translate(${tilt.y * 2}px, ${tilt.x * -2}px)`,
+            }}
+          />
+
+          {/* Top accent line */}
+          <div
+            className="absolute top-0 left-8 right-8 h-[2px] rounded-full transition-all duration-700"
+            style={{
+              background: isHovered
+                ? "linear-gradient(90deg, transparent, hsl(43 55% 55%), hsl(43 60% 70%), hsl(43 55% 55%), transparent)"
+                : "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.15), transparent)",
+              opacity: isHovered ? 1 : 0.5,
+            }}
+          />
+
+          <div className="relative z-10 flex flex-col md:flex-row gap-6 md:gap-8">
+            {/* Left — icon + number */}
+            <div className="flex md:flex-col items-center md:items-start gap-4 md:gap-3 shrink-0">
+              <motion.div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center relative"
+                style={{
+                  background: isHovered
+                    ? "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))"
+                    : "hsl(43 52% 39% / 0.1)",
+                  border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.5)" : "hsl(43 55% 55% / 0.15)"}`,
+                  color: isHovered ? "#fff" : "hsl(43 55% 55%)",
+                  boxShadow: isHovered ? "0 8px 30px hsl(43 52% 39% / 0.3), 0 0 20px hsl(43 55% 55% / 0.15)" : "none",
+                  transition: "all 0.5s cubic-bezier(0.03,0.98,0.52,0.99)",
+                  transform: `translateZ(${isHovered ? 30 : 0}px)`,
+                }}
+              >
+                {svc.icon}
+                {/* Pulse ring on hover */}
+                {isHovered && (
+                  <motion.div
+                    className="absolute inset-0 rounded-2xl"
+                    style={{ border: "2px solid hsl(43 55% 55% / 0.4)" }}
+                    initial={{ scale: 1, opacity: 1 }}
+                    animate={{ scale: 1.4, opacity: 0 }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                  />
+                )}
+              </motion.div>
+              <span
+                className="font-clash text-3xl md:text-4xl font-black transition-colors duration-500"
+                style={{
+                  color: isHovered ? "hsl(43 55% 55%)" : "hsl(var(--foreground) / 0.08)",
+                  textShadow: isHovered ? "0 0 30px hsl(43 55% 55% / 0.3)" : "none",
+                  transform: `translateZ(${isHovered ? 20 : 0}px)`,
+                }}
+              >
+                {svc.num}
+              </span>
+            </div>
+
+            {/* Right — content */}
+            <div className="flex-1" style={{ transform: `translateZ(${isHovered ? 15 : 0}px)` }}>
+              <h3
+                className="font-clash font-black text-xl md:text-2xl mb-3 transition-all duration-500"
+                style={{
+                  color: isHovered ? "hsl(43 52% 39%)" : "hsl(var(--foreground))",
+                }}
+              >
+                {svc.title}
+              </h3>
+              <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed mb-6">{svc.description}</p>
+              <div className="flex flex-wrap gap-2.5">
+                {svc.chips.map((chip, ci) => (
+                  <motion.span
+                    key={chip}
+                    className="px-4 py-2 rounded-xl text-[11px] font-mono font-medium transition-all duration-500"
+                    style={{
+                      background: isHovered ? "hsl(43 55% 55% / 0.12)" : "hsl(var(--foreground) / 0.03)",
+                      border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.25)" : "hsl(var(--foreground) / 0.06)"}`,
+                      color: isHovered ? "hsl(43 52% 39%)" : "hsl(var(--foreground) / 0.45)",
+                      transform: `translateZ(${isHovered ? 10 : 0}px)`,
+                    }}
+                    initial={false}
+                    animate={isHovered ? { y: 0, opacity: 1 } : { y: 0, opacity: 1 }}
+                  >
+                    {chip}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
 
 const ServicesSection = () => {
   const ref = useScrollReveal();
   return (
-    <section id="services" ref={ref} className="py-28 md:py-40 px-6">
+    <section id="services" ref={ref} className="py-28 md:py-44 px-6 relative">
+      {/* Background decorative elements */}
+      <div className="absolute top-40 left-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-30"
+        style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.06) 0%, transparent 60%)" }} />
+      <div className="absolute bottom-20 right-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-20"
+        style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.08) 0%, transparent 60%)" }} />
+
       <div className="max-w-[1400px] mx-auto">
-        <div className="grid md:grid-cols-[1fr_2fr] gap-16 md:gap-20">
+        <div className="grid lg:grid-cols-[1fr_2.2fr] gap-16 md:gap-24">
           {/* Left sticky header */}
-          <div className="md:sticky md:top-32 md:self-start">
-            <motion.div {...fadeUp()} className="rv flex items-center gap-3 mb-4">
-              <div className="w-8 h-[1.5px] bg-burgundy-light" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-burgundy-light">Services</span>
+          <div className="lg:sticky lg:top-32 lg:self-start">
+            <motion.div {...fadeUp()} className="rv flex items-center gap-3 mb-5">
+              <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>Services</span>
             </motion.div>
-            <motion.h2 {...fadeUp(0.05)} className="rv font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground leading-tight mb-5">
+            <motion.h2 {...fadeUp(0.05)} className="rv font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black text-foreground leading-[0.95] mb-6">
               Ce qu'on fait
               <br />
-              <span className="text-burgundy-light">pour vous</span>
+              <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.2)" }}>pour vous</span>
             </motion.h2>
-            <motion.p {...fadeUp(0.1)} className="rv text-muted-foreground text-sm leading-relaxed max-w-sm">
+            <motion.p {...fadeUp(0.1)} className="rv text-muted-foreground text-sm md:text-[15px] leading-relaxed max-w-sm mb-8">
               Chaque service est conçu pour maximiser votre impact digital
               et générer un retour mesurable.
             </motion.p>
+            {/* Decorative vertical line */}
+            <motion.div
+              className="hidden lg:block w-[1px] h-24 ml-1"
+              style={{ background: "linear-gradient(to bottom, hsl(43 55% 55% / 0.3), transparent)" }}
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
+            />
           </div>
 
-          {/* Right — cards */}
-          <div className="space-y-6">
+          {/* Right — 3D cards */}
+          <div className="space-y-8">
             {SERVICES.map((svc, i) => (
-              <motion.div key={svc.title} {...fadeUp(i * 0.1)}
-                className="rv group relative rounded-2xl p-8 md:p-10 transition-all duration-700 cursor-default overflow-hidden"
-                style={{
-                  background: "hsl(var(--foreground) / 0.03)",
-                  border: "1px solid hsl(var(--foreground) / 0.06)",
-                }}
-                whileHover={{
-                  borderColor: "hsl(43 52% 39% / 0.25)",
-                  background: "hsl(var(--foreground) / 0.05)",
-                  y: -4,
-                }}
-              >
-                {/* Hover glow */}
-                <div className="absolute -top-20 -right-20 w-[200px] h-[200px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.1) 0%, transparent 70%)" }} />
-
-                <div className="relative z-10 flex gap-6">
-                  <div className="shrink-0">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-105"
-                      style={{
-                        background: "hsl(43 52% 39% / 0.1)",
-                        border: "1px solid hsl(43 55% 55% / 0.15)",
-                        color: "hsl(43 55% 55%)",
-                      }}>
-                      {svc.icon}
-                    </div>
-                    <span className="block mt-3 font-mono text-[10px] text-muted-foreground/40 text-center">{svc.num}</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-clash font-bold text-foreground text-lg md:text-xl mb-3 group-hover:text-burgundy-light transition-colors duration-500">
-                      {svc.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-5">{svc.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {svc.chips.map((chip) => (
-                        <span key={chip}
-                          className="px-3 py-1.5 rounded-full text-[10px] font-mono text-muted-foreground/60 transition-all duration-300 group-hover:text-muted-foreground"
-                          style={{ border: "1px solid hsl(var(--foreground) / 0.06)", background: "hsl(var(--foreground) / 0.02)" }}>
-                          {chip}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              <ServiceCard3D key={svc.title} svc={svc} index={i} />
             ))}
           </div>
         </div>
