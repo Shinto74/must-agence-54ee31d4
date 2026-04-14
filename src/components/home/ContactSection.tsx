@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { MessageSquare, Phone, MapPin, Send, ChevronDown, ArrowRight, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +19,13 @@ interface ContactSectionProps {
 
 const ContactSection = ({ heading, text, subtext, email, phone, location, whatsappUrl, formOptions }: ContactSectionProps) => {
   const ref = useScrollReveal();
+  const loc = useLocation();
+  const isEntreprise = loc.pathname === "/entreprise";
+  
+  // Dynamic accent color: gold for Entreprise, neon for Artiste
+  const accent = isEntreprise ? "43 55% 55%" : "var(--neon)";
+  const accentDark = isEntreprise ? "43 52% 39%" : "var(--neon)";
+  
   const [form, setForm] = useState({ type: formOptions[0], name: "", email: "", phone: "", budget: "", message: "" });
   const [sending, setSending] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
@@ -48,9 +56,9 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
   const inputBase = "w-full rounded-2xl px-5 py-4 text-sm font-outfit outline-none transition-all duration-500 placeholder:text-foreground/20";
   const getInputStyle = (field: string) => ({
     background: focusField === field ? "hsl(var(--foreground) / 0.07)" : "hsl(var(--foreground) / 0.04)",
-    border: focusField === field ? "1.5px solid hsl(var(--neon) / 0.45)" : "1.5px solid hsl(var(--foreground) / 0.08)",
+    border: focusField === field ? `1.5px solid hsl(${accent} / 0.45)` : "1.5px solid hsl(var(--foreground) / 0.08)",
     color: "hsl(var(--foreground))",
-    boxShadow: focusField === field ? "0 0 30px hsl(var(--neon) / 0.06), inset 0 1px 0 hsl(var(--neon) / 0.05)" : "inset 0 1px 0 hsl(var(--foreground) / 0.03)",
+    boxShadow: focusField === field ? `0 0 30px hsl(${accent} / 0.06), inset 0 1px 0 hsl(${accent} / 0.05)` : "inset 0 1px 0 hsl(var(--foreground) / 0.03)",
   });
 
   const CustomSelect = ({
@@ -82,7 +90,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
             style={{
               background: "hsl(var(--card))",
               border: "1.5px solid hsl(var(--foreground) / 0.1)",
-              boxShadow: "0 25px 70px hsla(0,0%,0%,0.6), 0 0 40px hsl(var(--neon) / 0.04)",
+              boxShadow: `0 25px 70px hsla(0,0%,0%,0.6), 0 0 40px hsl(${accent} / 0.04)`,
               backdropFilter: "blur(24px)",
             }}
             initial={{ opacity: 0, y: -10, scale: 0.97 }}
@@ -97,19 +105,19 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                 onClick={() => { onChange(opt); setOpen(false); }}
                 className="w-full text-left px-5 py-3.5 text-sm font-outfit transition-all duration-200 flex items-center gap-3"
                 style={{
-                  color: value === opt ? "hsl(var(--neon))" : "hsl(var(--foreground) / 0.65)",
-                  background: value === opt ? "hsl(var(--neon) / 0.07)" : "transparent",
+                  color: value === opt ? `hsl(${accent})` : "hsl(var(--foreground) / 0.65)",
+                  background: value === opt ? `hsl(${accent} / 0.07)` : "transparent",
                   borderBottom: idx < options.length - 1 ? "1px solid hsl(var(--foreground) / 0.05)" : "none",
                 }}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.03 }}
-                whileHover={{ background: value === opt ? "hsl(var(--neon) / 0.1)" : "hsl(var(--foreground) / 0.05)", x: 4 }}
+                whileHover={{ background: value === opt ? `hsl(${accent} / 0.1)` : "hsl(var(--foreground) / 0.05)", x: 4 }}
               >
                 {value === opt && (
                   <motion.span
                     className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: "hsl(var(--neon))" }}
+                    style={{ background: `hsl(${accent})` }}
                     layoutId={`select-${field}`}
                   />
                 )}
@@ -132,8 +140,8 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
     <section id="contact" ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/3 w-[700px] h-[700px] rounded-full" style={{ background: "radial-gradient(ellipse, hsl(var(--neon) / 0.03) 0%, transparent 65%)" }} />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: "radial-gradient(ellipse, hsl(var(--neon) / 0.02) 0%, transparent 65%)" }} />
+        <div className="absolute top-0 left-1/3 w-[700px] h-[700px] rounded-full" style={{ background: `radial-gradient(ellipse, hsl(${accent} / 0.03) 0%, transparent 65%)` }} />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: `radial-gradient(ellipse, hsl(${accent} / 0.02) 0%, transparent 65%)` }} />
       </div>
 
       <div className="max-w-[1400px] mx-auto relative">
@@ -152,13 +160,13 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
               >
                 <motion.div
                   className="w-10 h-[2px] rounded-full"
-                  style={{ background: "hsl(var(--neon))" }}
+                  style={{ background: `hsl(${accent})` }}
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                   viewport={{ once: true }}
                 />
-                <span className="font-mono text-[11px] uppercase tracking-[0.25em] font-medium" style={{ color: "hsl(var(--neon))" }}>
+                <span className="font-mono text-[11px] uppercase tracking-[0.25em] font-medium" style={{ color: `hsl(${accent})` }}>
                   Contact
                 </span>
               </motion.div>
@@ -216,11 +224,11 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                       <motion.div
                         className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
                         style={{
-                          background: "hsl(var(--neon) / 0.07)",
-                          border: "1px solid hsl(var(--neon) / 0.12)",
-                          color: "hsl(var(--neon))",
+                          background: `hsl(${accent} / 0.07)`,
+                          border: `1px solid hsl(${accent} / 0.12)`,
+                          color: `hsl(${accent})`,
                         }}
-                        whileHover={{ scale: 1.1, borderColor: "hsl(var(--neon) / 0.35)", boxShadow: "0 0 20px hsl(var(--neon) / 0.15)" }}
+                        whileHover={{ scale: 1.1, borderColor: `hsl(${accent} / 0.35)`, boxShadow: `0 0 20px hsl(${accent} / 0.15)` }}
                         transition={{ type: "spring", stiffness: 300, damping: 15 }}
                       >
                         {item.icon}
@@ -230,7 +238,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                   ) : (
                     <div className="flex items-center gap-4 p-3.5">
                       <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                        style={{ background: "hsl(var(--neon) / 0.07)", border: "1px solid hsl(var(--neon) / 0.12)", color: "hsl(var(--neon))" }}>
+                        style={{ background: `hsl(${accent} / 0.07)`, border: `1px solid hsl(${accent} / 0.12)`, color: `hsl(${accent})` }}>
                         {item.icon}
                       </div>
                       <span className="text-sm text-foreground/55">{item.label}</span>
@@ -275,7 +283,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
               {/* Neon top accent */}
               <motion.div
                 className="h-[2px] w-full"
-                style={{ background: "linear-gradient(90deg, transparent 10%, hsl(var(--neon) / 0.6) 50%, transparent 90%)" }}
+                style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${accent} / 0.6) 50%, transparent 90%)` }}
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
                 transition={{ duration: 1, delay: 0.5 }}
@@ -285,7 +293,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
               <div className="p-6 md:p-8 space-y-4">
                 {/* Form header */}
                 <div className="flex items-center gap-2 mb-2">
-                  <Sparkles size={14} style={{ color: "hsl(var(--neon) / 0.6)" }} />
+                  <Sparkles size={14} style={{ color: `hsl(${accent} / 0.6)` }} />
                   <span className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
                     Formulaire de contact
                   </span>
@@ -348,13 +356,13 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                   type="submit" disabled={sending}
                   className="w-full mt-2 py-5 font-mono text-sm uppercase tracking-[0.15em] font-bold disabled:opacity-50 group cursor-pointer relative overflow-hidden"
                   style={{
-                    background: "hsl(var(--primary))",
-                    color: "hsl(var(--primary-foreground))",
+                    background: isEntreprise ? `linear-gradient(135deg, hsl(${accentDark}), hsl(${accent}))` : "hsl(var(--primary))",
+                    color: isEntreprise ? "#fff" : "hsl(var(--primary-foreground))",
                     borderRadius: "16px",
-                    boxShadow: "0 0 30px hsl(var(--neon) / 0.2)",
+                    boxShadow: `0 0 30px hsl(${accent} / 0.2)`,
                     border: "none",
                   }}
-                  whileHover={{ y: -2, boxShadow: "0 0 50px hsl(var(--neon) / 0.35), 0 10px 30px hsla(0,0%,0%,0.3)" }}
+                  whileHover={{ y: -2, boxShadow: `0 0 50px hsl(${accent} / 0.35), 0 10px 30px hsla(0,0%,0%,0.3)` }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 >
