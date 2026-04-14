@@ -246,7 +246,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const isInView = useInView(sentinelRef, { once: true, margin: "-50px" });
+  const isInView = useInView(sentinelRef, { once: true, margin: "0px 0px -120px 0px" });
   const isLit = isInView || isHovered;
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -273,7 +273,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       transition={{ duration: 1, delay: index * 0.15, ease: EASE }}
     >
       {/* Sentinel for inView detection */}
-      <div ref={sentinelRef} className="absolute top-1/2 left-0 w-0 h-0 pointer-events-none" />
+      <div ref={sentinelRef} className="absolute top-1/3 left-0 w-0 h-0 pointer-events-none" />
+
       <motion.div
         className="relative rounded-[1.5rem] overflow-hidden"
         style={{
@@ -281,6 +282,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
           transition: "transform 0.4s cubic-bezier(0.03,0.98,0.52,0.99)",
           transformStyle: "preserve-3d",
         }}
+        animate={isLit ? { y: -6, scale: 1.01 } : { y: 0, scale: 1 }}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
@@ -290,42 +292,65 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
           className="relative p-8 md:p-10 lg:p-12"
           style={{
             background: isLit
-              ? "linear-gradient(145deg, hsl(40 20% 96%) 0%, hsl(43 25% 93%) 100%)"
-              : "linear-gradient(145deg, hsl(40 15% 96%) 0%, hsl(40 10% 94%) 100%)",
-            border: `1px solid ${isLit ? "hsl(43 55% 55% / 0.35)" : "hsl(var(--foreground) / 0.07)"}`,
+              ? "linear-gradient(145deg, hsl(40 25% 97%) 0%, hsl(43 30% 94%) 100%)"
+              : "linear-gradient(145deg, hsl(40 10% 96%) 0%, hsl(40 8% 93%) 100%)",
+            border: `1.5px solid ${isLit ? "hsl(43 55% 55% / 0.45)" : "hsl(var(--foreground) / 0.06)"}`,
             boxShadow: isLit
-              ? "0 30px 60px -15px hsl(43 52% 39% / 0.2), 0 0 50px hsl(43 55% 55% / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
-              : "0 4px 20px -5px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
+              ? "0 30px 80px -15px hsl(43 52% 39% / 0.3), 0 0 60px hsl(43 55% 55% / 0.12), 0 0 0 1px hsl(43 55% 55% / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.6)"
+              : "0 2px 10px -5px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.3)",
             transition: "all 0.8s cubic-bezier(0.03,0.98,0.52,0.99)",
+            borderRadius: "1.5rem",
           }}
         >
+          {/* Light sweep animation on illuminate */}
+          {isLit && (
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "linear-gradient(105deg, transparent 35%, hsl(43 80% 70% / 0.15) 45%, hsl(43 80% 80% / 0.22) 50%, hsl(43 80% 70% / 0.15) 55%, transparent 65%)",
+              }}
+              initial={{ x: "-120%" }}
+              animate={{ x: "220%" }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
+            />
+          )}
+
           {/* Spotlight follow cursor */}
           {isHovered && (
             <div
               className="absolute inset-0 pointer-events-none opacity-60 transition-opacity duration-500"
               style={{
-                background: `radial-gradient(600px circle at ${(tilt.y / 12 + 0.5) * 100}% ${(-tilt.x / 12 + 0.5) * 100}%, hsl(43 55% 55% / 0.12), transparent 50%)`,
+                background: `radial-gradient(600px circle at ${(tilt.y / 12 + 0.5) * 100}% ${(-tilt.x / 12 + 0.5) * 100}%, hsl(43 55% 55% / 0.15), transparent 50%)`,
               }}
             />
           )}
 
           {/* Decorative orb */}
           <div
-            className="absolute -top-16 -right-16 w-[200px] h-[200px] rounded-full pointer-events-none transition-all duration-700"
+            className="absolute -top-16 -right-16 w-[250px] h-[250px] rounded-full pointer-events-none transition-all duration-700"
             style={{
-              background: `radial-gradient(circle, hsl(43 55% 55% / ${isLit ? 0.12 : 0.04}) 0%, transparent 70%)`,
+              background: `radial-gradient(circle, hsl(43 55% 55% / ${isLit ? 0.15 : 0.03}) 0%, transparent 70%)`,
               transform: `translate(${tilt.y * 2}px, ${tilt.x * -2}px)`,
             }}
           />
 
           {/* Top accent line */}
           <div
-            className="absolute top-0 left-8 right-8 h-[2px] rounded-full transition-all duration-700"
+            className="absolute top-0 left-0 right-0 h-[2.5px] transition-all duration-700"
             style={{
               background: isLit
-                ? "linear-gradient(90deg, transparent, hsl(43 55% 55%), hsl(43 60% 70%), hsl(43 55% 55%), transparent)"
-                : "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.15), transparent)",
-              opacity: isLit ? 1 : 0.5,
+                ? "linear-gradient(90deg, transparent 5%, hsl(43 55% 55%) 25%, hsl(43 70% 70%) 50%, hsl(43 55% 55%) 75%, transparent 95%)"
+                : "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.1), transparent)",
+              opacity: isLit ? 1 : 0.3,
+              borderRadius: "1.5rem 1.5rem 0 0",
+            }}
+          />
+
+          {/* Bottom subtle accent */}
+          <div
+            className="absolute bottom-0 left-12 right-12 h-[1px] transition-all duration-700"
+            style={{
+              background: isLit ? "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.2), transparent)" : "transparent",
             }}
           />
 
@@ -334,13 +359,15 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
             <div className="flex md:flex-col items-center md:items-start gap-4 md:gap-3 shrink-0">
               <motion.div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center relative"
+                animate={isLit ? { scale: 1.05 } : { scale: 1 }}
+                transition={{ duration: 0.5, ease: EASE }}
                 style={{
                   background: isLit
                     ? "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))"
-                    : "hsl(43 52% 39% / 0.1)",
-                  border: `1px solid ${isLit ? "hsl(43 55% 55% / 0.5)" : "hsl(43 55% 55% / 0.15)"}`,
-                  color: isLit ? "#fff" : "hsl(43 55% 55%)",
-                  boxShadow: isLit ? "0 8px 30px hsl(43 52% 39% / 0.3), 0 0 20px hsl(43 55% 55% / 0.15)" : "none",
+                    : "hsl(43 52% 39% / 0.08)",
+                  border: `1.5px solid ${isLit ? "hsl(43 55% 55% / 0.6)" : "hsl(43 55% 55% / 0.12)"}`,
+                  color: isLit ? "#fff" : "hsl(43 55% 55% / 0.5)",
+                  boxShadow: isLit ? "0 10px 35px hsl(43 52% 39% / 0.35), 0 0 25px hsl(43 55% 55% / 0.2)" : "none",
                   transition: "all 0.6s cubic-bezier(0.03,0.98,0.52,0.99)",
                   transform: `translateZ(${isHovered ? 30 : 0}px)`,
                 }}
@@ -352,47 +379,56 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
                     className="absolute inset-0 rounded-2xl"
                     style={{ border: "2px solid hsl(43 55% 55% / 0.4)" }}
                     initial={{ scale: 1, opacity: 1 }}
-                    animate={{ scale: 1.4, opacity: 0 }}
-                    transition={{ duration: 1.2, repeat: Infinity }}
+                    animate={{ scale: 1.5, opacity: 0 }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
                   />
                 )}
               </motion.div>
-              <span
-                className="font-clash text-3xl md:text-4xl font-black transition-colors duration-500"
+              <motion.span
+                className="font-clash text-3xl md:text-4xl font-black"
+                animate={isLit ? { opacity: 1 } : { opacity: 0.08 }}
+                transition={{ duration: 0.6 }}
                 style={{
-                  color: isLit ? "hsl(43 55% 55%)" : "hsl(var(--foreground) / 0.08)",
-                  textShadow: isLit ? "0 0 30px hsl(43 55% 55% / 0.3)" : "none",
+                  color: isLit ? "hsl(43 55% 55%)" : "hsl(var(--foreground))",
+                  textShadow: isLit ? "0 0 35px hsl(43 55% 55% / 0.4)" : "none",
                   transform: `translateZ(${isHovered ? 20 : 0}px)`,
                 }}
               >
                 {svc.num}
-              </span>
+              </motion.span>
             </div>
 
             {/* Right — content */}
             <div className="flex-1" style={{ transform: `translateZ(${isHovered ? 15 : 0}px)` }}>
               <h3
-                className="font-clash font-black text-xl md:text-2xl mb-3 transition-all duration-500"
+                className="font-clash font-black text-xl md:text-2xl mb-3 transition-all duration-600"
                 style={{
-                  color: isLit ? "hsl(43 52% 39%)" : "hsl(var(--foreground))",
+                  color: isLit ? "hsl(43 52% 39%)" : "hsl(var(--foreground) / 0.7)",
                 }}
               >
                 {svc.title}
               </h3>
-              <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed mb-6">{svc.description}</p>
+              <p className="text-sm md:text-[15px] leading-relaxed mb-6 transition-colors duration-600"
+                style={{ color: isLit ? "hsl(var(--foreground) / 0.6)" : "hsl(var(--foreground) / 0.35)" }}>
+                {svc.description}
+              </p>
               <div className="flex flex-wrap gap-2.5">
                 {svc.chips.map((chip, ci) => (
                   <motion.span
                     key={chip}
-                    className="px-4 py-2 rounded-xl text-[11px] font-mono font-medium transition-all duration-500"
+                    className="px-4 py-2 rounded-xl text-[11px] font-mono font-medium"
+                    initial={false}
+                    animate={isLit
+                      ? { opacity: 1, y: 0, scale: 1 }
+                      : { opacity: 0.4, y: 4, scale: 0.97 }
+                    }
+                    transition={{ duration: 0.4, delay: isLit ? ci * 0.06 : 0, ease: EASE }}
                     style={{
-                      background: isLit ? "hsl(43 55% 55% / 0.12)" : "hsl(var(--foreground) / 0.03)",
-                      border: `1px solid ${isLit ? "hsl(43 55% 55% / 0.25)" : "hsl(var(--foreground) / 0.06)"}`,
-                      color: isLit ? "hsl(43 52% 39%)" : "hsl(var(--foreground) / 0.45)",
+                      background: isLit ? "hsl(43 55% 55% / 0.14)" : "hsl(var(--foreground) / 0.02)",
+                      border: `1px solid ${isLit ? "hsl(43 55% 55% / 0.3)" : "hsl(var(--foreground) / 0.05)"}`,
+                      color: isLit ? "hsl(43 52% 39%)" : "hsl(var(--foreground) / 0.3)",
                       transform: `translateZ(${isHovered ? 10 : 0}px)`,
                     }}
-                    initial={false}
-                    animate={isLit ? { y: 0, opacity: 1 } : { y: 0, opacity: 1 }}
                   >
                     {chip}
                   </motion.span>
@@ -419,7 +455,11 @@ const ServicesSection = () => {
       <div className="max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-[1fr_2.2fr] gap-16 md:gap-24">
           {/* Left sticky header */}
-          <div className="lg:sticky lg:top-32 lg:self-start">
+          <motion.div
+            className="lg:sticky lg:top-32 lg:self-start"
+            animate={{ y: [0, -8, 0, 8, 0] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          >
             <motion.div {...fadeUp()} className="rv flex items-center gap-3 mb-5">
               <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
               <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>Services</span>
@@ -429,11 +469,7 @@ const ServicesSection = () => {
               <br />
               <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.2)" }}>pour vous</span>
             </motion.h2>
-            <motion.p
-              className="rv text-muted-foreground text-sm md:text-[15px] leading-relaxed max-w-sm mb-8"
-              animate={{ y: [0, -6, 0, 6, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            >
+            <motion.p className="rv text-muted-foreground text-sm md:text-[15px] leading-relaxed max-w-sm mb-8">
               Chaque service est conçu pour maximiser votre impact digital
               et générer un retour mesurable.
             </motion.p>
@@ -446,7 +482,7 @@ const ServicesSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
             />
-          </div>
+          </motion.div>
 
           {/* Right — 3D cards */}
           <div className="space-y-8">
