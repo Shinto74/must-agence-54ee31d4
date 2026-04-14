@@ -16,7 +16,7 @@ const ORBIT_RADIUS_X = 520; // ellipse width
 const ORBIT_RADIUS_Y = 180; // ellipse depth (perspective)
 const CARD_W = 280;
 const CARD_H = 360;
-const ROTATION_SPEED = -0.0003; // negative = right to left, slow & premium
+const ROTATION_SPEED = -0.00022; // slow & premium, never stops
 
 const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
