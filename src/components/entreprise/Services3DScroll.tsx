@@ -492,27 +492,30 @@ const Services3DScroll = () => {
           width={1920}
           height={1080}
           style={{
-            filter: "blur(6px) saturate(0.5) brightness(1.15)",
-            opacity: 0.25,
+            filter: "blur(4px) saturate(0.6) brightness(1.05)",
+            opacity: 0.55,
           }}
         />
-        {/* Light overlay for readability */}
+        {/* Soft overlay — keeps readability without killing the image */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: "linear-gradient(180deg, hsl(40 20% 97% / 0.82) 0%, hsl(38 18% 94% / 0.75) 40%, hsl(40 15% 96% / 0.85) 100%)",
+            background: "linear-gradient(180deg, hsl(40 20% 97% / 0.5) 0%, hsl(38 18% 94% / 0.4) 40%, hsl(40 15% 96% / 0.5) 100%)",
           }}
         />
+        {/* Warm accent glows */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 80% / 0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.04) 0%, transparent 55%), radial-gradient(ellipse 50% 40% at 80% 60%, hsl(35 45% 65% / 0.05) 0%, transparent 50%)",
+            background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 80% / 0.15) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.06) 0%, transparent 55%)",
           }}
         />
+        {/* Soft vignette */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 50%, hsl(40 20% 97% / 0.6) 100%)" }}
+          style={{ background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 50%, hsl(40 20% 97% / 0.35) 100%)" }}
         />
+        {/* Grain */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.025]"
           style={{
