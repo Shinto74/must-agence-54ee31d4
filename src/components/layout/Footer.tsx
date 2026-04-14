@@ -20,7 +20,7 @@ const Footer = () => {
       className="relative border-t pt-16 pb-8"
       style={{
         background: isEntreprise
-          ? "linear-gradient(180deg, hsl(46 70% 38%) 0%, hsl(44 65% 32%) 100%)"
+          ? "linear-gradient(180deg, hsl(44 65% 30%) 0%, hsl(43 60% 24%) 100%)"
           : "hsl(var(--background))",
         borderColor: isEntreprise ? "hsl(44 60% 28%)" : "hsl(var(--border))",
         color: isEntreprise ? "hsl(45 30% 95%)" : "hsl(var(--foreground))",
