@@ -992,7 +992,7 @@ const Entreprise = () => {
     <div className="page-bg page-bg--entreprise">
       <EntrepriseHero />
       <MarqueeSep />
-      <ServicesSection />
+      <Services3DScroll />
       <ExpertiseSection />
       <ReferencesSection />
       <FinalCta />
