@@ -70,11 +70,9 @@ const Header = () => {
             />
           </div>
           <span
-            className="font-clash font-bold text-base md:text-lg tracking-tight transition-colors duration-300"
-            style={{ color: `hsl(var(--foreground) / 0.9)` }}
+            className="font-clash font-bold text-base md:text-lg tracking-tight transition-colors duration-300 group-hover:[color:var(--header-accent)]"
+            style={{ color: "hsl(var(--foreground) / 0.9)", ["--header-accent" as string]: accentHslFull }}
           >
-            <style>{`.group:hover .logo-text { color: ${accentHslFull} !important; }`}</style>
-            <span className="logo-text transition-colors duration-300" style={{ color: "inherit" }}>MUST AGENCE</span>
             MUST AGENCE
           </span>
         </Link>
