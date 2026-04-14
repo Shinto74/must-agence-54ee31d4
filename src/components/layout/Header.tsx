@@ -70,12 +70,11 @@ const Header = () => {
             />
           </div>
           <span
-            className="font-clash font-bold text-base md:text-lg tracking-tight text-foreground/90 transition-colors duration-300"
-            style={{ ["--tw-text-opacity" as string]: 1 }}
-            onMouseEnter={() => {}}
+            className="font-clash font-bold text-base md:text-lg tracking-tight transition-colors duration-300"
+            style={{ color: `hsl(var(--foreground) / 0.9)` }}
           >
-            <span className="group-hover:opacity-0 opacity-100 transition-opacity duration-300 absolute">MUST AGENCE</span>
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: accentHslFull }}>MUST AGENCE</span>
+            <style>{`.group:hover .logo-text { color: ${accentHslFull} !important; }`}</style>
+            <span className="logo-text transition-colors duration-300" style={{ color: "inherit" }}>MUST AGENCE</span>
             MUST AGENCE
           </span>
         </Link>
