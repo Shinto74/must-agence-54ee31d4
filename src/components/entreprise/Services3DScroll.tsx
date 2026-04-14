@@ -314,13 +314,13 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
             <div className="flex-1">
               <h3
                 className="mb-3 font-clash text-xl font-black md:text-2xl transition-colors duration-500"
-                style={{ color: isHovered ? "hsl(43 50% 32%)" : "hsl(43 52% 39%)" }}
+                style={{ color: isHovered ? "hsl(0 0% 8%)" : "hsl(0 0% 15%)" }}
               >
                 {svc.title}
               </h3>
               <p
                 className="mb-6 text-sm leading-relaxed md:text-[15px]"
-                style={{ color: "hsl(0 0% 10% / 0.55)" }}
+                style={{ color: "hsl(0 0% 30%)" }}
               >
                 {svc.description}
               </p>
