@@ -410,7 +410,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
 
                 <motion.span
                   className="font-clash text-3xl font-black md:text-4xl"
-                  animate={shouldReduceMotion ? {} : isLit ? { opacity: 1, x: 0 } : { opacity: 0.08, x: fromRight ? 10 : -10 }}
+                  animate={shouldReduceMotion ? {} : isLit ? { opacity: 1, x: 0 } : { opacity: 0.15, x: fromRight ? 8 : -8 }}
                   transition={{ duration: 0.6, ease: EASE }}
                   style={{
                     color: isLit ? "hsl(var(--burgundy-light))" : "hsl(var(--foreground) / 0.3)",
