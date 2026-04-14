@@ -212,7 +212,7 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
             )}
           </AnimatePresence>
 
-          {/* Contextual background image */}
+          {/* Contextual background image — very subtle on white card */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.5rem]">
             <img
               src={svc.bgImage}
@@ -220,18 +220,15 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover"
               style={{
-                filter: "blur(12px) saturate(0.6) brightness(1.1)",
-                opacity: isHovered ? 0.45 : 0.35,
+                filter: "blur(14px) saturate(0.4) brightness(1.2)",
+                opacity: isHovered ? 0.2 : 0.12,
                 transform: "scale(1.15)",
                 transition: "opacity 0.6s ease",
               }}
             />
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(155deg, hsl(40 20% 97% / 0.45) 0%, hsl(40 15% 95% / 0.35) 50%, hsl(40 10% 92% / 0.5) 100%)",
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: "linear-gradient(155deg, hsl(0 0% 100% / 0.7) 0%, hsl(40 20% 97% / 0.6) 50%, hsl(0 0% 100% / 0.7) 100%)",
+            }} />
           </div>
 
           {/* Bottom accent line */}
