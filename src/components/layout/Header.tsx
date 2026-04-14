@@ -26,28 +26,45 @@ const Header = () => {
 
   const isArtiste = location.pathname === "/artiste";
   const isEntreprise = location.pathname === "/entreprise";
-  const accentHsl = isEntreprise ? "var(--burgundy-light)" : "73 100% 50%";
-  const accentHslFull = isEntreprise ? "hsl(43 55% 55%)" : "hsl(73 100% 50%)";
+  const isLightPage = isEntreprise;
+
+  // Colors
+  const gold = "hsl(43 55% 55%)";
+  const goldDark = "hsl(43 55% 35%)";
+  const neon = "hsl(73 100% 50%)";
+  const accentColor = isEntreprise ? gold : neon;
+
+  // Determine if we're on top of the hero (dark video bg) or scrolled into light content
+  const onHero = !scrolled;
+  // On Entreprise: hero has dark video overlay, but scrolled content is light cream
+  const needsDarkText = isLightPage && scrolled;
 
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled
-          ? isEntreprise ? "hsla(43,52%,39%,0.05)" : "hsla(73,100%,50%,0.03)"
+          ? needsDarkText
+            ? "hsla(40, 30%, 95%, 0.85)"
+            : isArtiste
+              ? "hsla(0, 0%, 4%, 0.75)"
+              : "hsla(0, 0%, 4%, 0.75)"
           : "transparent",
         backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "none",
-        borderBottom: scrolled ? "1px solid hsla(0,0%,100%,0.06)" : "1px solid transparent",
+        borderBottom: scrolled
+          ? needsDarkText
+            ? "1px solid hsla(43, 55%, 55%, 0.15)"
+            : "1px solid hsla(0,0%,100%,0.06)"
+          : "1px solid transparent",
       }}
     >
       {/* Subtle top accent line */}
       <div
-        className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
+        className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none transition-opacity duration-500"
         style={{
           background: scrolled
-            ? `linear-gradient(to right, ${accentHslFull.replace(')', ' / 0.3)')}, transparent 30%, transparent 70%, ${accentHslFull.replace(')', ' / 0.15)')})`
+            ? `linear-gradient(to right, transparent 10%, ${accentColor.replace(')', ' / 0.4)')}, transparent 90%)`
             : "transparent",
-          transition: "background 0.5s",
         }}
       />
 
@@ -59,19 +76,16 @@ const Header = () => {
               src={isEntreprise ? SITE.logoWhite : isArtiste ? SITE.logoWhite : SITE.logoGreen}
               alt={SITE.name}
               className="h-7 md:h-9 w-auto relative z-10 transition-transform duration-300 group-hover:scale-105"
-            />
-            {/* Glow behind logo on hover */}
-            <div
-              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-0"
               style={{
-                background: `radial-gradient(circle, hsl(${accentHsl} / 0.15) 0%, transparent 70%)`,
-                transform: "scale(2.5)",
+                filter: needsDarkText ? "brightness(0.3) sepia(1) hue-rotate(10deg) saturate(3)" : "none",
               }}
             />
           </div>
           <span
-            className="font-clash font-bold text-base md:text-lg tracking-tight transition-colors duration-300 group-hover:[color:var(--header-accent)]"
-            style={{ color: "hsl(var(--foreground) / 0.9)", ["--header-accent" as string]: accentHslFull }}
+            className="font-clash font-bold text-base md:text-lg tracking-tight transition-colors duration-300"
+            style={{
+              color: needsDarkText ? goldDark : "hsl(0 0% 90%)",
+            }}
           >
             MUST AGENCE
           </span>
@@ -79,11 +93,18 @@ const Header = () => {
 
         {/* Nav desktop — pill container */}
         <nav
-          className="hidden md:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2 rounded-full px-1 py-1"
+          className="hidden md:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2 rounded-full px-1.5 py-1.5 transition-all duration-500"
           style={{
-            background: "hsla(0,0%,100%,0.04)",
-            border: "1px solid hsla(0,0%,100%,0.07)",
+            background: needsDarkText
+              ? "hsla(43, 40%, 85%, 0.5)"
+              : "hsla(0,0%,100%,0.06)",
+            border: needsDarkText
+              ? "1px solid hsla(43, 55%, 55%, 0.2)"
+              : "1px solid hsla(0,0%,100%,0.08)",
             backdropFilter: "blur(12px)",
+            boxShadow: needsDarkText
+              ? "0 2px 16px hsla(43, 40%, 30%, 0.08)"
+              : "0 2px 16px hsla(0, 0%, 0%, 0.15)",
           }}
         >
           {NAV_ITEMS.map((item) => {
@@ -94,19 +115,26 @@ const Header = () => {
                 to={item.path}
                 className="relative px-5 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.15em] transition-all duration-300"
                 style={{
-                  color: isActive ? (isEntreprise ? "#fff" : "hsl(var(--primary-foreground))") : "hsla(0,0%,100%,0.45)",
-                  background: isActive ? accentHslFull : "transparent",
-                  boxShadow: isActive ? `0 0 16px ${accentHslFull.replace(')', ' / 0.3)')}, 0 2px 8px ${accentHslFull.replace(')', ' / 0.15)')}` : "none",
+                  color: isActive
+                    ? needsDarkText ? "#fff" : isEntreprise ? "#fff" : "hsl(var(--primary-foreground))"
+                    : needsDarkText ? "hsla(43, 30%, 25%, 0.65)" : "hsla(0,0%,100%,0.5)",
+                  background: isActive
+                    ? isEntreprise ? gold : accentColor
+                    : "transparent",
+                  boxShadow: isActive
+                    ? `0 0 16px ${accentColor.replace(')', ' / 0.25)')}, 0 2px 8px ${accentColor.replace(')', ' / 0.15)')}`
+                    : "none",
+                  fontWeight: isActive ? 600 : 400,
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    (e.currentTarget as HTMLElement).style.color = "hsla(0,0%,100%,0.85)";
-                    (e.currentTarget as HTMLElement).style.background = "hsla(0,0%,100%,0.06)";
+                    (e.currentTarget as HTMLElement).style.color = needsDarkText ? "hsla(43, 30%, 20%, 0.9)" : "hsla(0,0%,100%,0.9)";
+                    (e.currentTarget as HTMLElement).style.background = needsDarkText ? "hsla(43, 40%, 80%, 0.4)" : "hsla(0,0%,100%,0.08)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) {
-                    (e.currentTarget as HTMLElement).style.color = "hsla(0,0%,100%,0.45)";
+                    (e.currentTarget as HTMLElement).style.color = needsDarkText ? "hsla(43, 30%, 25%, 0.65)" : "hsla(0,0%,100%,0.5)";
                     (e.currentTarget as HTMLElement).style.background = "transparent";
                   }
                 }}
@@ -117,24 +145,24 @@ const Header = () => {
           })}
         </nav>
 
-        {/* CTA right (optional decorative element) */}
+        {/* CTA right */}
         <div className="hidden md:flex items-center gap-3 ml-auto">
           <a
             href="#contact"
             className="px-5 py-2 rounded-full font-mono text-[10px] uppercase tracking-[0.15em] transition-all duration-300"
             style={{
-              border: `1px solid ${isEntreprise ? "hsl(var(--burgundy-light) / 0.3)" : "hsla(73,100%,50%,0.25)"}`,
-              color: accentHslFull,
-              background: isEntreprise ? "hsl(var(--burgundy) / 0.08)" : "hsla(73,100%,50%,0.05)",
+              border: `1px solid ${needsDarkText ? "hsla(43, 55%, 55%, 0.35)" : isEntreprise ? "hsl(var(--burgundy-light) / 0.3)" : "hsla(73,100%,50%,0.25)"}`,
+              color: needsDarkText ? goldDark : accentColor,
+              background: needsDarkText ? "hsla(43, 55%, 55%, 0.08)" : isEntreprise ? "hsl(var(--burgundy) / 0.08)" : "hsla(73,100%,50%,0.05)",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = accentHslFull;
+              (e.currentTarget as HTMLElement).style.background = isEntreprise ? gold : accentColor;
               (e.currentTarget as HTMLElement).style.color = "#fff";
-              (e.currentTarget as HTMLElement).style.boxShadow = `0 0 20px ${accentHslFull.replace(')', ' / 0.3)')}`;
+              (e.currentTarget as HTMLElement).style.boxShadow = `0 0 20px ${accentColor.replace(')', ' / 0.3)')}`;
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = isEntreprise ? "hsl(var(--burgundy) / 0.08)" : "hsla(73,100%,50%,0.05)";
-              (e.currentTarget as HTMLElement).style.color = accentHslFull;
+              (e.currentTarget as HTMLElement).style.background = needsDarkText ? "hsla(43, 55%, 55%, 0.08)" : isEntreprise ? "hsl(var(--burgundy) / 0.08)" : "hsla(73,100%,50%,0.05)";
+              (e.currentTarget as HTMLElement).style.color = needsDarkText ? goldDark : accentColor;
               (e.currentTarget as HTMLElement).style.boxShadow = "none";
             }}
           >
@@ -147,9 +175,13 @@ const Header = () => {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden p-2.5 ml-auto rounded-lg transition-all duration-300"
           style={{
-            border: "1px solid hsla(0,0%,100%,0.08)",
-            background: mobileOpen ? "hsla(73,100%,50%,0.1)" : "hsla(0,0%,100%,0.04)",
-            color: mobileOpen ? "hsl(73 100% 50%)" : "hsla(0,0%,100%,0.7)",
+            border: needsDarkText ? "1px solid hsla(43, 55%, 55%, 0.2)" : "1px solid hsla(0,0%,100%,0.08)",
+            background: mobileOpen
+              ? needsDarkText ? "hsla(43, 55%, 55%, 0.15)" : "hsla(73,100%,50%,0.1)"
+              : needsDarkText ? "hsla(43, 40%, 85%, 0.3)" : "hsla(0,0%,100%,0.04)",
+            color: mobileOpen
+              ? accentColor
+              : needsDarkText ? goldDark : "hsla(0,0%,100%,0.7)",
           }}
           aria-label="Menu"
         >
@@ -162,9 +194,9 @@ const Header = () => {
         <nav
           className="md:hidden px-6 pb-6 pt-2"
           style={{
-            background: "hsla(0,0%,4%,0.95)",
+            background: needsDarkText ? "hsla(40, 30%, 95%, 0.97)" : "hsla(0,0%,4%,0.95)",
             backdropFilter: "blur(20px)",
-            borderTop: "1px solid hsla(0,0%,100%,0.06)",
+            borderTop: needsDarkText ? "1px solid hsla(43, 55%, 55%, 0.1)" : "1px solid hsla(0,0%,100%,0.06)",
             animation: "navSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
@@ -176,13 +208,23 @@ const Header = () => {
                 to={item.path}
                 className="flex items-center gap-3 py-3.5 transition-colors"
                 style={{
-                  color: isActive ? "hsl(73 100% 50%)" : "hsla(0,0%,100%,0.5)",
-                  borderBottom: idx < NAV_ITEMS.length - 1 ? "1px solid hsla(0,0%,100%,0.04)" : "none",
+                  color: isActive
+                    ? needsDarkText ? gold : "hsl(73 100% 50%)"
+                    : needsDarkText ? "hsla(43, 30%, 25%, 0.5)" : "hsla(0,0%,100%,0.5)",
+                  borderBottom: idx < NAV_ITEMS.length - 1
+                    ? needsDarkText ? "1px solid hsla(43, 55%, 55%, 0.08)" : "1px solid hsla(0,0%,100%,0.04)"
+                    : "none",
                   animation: `navSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) ${idx * 0.05}s both`,
                 }}
               >
                 {isActive && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary" style={{ boxShadow: "0 0 6px hsl(73 100% 50% / 0.5)" }} />
+                  <div
+                    className="w-1.5 h-1.5 rounded-full"
+                    style={{
+                      background: accentColor,
+                      boxShadow: `0 0 6px ${accentColor.replace(')', ' / 0.5)')}`,
+                    }}
+                  />
                 )}
                 <span className="font-mono text-sm uppercase tracking-[0.15em]">{item.label}</span>
               </Link>
@@ -191,7 +233,11 @@ const Header = () => {
 
           <a
             href="#contact"
-            className="mt-4 block w-full text-center py-3 rounded-full font-mono text-xs uppercase tracking-[0.15em] bg-primary text-primary-foreground"
+            className="mt-4 block w-full text-center py-3 rounded-full font-mono text-xs uppercase tracking-[0.15em]"
+            style={{
+              background: isEntreprise ? gold : "hsl(73 100% 50%)",
+              color: "#fff",
+            }}
           >
             Contact
           </a>
