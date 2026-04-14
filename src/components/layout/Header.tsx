@@ -64,12 +64,15 @@ const Header = () => {
             <div
               className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-0"
               style={{
-                background: "radial-gradient(circle, hsl(73 100% 50% / 0.15) 0%, transparent 70%)",
+                background: `radial-gradient(circle, hsl(${accentHsl} / 0.15) 0%, transparent 70%)`,
                 transform: "scale(2.5)",
               }}
             />
           </div>
-          <span className="font-clash font-bold text-base md:text-lg tracking-tight text-foreground/90 group-hover:text-primary transition-colors duration-300">
+          <span
+            className="font-clash font-bold text-base md:text-lg tracking-tight transition-colors duration-300 group-hover:[color:var(--header-accent)]"
+            style={{ color: "hsl(var(--foreground) / 0.9)", ["--header-accent" as string]: accentHslFull }}
+          >
             MUST AGENCE
           </span>
         </Link>
