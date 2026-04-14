@@ -270,10 +270,10 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       ref={cardRef}
       className="group relative cursor-default"
       style={{ perspective: "1200px" }}
-      initial={{ opacity: 0.3, x: fromRight ? 120 : -120, scale: 0.85, rotateY: fromRight ? -8 : 8 }}
+      initial={{ opacity: 0, x: fromRight ? 80 : -80, scale: 0.92, rotateY: fromRight ? -5 : 5 }}
       whileInView={{ opacity: 1, x: 0, scale: 1, rotateY: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 1.1, delay: index * 0.1, ease: EASE }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 1, delay: index * 0.12, ease: EASE }}
     >
       {/* Golden halo behind card */}
       <motion.div
