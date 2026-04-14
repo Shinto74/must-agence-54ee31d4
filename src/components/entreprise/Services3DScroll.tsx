@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Video, Share2, Rocket, Search } from "lucide-react";
 
@@ -12,6 +12,8 @@ const SERVICES = [
     description:
       "Production de photos et vidéos professionnelles haute définition pour sublimer votre image de marque.",
     chips: ["Photo HD", "Vidéo corporate", "Motion design", "Drone"],
+    // Contextual bg keyword for atmosphere
+    bgGradient: "radial-gradient(ellipse 60% 50% at 70% 30%, hsl(30 40% 60% / 0.06) 0%, transparent 70%)",
   },
   {
     icon: <Share2 size={28} />,
@@ -20,6 +22,7 @@ const SERVICES = [
     description:
       "Gestion professionnelle de vos réseaux sociaux pour fédérer et engager votre communauté.",
     chips: ["Instagram", "TikTok", "LinkedIn", "Planning éditorial"],
+    bgGradient: "radial-gradient(ellipse 55% 45% at 30% 60%, hsl(280 30% 50% / 0.04) 0%, transparent 70%)",
   },
   {
     icon: <Rocket size={28} />,
@@ -28,6 +31,7 @@ const SERVICES = [
     description:
       "Création et pilotage de campagnes ultra-performantes sur Google Ads, Meta Ads et TikTok Ads.",
     chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Retargeting"],
+    bgGradient: "radial-gradient(ellipse 50% 50% at 60% 40%, hsl(20 50% 55% / 0.05) 0%, transparent 70%)",
   },
   {
     icon: <Search size={28} />,
@@ -36,6 +40,7 @@ const SERVICES = [
     description:
       "Optimisation de votre visibilité sur les moteurs de recherche pour attirer un trafic qualifié.",
     chips: ["Audit SEO", "Netlinking", "Content SEO", "Local SEO"],
+    bgGradient: "radial-gradient(ellipse 50% 55% at 40% 50%, hsl(200 30% 50% / 0.04) 0%, transparent 70%)",
   },
 ];
 
@@ -49,19 +54,12 @@ interface CardLayerProps {
 }
 
 const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
-  // Each card occupies a segment of the scroll progress
   const segmentSize = 1 / total;
   const center = (index + 0.5) * segmentSize;
 
-  // Distance from active center: -1 (far behind) to +1 (far ahead)
-  const rawDistance = useTransform(scrollYProgress, (v) => {
-    return (v - center) / segmentSize;
-  });
-
-  // Smooth with spring for inertia
+  const rawDistance = useTransform(scrollYProgress, (v) => (v - center) / segmentSize);
   const distance = useSpring(rawDistance, SPRING_CONFIG);
 
-  // Z translation: active = 0, behind = negative, ahead = positive
   const z = useTransform(distance, [-2, -1, 0, 1, 2], [-600, -300, 0, 200, 400]);
   const scale = useTransform(distance, [-2, -1, 0, 1, 2], [0.5, 0.7, 1, 0.85, 0.6]);
   const opacity = useTransform(distance, [-2, -1, 0, 1, 2], [0, 0.4, 1, 0.5, 0]);
@@ -79,16 +77,38 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
         perspective: "1200px",
       }}
     >
-      {/* Glow behind active card */}
+      {/* ── Multi-layer glow behind card ── */}
+      {/* Primary warm glow */}
       <motion.div
-        className="absolute rounded-[3rem] pointer-events-none"
+        className="absolute rounded-full pointer-events-none"
         style={{
-          width: "min(90vw, 820px)",
-          height: 380,
+          width: "min(95vw, 900px)",
+          height: 500,
           background:
-            "radial-gradient(ellipse 80% 70% at 50% 50%, hsl(43 55% 55% / 0.2) 0%, hsl(43 52% 39% / 0.08) 40%, transparent 72%)",
-          filter: "blur(40px)",
+            "radial-gradient(ellipse 70% 60% at 50% 50%, hsl(43 55% 55% / 0.18) 0%, hsl(43 52% 39% / 0.06) 45%, transparent 72%)",
+          filter: "blur(50px)",
           opacity: glowOpacity,
+        }}
+      />
+      {/* Secondary halo — wider, softer */}
+      <motion.div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: "min(110vw, 1200px)",
+          height: 600,
+          background:
+            "radial-gradient(ellipse 80% 70% at 50% 45%, hsl(35 40% 70% / 0.08) 0%, transparent 65%)",
+          filter: "blur(80px)",
+          opacity: useTransform(glowOpacity, (o) => o * 0.6),
+        }}
+      />
+
+      {/* Contextual atmosphere per service */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: svc.bgGradient,
+          opacity: useTransform(glowOpacity, (o) => o * 0.8),
         }}
       />
 
@@ -109,13 +129,13 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
           className="relative overflow-hidden rounded-[1.5rem] p-8 md:p-10 lg:p-12"
           style={{
             background:
-              "linear-gradient(155deg, hsl(var(--background)) 0%, hsl(var(--card)) 45%, hsl(var(--muted)) 100%)",
+              "linear-gradient(155deg, hsl(40 20% 97%) 0%, hsl(40 15% 95%) 40%, hsl(40 10% 92%) 100%)",
             borderWidth: 1.5,
             borderStyle: "solid",
             borderColor: useTransform(borderOpacity, (o) => `hsl(43 55% 55% / ${o})`),
             boxShadow: useTransform(glowOpacity, (o) =>
               o > 0.3
-                ? `0 40px 100px -20px hsl(43 52% 39% / ${0.28 * o}), 0 0 80px hsl(43 55% 55% / ${0.15 * o}), inset 0 1px 0 hsl(0 0% 100% / 0.15)`
+                ? `0 40px 100px -20px hsl(43 52% 39% / ${0.25 * o}), 0 0 80px hsl(43 55% 55% / ${0.12 * o}), 0 20px 60px -10px hsl(0 0% 0% / ${0.08 * o}), inset 0 1px 0 hsl(0 0% 100% / 0.4)`
                 : "0 4px 12px -8px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)"
             ),
           }}
@@ -131,6 +151,43 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
               scaleX: useTransform(glowOpacity, [0, 1], [0, 1]),
             }}
           />
+
+          {/* Bottom accent line — mirrored */}
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 h-[1px]"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent 15%, hsl(43 55% 55% / 0.15) 50%, transparent 85%)",
+              opacity: glowOpacity,
+            }}
+          />
+
+          {/* Inner subtle grain texture overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.03] rounded-[1.5rem]"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            }}
+          />
+
+          {/* Decorative corner lines — top-right */}
+          <motion.div
+            className="absolute top-6 right-6 pointer-events-none"
+            style={{ opacity: useTransform(glowOpacity, (o) => o * 0.25) }}
+          >
+            <div className="w-12 h-[1px]" style={{ background: "linear-gradient(to left, hsl(43 55% 55% / 0.5), transparent)" }} />
+            <div className="w-[1px] h-12 ml-auto -mt-[1px]" style={{ background: "linear-gradient(to bottom, hsl(43 55% 55% / 0.5), transparent)" }} />
+          </motion.div>
+
+          {/* Decorative corner lines — bottom-left */}
+          <motion.div
+            className="absolute bottom-6 left-6 pointer-events-none"
+            style={{ opacity: useTransform(glowOpacity, (o) => o * 0.2) }}
+          >
+            <div className="w-[1px] h-10" style={{ background: "linear-gradient(to top, hsl(43 55% 55% / 0.4), transparent)" }} />
+            <div className="w-10 h-[1px] -mt-[1px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55% / 0.4), transparent)" }} />
+          </motion.div>
 
           {/* Content */}
           <div className="relative z-10 flex flex-col gap-6 md:flex-row md:gap-8">
@@ -169,7 +226,7 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
               </h3>
               <p
                 className="mb-6 text-sm leading-relaxed md:text-[15px]"
-                style={{ color: "hsl(var(--foreground) / 0.6)" }}
+                style={{ color: "hsl(0 0% 10% / 0.55)" }}
               >
                 {svc.description}
               </p>
@@ -179,8 +236,8 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
                     key={chip}
                     className="rounded-xl px-4 py-2 text-[11px] font-mono font-medium"
                     style={{
-                      background: "hsl(43 55% 55% / 0.14)",
-                      border: "1px solid hsl(43 55% 55% / 0.3)",
+                      background: "hsl(43 55% 55% / 0.12)",
+                      border: "1px solid hsl(43 55% 55% / 0.25)",
                       color: "hsl(43 52% 39%)",
                     }}
                   >
@@ -191,12 +248,21 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
             </div>
           </div>
 
-          {/* Decorative orb */}
+          {/* Decorative orb — top right */}
           <div
-            className="absolute -top-16 -right-16 h-[250px] w-[250px] rounded-full pointer-events-none"
+            className="absolute -top-20 -right-20 h-[300px] w-[300px] rounded-full pointer-events-none"
             style={{
               background:
-                "radial-gradient(circle, hsl(43 55% 55% / 0.12) 0%, transparent 72%)",
+                "radial-gradient(circle, hsl(43 55% 55% / 0.1) 0%, hsl(35 40% 70% / 0.04) 40%, transparent 72%)",
+            }}
+          />
+
+          {/* Decorative orb — bottom left */}
+          <div
+            className="absolute -bottom-16 -left-16 h-[200px] w-[200px] rounded-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, hsl(43 52% 39% / 0.06) 0%, transparent 70%)",
             }}
           />
         </motion.div>
@@ -220,26 +286,114 @@ const ProgressDots = ({
 
   return (
     <div className="fixed right-6 md:right-10 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
-      {SERVICES.map((_, i) => (
-        <motion.div
-          key={i}
-          className="relative w-2.5 h-2.5 rounded-full"
-          style={{
-            background: useTransform(smoothActive, (a) =>
-              Math.abs(a - i) < 0.6 ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0.2)"
-            ),
-            boxShadow: useTransform(smoothActive, (a) =>
-              Math.abs(a - i) < 0.6
-                ? "0 0 12px hsl(43 55% 55% / 0.5)"
-                : "none"
-            ),
-            scale: useTransform(smoothActive, (a) =>
-              Math.abs(a - i) < 0.6 ? 1.4 : 1
-            ),
-          }}
-        />
+      {SERVICES.map((svc, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <motion.div
+            className="relative w-2.5 h-2.5 rounded-full"
+            style={{
+              background: useTransform(smoothActive, (a) =>
+                Math.abs(a - i) < 0.6 ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0.2)"
+              ),
+              boxShadow: useTransform(smoothActive, (a) =>
+                Math.abs(a - i) < 0.6
+                  ? "0 0 12px hsl(43 55% 55% / 0.5)"
+                  : "none"
+              ),
+              scale: useTransform(smoothActive, (a) =>
+                Math.abs(a - i) < 0.6 ? 1.4 : 1
+              ),
+            }}
+          />
+          {/* Service label next to active dot */}
+          <motion.span
+            className="font-mono text-[9px] uppercase tracking-[0.15em] whitespace-nowrap hidden md:block"
+            style={{
+              color: useTransform(smoothActive, (a) =>
+                Math.abs(a - i) < 0.6 ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0)"
+              ),
+              opacity: useTransform(smoothActive, (a) =>
+                Math.abs(a - i) < 0.6 ? 1 : 0
+              ),
+              x: useTransform(smoothActive, (a) =>
+                Math.abs(a - i) < 0.6 ? 0 : -8
+              ),
+            }}
+          >
+            {svc.num}
+          </motion.span>
+        </div>
       ))}
     </div>
+  );
+};
+
+/* ── Decorative floating elements in the viewport ── */
+const AmbientDecorations = ({ scrollYProgress }: { scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"] }) => {
+  const rotate1 = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const rotate2 = useTransform(scrollYProgress, [0, 1], [45, -135]);
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
+
+  return (
+    <>
+      {/* Floating diamond shape — top left */}
+      <motion.div
+        className="absolute top-[15%] left-[8%] w-16 h-16 pointer-events-none opacity-[0.06]"
+        style={{
+          border: "1px solid hsl(43 55% 55%)",
+          rotate: rotate1,
+          y: y1,
+          borderRadius: "4px",
+        }}
+      />
+
+      {/* Floating circle — bottom right */}
+      <motion.div
+        className="absolute bottom-[20%] right-[12%] w-20 h-20 rounded-full pointer-events-none opacity-[0.04]"
+        style={{
+          border: "1px solid hsl(43 55% 55%)",
+          y: y2,
+        }}
+      />
+
+      {/* Thin diagonal line — top right */}
+      <motion.div
+        className="absolute top-[25%] right-[20%] w-[120px] h-[1px] pointer-events-none opacity-[0.06]"
+        style={{
+          background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.4), transparent)",
+          rotate: rotate2,
+          y: y1,
+        }}
+      />
+
+      {/* Small plus sign — left center */}
+      <motion.div
+        className="absolute top-[45%] left-[5%] pointer-events-none opacity-[0.07]"
+        style={{ y: y2, color: "hsl(43 55% 55%)" }}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1">
+          <line x1="8" y1="2" x2="8" y2="14" />
+          <line x1="2" y1="8" x2="14" y2="8" />
+        </svg>
+      </motion.div>
+
+      {/* Dot cluster — bottom left */}
+      <div className="absolute bottom-[30%] left-[15%] pointer-events-none opacity-[0.05]">
+        {[0, 1, 2].map((row) =>
+          [0, 1, 2].map((col) => (
+            <div
+              key={`${row}-${col}`}
+              className="absolute w-1 h-1 rounded-full"
+              style={{
+                background: "hsl(43 55% 55%)",
+                left: col * 8,
+                top: row * 8,
+              }}
+            />
+          ))
+        )}
+      </div>
+    </>
   );
 };
 
@@ -253,20 +407,57 @@ const Services3DScroll = () => {
   return (
     <section id="services" ref={containerRef} className="relative" style={{ height: `${(SERVICES.length + 1) * 100}vh` }}>
       {/* Sticky viewport */}
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden" style={{ perspective: "1200px" }}>
-        {/* Background decorative */}
+      <div
+        className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
+        style={{
+          perspective: "1200px",
+          background: "linear-gradient(180deg, hsl(40 20% 97%) 0%, hsl(38 18% 94%) 40%, hsl(40 15% 96%) 100%)",
+        }}
+      >
+        {/* Full-screen subtle warm gradient atmosphere */}
         <div
-          className="absolute top-40 left-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-30"
+          className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(circle, hsl(43 55% 55% / 0.06) 0%, transparent 60%)",
+              "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 80% / 0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.04) 0%, transparent 55%), radial-gradient(ellipse 50% 40% at 80% 60%, hsl(35 45% 65% / 0.05) 0%, transparent 50%)",
+          }}
+        />
+
+        {/* Vignette edges for cinematic depth */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 50%, hsl(40 20% 97% / 0.6) 100%)",
+          }}
+        />
+
+        {/* Grain texture */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          }}
+        />
+
+        {/* Animated ambient decorations */}
+        <AmbientDecorations scrollYProgress={scrollYProgress} />
+
+        {/* Background decorative orbs */}
+        <div
+          className="absolute top-20 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle, hsl(43 55% 55% / 0.06) 0%, transparent 55%)",
+            filter: "blur(20px)",
           }}
         />
         <div
-          className="absolute bottom-20 right-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-20"
+          className="absolute bottom-10 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
           style={{
             background:
-              "radial-gradient(circle, hsl(43 55% 55% / 0.08) 0%, transparent 60%)",
+              "radial-gradient(circle, hsl(43 55% 55% / 0.05) 0%, transparent 55%)",
+            filter: "blur(20px)",
           }}
         />
 
@@ -293,7 +484,7 @@ const Services3DScroll = () => {
               Services
             </span>
           </div>
-          <h2 className="font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black text-foreground leading-[0.95]">
+          <h2 className="font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[0.95]" style={{ color: "hsl(0 0% 10%)" }}>
             Ce qu'on fait
             <br />
             <span
