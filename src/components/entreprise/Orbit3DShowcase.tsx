@@ -12,11 +12,11 @@ interface Orbit3DShowcaseProps {
   cards: OrbitCard[];
 }
 
-const ORBIT_RADIUS_X = 380; // ellipse width
-const ORBIT_RADIUS_Y = 140; // ellipse depth (perspective)
-const CARD_W = 200;
-const CARD_H = 260;
-const ROTATION_SPEED = 0.0004; // radians per ms — slow & premium
+const ORBIT_RADIUS_X = 520; // ellipse width
+const ORBIT_RADIUS_Y = 180; // ellipse depth (perspective)
+const CARD_W = 280;
+const CARD_H = 360;
+const ROTATION_SPEED = -0.0003; // negative = right to left, slow & premium
 
 const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -70,7 +70,7 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
     <div
       ref={containerRef}
       className="relative flex items-center justify-center"
-      style={{ height: 580, perspective: "1200px" }}
+      style={{ height: 720, perspective: "1200px" }}
     >
       {/* Central logo "M" */}
       <motion.div
@@ -83,18 +83,18 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
         <div
           className="absolute rounded-full pointer-events-none"
           style={{
-            width: 180,
-            height: 180,
+            width: 260,
+            height: 260,
             background: "radial-gradient(circle, hsl(43 55% 55% / 0.15) 0%, hsl(43 55% 55% / 0.05) 50%, transparent 70%)",
-            filter: "blur(20px)",
+            filter: "blur(25px)",
           }}
         />
         {/* Pulsing ring */}
         <motion.div
           className="absolute rounded-full pointer-events-none"
           style={{
-            width: 130,
-            height: 130,
+            width: 180,
+            height: 180,
             border: "1.5px solid hsl(43 55% 55% / 0.2)",
           }}
           animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.15, 0.4] }}
@@ -104,8 +104,8 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
         <div
           className="relative flex items-center justify-center rounded-full"
           style={{
-            width: 100,
-            height: 100,
+            width: 140,
+            height: 140,
             background: "radial-gradient(circle, hsl(var(--card)) 0%, hsl(var(--background)) 100%)",
             border: "1.5px solid hsl(43 55% 55% / 0.35)",
             boxShadow: "0 0 60px hsl(43 55% 55% / 0.12), 0 0 120px hsl(43 55% 55% / 0.06), inset 0 0 30px hsl(43 55% 55% / 0.05)",
@@ -114,7 +114,7 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
           <img
             src={SITE.logoWhite}
             alt="Must Agence"
-            className="h-10 w-auto"
+            className="h-14 w-auto"
             style={{ filter: "drop-shadow(0 0 12px hsl(43 55% 55% / 0.4))" }}
           />
         </div>
@@ -196,11 +196,11 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
                   style={{ background: "linear-gradient(90deg, transparent 10%, hsl(43 55% 75% / 0.3) 50%, transparent 90%)" }}
                 />
                 {/* Text */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
-                  <h4 className="font-clash font-bold text-white text-sm mb-0.5 drop-shadow-lg">
+                <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
+                  <h4 className="font-clash font-bold text-white text-lg mb-1 drop-shadow-lg">
                     {card.name}
                   </h4>
-                  <p className="text-white/55 text-[10px] font-mono tracking-wide">{card.desc}</p>
+                  <p className="text-white/60 text-xs font-mono tracking-wide">{card.desc}</p>
                 </div>
               </div>
             </motion.div>
