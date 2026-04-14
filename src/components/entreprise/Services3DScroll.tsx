@@ -481,9 +481,28 @@ const Services3DScroll = () => {
         className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
         style={{
           perspective: "1200px",
-          background: "linear-gradient(180deg, hsl(40 20% 97%) 0%, hsl(38 18% 94%) 40%, hsl(40 15% 96%) 100%)",
         }}
       >
+        {/* Section background image */}
+        <img
+          src={svcSectionBg}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          loading="lazy"
+          width={1920}
+          height={1080}
+          style={{
+            filter: "blur(6px) saturate(0.5) brightness(1.15)",
+            opacity: 0.25,
+          }}
+        />
+        {/* Light overlay for readability */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "linear-gradient(180deg, hsl(40 20% 97% / 0.82) 0%, hsl(38 18% 94% / 0.75) 40%, hsl(40 15% 96% / 0.85) 100%)",
+          }}
+        />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
