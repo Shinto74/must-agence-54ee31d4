@@ -12,6 +12,7 @@ import sectorBeaute from "@/assets/sector-beaute.jpg";
 import sectorSport from "@/assets/sector-sport.jpg";
 import sectorAutomobile from "@/assets/sector-automobile.jpg";
 import sectorDistribution from "@/assets/sector-distribution.jpg";
+import heroVideoAsset from "@/assets/entreprise-hero-video.mp4.asset.json";
 
 /* ═══ ANIMATION HELPERS ═══ */
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
