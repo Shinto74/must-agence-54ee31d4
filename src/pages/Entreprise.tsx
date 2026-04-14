@@ -550,7 +550,7 @@ const ExpertiseSection = () => {
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.25), transparent)" }} />
 
       <div className="max-w-[1400px] mx-auto">
-        <motion.div {...fadeUp()} className="rv text-center mb-16 md:mb-20">
+        <motion.div {...fadeUp()} className="rv text-center mb-8 md:mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-8 h-[1.5px] bg-burgundy-light" />
             <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-burgundy-light">Expertise terrain</span>
@@ -566,14 +566,19 @@ const ExpertiseSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Desktop: 3D Orbit */}
+        <div className="hidden lg:block">
+          <Orbit3DShowcase cards={SECTORS} />
+        </div>
+
+        {/* Mobile: Grid fallback */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:hidden">
           {SECTORS.map((sector, i) => (
             <motion.div key={sector.name} {...fadeUp(i * 0.08)}
               className="rv group relative rounded-2xl cursor-default transition-all duration-700 overflow-hidden aspect-[4/3]"
               style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}
               whileHover={{ y: -6, borderColor: "hsl(43 55% 55% / 0.3)" }}
             >
-              {/* Image */}
               <img
                 src={sector.img}
                 alt={sector.name}
@@ -582,13 +587,9 @@ const ExpertiseSection = () => {
                 width={800}
                 height={600}
               />
-              {/* Dark overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/90" />
-              {/* Burgundy hover tint */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
                 style={{ background: "linear-gradient(to top, hsl(43 52% 39% / 0.35), transparent 60%)" }} />
-
-              {/* Text */}
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
                 <h3 className="font-clash font-bold text-white text-xl md:text-2xl mb-1 group-hover:text-burgundy-foreground transition-colors duration-500 drop-shadow-lg">
                   {sector.name}
