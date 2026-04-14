@@ -19,6 +19,13 @@ interface ContactSectionProps {
 
 const ContactSection = ({ heading, text, subtext, email, phone, location, whatsappUrl, formOptions }: ContactSectionProps) => {
   const ref = useScrollReveal();
+  const loc = useLocation();
+  const isEntreprise = loc.pathname === "/entreprise";
+  
+  // Dynamic accent color: gold for Entreprise, neon for Artiste
+  const accent = isEntreprise ? "43 55% 55%" : "var(--neon)";
+  const accentDark = isEntreprise ? "43 52% 39%" : "var(--neon)";
+  
   const [form, setForm] = useState({ type: formOptions[0], name: "", email: "", phone: "", budget: "", message: "" });
   const [sending, setSending] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
@@ -49,9 +56,9 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
   const inputBase = "w-full rounded-2xl px-5 py-4 text-sm font-outfit outline-none transition-all duration-500 placeholder:text-foreground/20";
   const getInputStyle = (field: string) => ({
     background: focusField === field ? "hsl(var(--foreground) / 0.07)" : "hsl(var(--foreground) / 0.04)",
-    border: focusField === field ? "1.5px solid hsl(var(--neon) / 0.45)" : "1.5px solid hsl(var(--foreground) / 0.08)",
+    border: focusField === field ? `1.5px solid hsl(${accent} / 0.45)` : "1.5px solid hsl(var(--foreground) / 0.08)",
     color: "hsl(var(--foreground))",
-    boxShadow: focusField === field ? "0 0 30px hsl(var(--neon) / 0.06), inset 0 1px 0 hsl(var(--neon) / 0.05)" : "inset 0 1px 0 hsl(var(--foreground) / 0.03)",
+    boxShadow: focusField === field ? `0 0 30px hsl(${accent} / 0.06), inset 0 1px 0 hsl(${accent} / 0.05)` : "inset 0 1px 0 hsl(var(--foreground) / 0.03)",
   });
 
   const CustomSelect = ({
