@@ -23,11 +23,10 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
   const isInView = useInView(containerRef, { amount: 0.3 });
   const [angle, setAngle] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
   const animRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
 
-  // Animate rotation
+  // Animate rotation — never stops
   useEffect(() => {
     if (!isInView) return;
 
@@ -36,15 +35,13 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
       const delta = time - lastTimeRef.current;
       lastTimeRef.current = time;
 
-      if (!isPaused) {
-        setAngle((prev) => prev + ROTATION_SPEED * delta);
-      }
+      setAngle((prev) => prev + ROTATION_SPEED * delta);
       animRef.current = requestAnimationFrame(animate);
     };
 
     animRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animRef.current);
-  }, [isInView, isPaused]);
+  }, [isInView]);
 
   // Compute card positions
   const cardPositions = useMemo(() => {
