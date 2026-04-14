@@ -19,9 +19,11 @@ const Footer = () => {
     <footer
       className="relative border-t pt-16 pb-8"
       style={{
-        background: isEntreprise ? "hsl(0 0% 8%)" : "hsl(var(--background))",
-        borderColor: isEntreprise ? "hsl(0 0% 15%)" : "hsl(var(--border))",
-        color: isEntreprise ? "hsl(0 0% 100%)" : "hsl(var(--foreground))",
+        background: isEntreprise
+          ? "linear-gradient(180deg, hsl(43 30% 12%) 0%, hsl(43 25% 8%) 100%)"
+          : "hsl(var(--background))",
+        borderColor: isEntreprise ? "hsl(43 55% 55% / 0.2)" : "hsl(var(--border))",
+        color: isEntreprise ? "hsl(40 20% 90%)" : "hsl(var(--foreground))",
       }}
     >
       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(to right, transparent, ${accentBg}, transparent)` }} />
