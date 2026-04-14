@@ -155,13 +155,13 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
           animate={isHovered ? { y: -6 } : { y: 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
           style={{
-            background: "linear-gradient(155deg, hsl(40 20% 97%) 0%, hsl(40 15% 95%) 40%, hsl(40 10% 92%) 100%)",
+            background: "linear-gradient(155deg, hsl(0 0% 100%) 0%, hsl(40 20% 97%) 40%, hsl(40 15% 95%) 100%)",
             borderWidth: 1.5,
             borderStyle: "solid",
             borderColor: useTransform(borderOpacity, (o) => `hsl(43 55% 55% / ${isHovered ? Math.max(o, 0.6) : o})`),
             boxShadow: isHovered
-              ? "0 50px 120px -20px hsl(43 52% 39% / 0.3), 0 0 100px hsl(43 55% 55% / 0.18), 0 25px 70px -10px hsl(0 0% 0% / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
-              : undefined,
+              ? "0 50px 120px -20px rgba(0,0,0,0.5), 0 0 100px hsl(43 55% 55% / 0.15), 0 25px 70px -10px rgba(0,0,0,0.3), inset 0 1px 0 hsl(0 0% 100% / 0.7)"
+              : "0 20px 60px -15px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.15)",
           }}
         >
           {/* Top accent line */}
