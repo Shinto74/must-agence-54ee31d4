@@ -178,9 +178,9 @@ const Header = () => {
 
         {/* CTA right */}
         <div className="hidden md:flex items-center gap-3 ml-auto">
-          <a
-            href="#contact"
-            className="px-5 py-2 rounded-full font-mono text-[10px] uppercase tracking-[0.15em] transition-all duration-300"
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
+            className="px-5 py-2 rounded-full font-mono text-[10px] uppercase tracking-[0.15em] transition-all duration-300 cursor-pointer"
             style={{
               border: `1px solid ${needsDarkText ? "hsla(43, 55%, 55%, 0.35)" : isEntreprise ? "hsl(var(--burgundy-light) / 0.3)" : "hsla(73,100%,50%,0.25)"}`,
               color: needsDarkText ? goldDark : accentColor,
@@ -198,7 +198,7 @@ const Header = () => {
             }}
           >
             Contact
-          </a>
+          </button>
         </div>
 
         {/* Mobile toggle */}
@@ -262,16 +262,16 @@ const Header = () => {
             );
           })}
 
-          <a
-            href="#contact"
-            className="mt-4 block w-full text-center py-3 rounded-full font-mono text-xs uppercase tracking-[0.15em]"
+          <button
+            onClick={() => { window.dispatchEvent(new CustomEvent("open-contact-modal")); setMobileOpen(false); }}
+            className="mt-4 block w-full text-center py-3 rounded-full font-mono text-xs uppercase tracking-[0.15em] cursor-pointer"
             style={{
               background: isEntreprise ? gold : "hsl(73 100% 50%)",
               color: "#fff",
             }}
           >
             Contact
-          </a>
+          </button>
         </nav>
       )}
 
