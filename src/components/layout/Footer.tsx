@@ -20,22 +20,22 @@ const Footer = () => {
       className="relative border-t pt-16 pb-8"
       style={{
         background: isEntreprise
-          ? "linear-gradient(180deg, hsl(43 30% 12%) 0%, hsl(43 25% 8%) 100%)"
+          ? "linear-gradient(180deg, hsl(46 70% 38%) 0%, hsl(44 65% 32%) 100%)"
           : "hsl(var(--background))",
-        borderColor: isEntreprise ? "hsl(43 55% 55% / 0.2)" : "hsl(var(--border))",
-        color: isEntreprise ? "hsl(40 20% 90%)" : "hsl(var(--foreground))",
+        borderColor: isEntreprise ? "hsl(44 60% 28%)" : "hsl(var(--border))",
+        color: isEntreprise ? "hsl(45 30% 95%)" : "hsl(var(--foreground))",
       }}
     >
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(to right, transparent, ${accentBg}, transparent)` }} />
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: isEntreprise ? "linear-gradient(to right, transparent, hsl(45 80% 60% / 0.5), transparent)" : `linear-gradient(to right, transparent, ${accentBg}, transparent)` }} />
 
       <div className="max-w-[1400px] mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-4">
               <img src={SITE.logoWhite} alt={SITE.name} className="h-9 w-auto" />
-              <span className="font-clash font-bold text-xl" style={{ color: isEntreprise ? "#fff" : "hsl(var(--foreground))" }}>MUST AGENCE</span>
+              <span className="font-clash font-bold text-xl" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : "hsl(var(--foreground))" }}>MUST AGENCE</span>
             </div>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: isEntreprise ? "hsl(0 0% 55%)" : "hsl(var(--muted-foreground))" }}>
+            <p className="text-sm leading-relaxed mb-6" style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}>
               Agence d'influence spécialisée musique et marques. Paris, France.
             </p>
             <div className="flex gap-3">
@@ -51,15 +51,15 @@ const Footer = () => {
                   className="w-9 h-9 rounded-full border flex items-center justify-center font-mono text-[10px] transition-all duration-300"
                   style={{
                     borderColor: isEntreprise ? "hsl(0 0% 22%)" : "hsl(var(--border))",
-                    color: isEntreprise ? "hsl(0 0% 50%)" : "hsl(var(--muted-foreground))",
+                    color: isEntreprise ? "hsl(45 20% 78%)" : "hsl(var(--muted-foreground))",
                   }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.color = accentColor;
                     (e.currentTarget as HTMLElement).style.borderColor = accentBorder;
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(0 0% 50%)" : "";
-                    (e.currentTarget as HTMLElement).style.borderColor = isEntreprise ? "hsl(0 0% 22%)" : "hsl(var(--border))";
+                    (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 78%)" : "";
+                    (e.currentTarget as HTMLElement).style.borderColor = isEntreprise ? "hsl(45 50% 45%)" : "hsl(var(--border))";
                   }}
                 >
                   {s.label}
@@ -69,7 +69,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: accentColor }}>Navigation</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : accentColor }}>Navigation</p>
             <nav className="flex flex-col gap-2.5">
               {[
                 { label: "Accueil", to: "/" },
@@ -80,9 +80,9 @@ const Footer = () => {
                   key={item.to}
                   to={item.to}
                   className="text-sm transition-colors duration-300 w-fit"
-                  style={{ color: isEntreprise ? "hsl(0 0% 55%)" : "hsl(var(--muted-foreground))" }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "#fff" : "hsl(var(--foreground))"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(0 0% 55%)" : ""; }}
+                  style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 30% 97%)" : "hsl(var(--foreground))"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
                 >
                   {item.label}
                 </Link>
@@ -91,13 +91,13 @@ const Footer = () => {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: accentColor }}>Contact</p>
-            <div className="flex flex-col gap-2.5 text-sm" style={{ color: isEntreprise ? "hsl(0 0% 55%)" : "hsl(var(--muted-foreground))" }}>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : accentColor }}>Contact</p>
+            <div className="flex flex-col gap-2.5 text-sm" style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}>
               <a
                 href={`mailto:${SITE.contact.email}`}
                 className="transition-colors duration-300"
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(0 0% 55%)" : ""; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
               >
                 {SITE.contact.email}
               </a>
@@ -105,7 +105,7 @@ const Footer = () => {
                 href={`tel:${SITE.contact.phone}`}
                 className="transition-colors duration-300"
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(0 0% 55%)" : ""; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
               >
                 {SITE.contact.phone}
               </a>
@@ -114,11 +114,11 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: `1px solid ${isEntreprise ? "hsl(43 55% 55% / 0.15)" : "hsl(var(--border))"}` }}>
-          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(43 55% 55% / 0.5)" : "hsl(var(--muted-foreground) / 0.6)" }}>
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: `1px solid ${isEntreprise ? "hsl(45 40% 28%)" : "hsl(var(--border))"}` }}>
+          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(45 20% 70%)" : "hsl(var(--muted-foreground) / 0.6)" }}>
             © {new Date().getFullYear()} {SITE.name} — Tous droits réservés.
           </p>
-          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(43 55% 55% / 0.35)" : "hsl(var(--muted-foreground) / 0.4)" }}>
+          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(45 20% 62%)" : "hsl(var(--muted-foreground) / 0.4)" }}>
             Fait avec précision à Paris.
           </p>
         </div>
