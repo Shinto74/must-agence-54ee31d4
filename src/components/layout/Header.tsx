@@ -25,6 +25,9 @@ const Header = () => {
   }, [location.pathname]);
 
   const isArtiste = location.pathname === "/artiste";
+  const isEntreprise = location.pathname === "/entreprise";
+  const accentHsl = isEntreprise ? "var(--burgundy-light)" : "73 100% 50%";
+  const accentHslFull = isEntreprise ? "hsl(var(--burgundy-light))" : "hsl(73 100% 50%)";
 
   return (
     <header
