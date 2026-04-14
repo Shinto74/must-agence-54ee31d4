@@ -159,6 +159,28 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
             }}
           />
 
+          {/* Contextual background image — heavily blurred atmosphere */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.5rem]">
+            <img
+              src={svc.bgImage}
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{
+                filter: "blur(25px) saturate(0.4)",
+                opacity: 0.08,
+                transform: "scale(1.15)",
+              }}
+            />
+            {/* Light overlay for readability */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(155deg, hsl(40 20% 97% / 0.88) 0%, hsl(40 15% 95% / 0.82) 50%, hsl(40 10% 92% / 0.9) 100%)",
+              }}
+            />
+          </div>
+
           {/* Bottom accent line — mirrored */}
           <motion.div
             className="absolute bottom-0 left-0 right-0 h-[1px]"
