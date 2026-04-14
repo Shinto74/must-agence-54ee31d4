@@ -20,9 +20,16 @@ const Header = () => {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 40);
-      // Hide on scroll down, show on scroll up (only after 100px)
+
       if (y > 100) {
-        setHidden(y > lastScrollY.current && y - lastScrollY.current > 5);
+        if (y > lastScrollY.current + 5) {
+          // Scrolling DOWN → hide
+          setHidden(true);
+        } else if (y < lastScrollY.current - 3) {
+          // Scrolling UP → show and stay visible
+          setHidden(false);
+        }
+        // If difference is tiny (stopped scrolling), keep current state
       } else {
         setHidden(false);
       }
