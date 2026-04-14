@@ -201,36 +201,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
             {subtext}
           </motion.p>
 
-          {/* CTA Button — opens modal */}
-          <motion.button
-            onClick={() => setModalOpen(true)}
-            className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold cursor-pointer relative overflow-hidden mb-14"
-            style={{
-              background: isEntreprise
-                ? `linear-gradient(135deg, hsl(${accentDark}), hsl(${accent}))`
-                : "hsl(var(--primary))",
-              color: isEntreprise ? "#fff" : "hsl(var(--primary-foreground))",
-              boxShadow: `0 0 40px hsl(${accent} / 0.2), 0 8px 30px hsla(0,0%,0%,0.2)`,
-            }}
-            whileHover={{ y: -3, boxShadow: `0 0 60px hsl(${accent} / 0.35), 0 12px 40px hsla(0,0%,0%,0.3)`, scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-            viewport={{ once: true }}
-          >
-            {/* Shimmer */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(105deg, transparent 40%, hsla(0,0%,100%,0.15) 50%, transparent 60%)" }}
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-            />
-            <span className="relative z-10 flex items-center gap-3">
-              Contactez-nous
-              <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-            </span>
-          </motion.button>
+          <div className="mb-14" />
 
           {/* Contact info row */}
           <motion.div
