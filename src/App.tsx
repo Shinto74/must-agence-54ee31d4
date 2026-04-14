@@ -16,7 +16,6 @@ import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import NotFound from "./pages/NotFound";
 
-
 const queryClient = new QueryClient();
 
 const AnimatedRoutes = () => {
@@ -46,7 +45,6 @@ const AnimatedRoutes = () => {
       <Routes location={location}>
         <Route path="/artiste" element={<Artiste />} />
         <Route path="/entreprise" element={<Entreprise />} />
-        
         <Route path="*" element={<NotFound />} />
       </Routes>
     </PageTransition>
@@ -70,6 +68,12 @@ const AppShell = () => {
   );
 };
 
+const RouteAwareLoader = ({ onComplete }: { onComplete: () => void }) => {
+  const location = useLocation();
+  const isEntreprise = location.pathname === "/entreprise";
+  return <InitialLoader onComplete={onComplete} theme={isEntreprise ? "gold" : "neon"} />;
+};
+
 const App = () => {
   const [loaded, setLoaded] = useState(false);
   const handleLoaded = useCallback(() => setLoaded(true), []);
@@ -79,8 +83,8 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        {!loaded && <InitialLoader onComplete={handleLoaded} />}
         <BrowserRouter>
+          {!loaded && <RouteAwareLoader onComplete={handleLoaded} />}
           <AppShell />
         </BrowserRouter>
       </TooltipProvider>
