@@ -189,13 +189,13 @@ const EntrepriseHero = () => {
 
 /* ═══ MARQUEE SEPARATOR ═══ */
 const MarqueeSep = () => (
-  <div className="overflow-hidden py-8" style={{ borderTop: "1px solid hsl(var(--border))", borderBottom: "1px solid hsl(var(--border))" }}>
-    <div className="flex gap-16 animate-mq whitespace-nowrap">
+  <div className="overflow-hidden py-10" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.1)", borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
+    <div className="flex gap-14 animate-mq whitespace-nowrap">
       {[...Array(3)].flatMap((_, i) =>
-        ["CONTENU", "SOCIAL MEDIA", "ADS", "SEO", "STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING"].map((w, j) => (
-          <span key={`${i}-${j}`} className="font-clash text-sm md:text-base font-semibold tracking-[0.15em] text-foreground/10 uppercase flex items-center gap-6">
+        ["STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING", "CONTENU", "SOCIAL MEDIA", "ADS", "SEO"].map((w, j) => (
+          <span key={`${i}-${j}`} className="font-clash text-base md:text-lg font-bold tracking-[0.2em] uppercase flex items-center gap-8" style={{ color: "hsl(43 52% 39% / 0.55)" }}>
             {w}
-            <span className="w-1.5 h-1.5 rounded-full bg-burgundy-light/50" />
+            <span className="w-2 h-2 rounded-full" style={{ background: "hsl(43 55% 55%)" }} />
           </span>
         ))
       )}
