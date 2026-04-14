@@ -5,6 +5,7 @@ import {
   Video, Share2, Rocket, Search, ArrowRight, ChevronRight,
 } from "lucide-react";
 import ContactSection from "@/components/home/ContactSection";
+import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
 import sectorGastronomie from "@/assets/sector-gastronomie.jpg";
 import sectorHotellerie from "@/assets/sector-hotellerie.jpg";
