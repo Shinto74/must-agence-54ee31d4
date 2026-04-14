@@ -245,6 +245,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
   const cardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const isInView = useInView(cardRef, { once: true, margin: "-15%" });
+  const isLit = isInView || isHovered;
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current) return;
@@ -284,14 +286,14 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
         <div
           className="relative p-8 md:p-10 lg:p-12"
           style={{
-            background: isHovered
+            background: isLit
               ? "linear-gradient(145deg, hsl(40 20% 96%) 0%, hsl(43 25% 93%) 100%)"
               : "linear-gradient(145deg, hsl(40 15% 96%) 0%, hsl(40 10% 94%) 100%)",
-            border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.35)" : "hsl(var(--foreground) / 0.07)"}`,
-            boxShadow: isHovered
+            border: `1px solid ${isLit ? "hsl(43 55% 55% / 0.35)" : "hsl(var(--foreground) / 0.07)"}`,
+            boxShadow: isLit
               ? "0 30px 60px -15px hsl(43 52% 39% / 0.2), 0 0 50px hsl(43 55% 55% / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
               : "0 4px 20px -5px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
-            transition: "all 0.6s cubic-bezier(0.03,0.98,0.52,0.99)",
+            transition: "all 0.8s cubic-bezier(0.03,0.98,0.52,0.99)",
           }}
         >
           {/* Spotlight follow cursor */}
@@ -308,7 +310,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
           <div
             className="absolute -top-16 -right-16 w-[200px] h-[200px] rounded-full pointer-events-none transition-all duration-700"
             style={{
-              background: `radial-gradient(circle, hsl(43 55% 55% / ${isHovered ? 0.12 : 0.04}) 0%, transparent 70%)`,
+              background: `radial-gradient(circle, hsl(43 55% 55% / ${isLit ? 0.12 : 0.04}) 0%, transparent 70%)`,
               transform: `translate(${tilt.y * 2}px, ${tilt.x * -2}px)`,
             }}
           />
@@ -317,10 +319,10 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
           <div
             className="absolute top-0 left-8 right-8 h-[2px] rounded-full transition-all duration-700"
             style={{
-              background: isHovered
+              background: isLit
                 ? "linear-gradient(90deg, transparent, hsl(43 55% 55%), hsl(43 60% 70%), hsl(43 55% 55%), transparent)"
                 : "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.15), transparent)",
-              opacity: isHovered ? 1 : 0.5,
+              opacity: isLit ? 1 : 0.5,
             }}
           />
 
@@ -330,19 +332,19 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
               <motion.div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center relative"
                 style={{
-                  background: isHovered
+                  background: isLit
                     ? "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))"
                     : "hsl(43 52% 39% / 0.1)",
-                  border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.5)" : "hsl(43 55% 55% / 0.15)"}`,
-                  color: isHovered ? "#fff" : "hsl(43 55% 55%)",
-                  boxShadow: isHovered ? "0 8px 30px hsl(43 52% 39% / 0.3), 0 0 20px hsl(43 55% 55% / 0.15)" : "none",
-                  transition: "all 0.5s cubic-bezier(0.03,0.98,0.52,0.99)",
+                  border: `1px solid ${isLit ? "hsl(43 55% 55% / 0.5)" : "hsl(43 55% 55% / 0.15)"}`,
+                  color: isLit ? "#fff" : "hsl(43 55% 55%)",
+                  boxShadow: isLit ? "0 8px 30px hsl(43 52% 39% / 0.3), 0 0 20px hsl(43 55% 55% / 0.15)" : "none",
+                  transition: "all 0.6s cubic-bezier(0.03,0.98,0.52,0.99)",
                   transform: `translateZ(${isHovered ? 30 : 0}px)`,
                 }}
               >
                 {svc.icon}
-                {/* Pulse ring on hover */}
-                {isHovered && (
+                {/* Pulse ring when lit */}
+                {isLit && (
                   <motion.div
                     className="absolute inset-0 rounded-2xl"
                     style={{ border: "2px solid hsl(43 55% 55% / 0.4)" }}
@@ -355,8 +357,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
               <span
                 className="font-clash text-3xl md:text-4xl font-black transition-colors duration-500"
                 style={{
-                  color: isHovered ? "hsl(43 55% 55%)" : "hsl(var(--foreground) / 0.08)",
-                  textShadow: isHovered ? "0 0 30px hsl(43 55% 55% / 0.3)" : "none",
+                  color: isLit ? "hsl(43 55% 55%)" : "hsl(var(--foreground) / 0.08)",
+                  textShadow: isLit ? "0 0 30px hsl(43 55% 55% / 0.3)" : "none",
                   transform: `translateZ(${isHovered ? 20 : 0}px)`,
                 }}
               >
@@ -369,7 +371,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
               <h3
                 className="font-clash font-black text-xl md:text-2xl mb-3 transition-all duration-500"
                 style={{
-                  color: isHovered ? "hsl(43 52% 39%)" : "hsl(var(--foreground))",
+                  color: isLit ? "hsl(43 52% 39%)" : "hsl(var(--foreground))",
                 }}
               >
                 {svc.title}
@@ -381,13 +383,13 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
                     key={chip}
                     className="px-4 py-2 rounded-xl text-[11px] font-mono font-medium transition-all duration-500"
                     style={{
-                      background: isHovered ? "hsl(43 55% 55% / 0.12)" : "hsl(var(--foreground) / 0.03)",
-                      border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.25)" : "hsl(var(--foreground) / 0.06)"}`,
-                      color: isHovered ? "hsl(43 52% 39%)" : "hsl(var(--foreground) / 0.45)",
+                      background: isLit ? "hsl(43 55% 55% / 0.12)" : "hsl(var(--foreground) / 0.03)",
+                      border: `1px solid ${isLit ? "hsl(43 55% 55% / 0.25)" : "hsl(var(--foreground) / 0.06)"}`,
+                      color: isLit ? "hsl(43 52% 39%)" : "hsl(var(--foreground) / 0.45)",
                       transform: `translateZ(${isHovered ? 10 : 0}px)`,
                     }}
                     initial={false}
-                    animate={isHovered ? { y: 0, opacity: 1 } : { y: 0, opacity: 1 }}
+                    animate={isLit ? { y: 0, opacity: 1 } : { y: 0, opacity: 1 }}
                   >
                     {chip}
                   </motion.span>
