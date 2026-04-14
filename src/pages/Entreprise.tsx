@@ -226,7 +226,7 @@ const FinalCta = () => {
         style={{ background: "hsl(var(--burgundy))" }}
         initial={{ opacity: 0, scale: 0.96 }}
         animate={inView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.8, ease: EASE }}
       >
         {/* Glow effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full blur-[100px] pointer-events-none"
