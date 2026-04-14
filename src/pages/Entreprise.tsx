@@ -114,7 +114,7 @@ const EntrepriseHero = () => {
         >
           Une stratégie digitale
           <br />
-          <span className="text-burgundy-light" style={{ textShadow: "0 0 40px hsl(var(--burgundy) / 0.5)" }}>pensée pour performer</span>
+          <span className="text-burgundy-light" style={{ textShadow: "0 0 40px hsl(43 55% 55% / 0.5)" }}>pensée pour performer</span>
         </motion.h1>
 
         <motion.p
@@ -136,13 +136,13 @@ const EntrepriseHero = () => {
           <motion.a href="#contact"
             className="group inline-flex items-center gap-3 px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500"
             style={{
-              background: "hsl(var(--burgundy))",
+              background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
               color: "#fff",
-              boxShadow: "0 0 0 1px hsl(var(--burgundy-light) / 0.3), 0 8px 30px hsl(var(--burgundy) / 0.25)",
+              boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.3), 0 8px 30px hsl(43 52% 39% / 0.25)",
             }}
             whileHover={{
               y: -2,
-              boxShadow: "0 0 0 1px hsl(var(--burgundy-light) / 0.5), 0 12px 50px hsl(var(--burgundy) / 0.4), 0 0 80px hsl(var(--burgundy) / 0.15)",
+              boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.5), 0 12px 50px hsl(43 52% 39% / 0.4), 0 0 80px hsl(43 55% 55% / 0.15)",
             }}
             whileTap={{ scale: 0.97 }}
           >
@@ -433,7 +433,7 @@ const ReferencesSection = () => {
   );
 };
 
-/* ═══ CTA FINAL — IMMERSIVE BURGUNDY ═══ */
+/* ═══ CTA FINAL — IMMERSIVE GOLD ═══ */
 const FinalCta = () => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
@@ -442,16 +442,16 @@ const FinalCta = () => {
     <section ref={ref} className="py-20 px-6">
       <motion.div
         className="max-w-[1400px] mx-auto rounded-[2rem] px-8 md:px-16 py-20 md:py-28 text-center relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, hsl(var(--burgundy-dark)), hsl(var(--burgundy)), hsl(var(--burgundy-dark)))" }}
+        style={{ background: "linear-gradient(135deg, hsl(43 60% 22%), hsl(43 52% 39%), hsl(43 60% 22%))" }}
         initial={{ opacity: 0, y: 40, scale: 0.97 }}
         animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
         transition={{ duration: 1, ease: EASE }}
       >
         {/* Glow effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full blur-[120px] pointer-events-none"
-          style={{ background: "hsl(var(--burgundy-light) / 0.2)" }} />
+          style={{ background: "hsl(43 55% 55% / 0.25)" }} />
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[200px] rounded-full blur-[100px] pointer-events-none"
-          style={{ background: "hsl(var(--burgundy-light) / 0.1)" }} />
+          style={{ background: "hsl(43 55% 55% / 0.15)" }} />
         {/* Grain */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
           style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
@@ -475,12 +475,12 @@ const FinalCta = () => {
             className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold transition-all duration-500"
             style={{
               background: "#fff",
-              color: "hsl(var(--burgundy))",
+              color: "hsl(43 52% 39%)",
               boxShadow: "0 0 0 1px rgba(255,255,255,0.2), 0 8px 40px rgba(0,0,0,0.3)",
             }}
             whileHover={{
               y: -3,
-              boxShadow: "0 0 0 1px rgba(255,255,255,0.4), 0 16px 60px rgba(0,0,0,0.4), 0 0 80px rgba(255,255,255,0.1)",
+              boxShadow: "0 0 0 1px rgba(255,255,255,0.4), 0 16px 60px rgba(0,0,0,0.4), 0 0 80px hsl(43 55% 55% / 0.2)",
               scale: 1.02,
             }}
             whileTap={{ scale: 0.97 }}
