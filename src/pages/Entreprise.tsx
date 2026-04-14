@@ -6,11 +6,12 @@ import ContactSection from "@/components/home/ContactSection";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
 
 /* ═══ ANIMATION HELPERS ═══ */
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] },
+  transition: { duration: 0.8, delay, ease: EASE },
 });
 
 /* ═══ HERO ═══ */
