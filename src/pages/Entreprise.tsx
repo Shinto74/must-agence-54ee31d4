@@ -133,8 +133,9 @@ const EntrepriseHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.55, ease: EASE }}
         >
-          <motion.a href="#contact"
-            className="group inline-flex items-center gap-3 px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500"
+          <motion.button
+            onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
+            className="group inline-flex items-center gap-3 px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 cursor-pointer"
             style={{
               background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
               color: "#fff",
@@ -148,7 +149,7 @@ const EntrepriseHero = () => {
           >
             Demander un audit gratuit
             <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-          </motion.a>
+          </motion.button>
           <motion.a href="#services"
             className="group px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-white/60 hover:text-white"
             style={{ border: "1px solid rgba(255,255,255,0.2)" }}
@@ -714,8 +715,9 @@ const FinalCta = () => {
             Stratégie sur-mesure, exécution premium et résultats mesurables.
             Chaque projet est une mission.
           </p>
-          <motion.a href="#contact"
-            className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold transition-all duration-500"
+          <motion.button
+            onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
+            className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold transition-all duration-500 cursor-pointer"
             style={{
               background: "#fff",
               color: "hsl(43 52% 39%)",
@@ -730,7 +732,7 @@ const FinalCta = () => {
           >
             Contactez-nous
             <ChevronRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-          </motion.a>
+          </motion.button>
         </motion.div>
       </motion.div>
     </section>
