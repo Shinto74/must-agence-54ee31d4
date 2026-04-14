@@ -292,156 +292,189 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
         </div>
       </section>
 
-      {/* ═══ CONTACT MODAL ═══ */}
+      {/* ═══ CONTACT MODAL — PREMIUM ═══ */}
       <AnimatePresence>
         {modalOpen && (
           <motion.div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.35 }}
           >
             {/* Backdrop */}
             <motion.div
               className="absolute inset-0"
-              style={{ background: "hsla(0,0%,0%,0.65)", backdropFilter: "blur(8px)" }}
+              style={{ background: "hsla(0,0%,0%,0.7)", backdropFilter: "blur(12px)" }}
               onClick={() => setModalOpen(false)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
 
-            {/* Modal */}
+            {/* Modal card */}
             <motion.div
-              className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl z-10"
+              className="relative w-full max-w-[520px] max-h-[92vh] overflow-y-auto z-10"
               style={{
-                background: isEntreprise ? "hsl(40 20% 97%)" : "hsl(var(--card))",
-                border: `1px solid hsl(${accent} / 0.15)`,
-                boxShadow: `0 40px 100px hsla(0,0%,0%,0.5), 0 0 60px hsl(${accent} / 0.1)`,
+                borderRadius: "28px",
+                background: isEntreprise
+                  ? "linear-gradient(180deg, hsl(40 25% 97%) 0%, hsl(40 20% 95%) 100%)"
+                  : "linear-gradient(180deg, hsl(0 0% 13%) 0%, hsl(0 0% 10%) 100%)",
+                border: `1px solid hsl(${accent} / 0.2)`,
+                boxShadow: `0 50px 100px -20px hsla(0,0%,0%,0.6), 0 0 80px hsl(${accent} / 0.08), inset 0 1px 0 ${isEntreprise ? "hsl(0 0% 100% / 0.6)" : "hsl(0 0% 100% / 0.06)"}`,
               }}
-              initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 5 }}
-              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-              exit={{ opacity: 0, y: 30, scale: 0.97 }}
-              transition={{ duration: 0.4, ease: EASE }}
+              initial={{ opacity: 0, y: 60, scale: 0.92 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 40, scale: 0.95 }}
+              transition={{ duration: 0.45, ease: EASE }}
             >
-              {/* Top accent line */}
+              {/* Top gold/neon accent bar */}
               <div
-                className="h-[2px] w-full rounded-t-3xl"
-                style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${accent} / 0.6) 50%, transparent 90%)` }}
+                className="h-[3px] w-full"
+                style={{
+                  borderRadius: "28px 28px 0 0",
+                  background: `linear-gradient(90deg, transparent 5%, hsl(${accent}) 30%, hsl(${accent}) 70%, transparent 95%)`,
+                }}
               />
 
               {/* Close button */}
               <motion.button
                 onClick={() => setModalOpen(false)}
-                className="absolute top-4 right-4 w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer z-20"
+                className="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer z-20"
                 style={{
-                  background: "hsl(var(--foreground) / 0.05)",
-                  border: "1px solid hsl(var(--foreground) / 0.08)",
-                  color: "hsl(var(--foreground) / 0.4)",
+                  background: isEntreprise ? "hsl(0 0% 0% / 0.05)" : "hsl(0 0% 100% / 0.06)",
+                  border: `1px solid ${isEntreprise ? "hsl(0 0% 0% / 0.08)" : "hsl(0 0% 100% / 0.08)"}`,
+                  color: isEntreprise ? "hsl(0 0% 0% / 0.35)" : "hsl(0 0% 100% / 0.35)",
                 }}
-                whileHover={{ background: "hsl(var(--foreground) / 0.1)", color: "hsl(var(--foreground) / 0.8)", scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{
+                  background: isEntreprise ? "hsl(0 0% 0% / 0.1)" : "hsl(0 0% 100% / 0.12)",
+                  color: isEntreprise ? "hsl(0 0% 0% / 0.8)" : "hsl(0 0% 100% / 0.8)",
+                  scale: 1.08,
+                }}
+                whileTap={{ scale: 0.92 }}
               >
                 <X size={18} />
               </motion.button>
 
-              <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-4">
+              <form onSubmit={handleSubmit} className="p-7 md:p-9 space-y-5">
                 {/* Header */}
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles size={14} style={{ color: `hsl(${accent} / 0.6)` }} />
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
-                    Formulaire de contact
-                  </span>
-                </div>
+                <motion.div
+                  className="mb-3"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15, duration: 0.4, ease: EASE }}
+                >
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `hsl(${accent} / 0.1)` }}>
+                      <Sparkles size={14} style={{ color: `hsl(${accent})` }} />
+                    </div>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.25em] font-medium" style={{ color: `hsl(${accent})` }}>
+                      Formulaire de contact
+                    </span>
+                  </div>
+                  <h3 className="font-clash font-bold text-xl" style={{ color: isEntreprise ? "hsl(0 0% 15%)" : "hsl(0 0% 95%)" }}>
+                    Parlons de votre projet
+                  </h3>
+                </motion.div>
 
-                {/* Type select */}
-                <CustomSelect
-                  value={form.type} options={formOptions} open={selectOpen} setOpen={setSelectOpen}
-                  onChange={v => setForm({ ...form, type: v })} placeholder="Type de projet" field="type"
-                />
-
-                {/* Name + Email */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <motion.input
-                    type="text" placeholder="Votre nom" value={form.name}
-                    onChange={e => setForm({ ...form, name: e.target.value })}
-                    onFocus={() => setFocusField("name")} onBlur={() => setFocusField(null)}
-                    required className={inputBase} style={getInputStyle("name")}
-                    whileFocus={{ scale: 1.01 }}
-                    transition={{ duration: 0.2 }}
-                  />
-                  <motion.input
-                    type="email" placeholder="Votre email" value={form.email}
-                    onChange={e => setForm({ ...form, email: e.target.value })}
-                    onFocus={() => setFocusField("email")} onBlur={() => setFocusField(null)}
-                    required className={inputBase} style={getInputStyle("email")}
-                    whileFocus={{ scale: 1.01 }}
-                    transition={{ duration: 0.2 }}
-                  />
-                </div>
-
-                {/* Phone */}
-                <motion.input
-                  type="tel" placeholder="Votre téléphone" value={form.phone}
-                  onChange={e => setForm({ ...form, phone: e.target.value })}
-                  onFocus={() => setFocusField("phone")} onBlur={() => setFocusField(null)}
-                  className={inputBase} style={getInputStyle("phone")}
-                  whileFocus={{ scale: 1.01 }}
-                  transition={{ duration: 0.2 }}
-                />
-
-                {/* Budget */}
-                <CustomSelect
-                  value={form.budget} options={budgetOptions} open={budgetOpen} setOpen={setBudgetOpen}
-                  onChange={v => setForm({ ...form, budget: v })} placeholder="Sélectionnez un budget" field="budget"
-                />
-
-                {/* Message */}
-                <motion.textarea
-                  placeholder="Décrivez votre projet, vos ambitions..." rows={4} value={form.message}
-                  onChange={e => setForm({ ...form, message: e.target.value })}
-                  onFocus={() => setFocusField("message")} onBlur={() => setFocusField(null)}
-                  required className={`${inputBase} resize-none`} style={getInputStyle("message")}
-                  whileFocus={{ scale: 1.005 }}
-                  transition={{ duration: 0.2 }}
-                />
+                {/* Fields with stagger animation */}
+                {[
+                  { content: (
+                    <CustomSelect
+                      value={form.type} options={formOptions} open={selectOpen} setOpen={setSelectOpen}
+                      onChange={v => setForm({ ...form, type: v })} placeholder="Type de projet" field="type"
+                    />
+                  ), delay: 0.2 },
+                  { content: (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <motion.input
+                        type="text" placeholder="Votre nom" value={form.name}
+                        onChange={e => setForm({ ...form, name: e.target.value })}
+                        onFocus={() => setFocusField("name")} onBlur={() => setFocusField(null)}
+                        required className={inputBase} style={getInputStyle("name")}
+                      />
+                      <motion.input
+                        type="email" placeholder="Votre email" value={form.email}
+                        onChange={e => setForm({ ...form, email: e.target.value })}
+                        onFocus={() => setFocusField("email")} onBlur={() => setFocusField(null)}
+                        required className={inputBase} style={getInputStyle("email")}
+                      />
+                    </div>
+                  ), delay: 0.25 },
+                  { content: (
+                    <motion.input
+                      type="tel" placeholder="Votre téléphone" value={form.phone}
+                      onChange={e => setForm({ ...form, phone: e.target.value })}
+                      onFocus={() => setFocusField("phone")} onBlur={() => setFocusField(null)}
+                      className={inputBase} style={getInputStyle("phone")}
+                    />
+                  ), delay: 0.3 },
+                  { content: (
+                    <CustomSelect
+                      value={form.budget} options={budgetOptions} open={budgetOpen} setOpen={setBudgetOpen}
+                      onChange={v => setForm({ ...form, budget: v })} placeholder="Sélectionnez un budget" field="budget"
+                    />
+                  ), delay: 0.35 },
+                  { content: (
+                    <motion.textarea
+                      placeholder="Décrivez votre projet, vos ambitions..." rows={4} value={form.message}
+                      onChange={e => setForm({ ...form, message: e.target.value })}
+                      onFocus={() => setFocusField("message")} onBlur={() => setFocusField(null)}
+                      required className={`${inputBase} resize-none`} style={getInputStyle("message")}
+                    />
+                  ), delay: 0.4 },
+                ].map((item, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: item.delay, duration: 0.35, ease: EASE }}
+                  >
+                    {item.content}
+                  </motion.div>
+                ))}
 
                 {/* Submit */}
-                <motion.button
-                  type="submit" disabled={sending}
-                  className="w-full mt-2 py-5 font-mono text-sm uppercase tracking-[0.15em] font-bold disabled:opacity-50 group cursor-pointer relative overflow-hidden"
-                  style={{
-                    background: isEntreprise ? `linear-gradient(135deg, hsl(${accentDark}), hsl(${accent}))` : "hsl(var(--primary))",
-                    color: isEntreprise ? "#fff" : "hsl(var(--primary-foreground))",
-                    borderRadius: "16px",
-                    boxShadow: `0 0 30px hsl(${accent} / 0.2)`,
-                    border: "none",
-                  }}
-                  whileHover={{ y: -2, boxShadow: `0 0 50px hsl(${accent} / 0.35), 0 10px 30px hsla(0,0%,0%,0.3)` }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.45, duration: 0.35, ease: EASE }}
                 >
-                  {/* Shimmer */}
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{ background: "linear-gradient(105deg, transparent 40%, hsla(0,0%,100%,0.12) 50%, transparent 60%)" }}
-                    animate={{ x: ["-100%", "200%"] }}
-                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "linear" }}
-                  />
-                  <span className="flex items-center justify-center gap-3 relative z-10">
-                    {sending ? (
-                      <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 1.2, repeat: Infinity }}>
-                        Envoi en cours...
-                      </motion.span>
-                    ) : (
-                      <>
-                        Envoyer ma demande
-                        <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-                      </>
-                    )}
-                  </span>
-                </motion.button>
+                  <motion.button
+                    type="submit" disabled={sending}
+                    className="w-full mt-1 py-5 font-mono text-sm uppercase tracking-[0.15em] font-bold disabled:opacity-50 group cursor-pointer relative overflow-hidden"
+                    style={{
+                      background: isEntreprise ? `linear-gradient(135deg, hsl(${accentDark}), hsl(${accent}))` : "hsl(var(--primary))",
+                      color: isEntreprise ? "#fff" : "hsl(var(--primary-foreground))",
+                      borderRadius: "18px",
+                      boxShadow: `0 8px 30px hsl(${accent} / 0.25), 0 0 0 1px hsl(${accent} / 0.15)`,
+                      border: "none",
+                    }}
+                    whileHover={{ y: -2, boxShadow: `0 12px 40px hsl(${accent} / 0.35), 0 0 60px hsl(${accent} / 0.1)` }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  >
+                    {/* Shimmer */}
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: "linear-gradient(105deg, transparent 40%, hsla(0,0%,100%,0.15) 50%, transparent 60%)" }}
+                      animate={{ x: ["-100%", "200%"] }}
+                      transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "linear" }}
+                    />
+                    <span className="flex items-center justify-center gap-3 relative z-10">
+                      {sending ? (
+                        <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 1.2, repeat: Infinity }}>
+                          Envoi en cours...
+                        </motion.span>
+                      ) : (
+                        <>
+                          Envoyer ma demande
+                          <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+                        </>
+                      )}
+                    </span>
+                  </motion.button>
+                </motion.div>
               </form>
             </motion.div>
           </motion.div>
