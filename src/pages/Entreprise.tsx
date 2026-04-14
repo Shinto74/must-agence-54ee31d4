@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import ContactSection from "@/components/home/ContactSection";
 import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
+import Services3DScroll from "@/components/entreprise/Services3DScroll";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
 import sectorGastronomie from "@/assets/sector-gastronomie.jpg";
 import sectorHotellerie from "@/assets/sector-hotellerie.jpg";
