@@ -106,7 +106,7 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
         style={{
           width: "min(95vw, 900px)",
           height: 500,
-          background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsl(43 55% 55% / 0.18) 0%, hsl(43 52% 39% / 0.06) 45%, transparent 72%)",
+          background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsl(43 55% 55% / 0.12) 0%, hsl(43 52% 39% / 0.04) 45%, transparent 72%)",
           filter: "blur(50px)",
           opacity: glowOpacity,
         }}
@@ -155,13 +155,13 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
           animate={isHovered ? { y: -6 } : { y: 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
           style={{
-            background: "linear-gradient(155deg, hsl(40 20% 97%) 0%, hsl(40 15% 95%) 40%, hsl(40 10% 92%) 100%)",
+            background: "linear-gradient(155deg, hsl(0 0% 100%) 0%, hsl(40 20% 97%) 40%, hsl(40 15% 95%) 100%)",
             borderWidth: 1.5,
             borderStyle: "solid",
             borderColor: useTransform(borderOpacity, (o) => `hsl(43 55% 55% / ${isHovered ? Math.max(o, 0.6) : o})`),
             boxShadow: isHovered
-              ? "0 50px 120px -20px hsl(43 52% 39% / 0.3), 0 0 100px hsl(43 55% 55% / 0.18), 0 25px 70px -10px hsl(0 0% 0% / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
-              : undefined,
+              ? "0 50px 120px -20px rgba(0,0,0,0.5), 0 0 100px hsl(43 55% 55% / 0.15), 0 25px 70px -10px rgba(0,0,0,0.3), inset 0 1px 0 hsl(0 0% 100% / 0.7)"
+              : "0 20px 60px -15px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.15)",
           }}
         >
           {/* Top accent line */}
@@ -212,7 +212,7 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
             )}
           </AnimatePresence>
 
-          {/* Contextual background image */}
+          {/* Contextual background image — very subtle on white card */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.5rem]">
             <img
               src={svc.bgImage}
@@ -220,18 +220,15 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover"
               style={{
-                filter: "blur(12px) saturate(0.6) brightness(1.1)",
-                opacity: isHovered ? 0.45 : 0.35,
+                filter: "blur(14px) saturate(0.4) brightness(1.2)",
+                opacity: isHovered ? 0.2 : 0.12,
                 transform: "scale(1.15)",
                 transition: "opacity 0.6s ease",
               }}
             />
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(155deg, hsl(40 20% 97% / 0.45) 0%, hsl(40 15% 95% / 0.35) 50%, hsl(40 10% 92% / 0.5) 100%)",
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: "linear-gradient(155deg, hsl(0 0% 100% / 0.7) 0%, hsl(40 20% 97% / 0.6) 50%, hsl(0 0% 100% / 0.7) 100%)",
+            }} />
           </div>
 
           {/* Bottom accent line */}
@@ -314,13 +311,13 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
             <div className="flex-1">
               <h3
                 className="mb-3 font-clash text-xl font-black md:text-2xl transition-colors duration-500"
-                style={{ color: isHovered ? "hsl(43 50% 32%)" : "hsl(43 52% 39%)" }}
+                style={{ color: isHovered ? "hsl(0 0% 8%)" : "hsl(0 0% 15%)" }}
               >
                 {svc.title}
               </h3>
               <p
                 className="mb-6 text-sm leading-relaxed md:text-[15px]"
-                style={{ color: "hsl(0 0% 10% / 0.55)" }}
+                style={{ color: "hsl(0 0% 30%)" }}
               >
                 {svc.description}
               </p>
@@ -332,9 +329,9 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
                     animate={isHovered ? { y: -2, scale: 1.03 } : { y: 0, scale: 1 }}
                     transition={{ duration: 0.35, delay: ci * 0.04, ease: EASE }}
                     style={{
-                      background: isHovered ? "hsl(43 55% 55% / 0.18)" : "hsl(43 55% 55% / 0.12)",
-                      border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.4)" : "hsl(43 55% 55% / 0.25)"}`,
-                      color: "hsl(43 52% 39%)",
+                      background: isHovered ? "hsl(43 55% 55% / 0.15)" : "hsl(43 55% 55% / 0.1)",
+                      border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.35)" : "hsl(43 55% 55% / 0.2)"}`,
+                      color: "hsl(0 0% 25%)",
                       transition: "background 0.4s ease, border-color 0.4s ease",
                     }}
                   >
@@ -483,7 +480,12 @@ const Services3DScroll = () => {
           perspective: "1200px",
         }}
       >
-        {/* Section background image */}
+        {/* Dark section background */}
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(180deg, #0e0e0e 0%, #131210 30%, #151311 50%, #131210 70%, #0e0e0e 100%)",
+        }} />
+
+        {/* Background image — darkened */}
         <img
           src={svcSectionBg}
           alt=""
@@ -492,46 +494,45 @@ const Services3DScroll = () => {
           width={1920}
           height={1080}
           style={{
-            filter: "blur(4px) saturate(0.6) brightness(1.05)",
-            opacity: 0.55,
+            filter: "blur(6px) saturate(0.4) brightness(0.3)",
+            opacity: 0.5,
           }}
         />
-        {/* Soft overlay — keeps readability without killing the image */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "linear-gradient(180deg, hsl(40 20% 97% / 0.5) 0%, hsl(38 18% 94% / 0.4) 40%, hsl(40 15% 96% / 0.5) 100%)",
-          }}
-        />
+
         {/* Warm accent glows */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 80% / 0.15) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.06) 0%, transparent 55%)",
-          }}
-        />
-        {/* Soft vignette */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 50%, hsl(40 20% 97% / 0.35) 100%)" }}
-        />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 50% / 0.06) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.04) 0%, transparent 55%)",
+        }} />
+
+        {/* Vignette */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 40%, rgba(0,0,0,0.5) 100%)",
+        }} />
+
         {/* Grain */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.025]"
-          style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          }}
-        />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }} />
+
+        {/* Top fade from cream to dark */}
+        <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none z-10" style={{
+          background: "linear-gradient(to bottom, #FAF9F6, transparent)",
+        }} />
+
+        {/* Bottom fade from dark to cream */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-10" style={{
+          background: "linear-gradient(to top, #FAF9F6, transparent)",
+        }} />
 
         <AmbientDecorations scrollYProgress={scrollYProgress} />
 
         <div
           className="absolute top-20 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.06) 0%, transparent 55%)", filter: "blur(20px)" }}
+          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.05) 0%, transparent 55%)", filter: "blur(20px)" }}
         />
         <div
           className="absolute bottom-10 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.05) 0%, transparent 55%)", filter: "blur(20px)" }}
+          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.04) 0%, transparent 55%)", filter: "blur(20px)" }}
         />
 
         <motion.div
@@ -547,10 +548,10 @@ const Services3DScroll = () => {
               Services
             </span>
           </div>
-          <h2 className="font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[0.95]" style={{ color: "hsl(0 0% 10%)" }}>
+          <h2 className="font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[0.95] text-white">
             Ce qu'on fait
             <br />
-            <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.2)" }}>
+            <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.3)" }}>
               pour vous
             </span>
           </h2>
