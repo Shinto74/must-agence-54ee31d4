@@ -3,7 +3,6 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import {
   Video, Share2, Rocket, Search, ArrowRight, ChevronRight,
-  Sparkles, TrendingUp, Eye, Zap,
 } from "lucide-react";
 import ContactSection from "@/components/home/ContactSection";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
