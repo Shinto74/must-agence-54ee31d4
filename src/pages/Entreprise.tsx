@@ -431,23 +431,11 @@ const ServicesSection = () => {
             </motion.h2>
             <motion.p
               className="rv text-muted-foreground text-sm md:text-[15px] leading-relaxed max-w-sm mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ x: 6, transition: { duration: 0.4 } }}
-              animate={{ x: [0, 4, 0] }}
-              // @ts-ignore
-              transition2={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              animate={{ y: [0, -6, 0, 6, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                className="inline-block"
-              >
-                Chaque service est conçu pour maximiser votre impact digital
-                et générer un retour mesurable.
-              </motion.span>
+              Chaque service est conçu pour maximiser votre impact digital
+              et générer un retour mesurable.
             </motion.p>
             {/* Decorative vertical line */}
             <motion.div
