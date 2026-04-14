@@ -714,8 +714,9 @@ const FinalCta = () => {
             Stratégie sur-mesure, exécution premium et résultats mesurables.
             Chaque projet est une mission.
           </p>
-          <motion.a href="#contact"
-            className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold transition-all duration-500"
+          <motion.button
+            onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
+            className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold transition-all duration-500 cursor-pointer"
             style={{
               background: "#fff",
               color: "hsl(43 52% 39%)",
@@ -730,7 +731,7 @@ const FinalCta = () => {
           >
             Contactez-nous
             <ChevronRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-          </motion.a>
+          </motion.button>
         </motion.div>
       </motion.div>
     </section>
