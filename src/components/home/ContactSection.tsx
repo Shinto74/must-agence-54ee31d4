@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { MessageSquare, Phone, MapPin, Send, ChevronDown, ArrowRight, Sparkles, X } from "lucide-react";
