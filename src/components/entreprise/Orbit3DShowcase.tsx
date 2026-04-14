@@ -157,14 +157,8 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
                 filter: `blur(${finalBlur}px)`,
                 transition: "transform 0.15s linear, opacity 0.3s ease, filter 0.3s ease",
               }}
-              onMouseEnter={() => {
-                setHoveredIndex(index);
-                setIsPaused(true);
-              }}
-              onMouseLeave={() => {
-                setHoveredIndex(null);
-                setIsPaused(false);
-              }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               <div
                 className="w-full h-full rounded-2xl overflow-hidden relative group"
