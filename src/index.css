@@ -123,14 +123,27 @@
     radial-gradient(ellipse 40% 35% at 80% 80%, hsl(var(--neon) / 0.04) 0%, transparent 55%);
 }
 
-/* Entreprise: warm cream/white background */
+/* Entreprise: warm cream/white background with dark text */
 .page-bg--entreprise {
   background-color: #FAF9F6;
+  --background: 40 20% 97%;
+  --foreground: 0 0% 10%;
+  --card: 40 15% 95%;
+  --card-foreground: 0 0% 10%;
+  --muted: 40 10% 90%;
+  --muted-foreground: 0 0% 40%;
+  --border: 0 0% 88%;
+  --input: 0 0% 88%;
+  --sf: 40 15% 94%;
+  --sf2: 40 10% 91%;
+  --bd: 0 0% 85%;
+  --bdl: 0 0% 80%;
+  color: hsl(0 0% 10%);
 }
 .page-bg--entreprise::before {
   background:
-    radial-gradient(ellipse 70% 50% at 70% 0%, hsl(var(--burgundy) / 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 0% 50%, hsl(var(--burgundy) / 0.02) 0%, transparent 50%);
+    radial-gradient(ellipse 70% 50% at 70% 0%, hsl(var(--burgundy) / 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 0% 50%, hsl(var(--burgundy) / 0.03) 0%, transparent 50%);
 }
 .page-bg--entreprise::after {
   content: "";
