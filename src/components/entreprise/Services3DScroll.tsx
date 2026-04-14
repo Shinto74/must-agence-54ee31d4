@@ -5,6 +5,7 @@ import svcBgContent from "@/assets/svc-bg-content.jpg";
 import svcBgSocial from "@/assets/svc-bg-social.jpg";
 import svcBgAds from "@/assets/svc-bg-ads.jpg";
 import svcBgSeo from "@/assets/svc-bg-seo.jpg";
+import svcSectionBg from "@/assets/svc-section-bg.jpg";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
