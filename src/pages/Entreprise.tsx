@@ -245,6 +245,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
   const cardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const isInView = useInView(cardRef, { once: true, margin: "-15%" });
+  const isLit = isInView || isHovered;
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current) return;
