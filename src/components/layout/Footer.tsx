@@ -112,11 +112,11 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: `1px solid ${isEntreprise ? "hsl(0 0% 15%)" : "hsl(var(--border))"}` }}>
-          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(0 0% 35%)" : "hsl(var(--muted-foreground) / 0.6)" }}>
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: `1px solid ${isEntreprise ? "hsl(43 55% 55% / 0.15)" : "hsl(var(--border))"}` }}>
+          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(43 55% 55% / 0.5)" : "hsl(var(--muted-foreground) / 0.6)" }}>
             © {new Date().getFullYear()} {SITE.name} — Tous droits réservés.
           </p>
-          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(0 0% 25%)" : "hsl(var(--muted-foreground) / 0.4)" }}>
+          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(43 55% 55% / 0.35)" : "hsl(var(--muted-foreground) / 0.4)" }}>
             Fait avec précision à Paris.
           </p>
         </div>
