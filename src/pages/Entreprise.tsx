@@ -384,50 +384,90 @@ const ExpertiseSection = () => {
   );
 };
 
-/* ═══ REFERENCES ═══ */
+/* ═══ REFERENCES — PREMIUM SHOWCASE ═══ */
 const REFERENCES = [
-  { name: "Les Grands Buffets", subtitle: "Narbonne" },
-  { name: "Leclerc", subtitle: "Grande distribution" },
-  { name: "Novotel", subtitle: "Hôtellerie" },
-  { name: "Basic-Fit", subtitle: "Sport & Fitness" },
-  { name: "Yamaha", subtitle: "Automobile & Moto" },
+  { name: "Les Grands Buffets", subtitle: "Narbonne", initial: "GB" },
+  { name: "Leclerc", subtitle: "Grande distribution", initial: "LC" },
+  { name: "Novotel", subtitle: "Hôtellerie", initial: "NV" },
+  { name: "Basic-Fit", subtitle: "Sport & Fitness", initial: "BF" },
+  { name: "Yamaha", subtitle: "Automobile & Moto", initial: "YM" },
 ];
 
 const ReferencesSection = () => {
   const ref = useScrollReveal();
   return (
-    <section ref={ref} className="py-28 md:py-36 px-6">
-      <div className="max-w-[1400px] mx-auto text-center">
-        <motion.div {...fadeUp()} className="rv mb-16">
+    <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
+      {/* Top separator */}
+      <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.3), transparent)" }} />
+
+      {/* Background decorative glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full pointer-events-none opacity-30"
+        style={{ background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.08) 0%, transparent 70%)" }} />
+
+      <div className="max-w-[1400px] mx-auto">
+        <motion.div {...fadeUp()} className="rv text-center mb-20">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-8 h-[1.5px] bg-burgundy-light" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-burgundy-light">Références</span>
-            <div className="w-8 h-[1.5px] bg-burgundy-light" />
+            <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, transparent, hsl(43 55% 55%))" }} />
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>Références</span>
+            <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to left, transparent, hsl(43 55% 55%))" }} />
           </div>
-          <h2 className="font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground">
-            Ils nous font <span className="text-burgundy-light">confiance</span>
+          <h2 className="font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
+            Ils nous font <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.3)" }}>confiance</span>
           </h2>
+          <p className="text-muted-foreground text-sm max-w-md mx-auto">
+            Des marques ambitieuses qui ont choisi l'excellence.
+          </p>
         </motion.div>
 
-        <div className="flex flex-wrap justify-center gap-5 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
           {REFERENCES.map((r, i) => (
-            <motion.div key={r.name} {...fadeUp(i * 0.08)}
-              className="rv group px-10 py-8 rounded-2xl transition-all duration-700 cursor-default min-w-[180px]"
-              style={{
-                background: "hsl(var(--foreground) / 0.02)",
-                border: "1px solid hsl(var(--foreground) / 0.06)",
-              }}
+            <motion.div key={r.name} {...fadeUp(i * 0.1)}
+              className="rv group relative rounded-2xl overflow-hidden cursor-default"
+              style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}
               whileHover={{
-                y: -4,
-                borderColor: "hsl(43 55% 55% / 0.25)",
-                boxShadow: "0 12px 40px hsl(43 52% 39% / 0.1)",
+                y: -8,
+                borderColor: "hsl(43 55% 55% / 0.4)",
+                boxShadow: "0 20px 60px hsl(43 52% 39% / 0.15), 0 0 40px hsl(43 55% 55% / 0.08)",
               }}
             >
-              <p className="font-clash font-black text-foreground text-base md:text-lg mb-1">{r.name}</p>
-              <p className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-[0.15em]">{r.subtitle}</p>
+              {/* Hover gold gradient overlay */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{ background: "linear-gradient(180deg, hsl(43 55% 55% / 0.06) 0%, transparent 50%)" }} />
+
+              {/* Top accent bar */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] transition-transform duration-700 origin-left scale-x-0 group-hover:scale-x-100"
+                style={{ background: "linear-gradient(90deg, hsl(43 55% 55%), hsl(43 60% 70%))" }} />
+
+              <div className="relative z-10 p-6 md:p-8 flex flex-col items-center text-center min-h-[160px] justify-center">
+                {/* Initial monogram */}
+                <div className="w-12 h-12 rounded-xl mb-5 flex items-center justify-center font-clash font-black text-lg transition-all duration-500 group-hover:scale-110"
+                  style={{
+                    background: "hsl(43 55% 55% / 0.08)",
+                    color: "hsl(43 55% 55% / 0.6)",
+                    border: "1px solid hsl(43 55% 55% / 0.12)",
+                  }}
+                >
+                  <span className="group-hover:text-[hsl(43_55%_55%)] transition-colors duration-500">{r.initial}</span>
+                </div>
+
+                <p className="font-clash font-bold text-foreground text-sm md:text-base mb-1.5 transition-colors duration-500 group-hover:text-[hsl(43_55%_55%)]">
+                  {r.name}
+                </p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.2em] transition-colors duration-500"
+                  style={{ color: "hsl(43 55% 55% / 0.5)" }}>
+                  {r.subtitle}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Bottom trust indicator */}
+        <motion.div {...fadeUp(0.4)} className="rv mt-14 text-center">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40">
+            + de 150 projets réalisés avec succès
+          </p>
+        </motion.div>
       </div>
     </section>
   );
