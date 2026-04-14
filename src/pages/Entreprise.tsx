@@ -243,9 +243,10 @@ const SERVICES = [
 /* 3D Tilt Card */
 const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const isInView = useInView(cardRef, { once: true, margin: "-15%" });
+  const isInView = useInView(sentinelRef, { once: true, margin: "-50px" });
   const isLit = isInView || isHovered;
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -271,6 +272,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 1, delay: index * 0.15, ease: EASE }}
     >
+      {/* Sentinel for inView detection */}
+      <div ref={sentinelRef} className="absolute top-1/2 left-0 w-0 h-0 pointer-events-none" />
       <motion.div
         className="relative rounded-[1.5rem] overflow-hidden"
         style={{
