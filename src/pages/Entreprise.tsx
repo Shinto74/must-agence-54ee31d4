@@ -15,7 +15,7 @@ import sectorSport from "@/assets/sector-sport.jpg";
 import sectorAutomobile from "@/assets/sector-automobile.jpg";
 import sectorDistribution from "@/assets/sector-distribution.jpg";
 import sydneyHeroAsset from "@/assets/sydney-hero.mp4.asset.json";
-import ctaDarkBg from "@/assets/cta-dark-bg.jpg";
+
 const HERO_VIDEO_URL = sydneyHeroAsset.url;
 
 /* ═══ ANIMATION HELPERS ═══ */
