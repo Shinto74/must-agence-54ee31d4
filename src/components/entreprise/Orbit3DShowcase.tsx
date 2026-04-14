@@ -16,18 +16,17 @@ const ORBIT_RADIUS_X = 520; // ellipse width
 const ORBIT_RADIUS_Y = 180; // ellipse depth (perspective)
 const CARD_W = 280;
 const CARD_H = 360;
-const ROTATION_SPEED = -0.0003; // negative = right to left, slow & premium
+const ROTATION_SPEED = -0.00022; // slow & premium, never stops
 
 const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { amount: 0.3 });
   const [angle, setAngle] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
   const animRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
 
-  // Animate rotation
+  // Animate rotation — never stops
   useEffect(() => {
     if (!isInView) return;
 
@@ -36,15 +35,13 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
       const delta = time - lastTimeRef.current;
       lastTimeRef.current = time;
 
-      if (!isPaused) {
-        setAngle((prev) => prev + ROTATION_SPEED * delta);
-      }
+      setAngle((prev) => prev + ROTATION_SPEED * delta);
       animRef.current = requestAnimationFrame(animate);
     };
 
     animRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animRef.current);
-  }, [isInView, isPaused]);
+  }, [isInView]);
 
   // Compute card positions
   const cardPositions = useMemo(() => {
@@ -160,14 +157,8 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
                 filter: `blur(${finalBlur}px)`,
                 transition: "transform 0.15s linear, opacity 0.3s ease, filter 0.3s ease",
               }}
-              onMouseEnter={() => {
-                setHoveredIndex(index);
-                setIsPaused(true);
-              }}
-              onMouseLeave={() => {
-                setHoveredIndex(null);
-                setIsPaused(false);
-              }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               <div
                 className="w-full h-full rounded-2xl overflow-hidden relative group"
