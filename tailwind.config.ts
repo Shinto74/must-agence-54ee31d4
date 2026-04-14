@@ -52,6 +52,12 @@ export default {
         },
         neon: "hsl(var(--neon))",
         "neon-2": "hsl(var(--neon2))",
+        burgundy: {
+          DEFAULT: "hsl(var(--burgundy))",
+          light: "hsl(var(--burgundy-light))",
+          dark: "hsl(var(--burgundy-dark))",
+          foreground: "hsl(var(--burgundy-fg))",
+        },
         surface: "hsl(var(--sf))",
         "surface-2": "hsl(var(--sf2))",
         "border-light": "hsl(var(--bdl))",

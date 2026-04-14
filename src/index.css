@@ -59,6 +59,12 @@
     --sidebar-border: 0 0% 15%;
     --sidebar-ring: 73 100% 50%;
 
+    /* ── Burgundy (Entreprise) ── */
+    --burgundy: 345 78% 25%;
+    --burgundy-light: 345 70% 35%;
+    --burgundy-dark: 345 85% 18%;
+    --burgundy-fg: 0 0% 100%;
+
     /* ── Motion ── */
     --ez: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -117,7 +123,7 @@
     radial-gradient(ellipse 40% 35% at 80% 80%, hsl(var(--neon) / 0.04) 0%, transparent 55%);
 }
 
-/* Entreprise: white glow right side */
+/* Entreprise: burgundy glow */
 .page-bg--entreprise::after {
   content: "";
   position: fixed;
@@ -125,8 +131,8 @@
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 50% 45% at 85% 30%, hsl(var(--foreground) / 0.04) 0%, transparent 55%),
-    radial-gradient(ellipse 35% 30% at 15% 75%, hsl(var(--foreground) / 0.02) 0%, transparent 50%);
+    radial-gradient(ellipse 50% 45% at 85% 30%, hsl(var(--burgundy) / 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 35% 30% at 15% 75%, hsl(var(--burgundy) / 0.04) 0%, transparent 50%);
 }
 
 /* Home: dual glow */
