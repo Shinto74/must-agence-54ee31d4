@@ -983,6 +983,10 @@ const FinalCta = () => {
 
 /* ═══ PAGE ═══ */
 const Entreprise = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="page-bg page-bg--entreprise">
       <EntrepriseHero />
