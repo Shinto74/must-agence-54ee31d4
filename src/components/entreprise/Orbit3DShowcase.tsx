@@ -70,7 +70,7 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
     <div
       ref={containerRef}
       className="relative flex items-center justify-center"
-      style={{ height: 580, perspective: "1200px" }}
+      style={{ height: 720, perspective: "1200px" }}
     >
       {/* Central logo "M" */}
       <motion.div
