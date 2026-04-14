@@ -246,8 +246,9 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
   const shouldReduceMotion = useReducedMotion();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const isInView = useInView(cardRef, { amount: 0.35, margin: "0px 0px -12% 0px" });
+  const isInView = useInView(cardRef, { amount: 0.3, margin: "0px 0px -10% 0px" });
   const isLit = isInView || isHovered;
+  const fromRight = index % 2 === 1;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (shouldReduceMotion || !cardRef.current) return;
@@ -265,13 +266,25 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
   return (
     <motion.div
       ref={cardRef}
-      className="rv group relative cursor-default"
+      className="group relative cursor-default"
       style={{ perspective: "1200px" }}
-      initial={{ opacity: 0, y: 60, scale: 0.92 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.9, delay: index * 0.12, ease: EASE }}
+      initial={{ opacity: 0, x: fromRight ? 120 : -120, scale: 0.88, rotateY: fromRight ? -8 : 8 }}
+      whileInView={{ opacity: 1, x: 0, scale: 1, rotateY: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 1.1, delay: index * 0.1, ease: EASE }}
     >
+      {/* Golden halo behind card */}
+      <motion.div
+        className="absolute -inset-6 rounded-[2.5rem] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 80% 70% at 50% 50%, hsl(var(--burgundy-light) / 0.22) 0%, hsl(var(--burgundy) / 0.08) 40%, transparent 72%)",
+          filter: "blur(30px)",
+        }}
+        initial={{ opacity: 0, scale: 0.7 }}
+        animate={isLit ? { opacity: 1, scale: 1.05 } : { opacity: 0, scale: 0.7 }}
+        transition={{ duration: 0.9, ease: EASE }}
+      />
+
       <motion.div
         className="relative will-change-transform"
         style={{
@@ -286,99 +299,98 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       >
         <motion.div
           className="relative overflow-hidden rounded-[1.5rem]"
-          animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { y: -12, scale: 1.03 } : { y: 0, scale: 0.97 }}
+          animate={shouldReduceMotion ? {} : isLit ? { y: -8, scale: 1.02 } : { y: 0, scale: 1 }}
           transition={{ duration: 0.7, ease: EASE }}
         >
+          {/* Animated border trace — draws itself around the card */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none z-20"
+            style={{ borderRadius: "1.5rem" }}
+            preserveAspectRatio="none"
+          >
+            <rect
+              x="1" y="1"
+              width="calc(100% - 2px)" height="calc(100% - 2px)"
+              rx="24" ry="24"
+              fill="none"
+              stroke="url(#goldGrad)"
+              strokeWidth="2"
+              strokeDasharray="2000"
+              strokeDashoffset={isLit ? "0" : "2000"}
+              style={{ transition: "stroke-dashoffset 1.4s cubic-bezier(0.16, 1, 0.3, 1)" }}
+            />
+            <defs>
+              <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="hsl(43 55% 55% / 0.8)" />
+                <stop offset="50%" stopColor="hsl(43 70% 75% / 1)" />
+                <stop offset="100%" stopColor="hsl(43 55% 55% / 0.6)" />
+              </linearGradient>
+            </defs>
+          </svg>
+
           <div
             className="relative p-8 md:p-10 lg:p-12"
             style={{
               background: isLit
-                ? "linear-gradient(160deg, hsl(var(--background)) 0%, hsl(var(--card)) 40%, hsl(var(--muted)) 100%)"
-                : "linear-gradient(160deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
+                ? "linear-gradient(155deg, hsl(var(--background)) 0%, hsl(var(--card)) 45%, hsl(var(--muted)) 100%)"
+                : "linear-gradient(155deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
               border: `1.5px solid ${isLit ? "hsl(var(--burgundy-light) / 0.5)" : "hsl(var(--foreground) / 0.06)"}`,
               boxShadow: isLit
-                ? "0 40px 100px -20px hsl(var(--burgundy) / 0.3), 0 0 80px hsl(var(--burgundy-light) / 0.18), 0 0 0 1px hsl(var(--burgundy-light) / 0.1), inset 0 1px 0 hsl(var(--wh) / 0.7)"
-                : "0 4px 12px -8px hsl(0 0% 0% / 0.08), inset 0 1px 0 hsl(var(--wh) / 0.2)",
-              transition: "background 0.65s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1)",
+                ? "0 40px 100px -20px hsl(var(--burgundy) / 0.28), 0 0 80px hsl(var(--burgundy-light) / 0.15), inset 0 1px 0 hsl(var(--wh) / 0.6)"
+                : "0 4px 12px -8px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(var(--wh) / 0.15)",
+              transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
               borderRadius: "1.5rem",
-              filter: isLit ? "none" : "saturate(0.3) brightness(0.92)",
             }}
           >
-            {/* Power-on fill bar from bottom */}
-            <motion.div
-              className="absolute bottom-0 left-0 right-0 pointer-events-none rounded-b-[1.5rem]"
-              style={{
-                background: "linear-gradient(to top, hsl(var(--burgundy-light) / 0.12) 0%, hsl(var(--burgundy-light) / 0.04) 60%, transparent 100%)",
-              }}
-              initial={{ height: "0%" }}
-              animate={isLit ? { height: "100%" } : { height: "0%" }}
-              transition={{ duration: 1, ease: EASE }}
-            />
-
-            {/* Light sweep on power-on */}
+            {/* Light sweep */}
             {isLit && !shouldReduceMotion && (
               <motion.div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: "linear-gradient(105deg, transparent 30%, hsl(var(--burgundy-light) / 0.06) 42%, hsl(var(--wh) / 0.35) 50%, hsl(var(--burgundy-light) / 0.1) 58%, transparent 70%)",
+                  background: "linear-gradient(105deg, transparent 30%, hsl(var(--burgundy-light) / 0.05) 42%, hsl(var(--wh) / 0.3) 50%, hsl(var(--burgundy-light) / 0.08) 58%, transparent 70%)",
                 }}
                 initial={{ x: "-140%" }}
                 animate={{ x: "240%" }}
-                transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
+                transition={{ duration: 1.2, delay: 0.4, ease: EASE }}
               />
             )}
 
+            {/* Cursor spotlight on hover */}
             {isHovered && !shouldReduceMotion && (
               <div
-                className="absolute inset-0 pointer-events-none opacity-70 transition-opacity duration-500"
+                className="absolute inset-0 pointer-events-none opacity-60"
                 style={{
-                  background: `radial-gradient(620px circle at ${(tilt.y / 10 + 0.5) * 100}% ${(-tilt.x / 10 + 0.5) * 100}%, hsl(var(--burgundy-light) / 0.18), transparent 52%)`,
+                  background: `radial-gradient(600px circle at ${(tilt.y / 10 + 0.5) * 100}% ${(-tilt.x / 10 + 0.5) * 100}%, hsl(var(--burgundy-light) / 0.15), transparent 50%)`,
                 }}
               />
             )}
 
+            {/* Decorative orb */}
             <div
               className="absolute -top-16 -right-16 h-[250px] w-[250px] rounded-full pointer-events-none transition-all duration-700"
               style={{
-                background: `radial-gradient(circle, hsl(var(--burgundy-light) / ${isLit ? 0.2 : 0.04}) 0%, transparent 72%)`,
+                background: `radial-gradient(circle, hsl(var(--burgundy-light) / ${isLit ? 0.18 : 0.03}) 0%, transparent 72%)`,
                 transform: `translate(${tilt.y * 2}px, ${tilt.x * -2}px)`,
               }}
             />
 
-            <div
-              className="absolute top-0 left-0 right-0 h-[2.5px] transition-all duration-700"
-              style={{
-                background: isLit
-                  ? "linear-gradient(90deg, transparent 6%, hsl(var(--burgundy-light)) 26%, hsl(var(--wh) / 0.92) 50%, hsl(var(--burgundy-light)) 74%, transparent 94%)"
-                  : "linear-gradient(90deg, transparent, hsl(var(--burgundy-light) / 0.12), transparent)",
-                opacity: isLit ? 1 : 0.35,
-                borderRadius: "1.5rem 1.5rem 0 0",
-              }}
-            />
-
-            <div
-              className="absolute bottom-0 left-12 right-12 h-[1px] transition-all duration-700"
-              style={{
-                background: isLit
-                  ? "linear-gradient(90deg, transparent, hsl(var(--burgundy-light) / 0.28), transparent)"
-                  : "transparent",
-              }}
-            />
-
+            {/* Content */}
             <div className="relative z-10 flex flex-col gap-6 md:flex-row md:gap-8">
               <div className="flex shrink-0 items-center gap-4 md:flex-col md:items-start md:gap-3">
                 <motion.div
                   className="relative flex h-16 w-16 items-center justify-center rounded-2xl"
-                  animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { scale: [1, 1.18, 1.1] } : { scale: 0.9 }}
-                  transition={isLit ? { duration: 0.6, times: [0, 0.6, 1], ease: EASE } : { duration: 0.4, ease: EASE }}
+                  animate={shouldReduceMotion ? {} : isLit ? { scale: 1.1, rotate: 0 } : { scale: 0.85, rotate: -4 }}
+                  transition={{ duration: 0.6, ease: EASE }}
                   style={{
                     background: isLit
                       ? "linear-gradient(135deg, hsl(var(--burgundy)), hsl(var(--burgundy-light)))"
-                      : "hsl(var(--burgundy) / 0.08)",
-                    border: `1.5px solid ${isLit ? "hsl(var(--burgundy-light) / 0.6)" : "hsl(var(--burgundy-light) / 0.14)"}`,
-                    color: isLit ? "hsl(var(--burgundy-fg))" : "hsl(var(--burgundy-light) / 0.56)",
-                    boxShadow: isLit ? "0 14px 42px hsl(var(--burgundy) / 0.34), 0 0 28px hsl(var(--burgundy-light) / 0.22)" : "none",
-                    transition: "background 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                      : "hsl(var(--burgundy) / 0.06)",
+                    border: `1.5px solid ${isLit ? "hsl(var(--burgundy-light) / 0.6)" : "hsl(var(--burgundy-light) / 0.1)"}`,
+                    color: isLit ? "hsl(var(--burgundy-fg))" : "hsl(var(--burgundy-light) / 0.4)",
+                    boxShadow: isLit
+                      ? "0 14px 42px hsl(var(--burgundy) / 0.3), 0 0 30px hsl(var(--burgundy-light) / 0.2)"
+                      : "none",
+                    transition: "background 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.6s, box-shadow 0.6s, color 0.5s",
                     transform: `translateZ(${isHovered ? 30 : 0}px)`,
                   }}
                 >
@@ -386,9 +398,9 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
                   {isLit && !shouldReduceMotion && (
                     <motion.div
                       className="absolute inset-0 rounded-2xl"
-                      style={{ border: "2px solid hsl(var(--burgundy-light) / 0.35)" }}
-                      initial={{ scale: 1, opacity: 1 }}
-                      animate={{ scale: 1.55, opacity: 0 }}
+                      style={{ border: "2px solid hsl(var(--burgundy-light) / 0.3)" }}
+                      initial={{ scale: 1, opacity: 0.8 }}
+                      animate={{ scale: 1.6, opacity: 0 }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: EASE }}
                     />
                   )}
@@ -396,11 +408,11 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
 
                 <motion.span
                   className="font-clash text-3xl font-black md:text-4xl"
-                  animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { opacity: 1, scale: 1.15 } : { opacity: 0.1, scale: 0.85 }}
-                  transition={{ duration: 0.55, ease: EASE }}
+                  animate={shouldReduceMotion ? {} : isLit ? { opacity: 1, x: 0 } : { opacity: 0.08, x: fromRight ? 10 : -10 }}
+                  transition={{ duration: 0.6, ease: EASE }}
                   style={{
-                    color: isLit ? "hsl(var(--burgundy-light))" : "hsl(var(--foreground) / 0.42)",
-                    textShadow: isLit ? "0 0 38px hsl(var(--burgundy-light) / 0.34)" : "none",
+                    color: isLit ? "hsl(var(--burgundy-light))" : "hsl(var(--foreground) / 0.3)",
+                    textShadow: isLit ? "0 0 40px hsl(var(--burgundy-light) / 0.35)" : "none",
                     transform: `translateZ(${isHovered ? 20 : 0}px)`,
                   }}
                 >
@@ -409,20 +421,22 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
               </div>
 
               <div className="flex-1" style={{ transform: `translateZ(${isHovered ? 15 : 0}px)` }}>
-                <h3
-                  className="mb-3 font-clash text-xl font-black text-foreground transition-all duration-500 md:text-2xl"
-                  style={{
-                    color: isLit ? "hsl(var(--burgundy))" : "hsl(var(--foreground) / 0.72)",
-                  }}
+                <motion.h3
+                  className="mb-3 font-clash text-xl font-black md:text-2xl"
+                  animate={shouldReduceMotion ? {} : isLit ? { opacity: 1, x: 0 } : { opacity: 0.5, x: fromRight ? 20 : -20 }}
+                  transition={{ duration: 0.7, delay: 0.05, ease: EASE }}
+                  style={{ color: isLit ? "hsl(var(--burgundy))" : "hsl(var(--foreground) / 0.6)" }}
                 >
                   {svc.title}
-                </h3>
-                <p
-                  className="mb-6 text-sm leading-relaxed text-muted-foreground transition-colors duration-500 md:text-[15px]"
-                  style={{ color: isLit ? "hsl(var(--foreground) / 0.62)" : "hsl(var(--foreground) / 0.38)" }}
+                </motion.h3>
+                <motion.p
+                  className="mb-6 text-sm leading-relaxed md:text-[15px]"
+                  animate={shouldReduceMotion ? {} : isLit ? { opacity: 1, x: 0 } : { opacity: 0.3, x: fromRight ? 15 : -15 }}
+                  transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
+                  style={{ color: isLit ? "hsl(var(--foreground) / 0.6)" : "hsl(var(--foreground) / 0.3)" }}
                 >
                   {svc.description}
-                </p>
+                </motion.p>
                 <div className="flex flex-wrap gap-2.5">
                   {svc.chips.map((chip, ci) => (
                     <motion.span
@@ -432,14 +446,14 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
                       animate={shouldReduceMotion
                         ? { opacity: 1, y: 0, scale: 1 }
                         : isLit
-                          ? { opacity: 1, y: 0, scale: 1 }
-                          : { opacity: 0.2, y: 8, scale: 0.93 }
+                          ? { opacity: 1, y: 0, scale: 1, x: 0 }
+                          : { opacity: 0.15, y: 6, scale: 0.92, x: fromRight ? 12 : -12 }
                       }
-                      transition={{ duration: 0.45, delay: isLit ? 0.2 + ci * 0.08 : 0, ease: EASE }}
+                      transition={{ duration: 0.5, delay: isLit ? 0.25 + ci * 0.07 : 0, ease: EASE }}
                       style={{
                         background: isLit ? "hsl(var(--burgundy-light) / 0.14)" : "hsl(var(--foreground) / 0.02)",
-                        border: `1px solid ${isLit ? "hsl(var(--burgundy-light) / 0.3)" : "hsl(var(--foreground) / 0.06)"}`,
-                        color: isLit ? "hsl(var(--burgundy))" : "hsl(var(--foreground) / 0.34)",
+                        border: `1px solid ${isLit ? "hsl(var(--burgundy-light) / 0.3)" : "hsl(var(--foreground) / 0.04)"}`,
+                        color: isLit ? "hsl(var(--burgundy))" : "hsl(var(--foreground) / 0.25)",
                         transform: `translateZ(${isHovered ? 10 : 0}px)`,
                       }}
                     >
