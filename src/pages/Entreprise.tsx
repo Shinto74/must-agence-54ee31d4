@@ -266,14 +266,14 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
     <motion.div
       ref={cardRef}
       className="rv group relative cursor-default"
-      style={{ perspective: "1200px" }}>
-      {/* Sentinel for inView detection */}
-      <div ref={sentinelRef} className="absolute top-1/2 left-0 w-0 h-0 pointer-events-none" />
+      style={{ perspective: "1200px" }}
       initial={{ opacity: 0, y: 80, rotateX: 8 }}
       whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 1, delay: index * 0.15, ease: EASE }}
     >
+      {/* Sentinel for inView detection */}
+      <div ref={sentinelRef} className="absolute top-1/2 left-0 w-0 h-0 pointer-events-none" />
       <motion.div
         className="relative rounded-[1.5rem] overflow-hidden"
         style={{
