@@ -57,50 +57,75 @@ const AnimatedCounter = ({ value, suffix = "" }: { value: string; suffix?: strin
   return <span ref={ref}>{isNaN(num) ? value : display}{suffix}</span>;
 };
 
-/* ═══ HERO WITH VIDEO ═══ */
+/* ═══ HERO WITH VIDEO – CINEMATIC REVEAL ═══ */
 const EntrepriseHero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
   const yText = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const scrollOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const scrollBlur = useTransform(scrollYProgress, [0.3, 0.7], [0, 6]);
+
+  /* Phase states for cinematic text reveal */
+  const [phase, setPhase] = useState(0); // 0=invisible, 1=fade+blur, 2=sharp+glow, 3=sweep
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase(1), 400);   // start fade-in
+    const t2 = setTimeout(() => setPhase(2), 1600);   // sharp + glow
+    const t3 = setTimeout(() => setPhase(3), 2800);   // light sweep
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Video background */}
+      {/* ── Layer 1: Video background ── */}
       <motion.div className="absolute inset-0 z-0" style={{ scale: videoScale }}>
         <video
           ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
+          autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
           src={HERO_VIDEO_URL}
         />
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/30" />
-        {/* Gold tint overlay */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsl(43 52% 39% / 0.3) 0%, transparent 60%)" }} />
-        {/* Bottom gradient fade to cream */}
-        <div className="absolute bottom-0 left-0 right-0 h-40" style={{ background: "linear-gradient(to bottom, transparent, #FAF9F6)" }} />
+        {/* Deeper cinematic overlay – 55% black */}
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.45) 100%)",
+        }} />
+        {/* Radial vignette for depth */}
+        <div className="absolute inset-0" style={{
+          background: "radial-gradient(ellipse 70% 60% at 30% 50%, transparent 0%, rgba(0,0,0,0.4) 100%)",
+        }} />
+        {/* Gold tint – subtle warm cast */}
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(160deg, hsl(43 52% 39% / 0.25) 0%, transparent 50%)",
+        }} />
+        {/* Bottom fade to cream */}
+        <div className="absolute bottom-0 left-0 right-0 h-48" style={{
+          background: "linear-gradient(to bottom, transparent, rgba(250,249,246,0.6) 60%, #FAF9F6)",
+        }} />
       </motion.div>
 
-      {/* Grain texture overlay */}
-      <div className="absolute inset-0 pointer-events-none z-[2] opacity-[0.03]"
-        style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
+      {/* ── Layer 2: Grain texture ── */}
+      <div className="absolute inset-0 pointer-events-none z-[2] opacity-[0.04]"
+        style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }}
+      />
 
-      <motion.div style={{ y: yText, opacity }} className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 py-32">
+      {/* ── Layer 3: Foreground content with cinematic reveal ── */}
+      <motion.div
+        style={{ y: yText, opacity: scrollOpacity }}
+        className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 py-32"
+      >
+        {/* Tag line */}
         <motion.div
           className="flex items-center gap-4 mb-8"
           initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, ease: EASE }}
+          animate={phase >= 1 ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 1.2, ease: EASE }}
         >
           <motion.div className="w-12 h-[1.5px] bg-white/70"
-            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-            transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
+            initial={{ scaleX: 0 }}
+            animate={phase >= 1 ? { scaleX: 1 } : {}}
+            transition={{ duration: 1.4, delay: 0.2, ease: EASE }}
             style={{ transformOrigin: "left" }}
           />
           <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-white/80 font-medium">
@@ -108,32 +133,77 @@ const EntrepriseHero = () => {
           </span>
         </motion.div>
 
+        {/* Main headline with blur→sharp reveal */}
         <motion.h1
-          className="font-clash text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] font-black text-white leading-[0.92] mb-8 max-w-5xl drop-shadow-lg"
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.15, ease: EASE }}
+          className="font-clash text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] font-black text-white leading-[0.92] mb-8 max-w-5xl relative"
+          initial={{ opacity: 0, y: 20, filter: "blur(12px)" }}
+          animate={phase >= 1
+            ? { opacity: 1, y: 0, filter: phase >= 2 ? "blur(0px)" : "blur(4px)" }
+            : {}
+          }
+          transition={{ duration: 1.6, ease: EASE }}
+          style={{
+            textShadow: phase >= 2
+              ? "0 0 60px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.3)"
+              : "none",
+          }}
         >
-          Une stratégie digitale
-          <br />
-          <span className="text-burgundy-light" style={{ textShadow: "0 0 40px hsl(43 55% 55% / 0.5)" }}>pensée pour performer</span>
+          {/* Light sweep overlay on text */}
+          <span className="relative inline-block">
+            Une stratégie digitale
+            <br />
+            <span
+              className="text-burgundy-light relative inline-block"
+              style={{ textShadow: phase >= 2 ? "0 0 50px hsl(43 55% 55% / 0.6)" : "none" }}
+            >
+              pensée pour performer
+              {/* Light sweep effect */}
+              <span
+                className="absolute inset-0 pointer-events-none overflow-hidden"
+                style={{ WebkitMaskImage: "linear-gradient(to right, transparent, white, transparent)" }}
+              >
+                <span
+                  className="absolute inset-0"
+                  style={{
+                    background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%)",
+                    transform: phase >= 3 ? "translateX(120%)" : "translateX(-120%)",
+                    transition: "transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                  }}
+                />
+              </span>
+            </span>
+          </span>
+          {/* Subtle halo behind text */}
+          <div
+            className="absolute -inset-10 pointer-events-none rounded-3xl"
+            style={{
+              background: "radial-gradient(ellipse at 30% 50%, hsl(43 55% 55% / 0.08) 0%, transparent 70%)",
+              opacity: phase >= 2 ? 1 : 0,
+              transition: "opacity 1.5s ease",
+            }}
+          />
         </motion.h1>
 
+        {/* Description */}
         <motion.p
           className="text-white/75 text-base md:text-lg lg:text-xl max-w-2xl leading-relaxed mb-12 font-light"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.35, ease: EASE }}
+          initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+          animate={phase >= 2 ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+          transition={{ duration: 1.2, delay: 0.1, ease: EASE }}
+          style={{
+            textShadow: phase >= 2 ? "0 2px 10px rgba(0,0,0,0.3)" : "none",
+          }}
         >
           Nous accompagnons les marques ambitieuses dans leur croissance
           grâce à une approche complète : contenu, visibilité et performance mesurable.
         </motion.p>
 
+        {/* CTAs */}
         <motion.div
           className="flex flex-col sm:flex-row gap-4"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.55, ease: EASE }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={phase >= 2 ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.2, ease: EASE }}
         >
           <motion.button
             onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
@@ -169,8 +239,8 @@ const EntrepriseHero = () => {
           className="mt-20 pt-10 flex flex-wrap gap-12 md:gap-20"
           style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.75, ease: EASE }}
+          animate={phase >= 2 ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.35, ease: EASE }}
         >
           {[
             { value: "150", suffix: "+", label: "Projets livrés" },
