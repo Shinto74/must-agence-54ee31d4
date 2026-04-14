@@ -356,8 +356,8 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                   type="submit" disabled={sending}
                   className="w-full mt-2 py-5 font-mono text-sm uppercase tracking-[0.15em] font-bold disabled:opacity-50 group cursor-pointer relative overflow-hidden"
                   style={{
-                    background: "hsl(var(--primary))",
-                    color: "hsl(var(--primary-foreground))",
+                    background: isEntreprise ? `linear-gradient(135deg, hsl(${accentDark}), hsl(${accent}))` : "hsl(var(--primary))",
+                    color: isEntreprise ? "#fff" : "hsl(var(--primary-foreground))",
                     borderRadius: "16px",
                     boxShadow: `0 0 30px hsl(${accent} / 0.2)`,
                     border: "none",
