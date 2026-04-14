@@ -529,16 +529,121 @@ const REFERENCES = [
   { name: "Yamaha", subtitle: "Automobile & Moto", initial: "YM" },
 ];
 
+const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number }) => {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 60, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.8, delay: index * 0.12, ease: EASE }}
+      className="group relative cursor-default"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <motion.div
+        className="relative rounded-2xl overflow-hidden"
+        style={{
+          background: hovered
+            ? "linear-gradient(165deg, hsl(40 30% 96%), hsl(43 35% 93%))"
+            : "hsl(var(--foreground) / 0.025)",
+          border: `1.5px solid ${hovered ? "hsl(43 55% 55% / 0.4)" : "hsl(var(--foreground) / 0.07)"}`,
+          boxShadow: hovered
+            ? "0 25px 50px hsl(43 52% 39% / 0.15), 0 0 0 1px hsl(43 55% 55% / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
+            : "0 2px 8px hsl(0 0% 0% / 0.04)",
+          transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+        animate={{ y: hovered ? -10 : 0 }}
+        transition={{ duration: 0.5, ease: EASE }}
+      >
+        {/* Top gold accent */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2px]"
+          style={{
+            background: "linear-gradient(90deg, transparent 10%, hsl(43 55% 55%), hsl(43 60% 65%), hsl(43 55% 55%), transparent 90%)",
+            opacity: hovered ? 1 : 0,
+            transition: "opacity 0.5s ease",
+          }}
+        />
+
+        <div className="relative z-10 p-8 md:p-10 flex flex-col items-center text-center min-h-[200px] justify-center">
+          {/* Monogram circle */}
+          <motion.div
+            className="relative mb-6"
+            animate={{ scale: hovered ? 1.1 : 1 }}
+            transition={{ duration: 0.5, ease: EASE }}
+          >
+            {/* Outer ring */}
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center relative"
+              style={{
+                background: hovered
+                  ? "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))"
+                  : "hsl(43 52% 39% / 0.08)",
+                boxShadow: hovered
+                  ? "0 8px 25px hsl(43 52% 39% / 0.3), 0 0 30px hsl(43 55% 55% / 0.15)"
+                  : "none",
+                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            >
+              {/* Pulse ring */}
+              {hovered && (
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{ border: "2px solid hsl(43 55% 55% / 0.3)" }}
+                  initial={{ scale: 1, opacity: 0.8 }}
+                  animate={{ scale: 1.6, opacity: 0 }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+              )}
+              <span
+                className="font-clash font-black text-base"
+                style={{
+                  color: hovered ? "#fff" : "hsl(43 55% 55%)",
+                  transition: "color 0.4s ease",
+                }}
+              >
+                {r.initial}
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Name */}
+          <p
+            className="font-clash font-bold text-base md:text-lg mb-2"
+            style={{
+              color: hovered ? "hsl(43 52% 39%)" : "hsl(var(--foreground))",
+              transition: "color 0.4s ease",
+            }}
+          >
+            {r.name}
+          </p>
+
+          {/* Subtitle */}
+          <p
+            className="font-mono text-[9px] uppercase tracking-[0.2em]"
+            style={{
+              color: hovered ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0.45)",
+              transition: "color 0.4s ease",
+            }}
+          >
+            {r.subtitle}
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const ReferencesSection = () => {
   const ref = useScrollReveal();
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
-      {/* Top separator */}
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.3), transparent)" }} />
 
-      {/* Background decorative glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full pointer-events-none opacity-30"
-        style={{ background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.08) 0%, transparent 70%)" }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.05) 0%, transparent 60%)" }} />
 
       <div className="max-w-[1400px] mx-auto">
         <motion.div {...fadeUp()} className="rv text-center mb-20">
@@ -555,51 +660,13 @@ const ReferencesSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
           {REFERENCES.map((r, i) => (
-            <motion.div key={r.name} {...fadeUp(i * 0.1)}
-              className="rv group relative rounded-2xl overflow-hidden cursor-default"
-              style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}
-              whileHover={{
-                y: -8,
-                borderColor: "hsl(43 55% 55% / 0.4)",
-                boxShadow: "0 20px 60px hsl(43 52% 39% / 0.15), 0 0 40px hsl(43 55% 55% / 0.08)",
-              }}
-            >
-              {/* Hover gold gradient overlay */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                style={{ background: "linear-gradient(180deg, hsl(43 55% 55% / 0.06) 0%, transparent 50%)" }} />
-
-              {/* Top accent bar */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] transition-transform duration-700 origin-left scale-x-0 group-hover:scale-x-100"
-                style={{ background: "linear-gradient(90deg, hsl(43 55% 55%), hsl(43 60% 70%))" }} />
-
-              <div className="relative z-10 p-6 md:p-8 flex flex-col items-center text-center min-h-[160px] justify-center">
-                {/* Initial monogram */}
-                <div className="w-12 h-12 rounded-xl mb-5 flex items-center justify-center font-clash font-black text-lg transition-all duration-500 group-hover:scale-110"
-                  style={{
-                    background: "hsl(43 55% 55% / 0.08)",
-                    color: "hsl(43 55% 55% / 0.6)",
-                    border: "1px solid hsl(43 55% 55% / 0.12)",
-                  }}
-                >
-                  <span className="group-hover:text-[hsl(43_55%_55%)] transition-colors duration-500">{r.initial}</span>
-                </div>
-
-                <p className="font-clash font-bold text-foreground text-sm md:text-base mb-1.5 transition-colors duration-500 group-hover:text-[hsl(43_55%_55%)]">
-                  {r.name}
-                </p>
-                <p className="font-mono text-[9px] uppercase tracking-[0.2em] transition-colors duration-500"
-                  style={{ color: "hsl(43 55% 55% / 0.5)" }}>
-                  {r.subtitle}
-                </p>
-              </div>
-            </motion.div>
+            <ReferenceCard key={r.name} r={r} index={i} />
           ))}
         </div>
 
-        {/* Bottom trust indicator */}
-        <motion.div {...fadeUp(0.4)} className="rv mt-14 text-center">
+        <motion.div {...fadeUp(0.4)} className="rv mt-16 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40">
             + de 150 projets réalisés avec succès
           </p>
