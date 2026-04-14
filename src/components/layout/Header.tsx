@@ -53,8 +53,10 @@ const Header = () => {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+      className="fixed top-0 left-0 right-0 z-50"
       style={{
+        transform: hidden ? "translateY(-100%)" : "translateY(0)",
+        transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s, border-color 0.5s, backdrop-filter 0.5s",
         background: scrolled
           ? needsDarkText
             ? "hsla(40, 30%, 95%, 0.85)"
