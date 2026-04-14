@@ -247,7 +247,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
   const shouldReduceMotion = useReducedMotion();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const isInView = useInView(cardRef, { amount: 0.3, margin: "0px 0px -10% 0px" });
+  const isInView = useInView(cardRef, { amount: 0.15 });
   const isLit = isInView || isHovered;
   const fromRight = index % 2 === 1;
 
