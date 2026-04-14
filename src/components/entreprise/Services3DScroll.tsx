@@ -1,6 +1,10 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Video, Share2, Rocket, Search } from "lucide-react";
+import svcBgContent from "@/assets/svc-bg-content.jpg";
+import svcBgSocial from "@/assets/svc-bg-social.jpg";
+import svcBgAds from "@/assets/svc-bg-ads.jpg";
+import svcBgSeo from "@/assets/svc-bg-seo.jpg";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
