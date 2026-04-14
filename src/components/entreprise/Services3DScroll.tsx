@@ -483,7 +483,12 @@ const Services3DScroll = () => {
           perspective: "1200px",
         }}
       >
-        {/* Section background image */}
+        {/* Dark section background */}
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(180deg, #0e0e0e 0%, #131210 30%, #151311 50%, #131210 70%, #0e0e0e 100%)",
+        }} />
+
+        {/* Background image — darkened */}
         <img
           src={svcSectionBg}
           alt=""
@@ -492,46 +497,45 @@ const Services3DScroll = () => {
           width={1920}
           height={1080}
           style={{
-            filter: "blur(4px) saturate(0.6) brightness(1.05)",
-            opacity: 0.55,
+            filter: "blur(6px) saturate(0.4) brightness(0.3)",
+            opacity: 0.5,
           }}
         />
-        {/* Soft overlay — keeps readability without killing the image */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "linear-gradient(180deg, hsl(40 20% 97% / 0.5) 0%, hsl(38 18% 94% / 0.4) 40%, hsl(40 15% 96% / 0.5) 100%)",
-          }}
-        />
+
         {/* Warm accent glows */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 80% / 0.15) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.06) 0%, transparent 55%)",
-          }}
-        />
-        {/* Soft vignette */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 50%, hsl(40 20% 97% / 0.35) 100%)" }}
-        />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 50% / 0.06) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.04) 0%, transparent 55%)",
+        }} />
+
+        {/* Vignette */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 40%, rgba(0,0,0,0.5) 100%)",
+        }} />
+
         {/* Grain */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.025]"
-          style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          }}
-        />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }} />
+
+        {/* Top fade from cream to dark */}
+        <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none z-10" style={{
+          background: "linear-gradient(to bottom, #FAF9F6, transparent)",
+        }} />
+
+        {/* Bottom fade from dark to cream */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-10" style={{
+          background: "linear-gradient(to top, #FAF9F6, transparent)",
+        }} />
 
         <AmbientDecorations scrollYProgress={scrollYProgress} />
 
         <div
           className="absolute top-20 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.06) 0%, transparent 55%)", filter: "blur(20px)" }}
+          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.05) 0%, transparent 55%)", filter: "blur(20px)" }}
         />
         <div
           className="absolute bottom-10 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.05) 0%, transparent 55%)", filter: "blur(20px)" }}
+          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.04) 0%, transparent 55%)", filter: "blur(20px)" }}
         />
 
         <motion.div
@@ -547,10 +551,10 @@ const Services3DScroll = () => {
               Services
             </span>
           </div>
-          <h2 className="font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[0.95]" style={{ color: "hsl(0 0% 10%)" }}>
+          <h2 className="font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[0.95] text-white">
             Ce qu'on fait
             <br />
-            <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.2)" }}>
+            <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.3)" }}>
               pour vous
             </span>
           </h2>
