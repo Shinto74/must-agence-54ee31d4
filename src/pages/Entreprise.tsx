@@ -312,19 +312,18 @@ const ServicesSection = () => {
 
 /* ═══ EXPERTISE TERRAIN — IMMERSIVE ═══ */
 const SECTORS = [
-  { name: "Gastronomie", icon: <Sparkles size={20} />, desc: "Restaurants & traiteurs haut de gamme" },
-  { name: "Hôtellerie", icon: <Eye size={20} />, desc: "Luxe, accueil & expérience client" },
-  { name: "Beauté & Bien-être", icon: <Zap size={20} />, desc: "Cosmétiques, spa & wellness" },
-  { name: "Sport & Fitness", icon: <TrendingUp size={20} />, desc: "Clubs, marques & athlètes" },
-  { name: "Automobile", icon: <Rocket size={20} />, desc: "Concessionnaires & moto" },
-  { name: "Grande Distribution", icon: <Share2 size={20} />, desc: "Retail & enseignes nationales" },
+  { name: "Gastronomie", img: sectorGastronomie, desc: "Restaurants & traiteurs haut de gamme" },
+  { name: "Hôtellerie", img: sectorHotellerie, desc: "Luxe, accueil & expérience client" },
+  { name: "Beauté & Bien-être", img: sectorBeaute, desc: "Cosmétiques, spa & wellness" },
+  { name: "Sport & Fitness", img: sectorSport, desc: "Clubs, marques & athlètes" },
+  { name: "Automobile", img: sectorAutomobile, desc: "Concessionnaires & moto" },
+  { name: "Grande Distribution", img: sectorDistribution, desc: "Retail & enseignes nationales" },
 ];
 
 const ExpertiseSection = () => {
   const ref = useScrollReveal();
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
-      {/* Full-width burgundy accent bar */}
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--burgundy) / 0.2), transparent)" }} />
 
       <div className="max-w-[1400px] mx-auto">
@@ -347,33 +346,32 @@ const ExpertiseSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {SECTORS.map((sector, i) => (
             <motion.div key={sector.name} {...fadeUp(i * 0.08)}
-              className="rv group relative rounded-2xl p-8 md:p-10 cursor-default transition-all duration-700 overflow-hidden"
-              style={{
-                background: "hsl(var(--foreground) / 0.02)",
-                border: "1px solid hsl(var(--foreground) / 0.05)",
-              }}
-              whileHover={{
-                y: -6,
-                borderColor: "hsl(var(--burgundy) / 0.2)",
-                background: "hsl(var(--foreground) / 0.04)",
-              }}
+              className="rv group relative rounded-2xl cursor-default transition-all duration-700 overflow-hidden aspect-[4/3]"
+              style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}
+              whileHover={{ y: -6, borderColor: "hsl(var(--burgundy) / 0.3)" }}
             >
-              {/* Corner accent */}
-              <div className="absolute top-0 right-0 w-20 h-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                style={{ background: "radial-gradient(circle at 100% 0%, hsl(var(--burgundy) / 0.1) 0%, transparent 70%)" }} />
+              {/* Image */}
+              <img
+                src={sector.img}
+                alt={sector.name}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
+                width={800}
+                height={600}
+              />
+              {/* Dark overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/90" />
+              {/* Burgundy hover tint */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{ background: "linear-gradient(to top, hsl(var(--burgundy) / 0.3), transparent 60%)" }} />
 
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110"
-                style={{
-                  background: "hsl(var(--burgundy) / 0.07)",
-                  border: "1px solid hsl(var(--burgundy) / 0.1)",
-                  color: "hsl(var(--burgundy-light))",
-                }}>
-                {sector.icon}
+              {/* Text */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
+                <h3 className="font-clash font-bold text-white text-xl md:text-2xl mb-1 group-hover:text-burgundy-foreground transition-colors duration-500 drop-shadow-lg">
+                  {sector.name}
+                </h3>
+                <p className="text-white/60 text-sm group-hover:text-white/80 transition-colors duration-500">{sector.desc}</p>
               </div>
-              <h3 className="font-clash font-bold text-foreground text-lg mb-2 group-hover:text-burgundy-light transition-colors duration-500">
-                {sector.name}
-              </h3>
-              <p className="text-[13px] text-muted-foreground leading-relaxed">{sector.desc}</p>
             </motion.div>
           ))}
         </div>
