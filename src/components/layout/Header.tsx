@@ -55,21 +55,25 @@ const Header = () => {
     <header
       className="fixed top-0 left-0 right-0 z-50"
       style={{
-        transform: hidden ? "translateY(-100%)" : "translateY(0)",
-        transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s, border-color 0.5s, backdrop-filter 0.5s",
+        transform: hidden ? "translateY(-110%)" : "translateY(0)",
+        transition: "transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease, height 0.4s ease, padding 0.4s ease",
         background: scrolled
           ? needsDarkText
-            ? "hsla(40, 30%, 95%, 0.85)"
-            : isArtiste
-              ? "hsla(0, 0%, 4%, 0.75)"
-              : "hsla(0, 0%, 4%, 0.75)"
+            ? "hsla(40, 30%, 95%, 0.88)"
+            : "hsla(0, 0%, 4%, 0.8)"
           : "transparent",
-        backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "none",
+        backdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
         borderBottom: scrolled
           ? needsDarkText
-            ? "1px solid hsla(43, 55%, 55%, 0.15)"
+            ? "1px solid hsla(43, 55%, 55%, 0.12)"
             : "1px solid hsla(0,0%,100%,0.06)"
           : "1px solid transparent",
+        boxShadow: scrolled
+          ? needsDarkText
+            ? "0 4px 30px hsla(43, 30%, 30%, 0.08)"
+            : "0 4px 30px hsla(0, 0%, 0%, 0.2)"
+          : "none",
       }}
     >
       {/* Subtle top accent line */}
