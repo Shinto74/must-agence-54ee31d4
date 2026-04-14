@@ -219,8 +219,8 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover"
               style={{
-                filter: "blur(18px) saturate(0.5)",
-                opacity: isHovered ? 0.22 : 0.15,
+                filter: "blur(12px) saturate(0.6) brightness(1.1)",
+                opacity: isHovered ? 0.45 : 0.35,
                 transform: "scale(1.15)",
                 transition: "opacity 0.6s ease",
               }}
@@ -228,7 +228,7 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
             <div
               className="absolute inset-0"
               style={{
-                background: "linear-gradient(155deg, hsl(40 20% 97% / 0.72) 0%, hsl(40 15% 95% / 0.65) 50%, hsl(40 10% 92% / 0.75) 100%)",
+                background: "linear-gradient(155deg, hsl(40 20% 97% / 0.45) 0%, hsl(40 15% 95% / 0.35) 50%, hsl(40 10% 92% / 0.5) 100%)",
               }}
             />
           </div>
