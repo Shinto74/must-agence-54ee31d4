@@ -79,8 +79,8 @@ const EntrepriseHero = () => {
         />
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/30" />
-        {/* Burgundy tint overlay */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsl(var(--burgundy) / 0.25) 0%, transparent 60%)" }} />
+        {/* Gold tint overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsl(43 52% 39% / 0.3) 0%, transparent 60%)" }} />
         {/* Bottom gradient fade to cream */}
         <div className="absolute bottom-0 left-0 right-0 h-40" style={{ background: "linear-gradient(to bottom, transparent, #FAF9F6)" }} />
       </motion.div>
@@ -114,7 +114,7 @@ const EntrepriseHero = () => {
         >
           Une stratégie digitale
           <br />
-          <span className="text-burgundy-light" style={{ textShadow: "0 0 40px hsl(var(--burgundy) / 0.5)" }}>pensée pour performer</span>
+          <span className="text-burgundy-light" style={{ textShadow: "0 0 40px hsl(43 55% 55% / 0.5)" }}>pensée pour performer</span>
         </motion.h1>
 
         <motion.p
@@ -136,13 +136,13 @@ const EntrepriseHero = () => {
           <motion.a href="#contact"
             className="group inline-flex items-center gap-3 px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500"
             style={{
-              background: "hsl(var(--burgundy))",
+              background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
               color: "#fff",
-              boxShadow: "0 0 0 1px hsl(var(--burgundy-light) / 0.3), 0 8px 30px hsl(var(--burgundy) / 0.25)",
+              boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.3), 0 8px 30px hsl(43 52% 39% / 0.25)",
             }}
             whileHover={{
               y: -2,
-              boxShadow: "0 0 0 1px hsl(var(--burgundy-light) / 0.5), 0 12px 50px hsl(var(--burgundy) / 0.4), 0 0 80px hsl(var(--burgundy) / 0.15)",
+              boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.5), 0 12px 50px hsl(43 52% 39% / 0.4), 0 0 80px hsl(43 55% 55% / 0.15)",
             }}
             whileTap={{ scale: 0.97 }}
           >
@@ -195,7 +195,7 @@ const MarqueeSep = () => (
         ["CONTENU", "SOCIAL MEDIA", "ADS", "SEO", "STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING"].map((w, j) => (
           <span key={`${i}-${j}`} className="font-clash text-sm md:text-base font-semibold tracking-[0.15em] text-foreground/10 uppercase flex items-center gap-6">
             {w}
-            <span className="w-1.5 h-1.5 rounded-full bg-burgundy/30" />
+            <span className="w-1.5 h-1.5 rounded-full bg-burgundy-light/50" />
           </span>
         ))
       )}
@@ -268,22 +268,22 @@ const ServicesSection = () => {
                   border: "1px solid hsl(var(--foreground) / 0.06)",
                 }}
                 whileHover={{
-                  borderColor: "hsl(var(--burgundy) / 0.25)",
+                  borderColor: "hsl(43 52% 39% / 0.25)",
                   background: "hsl(var(--foreground) / 0.05)",
                   y: -4,
                 }}
               >
                 {/* Hover glow */}
                 <div className="absolute -top-20 -right-20 w-[200px] h-[200px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "radial-gradient(circle, hsl(var(--burgundy) / 0.08) 0%, transparent 70%)" }} />
+                  style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.1) 0%, transparent 70%)" }} />
 
                 <div className="relative z-10 flex gap-6">
                   <div className="shrink-0">
                     <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-105"
                       style={{
-                        background: "hsl(var(--burgundy) / 0.08)",
-                        border: "1px solid hsl(var(--burgundy) / 0.12)",
-                        color: "hsl(var(--burgundy-light))",
+                        background: "hsl(43 52% 39% / 0.1)",
+                        border: "1px solid hsl(43 55% 55% / 0.15)",
+                        color: "hsl(43 55% 55%)",
                       }}>
                       {svc.icon}
                     </div>
@@ -328,7 +328,7 @@ const ExpertiseSection = () => {
   const ref = useScrollReveal();
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--burgundy) / 0.2), transparent)" }} />
+      <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.25), transparent)" }} />
 
       <div className="max-w-[1400px] mx-auto">
         <motion.div {...fadeUp()} className="rv text-center mb-16 md:mb-20">
@@ -352,7 +352,7 @@ const ExpertiseSection = () => {
             <motion.div key={sector.name} {...fadeUp(i * 0.08)}
               className="rv group relative rounded-2xl cursor-default transition-all duration-700 overflow-hidden aspect-[4/3]"
               style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}
-              whileHover={{ y: -6, borderColor: "hsl(var(--burgundy) / 0.3)" }}
+              whileHover={{ y: -6, borderColor: "hsl(43 55% 55% / 0.3)" }}
             >
               {/* Image */}
               <img
@@ -367,7 +367,7 @@ const ExpertiseSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/90" />
               {/* Burgundy hover tint */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                style={{ background: "linear-gradient(to top, hsl(var(--burgundy) / 0.3), transparent 60%)" }} />
+                style={{ background: "linear-gradient(to top, hsl(43 52% 39% / 0.35), transparent 60%)" }} />
 
               {/* Text */}
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
@@ -419,8 +419,8 @@ const ReferencesSection = () => {
               }}
               whileHover={{
                 y: -4,
-                borderColor: "hsl(var(--burgundy) / 0.2)",
-                boxShadow: "0 12px 40px hsl(var(--burgundy) / 0.08)",
+                borderColor: "hsl(43 55% 55% / 0.25)",
+                boxShadow: "0 12px 40px hsl(43 52% 39% / 0.1)",
               }}
             >
               <p className="font-clash font-black text-foreground text-base md:text-lg mb-1">{r.name}</p>
@@ -433,7 +433,7 @@ const ReferencesSection = () => {
   );
 };
 
-/* ═══ CTA FINAL — IMMERSIVE BURGUNDY ═══ */
+/* ═══ CTA FINAL — IMMERSIVE GOLD ═══ */
 const FinalCta = () => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
@@ -442,16 +442,16 @@ const FinalCta = () => {
     <section ref={ref} className="py-20 px-6">
       <motion.div
         className="max-w-[1400px] mx-auto rounded-[2rem] px-8 md:px-16 py-20 md:py-28 text-center relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, hsl(var(--burgundy-dark)), hsl(var(--burgundy)), hsl(var(--burgundy-dark)))" }}
+        style={{ background: "linear-gradient(135deg, hsl(43 60% 22%), hsl(43 52% 39%), hsl(43 60% 22%))" }}
         initial={{ opacity: 0, y: 40, scale: 0.97 }}
         animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
         transition={{ duration: 1, ease: EASE }}
       >
         {/* Glow effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full blur-[120px] pointer-events-none"
-          style={{ background: "hsl(var(--burgundy-light) / 0.2)" }} />
+          style={{ background: "hsl(43 55% 55% / 0.25)" }} />
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[200px] rounded-full blur-[100px] pointer-events-none"
-          style={{ background: "hsl(var(--burgundy-light) / 0.1)" }} />
+          style={{ background: "hsl(43 55% 55% / 0.15)" }} />
         {/* Grain */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
           style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
@@ -475,12 +475,12 @@ const FinalCta = () => {
             className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold transition-all duration-500"
             style={{
               background: "#fff",
-              color: "hsl(var(--burgundy))",
+              color: "hsl(43 52% 39%)",
               boxShadow: "0 0 0 1px rgba(255,255,255,0.2), 0 8px 40px rgba(0,0,0,0.3)",
             }}
             whileHover={{
               y: -3,
-              boxShadow: "0 0 0 1px rgba(255,255,255,0.4), 0 16px 60px rgba(0,0,0,0.4), 0 0 80px rgba(255,255,255,0.1)",
+              boxShadow: "0 0 0 1px rgba(255,255,255,0.4), 0 16px 60px rgba(0,0,0,0.4), 0 0 80px hsl(43 55% 55% / 0.2)",
               scale: 1.02,
             }}
             whileTap={{ scale: 0.97 }}
