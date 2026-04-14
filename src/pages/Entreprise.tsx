@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import {
   Video, Share2, Rocket, Search, ArrowRight, ChevronRight,
@@ -135,7 +135,7 @@ const EntrepriseHero = () => {
         >
           <motion.button
             onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
-            className="group inline-flex items-center gap-3 px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 cursor-pointer"
+            className="group inline-flex items-center gap-3 px-10 py-[1.125rem] rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 cursor-pointer"
             style={{
               background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
               color: "#fff",
@@ -151,7 +151,7 @@ const EntrepriseHero = () => {
             <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
           </motion.button>
           <motion.a href="#services"
-            className="group px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-white/60 hover:text-white"
+            className="group px-10 py-[1.125rem] rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-white/60 hover:text-white"
             style={{ border: "1px solid rgba(255,255,255,0.2)" }}
             whileHover={{
               borderColor: "rgba(255,255,255,0.4)",
@@ -243,18 +243,25 @@ const SERVICES = [
 /* 3D Tilt Card */
 const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const isInView = useInView(sentinelRef, { once: true, margin: "0px 0px -120px 0px" });
+  const [lightSweepKey, setLightSweepKey] = useState(0);
+  const isInView = useInView(cardRef, { amount: 0.35, margin: "0px 0px -12% 0px" });
   const isLit = isInView || isHovered;
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return;
+  useEffect(() => {
+    if (isInView) {
+      setLightSweepKey((current) => current + 1);
+    }
+  }, [isInView]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (shouldReduceMotion || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: y * -12, y: x * 12 });
+    setTilt({ x: y * -10, y: x * 10 });
   };
 
   const handleMouseLeave = () => {
@@ -267,176 +274,178 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       ref={cardRef}
       className="rv group relative cursor-default"
       style={{ perspective: "1200px" }}
-      initial={{ opacity: 0, y: 80, rotateX: 8 }}
-      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+      initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 1, delay: index * 0.15, ease: EASE }}
     >
-      {/* Sentinel for inView detection */}
-      <div ref={sentinelRef} className="absolute top-1/3 left-0 w-0 h-0 pointer-events-none" />
-
       <motion.div
-        className="relative rounded-[1.5rem] overflow-hidden"
+        className="relative will-change-transform"
         style={{
-          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+          rotateX: shouldReduceMotion ? 0 : tilt.x,
+          rotateY: shouldReduceMotion ? 0 : tilt.y,
           transition: "transform 0.4s cubic-bezier(0.03,0.98,0.52,0.99)",
           transformStyle: "preserve-3d",
         }}
-        animate={isLit ? { y: -6, scale: 1.01 } : { y: 0, scale: 1 }}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Card surface */}
-        <div
-          className="relative p-8 md:p-10 lg:p-12"
-          style={{
-            background: isLit
-              ? "linear-gradient(145deg, hsl(40 25% 97%) 0%, hsl(43 30% 94%) 100%)"
-              : "linear-gradient(145deg, hsl(40 10% 96%) 0%, hsl(40 8% 93%) 100%)",
-            border: `1.5px solid ${isLit ? "hsl(43 55% 55% / 0.45)" : "hsl(var(--foreground) / 0.06)"}`,
-            boxShadow: isLit
-              ? "0 30px 80px -15px hsl(43 52% 39% / 0.3), 0 0 60px hsl(43 55% 55% / 0.12), 0 0 0 1px hsl(43 55% 55% / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.6)"
-              : "0 2px 10px -5px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.3)",
-            transition: "all 0.8s cubic-bezier(0.03,0.98,0.52,0.99)",
-            borderRadius: "1.5rem",
-          }}
+        <motion.div
+          className="relative overflow-hidden rounded-[1.5rem]"
+          animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { y: -10, scale: 1.02 } : { y: 0, scale: 1 }}
+          transition={{ duration: 0.65, ease: EASE }}
         >
-          {/* Light sweep animation on illuminate */}
-          {isLit && (
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "linear-gradient(105deg, transparent 35%, hsl(43 80% 70% / 0.15) 45%, hsl(43 80% 80% / 0.22) 50%, hsl(43 80% 70% / 0.15) 55%, transparent 65%)",
-              }}
-              initial={{ x: "-120%" }}
-              animate={{ x: "220%" }}
-              transition={{ duration: 1.2, ease: "easeInOut" }}
-            />
-          )}
-
-          {/* Spotlight follow cursor */}
-          {isHovered && (
-            <div
-              className="absolute inset-0 pointer-events-none opacity-60 transition-opacity duration-500"
-              style={{
-                background: `radial-gradient(600px circle at ${(tilt.y / 12 + 0.5) * 100}% ${(-tilt.x / 12 + 0.5) * 100}%, hsl(43 55% 55% / 0.15), transparent 50%)`,
-              }}
-            />
-          )}
-
-          {/* Decorative orb */}
           <div
-            className="absolute -top-16 -right-16 w-[250px] h-[250px] rounded-full pointer-events-none transition-all duration-700"
-            style={{
-              background: `radial-gradient(circle, hsl(43 55% 55% / ${isLit ? 0.15 : 0.03}) 0%, transparent 70%)`,
-              transform: `translate(${tilt.y * 2}px, ${tilt.x * -2}px)`,
-            }}
-          />
-
-          {/* Top accent line */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[2.5px] transition-all duration-700"
+            className="relative p-8 md:p-10 lg:p-12"
             style={{
               background: isLit
-                ? "linear-gradient(90deg, transparent 5%, hsl(43 55% 55%) 25%, hsl(43 70% 70%) 50%, hsl(43 55% 55%) 75%, transparent 95%)"
-                : "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.1), transparent)",
-              opacity: isLit ? 1 : 0.3,
-              borderRadius: "1.5rem 1.5rem 0 0",
+                ? "linear-gradient(145deg, hsl(var(--background)) 0%, hsl(var(--card)) 58%, hsl(var(--muted)) 100%)"
+                : "linear-gradient(145deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
+              border: `1.5px solid ${isLit ? "hsl(var(--burgundy-light) / 0.42)" : "hsl(var(--foreground) / 0.08)"}`,
+              boxShadow: isLit
+                ? "0 36px 90px -24px hsl(var(--burgundy) / 0.24), 0 0 70px hsl(var(--burgundy-light) / 0.16), 0 0 0 1px hsl(var(--burgundy-light) / 0.08), inset 0 1px 0 hsl(var(--wh) / 0.65)"
+                : "0 12px 30px -22px hsl(0 0% 0% / 0.16), inset 0 1px 0 hsl(var(--wh) / 0.32)",
+              transition: "background 0.65s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1)",
+              borderRadius: "1.5rem",
             }}
-          />
-
-          {/* Bottom subtle accent */}
-          <div
-            className="absolute bottom-0 left-12 right-12 h-[1px] transition-all duration-700"
-            style={{
-              background: isLit ? "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.2), transparent)" : "transparent",
-            }}
-          />
-
-          <div className="relative z-10 flex flex-col md:flex-row gap-6 md:gap-8">
-            {/* Left — icon + number */}
-            <div className="flex md:flex-col items-center md:items-start gap-4 md:gap-3 shrink-0">
+          >
+            {isInView && !shouldReduceMotion && (
               <motion.div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center relative"
-                animate={isLit ? { scale: 1.05 } : { scale: 1 }}
-                transition={{ duration: 0.5, ease: EASE }}
+                key={lightSweepKey}
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: isLit
-                    ? "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))"
-                    : "hsl(43 52% 39% / 0.08)",
-                  border: `1.5px solid ${isLit ? "hsl(43 55% 55% / 0.6)" : "hsl(43 55% 55% / 0.12)"}`,
-                  color: isLit ? "#fff" : "hsl(43 55% 55% / 0.5)",
-                  boxShadow: isLit ? "0 10px 35px hsl(43 52% 39% / 0.35), 0 0 25px hsl(43 55% 55% / 0.2)" : "none",
-                  transition: "all 0.6s cubic-bezier(0.03,0.98,0.52,0.99)",
-                  transform: `translateZ(${isHovered ? 30 : 0}px)`,
+                  background: "linear-gradient(105deg, transparent 34%, hsl(var(--burgundy-light) / 0.08) 44%, hsl(var(--wh) / 0.45) 50%, hsl(var(--burgundy-light) / 0.14) 56%, transparent 66%)",
                 }}
-              >
-                {svc.icon}
-                {/* Pulse ring when lit */}
-                {isLit && (
-                  <motion.div
-                    className="absolute inset-0 rounded-2xl"
-                    style={{ border: "2px solid hsl(43 55% 55% / 0.4)" }}
-                    initial={{ scale: 1, opacity: 1 }}
-                    animate={{ scale: 1.5, opacity: 0 }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  />
-                )}
-              </motion.div>
-              <motion.span
-                className="font-clash text-3xl md:text-4xl font-black"
-                animate={isLit ? { opacity: 1 } : { opacity: 0.08 }}
-                transition={{ duration: 0.6 }}
-                style={{
-                  color: isLit ? "hsl(43 55% 55%)" : "hsl(var(--foreground))",
-                  textShadow: isLit ? "0 0 35px hsl(43 55% 55% / 0.4)" : "none",
-                  transform: `translateZ(${isHovered ? 20 : 0}px)`,
-                }}
-              >
-                {svc.num}
-              </motion.span>
-            </div>
+                initial={{ x: "-135%", opacity: 0 }}
+                animate={{ x: "215%", opacity: [0, 1, 1, 0] }}
+                transition={{ duration: 1.25, ease: EASE }}
+              />
+            )}
 
-            {/* Right — content */}
-            <div className="flex-1" style={{ transform: `translateZ(${isHovered ? 15 : 0}px)` }}>
-              <h3
-                className="font-clash font-black text-xl md:text-2xl mb-3 transition-all duration-600"
+            {isHovered && !shouldReduceMotion && (
+              <div
+                className="absolute inset-0 pointer-events-none opacity-70 transition-opacity duration-500"
                 style={{
-                  color: isLit ? "hsl(43 52% 39%)" : "hsl(var(--foreground) / 0.7)",
+                  background: `radial-gradient(620px circle at ${(tilt.y / 10 + 0.5) * 100}% ${(-tilt.x / 10 + 0.5) * 100}%, hsl(var(--burgundy-light) / 0.18), transparent 52%)`,
                 }}
-              >
-                {svc.title}
-              </h3>
-              <p className="text-sm md:text-[15px] leading-relaxed mb-6 transition-colors duration-600"
-                style={{ color: isLit ? "hsl(var(--foreground) / 0.6)" : "hsl(var(--foreground) / 0.35)" }}>
-                {svc.description}
-              </p>
-              <div className="flex flex-wrap gap-2.5">
-                {svc.chips.map((chip, ci) => (
-                  <motion.span
-                    key={chip}
-                    className="px-4 py-2 rounded-xl text-[11px] font-mono font-medium"
-                    initial={false}
-                    animate={isLit
-                      ? { opacity: 1, y: 0, scale: 1 }
-                      : { opacity: 0.4, y: 4, scale: 0.97 }
-                    }
-                    transition={{ duration: 0.4, delay: isLit ? ci * 0.06 : 0, ease: EASE }}
-                    style={{
-                      background: isLit ? "hsl(43 55% 55% / 0.14)" : "hsl(var(--foreground) / 0.02)",
-                      border: `1px solid ${isLit ? "hsl(43 55% 55% / 0.3)" : "hsl(var(--foreground) / 0.05)"}`,
-                      color: isLit ? "hsl(43 52% 39%)" : "hsl(var(--foreground) / 0.3)",
-                      transform: `translateZ(${isHovered ? 10 : 0}px)`,
-                    }}
-                  >
-                    {chip}
-                  </motion.span>
-                ))}
+              />
+            )}
+
+            <div
+              className="absolute -top-16 -right-16 h-[250px] w-[250px] rounded-full pointer-events-none transition-all duration-700"
+              style={{
+                background: `radial-gradient(circle, hsl(var(--burgundy-light) / ${isLit ? 0.2 : 0.04}) 0%, transparent 72%)`,
+                transform: `translate(${tilt.y * 2}px, ${tilt.x * -2}px)`,
+              }}
+            />
+
+            <div
+              className="absolute top-0 left-0 right-0 h-[2.5px] transition-all duration-700"
+              style={{
+                background: isLit
+                  ? "linear-gradient(90deg, transparent 6%, hsl(var(--burgundy-light)) 26%, hsl(var(--wh) / 0.92) 50%, hsl(var(--burgundy-light)) 74%, transparent 94%)"
+                  : "linear-gradient(90deg, transparent, hsl(var(--burgundy-light) / 0.12), transparent)",
+                opacity: isLit ? 1 : 0.35,
+                borderRadius: "1.5rem 1.5rem 0 0",
+              }}
+            />
+
+            <div
+              className="absolute bottom-0 left-12 right-12 h-[1px] transition-all duration-700"
+              style={{
+                background: isLit
+                  ? "linear-gradient(90deg, transparent, hsl(var(--burgundy-light) / 0.28), transparent)"
+                  : "transparent",
+              }}
+            />
+
+            <div className="relative z-10 flex flex-col gap-6 md:flex-row md:gap-8">
+              <div className="flex shrink-0 items-center gap-4 md:flex-col md:items-start md:gap-3">
+                <motion.div
+                  className="relative flex h-16 w-16 items-center justify-center rounded-2xl"
+                  animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { scale: 1.08 } : { scale: 1 }}
+                  transition={{ duration: 0.5, ease: EASE }}
+                  style={{
+                    background: isLit
+                      ? "linear-gradient(135deg, hsl(var(--burgundy)), hsl(var(--burgundy-light)))"
+                      : "hsl(var(--burgundy) / 0.08)",
+                    border: `1.5px solid ${isLit ? "hsl(var(--burgundy-light) / 0.6)" : "hsl(var(--burgundy-light) / 0.14)"}`,
+                    color: isLit ? "hsl(var(--burgundy-fg))" : "hsl(var(--burgundy-light) / 0.56)",
+                    boxShadow: isLit ? "0 14px 42px hsl(var(--burgundy) / 0.34), 0 0 28px hsl(var(--burgundy-light) / 0.22)" : "none",
+                    transition: "background 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                    transform: `translateZ(${isHovered ? 30 : 0}px)`,
+                  }}
+                >
+                  {svc.icon}
+                  {isLit && !shouldReduceMotion && (
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{ border: "2px solid hsl(var(--burgundy-light) / 0.35)" }}
+                      initial={{ scale: 1, opacity: 1 }}
+                      animate={{ scale: 1.55, opacity: 0 }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: EASE }}
+                    />
+                  )}
+                </motion.div>
+
+                <motion.span
+                  className="font-clash text-3xl font-black md:text-4xl"
+                  animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { opacity: 1, y: 0 } : { opacity: 0.14, y: 0 }}
+                  transition={{ duration: 0.45, ease: EASE }}
+                  style={{
+                    color: isLit ? "hsl(var(--burgundy-light))" : "hsl(var(--foreground) / 0.42)",
+                    textShadow: isLit ? "0 0 38px hsl(var(--burgundy-light) / 0.34)" : "none",
+                    transform: `translateZ(${isHovered ? 20 : 0}px)`,
+                  }}
+                >
+                  {svc.num}
+                </motion.span>
+              </div>
+
+              <div className="flex-1" style={{ transform: `translateZ(${isHovered ? 15 : 0}px)` }}>
+                <h3
+                  className="mb-3 font-clash text-xl font-black text-foreground transition-all duration-500 md:text-2xl"
+                  style={{
+                    color: isLit ? "hsl(var(--burgundy))" : "hsl(var(--foreground) / 0.72)",
+                  }}
+                >
+                  {svc.title}
+                </h3>
+                <p
+                  className="mb-6 text-sm leading-relaxed text-muted-foreground transition-colors duration-500 md:text-[15px]"
+                  style={{ color: isLit ? "hsl(var(--foreground) / 0.62)" : "hsl(var(--foreground) / 0.38)" }}
+                >
+                  {svc.description}
+                </p>
+                <div className="flex flex-wrap gap-2.5">
+                  {svc.chips.map((chip, ci) => (
+                    <motion.span
+                      key={chip}
+                      className="rounded-xl px-4 py-2 text-[11px] font-mono font-medium"
+                      initial={false}
+                      animate={shouldReduceMotion
+                        ? { opacity: 1, y: 0, scale: 1 }
+                        : isLit
+                          ? { opacity: 1, y: 0, scale: 1 }
+                          : { opacity: 0.45, y: 4, scale: 0.97 }
+                      }
+                      transition={{ duration: 0.4, delay: isLit ? ci * 0.06 : 0, ease: EASE }}
+                      style={{
+                        background: isLit ? "hsl(var(--burgundy-light) / 0.14)" : "hsl(var(--foreground) / 0.02)",
+                        border: `1px solid ${isLit ? "hsl(var(--burgundy-light) / 0.3)" : "hsl(var(--foreground) / 0.06)"}`,
+                        color: isLit ? "hsl(var(--burgundy))" : "hsl(var(--foreground) / 0.34)",
+                        transform: `translateZ(${isHovered ? 10 : 0}px)`,
+                      }}
+                    >
+                      {chip}
+                    </motion.span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
@@ -444,6 +453,10 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
 
 const ServicesSection = () => {
   const ref = useScrollReveal();
+  const stickyHeaderRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const isStickyHeaderInView = useInView(stickyHeaderRef, { amount: 0.5 });
+
   return (
     <section id="services" ref={ref} className="py-28 md:py-44 px-6 relative">
       {/* Background decorative elements */}
@@ -456,9 +469,13 @@ const ServicesSection = () => {
         <div className="grid lg:grid-cols-[1fr_2.2fr] gap-16 md:gap-24">
           {/* Left sticky header */}
           <motion.div
+            ref={stickyHeaderRef}
             className="lg:sticky lg:top-32 lg:self-start"
-            animate={{ y: [0, -8, 0, 8, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+            animate={!shouldReduceMotion && isStickyHeaderInView ? { y: [0, -8, 0, 8, 0] } : { y: 0 }}
+            transition={!shouldReduceMotion && isStickyHeaderInView
+              ? { duration: 7, repeat: Infinity, ease: "easeInOut" }
+              : { duration: 0.35, ease: EASE }
+            }
           >
             <motion.div {...fadeUp()} className="rv flex items-center gap-3 mb-5">
               <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
