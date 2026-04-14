@@ -7,6 +7,12 @@ import {
 } from "lucide-react";
 import ContactSection from "@/components/home/ContactSection";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
+import sectorGastronomie from "@/assets/sector-gastronomie.jpg";
+import sectorHotellerie from "@/assets/sector-hotellerie.jpg";
+import sectorBeaute from "@/assets/sector-beaute.jpg";
+import sectorSport from "@/assets/sector-sport.jpg";
+import sectorAutomobile from "@/assets/sector-automobile.jpg";
+import sectorDistribution from "@/assets/sector-distribution.jpg";
 
 /* ═══ ANIMATION HELPERS ═══ */
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
