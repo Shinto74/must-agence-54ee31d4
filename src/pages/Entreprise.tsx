@@ -506,152 +506,148 @@ const ReferencesSection = () => {
   );
 };
 
-/* ═══ CTA FINAL — 3D PREMIUM CARD ═══ */
+/* ═══ CTA FINAL — IMMERSIVE CINEMATIC ═══ */
 const FinalCta = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    setTilt({ x: (y - 0.5) * -8, y: (x - 0.5) * 8 });
-    setMousePos({ x: x * 100, y: y * 100 });
-  };
 
   return (
-    <section ref={ref} className="py-20 px-6" style={{ perspective: "1400px" }}>
-      <motion.div
-        ref={cardRef}
-        className="max-w-[1400px] mx-auto rounded-[2rem] px-8 md:px-16 py-20 md:py-28 text-center relative overflow-hidden cursor-default"
+    <section
+      ref={ref}
+      className="relative min-h-[80vh] flex items-center justify-center overflow-hidden"
+    >
+      {/* Background image */}
+      <img
+        src={ctaDarkBg}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+        loading="lazy"
+        width={1920}
+        height={1080}
+        style={{ filter: "brightness(0.4) saturate(0.7)" }}
+      />
+
+      {/* Dark overlay for depth */}
+      <div
+        className="absolute inset-0"
         style={{
-          background: "linear-gradient(135deg, hsl(43 60% 22%), hsl(43 52% 39%), hsl(43 60% 22%))",
-          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-          transition: "transform 0.4s cubic-bezier(0.03,0.98,0.52,0.99)",
-          transformStyle: "preserve-3d",
-          boxShadow: isHovered
-            ? "0 40px 80px -20px hsl(43 52% 20% / 0.6), 0 0 60px hsl(43 55% 55% / 0.15), inset 0 1px 0 hsl(43 55% 55% / 0.2)"
-            : "0 20px 50px -15px hsl(0 0% 0% / 0.3)",
+          background: "linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.75) 100%)",
         }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => { setTilt({ x: 0, y: 0 }); setIsHovered(false); }}
-        initial={{ opacity: 0, y: 60, rotateX: 12 }}
-        animate={inView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-        transition={{ duration: 1.2, ease: EASE }}
-      >
-        {/* Spotlight follow cursor */}
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-500"
-          style={{
-            background: `radial-gradient(800px circle at ${mousePos.x}% ${mousePos.y}%, hsl(43 55% 55% / ${isHovered ? 0.2 : 0.05}), transparent 50%)`,
-            opacity: isHovered ? 1 : 0.3,
-          }}
-        />
+      />
 
-        {/* Animated light sweep */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "linear-gradient(105deg, transparent 40%, hsl(43 80% 70% / 0.12) 48%, hsl(43 80% 80% / 0.18) 50%, hsl(43 80% 70% / 0.12) 52%, transparent 60%)",
-          }}
-          animate={{ x: ["-120%", "220%"] }}
-          transition={{ duration: 4, repeat: Infinity, repeatDelay: 3, ease: "linear" }}
-        />
+      {/* Radial vignette */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse 60% 50% at 50% 50%, transparent 0%, rgba(0,0,0,0.5) 100%)",
+        }}
+      />
 
-        {/* Border glow animated */}
-        <div
-          className="absolute inset-0 rounded-[2rem] pointer-events-none transition-all duration-700"
-          style={{
-            border: `1.5px solid hsl(43 55% 55% / ${isHovered ? 0.4 : 0.15})`,
-            boxShadow: isHovered ? "inset 0 0 40px hsl(43 55% 55% / 0.05)" : "none",
-          }}
-        />
+      {/* Gold halo glow — center */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.12) 0%, hsl(43 52% 39% / 0.04) 50%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+      />
 
-        {/* Top accent line */}
-        <div
-          className="absolute top-0 left-12 right-12 h-[2px] rounded-full transition-all duration-700"
-          style={{
-            background: isHovered
-              ? "linear-gradient(90deg, transparent, hsl(43 60% 65%), hsl(43 80% 80%), hsl(43 60% 65%), transparent)"
-              : "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.3), transparent)",
-          }}
-        />
+      {/* Subtle animated light sweep */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(105deg, transparent 40%, hsl(43 80% 70% / 0.04) 48%, hsl(43 80% 80% / 0.08) 50%, hsl(43 80% 70% / 0.04) 52%, transparent 60%)",
+        }}
+        animate={{ x: ["-100%", "200%"] }}
+        transition={{ duration: 5, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
+      />
 
-        {/* Bottom accent line */}
-        <div
-          className="absolute bottom-0 left-12 right-12 h-[1px] rounded-full transition-all duration-700"
-          style={{
-            background: isHovered
-              ? "linear-gradient(90deg, transparent 20%, hsl(43 55% 55% / 0.3), transparent 80%)"
-              : "transparent",
-          }}
-        />
+      {/* Grain texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
+        }}
+      />
 
-        {/* Glow effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full blur-[120px] pointer-events-none"
-          style={{ background: "hsl(43 55% 55% / 0.25)" }} />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[200px] rounded-full blur-[100px] pointer-events-none"
-          style={{ background: "hsl(43 55% 55% / 0.15)" }} />
+      {/* Top fade from cream */}
+      <div
+        className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
+        style={{ background: "linear-gradient(to bottom, #FAF9F6, transparent)" }}
+      />
 
-        {/* Grain */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
+      {/* Bottom fade to cream */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+        style={{ background: "linear-gradient(to top, #FAF9F6, transparent)" }}
+      />
 
-        {/* Corner decorative elements */}
-        <div className="absolute top-6 left-6 w-8 h-8 pointer-events-none" style={{ borderTop: "1.5px solid hsl(43 55% 55% / 0.25)", borderLeft: "1.5px solid hsl(43 55% 55% / 0.25)" }} />
-        <div className="absolute top-6 right-6 w-8 h-8 pointer-events-none" style={{ borderTop: "1.5px solid hsl(43 55% 55% / 0.25)", borderRight: "1.5px solid hsl(43 55% 55% / 0.25)" }} />
-        <div className="absolute bottom-6 left-6 w-8 h-8 pointer-events-none" style={{ borderBottom: "1.5px solid hsl(43 55% 55% / 0.25)", borderLeft: "1.5px solid hsl(43 55% 55% / 0.25)" }} />
-        <div className="absolute bottom-6 right-6 w-8 h-8 pointer-events-none" style={{ borderBottom: "1.5px solid hsl(43 55% 55% / 0.25)", borderRight: "1.5px solid hsl(43 55% 55% / 0.25)" }} />
+      {/* Content */}
+      <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+        <motion.p
+          className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, ease: EASE }}
+        >
+          Prêt à grandir ?
+        </motion.p>
 
-        <motion.div className="relative z-10" style={{ transform: `translateZ(${isHovered ? 25 : 0}px)`, transition: "transform 0.4s ease" }}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-6" style={{ transform: `translateZ(${isHovered ? 10 : 0}px)` }}>Prêt à grandir ?</p>
-          <h2
-            className="font-clash text-3xl md:text-4xl lg:text-[3.5rem] font-black text-white leading-tight mb-6"
-            style={{ transform: `translateZ(${isHovered ? 35 : 0}px)`, textShadow: isHovered ? "0 0 40px hsl(43 55% 55% / 0.2)" : "none", transition: "all 0.4s ease" }}
-          >
-            Faites passer votre entreprise
-            <br />
+        <motion.h2
+          className="font-clash text-3xl md:text-5xl lg:text-[3.5rem] font-black text-white leading-tight mb-6"
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+          transition={{ duration: 1.2, delay: 0.15, ease: EASE }}
+          style={{ textShadow: "0 0 60px hsl(43 55% 55% / 0.25)" }}
+        >
+          Faites passer votre entreprise
+          <br />
+          <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.4)" }}>
             au niveau supérieur
-          </h2>
-          <p className="text-white/50 text-sm md:text-base max-w-lg mx-auto mb-10 leading-relaxed">
-            Stratégie sur-mesure, exécution premium et résultats mesurables.
-            Chaque projet est une mission.
-          </p>
-          <motion.button
-            onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
-            className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold cursor-pointer relative overflow-hidden"
-            style={{
-              background: "#fff",
-              color: "hsl(43 52% 39%)",
-              boxShadow: "0 0 0 1px rgba(255,255,255,0.2), 0 8px 40px rgba(0,0,0,0.3)",
-              transform: `translateZ(${isHovered ? 45 : 0}px)`,
-              transition: "transform 0.4s ease",
-            }}
-            whileHover={{
-              y: -3,
-              boxShadow: "0 0 0 1px rgba(255,255,255,0.4), 0 16px 60px rgba(0,0,0,0.4), 0 0 80px hsl(43 55% 55% / 0.2)",
-              scale: 1.02,
-            }}
-            whileTap={{ scale: 0.97 }}
-          >
-            {/* Button shimmer */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(105deg, transparent 40%, hsl(43 55% 55% / 0.15) 50%, transparent 60%)" }}
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "linear" }}
-            />
-            <span className="relative z-10">Contactez-nous</span>
-            <ChevronRight size={16} className="relative z-10 group-hover:translate-x-1.5 transition-transform duration-300" />
-          </motion.button>
-        </motion.div>
-      </motion.div>
+          </span>
+        </motion.h2>
+
+        <motion.p
+          className="text-white/50 text-sm md:text-base max-w-lg mx-auto mb-10 leading-relaxed"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.3, ease: EASE }}
+        >
+          Stratégie sur-mesure, exécution premium et résultats mesurables.
+          <br />
+          Chaque projet est une mission.
+        </motion.p>
+
+        <motion.button
+          onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
+          className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold cursor-pointer relative overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.45, ease: EASE }}
+          style={{
+            background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
+            color: "#fff",
+            boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.3), 0 8px 40px hsl(43 52% 39% / 0.4), 0 0 80px hsl(43 55% 55% / 0.1)",
+          }}
+          whileHover={{
+            y: -3,
+            boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.5), 0 16px 60px hsl(43 52% 39% / 0.5), 0 0 100px hsl(43 55% 55% / 0.2)",
+            scale: 1.02,
+          }}
+          whileTap={{ scale: 0.97 }}
+        >
+          {/* Shimmer */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "linear-gradient(105deg, transparent 40%, hsl(0 0% 100% / 0.2) 50%, transparent 60%)" }}
+            animate={{ x: ["-100%", "200%"] }}
+            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "linear" }}
+          />
+          <span className="relative z-10">Contactez-nous</span>
+          <ChevronRight size={16} className="relative z-10 group-hover:translate-x-1.5 transition-transform duration-300" />
+        </motion.button>
+      </div>
     </section>
   );
 };
