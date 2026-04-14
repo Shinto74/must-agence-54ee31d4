@@ -515,79 +515,82 @@ const FinalCta = () => {
   return (
     <section
       ref={ref}
-      className="relative min-h-[80vh] flex items-center justify-center overflow-hidden"
+      className="relative min-h-[85vh] flex items-center justify-center overflow-hidden"
+      style={{ background: "#090909" }}
     >
-      {/* Background image */}
-      <img
-        src={ctaDarkBg}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
-        loading="lazy"
-        width={1920}
-        height={1080}
-        style={{ filter: "brightness(0.4) saturate(0.7)" }}
-      />
+      {/* Deep layered gradient background */}
+      <div className="absolute inset-0" style={{
+        background: "linear-gradient(180deg, #0a0a0a 0%, #0d0b08 30%, #100e0a 50%, #0d0b08 70%, #090909 100%)",
+      }} />
 
-      {/* Dark overlay for depth */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.75) 100%)",
-        }}
-      />
+      {/* Central warm glow — large, soft */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        style={{ width: "900px", height: "500px" }}
+        animate={{ scale: [1, 1.05, 1], opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="w-full h-full rounded-full" style={{
+          background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.10) 0%, hsl(43 52% 39% / 0.04) 40%, transparent 70%)",
+          filter: "blur(80px)",
+        }} />
+      </motion.div>
+
+      {/* Secondary accent glow — top left */}
+      <div className="absolute top-[15%] left-[10%] w-[400px] h-[300px] rounded-full pointer-events-none" style={{
+        background: "radial-gradient(ellipse, hsl(43 60% 50% / 0.06) 0%, transparent 65%)",
+        filter: "blur(50px)",
+      }} />
+
+      {/* Secondary accent glow — bottom right */}
+      <div className="absolute bottom-[15%] right-[10%] w-[350px] h-[250px] rounded-full pointer-events-none" style={{
+        background: "radial-gradient(ellipse, hsl(43 50% 45% / 0.05) 0%, transparent 65%)",
+        filter: "blur(50px)",
+      }} />
 
       {/* Radial vignette */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "radial-gradient(ellipse 60% 50% at 50% 50%, transparent 0%, rgba(0,0,0,0.5) 100%)",
-        }}
-      />
+      <div className="absolute inset-0" style={{
+        background: "radial-gradient(ellipse 65% 55% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)",
+      }} />
 
-      {/* Gold halo glow — center */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.12) 0%, hsl(43 52% 39% / 0.04) 50%, transparent 70%)",
-          filter: "blur(60px)",
-        }}
-      />
-
-      {/* Subtle animated light sweep */}
+      {/* Subtle light sweep */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(105deg, transparent 40%, hsl(43 80% 70% / 0.04) 48%, hsl(43 80% 80% / 0.08) 50%, hsl(43 80% 70% / 0.04) 52%, transparent 60%)",
+          background: "linear-gradient(105deg, transparent 40%, hsl(43 80% 70% / 0.03) 48%, hsl(43 80% 80% / 0.06) 50%, hsl(43 80% 70% / 0.03) 52%, transparent 60%)",
         }}
         animate={{ x: ["-100%", "200%"] }}
-        transition={{ duration: 5, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
+        transition={{ duration: 6, repeat: Infinity, repeatDelay: 6, ease: "linear" }}
       />
 
       {/* Grain texture */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.035]" style={{
+        backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
+      }} />
 
       {/* Top fade from cream */}
-      <div
-        className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, #FAF9F6, transparent)" }}
-      />
+      <div className="absolute top-0 left-0 right-0 h-40 pointer-events-none" style={{
+        background: "linear-gradient(to bottom, #FAF9F6, transparent)",
+      }} />
 
       {/* Bottom fade to cream */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-        style={{ background: "linear-gradient(to top, #FAF9F6, transparent)" }}
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none" style={{
+        background: "linear-gradient(to top, #FAF9F6, transparent)",
+      }} />
+
+      {/* Thin gold line accents */}
+      <div className="absolute top-[30%] left-0 right-0 h-[1px] pointer-events-none" style={{
+        background: "linear-gradient(90deg, transparent 10%, hsl(43 55% 55% / 0.08) 50%, transparent 90%)",
+      }} />
+      <div className="absolute bottom-[30%] left-0 right-0 h-[1px] pointer-events-none" style={{
+        background: "linear-gradient(90deg, transparent 10%, hsl(43 55% 55% / 0.06) 50%, transparent 90%)",
+      }} />
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
         <motion.p
-          className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-6"
+          className="font-mono text-[10px] uppercase tracking-[0.3em] mb-6"
+          style={{ color: "hsl(43 55% 55% / 0.6)" }}
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: EASE }}
@@ -597,20 +600,20 @@ const FinalCta = () => {
 
         <motion.h2
           className="font-clash text-3xl md:text-5xl lg:text-[3.5rem] font-black text-white leading-tight mb-6"
-          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
           animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: 1.2, delay: 0.15, ease: EASE }}
-          style={{ textShadow: "0 0 60px hsl(43 55% 55% / 0.25)" }}
+          transition={{ duration: 1.4, delay: 0.15, ease: EASE }}
+          style={{ textShadow: "0 0 80px hsl(43 55% 55% / 0.15)" }}
         >
           Faites passer votre entreprise
           <br />
-          <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.4)" }}>
+          <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 50px hsl(43 55% 55% / 0.35)" }}>
             au niveau supérieur
           </span>
         </motion.h2>
 
         <motion.p
-          className="text-white/50 text-sm md:text-base max-w-lg mx-auto mb-10 leading-relaxed"
+          className="text-white/45 text-sm md:text-base max-w-lg mx-auto mb-12 leading-relaxed"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.3, ease: EASE }}
@@ -638,7 +641,6 @@ const FinalCta = () => {
           }}
           whileTap={{ scale: 0.97 }}
         >
-          {/* Shimmer */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
             style={{ background: "linear-gradient(105deg, transparent 40%, hsl(0 0% 100% / 0.2) 50%, transparent 60%)" }}
