@@ -475,7 +475,7 @@ const Services3DScroll = () => {
   }, []);
 
   return (
-    <section id="services" ref={containerRef} className="relative" style={{ height: `${(SERVICES.length + 1) * 100}vh` }}>
+    <section id="services" ref={containerRef} data-sticky-parent className="relative z-[1]" style={{ height: `${(SERVICES.length + 1) * 100}vh` }}>
       <div
         className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
         style={{
