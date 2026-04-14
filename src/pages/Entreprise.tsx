@@ -1,93 +1,225 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { Video, Share2, Rocket, Search, ArrowRight, ChevronRight } from "lucide-react";
+import {
+  Video, Share2, Rocket, Search, ArrowRight, ChevronRight,
+  Sparkles, TrendingUp, Eye, Zap,
+} from "lucide-react";
 import ContactSection from "@/components/home/ContactSection";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
 
 /* ═══ ANIMATION HELPERS ═══ */
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 40 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.8, delay, ease: EASE },
+  initial: { opacity: 0, y: 50 } as const,
+  whileInView: { opacity: 1, y: 0 } as const,
+  viewport: { once: true, margin: "-60px" } as const,
+  transition: { duration: 0.9, delay, ease: EASE } as const,
 });
+
+const fadeIn = (delay = 0) => ({
+  initial: { opacity: 0 } as const,
+  whileInView: { opacity: 1 } as const,
+  viewport: { once: true } as const,
+  transition: { duration: 1, delay, ease: EASE } as const,
+});
+
+/* ═══ COUNTER ANIMATION ═══ */
+const AnimatedCounter = ({ value, suffix = "" }: { value: string; suffix?: string }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const [display, setDisplay] = useState("0");
+  const num = parseInt(value.replace(/\D/g, ""));
+
+  useEffect(() => {
+    if (!inView || isNaN(num)) return;
+    let start = 0;
+    const duration = 2000;
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setDisplay(Math.round(eased * num).toString());
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [inView, num]);
+
+  return <span ref={ref}>{isNaN(num) ? value : display}{suffix}</span>;
+};
 
 /* ═══ HERO ═══ */
 const EntrepriseHero = () => {
-  const ref = useScrollReveal();
-  return (
-    <section ref={ref} className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Burgundy atmospheric glow */}
-      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: "hsl(var(--burgundy) / 0.12)" }} />
-      <div className="absolute bottom-1/4 left-1/3 w-[300px] h-[300px] rounded-full blur-[100px] pointer-events-none"
-        style={{ background: "hsl(var(--burgundy) / 0.06)" }} />
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
+  const yText = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 py-28">
-        <motion.div {...fadeUp(0)} className="rv flex items-center gap-3 mb-6">
-          <div className="w-10 h-[2px] rounded-full bg-burgundy" />
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-burgundy-light">
+  return (
+    <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Layered atmospheric glows */}
+      <motion.div
+        className="absolute top-[-10%] right-[-5%] w-[700px] h-[700px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, hsl(var(--burgundy) / 0.12) 0%, transparent 70%)" }}
+        animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, hsl(var(--burgundy) / 0.06) 0%, transparent 70%)" }}
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {/* Grain texture overlay */}
+      <div className="absolute inset-0 pointer-events-none z-[2] opacity-[0.015]"
+        style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
+
+      {/* Subtle horizontal lines */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 80px, hsl(var(--foreground) / 0.5) 80px, hsl(var(--foreground) / 0.5) 81px)" }} />
+
+      <motion.div style={{ y: yText, opacity }} className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 py-32">
+        <motion.div
+          className="flex items-center gap-4 mb-8"
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, ease: EASE }}
+        >
+          <motion.div className="w-12 h-[1.5px] bg-burgundy-light"
+            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
+            style={{ transformOrigin: "left" }}
+          />
+          <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-burgundy-light font-medium">
             Pôle Entreprise
           </span>
         </motion.div>
 
-        <motion.h1 {...fadeUp(0.1)}
-          className="rv font-clash text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-foreground leading-[0.95] mb-6 max-w-4xl"
+        <motion.h1
+          className="font-clash text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] font-black text-foreground leading-[0.92] mb-8 max-w-5xl"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 0.15, ease: EASE }}
         >
-          Une stratégie digitale pensée pour les{" "}
-          <span className="text-burgundy-light">entreprises ambitieuses</span>
+          Une stratégie digitale
+          <br />
+          <span className="text-burgundy-light">pensée pour performer</span>
         </motion.h1>
 
-        <motion.p {...fadeUp(0.2)}
-          className="rv text-muted-foreground text-base md:text-lg max-w-2xl leading-relaxed mb-10"
+        <motion.p
+          className="text-muted-foreground text-base md:text-lg lg:text-xl max-w-2xl leading-relaxed mb-12 font-light"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.35, ease: EASE }}
         >
-          Nous accompagnons les marques dans leur croissance grâce à une approche
-          complète : contenu, visibilité et performance.
+          Nous accompagnons les marques ambitieuses dans leur croissance
+          grâce à une approche complète : contenu, visibilité et performance mesurable.
         </motion.p>
 
-        <motion.div {...fadeUp(0.3)} className="rv flex flex-col sm:flex-row gap-4">
-          <a href="#contact"
-            className="group inline-flex items-center gap-3 px-8 py-4 rounded-pill bg-burgundy text-burgundy-foreground font-mono text-sm uppercase tracking-wider transition-all duration-300 hover:brightness-125 hover:shadow-[0_0_30px_hsl(var(--burgundy)/0.3)]"
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.55, ease: EASE }}
+        >
+          <motion.a href="#contact"
+            className="group inline-flex items-center gap-3 px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500"
+            style={{
+              background: "hsl(var(--burgundy))",
+              color: "#fff",
+              boxShadow: "0 0 0 1px hsl(var(--burgundy-light) / 0.3), 0 8px 30px hsl(var(--burgundy) / 0.25)",
+            }}
+            whileHover={{
+              y: -2,
+              boxShadow: "0 0 0 1px hsl(var(--burgundy-light) / 0.5), 0 12px 50px hsl(var(--burgundy) / 0.4), 0 0 80px hsl(var(--burgundy) / 0.15)",
+            }}
+            whileTap={{ scale: 0.97 }}
           >
             Demander un audit gratuit
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </a>
-          <a href="#services"
-            className="px-8 py-4 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-burgundy-light/40 transition-all duration-300"
+            <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+          </motion.a>
+          <motion.a href="#services"
+            className="group px-10 py-4.5 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-foreground/60 hover:text-foreground"
+            style={{ border: "1px solid hsl(var(--foreground) / 0.1)" }}
+            whileHover={{
+              borderColor: "hsl(var(--burgundy-light) / 0.3)",
+              background: "hsl(var(--burgundy) / 0.05)",
+            }}
           >
-            Nos services
-          </a>
+            Découvrir nos services
+          </motion.a>
         </motion.div>
-      </div>
+
+        {/* Stats bar */}
+        <motion.div
+          className="mt-20 pt-10 flex flex-wrap gap-12 md:gap-20"
+          style={{ borderTop: "1px solid hsl(var(--foreground) / 0.06)" }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.75, ease: EASE }}
+        >
+          {[
+            { value: "150", suffix: "+", label: "Projets livrés" },
+            { value: "98", suffix: "%", label: "Clients satisfaits" },
+            { value: "3", suffix: "M+", label: "Vues générées" },
+          ].map((stat) => (
+            <div key={stat.label}>
+              <p className="font-clash text-3xl md:text-4xl font-black text-burgundy-light mb-1">
+                <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+              </p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{stat.label}</p>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
 
+/* ═══ MARQUEE SEPARATOR ═══ */
+const MarqueeSep = () => (
+  <div className="overflow-hidden py-8" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)", borderBottom: "1px solid hsl(var(--foreground) / 0.05)" }}>
+    <div className="flex gap-16 animate-mq whitespace-nowrap">
+      {[...Array(3)].flatMap((_, i) =>
+        ["CONTENU", "SOCIAL MEDIA", "ADS", "SEO", "STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING"].map((w, j) => (
+          <span key={`${i}-${j}`} className="font-clash text-sm md:text-base font-semibold tracking-[0.15em] text-foreground/10 uppercase flex items-center gap-6">
+            {w}
+            <span className="w-1.5 h-1.5 rounded-full bg-burgundy/30" />
+          </span>
+        ))
+      )}
+    </div>
+  </div>
+);
+
 /* ═══ SERVICES ═══ */
 const SERVICES = [
   {
-    icon: <Video size={28} />,
+    icon: <Video size={24} />,
+    num: "01",
     title: "Création de Contenu Premium",
     description: "Production de photos et vidéos professionnelles haute définition pour sublimer votre image de marque.",
     chips: ["Photo HD", "Vidéo corporate", "Motion design", "Drone"],
   },
   {
-    icon: <Share2 size={28} />,
+    icon: <Share2 size={24} />,
+    num: "02",
     title: "Social Media Management",
     description: "Gestion professionnelle de vos réseaux sociaux pour fédérer et engager votre communauté.",
     chips: ["Instagram", "TikTok", "LinkedIn", "Planning éditorial"],
   },
   {
-    icon: <Rocket size={28} />,
-    title: "Campagnes Publicitaires (Ads)",
+    icon: <Rocket size={24} />,
+    num: "03",
+    title: "Campagnes Publicitaires",
     description: "Création et pilotage de campagnes ultra-performantes sur Google Ads, Meta Ads et TikTok Ads.",
     chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Retargeting"],
   },
   {
-    icon: <Search size={28} />,
-    title: "SEO / Référencement Naturel",
+    icon: <Search size={24} />,
+    num: "04",
+    title: "SEO & Référencement",
     description: "Optimisation de votre visibilité sur les moteurs de recherche pour attirer un trafic qualifié.",
     chips: ["Audit SEO", "Netlinking", "Content SEO", "Local SEO"],
   },
@@ -96,79 +228,146 @@ const SERVICES = [
 const ServicesSection = () => {
   const ref = useScrollReveal();
   return (
-    <section id="services" ref={ref} className="py-24 px-6">
+    <section id="services" ref={ref} className="py-28 md:py-40 px-6">
       <div className="max-w-[1400px] mx-auto">
-        <motion.p {...fadeUp()} className="rv font-mono text-xs uppercase tracking-[0.2em] text-burgundy-light mb-2">
-          Services
-        </motion.p>
-        <motion.h2 {...fadeUp(0.05)} className="rv font-clash text-3xl md:text-4xl font-bold text-foreground mb-14">
-          Ce qu'on <span className="text-burgundy-light">fait pour vous</span>
-        </motion.h2>
-
-        <div className="grid sm:grid-cols-2 gap-6">
-          {SERVICES.map((svc, i) => (
-            <motion.div key={svc.title} {...fadeUp(i * 0.08)}
-              className="rv group rounded-2xl border border-border bg-surface p-8 transition-all duration-500 hover:border-burgundy/30 hover:-translate-y-1"
-              style={{ boxShadow: "none" }}
-              whileHover={{ boxShadow: "0 8px 40px hsl(var(--burgundy) / 0.08)" }}
-            >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-colors duration-300"
-                style={{ background: "hsl(var(--burgundy) / 0.1)", color: "hsl(var(--burgundy-light))" }}>
-                {svc.icon}
-              </div>
-              <h3 className="font-clash font-semibold text-foreground text-xl mb-3">{svc.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-5">{svc.description}</p>
-              <div className="flex flex-wrap gap-2">
-                {svc.chips.map((chip) => (
-                  <span key={chip}
-                    className="px-3 py-1 rounded-full text-[10px] font-mono text-muted-foreground border border-border bg-background">
-                    {chip}
-                  </span>
-                ))}
-              </div>
+        <div className="grid md:grid-cols-[1fr_2fr] gap-16 md:gap-20">
+          {/* Left sticky header */}
+          <div className="md:sticky md:top-32 md:self-start">
+            <motion.div {...fadeUp()} className="rv flex items-center gap-3 mb-4">
+              <div className="w-8 h-[1.5px] bg-burgundy-light" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-burgundy-light">Services</span>
             </motion.div>
-          ))}
+            <motion.h2 {...fadeUp(0.05)} className="rv font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground leading-tight mb-5">
+              Ce qu'on fait
+              <br />
+              <span className="text-burgundy-light">pour vous</span>
+            </motion.h2>
+            <motion.p {...fadeUp(0.1)} className="rv text-muted-foreground text-sm leading-relaxed max-w-sm">
+              Chaque service est conçu pour maximiser votre impact digital
+              et générer un retour mesurable.
+            </motion.p>
+          </div>
+
+          {/* Right — cards */}
+          <div className="space-y-6">
+            {SERVICES.map((svc, i) => (
+              <motion.div key={svc.title} {...fadeUp(i * 0.1)}
+                className="rv group relative rounded-2xl p-8 md:p-10 transition-all duration-700 cursor-default overflow-hidden"
+                style={{
+                  background: "hsl(var(--foreground) / 0.03)",
+                  border: "1px solid hsl(var(--foreground) / 0.06)",
+                }}
+                whileHover={{
+                  borderColor: "hsl(var(--burgundy) / 0.25)",
+                  background: "hsl(var(--foreground) / 0.05)",
+                  y: -4,
+                }}
+              >
+                {/* Hover glow */}
+                <div className="absolute -top-20 -right-20 w-[200px] h-[200px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                  style={{ background: "radial-gradient(circle, hsl(var(--burgundy) / 0.08) 0%, transparent 70%)" }} />
+
+                <div className="relative z-10 flex gap-6">
+                  <div className="shrink-0">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-105"
+                      style={{
+                        background: "hsl(var(--burgundy) / 0.08)",
+                        border: "1px solid hsl(var(--burgundy) / 0.12)",
+                        color: "hsl(var(--burgundy-light))",
+                      }}>
+                      {svc.icon}
+                    </div>
+                    <span className="block mt-3 font-mono text-[10px] text-muted-foreground/40 text-center">{svc.num}</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-clash font-bold text-foreground text-lg md:text-xl mb-3 group-hover:text-burgundy-light transition-colors duration-500">
+                      {svc.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-5">{svc.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {svc.chips.map((chip) => (
+                        <span key={chip}
+                          className="px-3 py-1.5 rounded-full text-[10px] font-mono text-muted-foreground/60 transition-all duration-300 group-hover:text-muted-foreground"
+                          style={{ border: "1px solid hsl(var(--foreground) / 0.06)", background: "hsl(var(--foreground) / 0.02)" }}>
+                          {chip}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-/* ═══ EXPERTISE TERRAIN ═══ */
+/* ═══ EXPERTISE TERRAIN — IMMERSIVE ═══ */
 const SECTORS = [
-  { name: "Gastronomie", emoji: "🍽️", desc: "Restaurants haut de gamme" },
-  { name: "Hôtellerie", emoji: "🏨", desc: "Luxe & accueil" },
-  { name: "Beauté & Bien-être", emoji: "💆", desc: "Cosmétiques & spa" },
-  { name: "Sport & Fitness", emoji: "🏋️", desc: "Clubs & marques sportives" },
-  { name: "Automobile", emoji: "🏎️", desc: "Concessionnaires & moto" },
-  { name: "Grande Distribution", emoji: "🛒", desc: "Retail & enseignes" },
+  { name: "Gastronomie", icon: <Sparkles size={20} />, desc: "Restaurants & traiteurs haut de gamme" },
+  { name: "Hôtellerie", icon: <Eye size={20} />, desc: "Luxe, accueil & expérience client" },
+  { name: "Beauté & Bien-être", icon: <Zap size={20} />, desc: "Cosmétiques, spa & wellness" },
+  { name: "Sport & Fitness", icon: <TrendingUp size={20} />, desc: "Clubs, marques & athlètes" },
+  { name: "Automobile", icon: <Rocket size={20} />, desc: "Concessionnaires & moto" },
+  { name: "Grande Distribution", icon: <Share2 size={20} />, desc: "Retail & enseignes nationales" },
 ];
 
 const ExpertiseSection = () => {
   const ref = useScrollReveal();
   return (
-    <section ref={ref} className="py-24 px-6">
-      <div className="max-w-[1400px] mx-auto">
-        <motion.p {...fadeUp()} className="rv font-mono text-xs uppercase tracking-[0.2em] text-burgundy-light mb-2">
-          Expertise
-        </motion.p>
-        <motion.h2 {...fadeUp(0.05)} className="rv font-clash text-3xl md:text-4xl font-bold text-foreground mb-4">
-          Des secteurs que l'on <span className="text-burgundy-light">maîtrise</span>
-        </motion.h2>
-        <motion.p {...fadeUp(0.1)} className="rv text-muted-foreground text-sm md:text-base max-w-xl mb-14">
-          Notre expertise terrain nous permet de comprendre les enjeux de chaque industrie
-          et d'adapter notre stratégie en conséquence.
-        </motion.p>
+    <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
+      {/* Full-width burgundy accent bar */}
+      <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--burgundy) / 0.2), transparent)" }} />
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="max-w-[1400px] mx-auto">
+        <motion.div {...fadeUp()} className="rv text-center mb-16 md:mb-20">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-8 h-[1.5px] bg-burgundy-light" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-burgundy-light">Expertise terrain</span>
+            <div className="w-8 h-[1.5px] bg-burgundy-light" />
+          </div>
+          <h2 className="font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-5">
+            Des secteurs que l'on
+            <span className="text-burgundy-light"> maîtrise</span>
+          </h2>
+          <p className="text-muted-foreground text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+            Notre expertise nous permet de comprendre les enjeux spécifiques de chaque industrie
+            et d'adapter notre stratégie en conséquence.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {SECTORS.map((sector, i) => (
-            <motion.div key={sector.name} {...fadeUp(i * 0.06)}
-              className="rv group relative rounded-2xl border border-border bg-surface p-6 md:p-8 text-center transition-all duration-500 hover:border-burgundy/30 hover:-translate-y-1 cursor-default"
-              whileHover={{ boxShadow: "0 8px 40px hsl(var(--burgundy) / 0.08)" }}
+            <motion.div key={sector.name} {...fadeUp(i * 0.08)}
+              className="rv group relative rounded-2xl p-8 md:p-10 cursor-default transition-all duration-700 overflow-hidden"
+              style={{
+                background: "hsl(var(--foreground) / 0.02)",
+                border: "1px solid hsl(var(--foreground) / 0.05)",
+              }}
+              whileHover={{
+                y: -6,
+                borderColor: "hsl(var(--burgundy) / 0.2)",
+                background: "hsl(var(--foreground) / 0.04)",
+              }}
             >
-              <span className="text-3xl md:text-4xl block mb-3">{sector.emoji}</span>
-              <h3 className="font-clash font-semibold text-foreground text-sm md:text-base mb-1">{sector.name}</h3>
-              <p className="text-[11px] md:text-xs text-muted-foreground">{sector.desc}</p>
+              {/* Corner accent */}
+              <div className="absolute top-0 right-0 w-20 h-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{ background: "radial-gradient(circle at 100% 0%, hsl(var(--burgundy) / 0.1) 0%, transparent 70%)" }} />
+
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110"
+                style={{
+                  background: "hsl(var(--burgundy) / 0.07)",
+                  border: "1px solid hsl(var(--burgundy) / 0.1)",
+                  color: "hsl(var(--burgundy-light))",
+                }}>
+                {sector.icon}
+              </div>
+              <h3 className="font-clash font-bold text-foreground text-lg mb-2 group-hover:text-burgundy-light transition-colors duration-500">
+                {sector.name}
+              </h3>
+              <p className="text-[13px] text-muted-foreground leading-relaxed">{sector.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -189,23 +388,35 @@ const REFERENCES = [
 const ReferencesSection = () => {
   const ref = useScrollReveal();
   return (
-    <section ref={ref} className="py-24 px-6">
-      <div className="max-w-[1400px] mx-auto">
-        <motion.p {...fadeUp()} className="rv font-mono text-xs uppercase tracking-[0.2em] text-burgundy-light mb-2">
-          Références
-        </motion.p>
-        <motion.h2 {...fadeUp(0.05)} className="rv font-clash text-3xl md:text-4xl font-bold text-foreground mb-14">
-          Ils nous font <span className="text-burgundy-light">confiance</span>
-        </motion.h2>
+    <section ref={ref} className="py-28 md:py-36 px-6">
+      <div className="max-w-[1400px] mx-auto text-center">
+        <motion.div {...fadeUp()} className="rv mb-16">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-8 h-[1.5px] bg-burgundy-light" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-burgundy-light">Références</span>
+            <div className="w-8 h-[1.5px] bg-burgundy-light" />
+          </div>
+          <h2 className="font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground">
+            Ils nous font <span className="text-burgundy-light">confiance</span>
+          </h2>
+        </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <div className="flex flex-wrap justify-center gap-5 md:gap-6">
           {REFERENCES.map((r, i) => (
-            <motion.div key={r.name} {...fadeUp(i * 0.06)}
-              className="rv group rounded-2xl border border-border bg-surface p-6 text-center transition-all duration-400 hover:border-burgundy/30"
-              whileHover={{ y: -3, boxShadow: "0 6px 30px hsl(var(--burgundy) / 0.06)" }}
+            <motion.div key={r.name} {...fadeUp(i * 0.08)}
+              className="rv group px-10 py-8 rounded-2xl transition-all duration-700 cursor-default min-w-[180px]"
+              style={{
+                background: "hsl(var(--foreground) / 0.02)",
+                border: "1px solid hsl(var(--foreground) / 0.06)",
+              }}
+              whileHover={{
+                y: -4,
+                borderColor: "hsl(var(--burgundy) / 0.2)",
+                boxShadow: "0 12px 40px hsl(var(--burgundy) / 0.08)",
+              }}
             >
-              <p className="font-clash font-bold text-foreground text-sm md:text-base mb-1">{r.name}</p>
-              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{r.subtitle}</p>
+              <p className="font-clash font-black text-foreground text-base md:text-lg mb-1">{r.name}</p>
+              <p className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-[0.15em]">{r.subtitle}</p>
             </motion.div>
           ))}
         </div>
@@ -214,36 +425,62 @@ const ReferencesSection = () => {
   );
 };
 
-/* ═══ CTA FINAL ═══ */
+/* ═══ CTA FINAL — IMMERSIVE BURGUNDY ═══ */
 const FinalCta = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true });
+  const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <section ref={ref} className="py-20 px-6">
       <motion.div
-        className="max-w-[1400px] mx-auto rounded-3xl px-8 py-16 md:py-20 text-center relative overflow-hidden"
-        style={{ background: "hsl(var(--burgundy))" }}
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={inView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.8, ease: EASE }}
+        className="max-w-[1400px] mx-auto rounded-[2rem] px-8 md:px-16 py-20 md:py-28 text-center relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, hsl(var(--burgundy-dark)), hsl(var(--burgundy)), hsl(var(--burgundy-dark)))" }}
+        initial={{ opacity: 0, y: 40, scale: 0.97 }}
+        animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+        transition={{ duration: 1, ease: EASE }}
       >
         {/* Glow effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full blur-[100px] pointer-events-none"
-          style={{ background: "hsl(var(--burgundy-light) / 0.3)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full blur-[120px] pointer-events-none"
+          style={{ background: "hsl(var(--burgundy-light) / 0.2)" }} />
+        <div className="absolute bottom-0 left-1/4 w-[400px] h-[200px] rounded-full blur-[100px] pointer-events-none"
+          style={{ background: "hsl(var(--burgundy-light) / 0.1)" }} />
+        {/* Grain */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
 
-        <h2 className="font-clash text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 relative z-10">
-          Faites passer votre entreprise<br />au niveau supérieur
-        </h2>
-        <p className="text-white/70 text-sm md:text-base max-w-lg mx-auto mb-8 relative z-10">
-          Stratégie sur-mesure, exécution premium et résultats mesurables.
-        </p>
-        <a href="#contact"
-          className="relative z-10 group inline-flex items-center gap-3 px-10 py-4 rounded-pill bg-white text-burgundy font-mono text-sm uppercase tracking-wider font-bold transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,255,255,0.25)] hover:-translate-y-0.5"
+        <motion.div className="relative z-10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
         >
-          Contactez-nous
-          <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-        </a>
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-6">Prêt à grandir ?</p>
+          <h2 className="font-clash text-3xl md:text-4xl lg:text-[3.5rem] font-black text-white leading-tight mb-6">
+            Faites passer votre entreprise
+            <br />
+            au niveau supérieur
+          </h2>
+          <p className="text-white/50 text-sm md:text-base max-w-lg mx-auto mb-10 leading-relaxed">
+            Stratégie sur-mesure, exécution premium et résultats mesurables.
+            Chaque projet est une mission.
+          </p>
+          <motion.a href="#contact"
+            className="group inline-flex items-center gap-3 px-12 py-5 rounded-full font-mono text-sm uppercase tracking-wider font-bold transition-all duration-500"
+            style={{
+              background: "#fff",
+              color: "hsl(var(--burgundy))",
+              boxShadow: "0 0 0 1px rgba(255,255,255,0.2), 0 8px 40px rgba(0,0,0,0.3)",
+            }}
+            whileHover={{
+              y: -3,
+              boxShadow: "0 0 0 1px rgba(255,255,255,0.4), 0 16px 60px rgba(0,0,0,0.4), 0 0 80px rgba(255,255,255,0.1)",
+              scale: 1.02,
+            }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Contactez-nous
+            <ChevronRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+          </motion.a>
+        </motion.div>
       </motion.div>
     </section>
   );
@@ -254,6 +491,7 @@ const Entreprise = () => {
   return (
     <div className="page-bg page-bg--entreprise">
       <EntrepriseHero />
+      <MarqueeSep />
       <ServicesSection />
       <ExpertiseSection />
       <ReferencesSection />
