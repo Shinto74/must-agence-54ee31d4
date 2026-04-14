@@ -12,7 +12,7 @@ import sectorBeaute from "@/assets/sector-beaute.jpg";
 import sectorSport from "@/assets/sector-sport.jpg";
 import sectorAutomobile from "@/assets/sector-automobile.jpg";
 import sectorDistribution from "@/assets/sector-distribution.jpg";
-import heroVideoAsset from "@/assets/entreprise-hero-video-v2.mp4.asset.json";
+const HERO_VIDEO_URL = "/nyc-buildings.mp4";
 
 /* ═══ ANIMATION HELPERS ═══ */
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -75,7 +75,7 @@ const EntrepriseHero = () => {
           loop
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          src={heroVideoAsset.url}
+          src={HERO_VIDEO_URL}
         />
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/30" />
