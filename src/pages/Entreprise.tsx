@@ -268,22 +268,22 @@ const ServicesSection = () => {
                   border: "1px solid hsl(var(--foreground) / 0.06)",
                 }}
                 whileHover={{
-                  borderColor: "hsl(var(--burgundy) / 0.25)",
+                  borderColor: "hsl(43 52% 39% / 0.25)",
                   background: "hsl(var(--foreground) / 0.05)",
                   y: -4,
                 }}
               >
                 {/* Hover glow */}
                 <div className="absolute -top-20 -right-20 w-[200px] h-[200px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "radial-gradient(circle, hsl(var(--burgundy) / 0.08) 0%, transparent 70%)" }} />
+                  style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.1) 0%, transparent 70%)" }} />
 
                 <div className="relative z-10 flex gap-6">
                   <div className="shrink-0">
                     <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-105"
                       style={{
-                        background: "hsl(var(--burgundy) / 0.08)",
-                        border: "1px solid hsl(var(--burgundy) / 0.12)",
-                        color: "hsl(var(--burgundy-light))",
+                        background: "hsl(43 52% 39% / 0.1)",
+                        border: "1px solid hsl(43 55% 55% / 0.15)",
+                        color: "hsl(43 55% 55%)",
                       }}>
                       {svc.icon}
                     </div>
@@ -328,7 +328,7 @@ const ExpertiseSection = () => {
   const ref = useScrollReveal();
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--burgundy) / 0.2), transparent)" }} />
+      <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.25), transparent)" }} />
 
       <div className="max-w-[1400px] mx-auto">
         <motion.div {...fadeUp()} className="rv text-center mb-16 md:mb-20">
@@ -352,7 +352,7 @@ const ExpertiseSection = () => {
             <motion.div key={sector.name} {...fadeUp(i * 0.08)}
               className="rv group relative rounded-2xl cursor-default transition-all duration-700 overflow-hidden aspect-[4/3]"
               style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}
-              whileHover={{ y: -6, borderColor: "hsl(var(--burgundy) / 0.3)" }}
+              whileHover={{ y: -6, borderColor: "hsl(43 55% 55% / 0.3)" }}
             >
               {/* Image */}
               <img
@@ -367,7 +367,7 @@ const ExpertiseSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/90" />
               {/* Burgundy hover tint */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                style={{ background: "linear-gradient(to top, hsl(var(--burgundy) / 0.3), transparent 60%)" }} />
+                style={{ background: "linear-gradient(to top, hsl(43 52% 39% / 0.35), transparent 60%)" }} />
 
               {/* Text */}
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
@@ -419,8 +419,8 @@ const ReferencesSection = () => {
               }}
               whileHover={{
                 y: -4,
-                borderColor: "hsl(var(--burgundy) / 0.2)",
-                boxShadow: "0 12px 40px hsl(var(--burgundy) / 0.08)",
+                borderColor: "hsl(43 55% 55% / 0.25)",
+                boxShadow: "0 12px 40px hsl(43 52% 39% / 0.1)",
               }}
             >
               <p className="font-clash font-black text-foreground text-base md:text-lg mb-1">{r.name}</p>
