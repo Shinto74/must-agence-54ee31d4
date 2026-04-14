@@ -86,7 +86,13 @@ const Header = () => {
         }}
       />
 
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-10 flex items-center h-16 md:h-[72px]">
+      <div
+        className="max-w-[1400px] mx-auto px-6 lg:px-10 flex items-center"
+        style={{
+          height: scrolled ? "56px" : "72px",
+          transition: "height 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      >
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 shrink-0 relative z-10 group">
           <div className="relative">
