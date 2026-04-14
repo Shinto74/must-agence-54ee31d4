@@ -196,11 +196,11 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
                   style={{ background: "linear-gradient(90deg, transparent 10%, hsl(43 55% 75% / 0.3) 50%, transparent 90%)" }}
                 />
                 {/* Text */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
-                  <h4 className="font-clash font-bold text-white text-sm mb-0.5 drop-shadow-lg">
+                <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
+                  <h4 className="font-clash font-bold text-white text-lg mb-1 drop-shadow-lg">
                     {card.name}
                   </h4>
-                  <p className="text-white/55 text-[10px] font-mono tracking-wide">{card.desc}</p>
+                  <p className="text-white/60 text-xs font-mono tracking-wide">{card.desc}</p>
                 </div>
               </div>
             </motion.div>
