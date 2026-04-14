@@ -246,15 +246,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
   const shouldReduceMotion = useReducedMotion();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const [lightSweepKey, setLightSweepKey] = useState(0);
   const isInView = useInView(cardRef, { amount: 0.35, margin: "0px 0px -12% 0px" });
   const isLit = isInView || isHovered;
-
-  useEffect(() => {
-    if (isInView) {
-      setLightSweepKey((current) => current + 1);
-    }
-  }, [isInView]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (shouldReduceMotion || !cardRef.current) return;
@@ -274,10 +267,10 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       ref={cardRef}
       className="rv group relative cursor-default"
       style={{ perspective: "1200px" }}
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 60, scale: 0.92 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 1, delay: index * 0.15, ease: EASE }}
+      transition={{ duration: 0.9, delay: index * 0.12, ease: EASE }}
     >
       <motion.div
         className="relative will-change-transform"
@@ -293,33 +286,45 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       >
         <motion.div
           className="relative overflow-hidden rounded-[1.5rem]"
-          animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { y: -10, scale: 1.02 } : { y: 0, scale: 1 }}
-          transition={{ duration: 0.65, ease: EASE }}
+          animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { y: -12, scale: 1.03 } : { y: 0, scale: 0.97 }}
+          transition={{ duration: 0.7, ease: EASE }}
         >
           <div
             className="relative p-8 md:p-10 lg:p-12"
             style={{
               background: isLit
-                ? "linear-gradient(145deg, hsl(var(--background)) 0%, hsl(var(--card)) 58%, hsl(var(--muted)) 100%)"
-                : "linear-gradient(145deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
-              border: `1.5px solid ${isLit ? "hsl(var(--burgundy-light) / 0.42)" : "hsl(var(--foreground) / 0.08)"}`,
+                ? "linear-gradient(160deg, hsl(var(--background)) 0%, hsl(var(--card)) 40%, hsl(var(--muted)) 100%)"
+                : "linear-gradient(160deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
+              border: `1.5px solid ${isLit ? "hsl(var(--burgundy-light) / 0.5)" : "hsl(var(--foreground) / 0.06)"}`,
               boxShadow: isLit
-                ? "0 36px 90px -24px hsl(var(--burgundy) / 0.24), 0 0 70px hsl(var(--burgundy-light) / 0.16), 0 0 0 1px hsl(var(--burgundy-light) / 0.08), inset 0 1px 0 hsl(var(--wh) / 0.65)"
-                : "0 12px 30px -22px hsl(0 0% 0% / 0.16), inset 0 1px 0 hsl(var(--wh) / 0.32)",
+                ? "0 40px 100px -20px hsl(var(--burgundy) / 0.3), 0 0 80px hsl(var(--burgundy-light) / 0.18), 0 0 0 1px hsl(var(--burgundy-light) / 0.1), inset 0 1px 0 hsl(var(--wh) / 0.7)"
+                : "0 4px 12px -8px hsl(0 0% 0% / 0.08), inset 0 1px 0 hsl(var(--wh) / 0.2)",
               transition: "background 0.65s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1)",
               borderRadius: "1.5rem",
+              filter: isLit ? "none" : "saturate(0.3) brightness(0.92)",
             }}
           >
-            {isInView && !shouldReduceMotion && (
+            {/* Power-on fill bar from bottom */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 pointer-events-none rounded-b-[1.5rem]"
+              style={{
+                background: "linear-gradient(to top, hsl(var(--burgundy-light) / 0.12) 0%, hsl(var(--burgundy-light) / 0.04) 60%, transparent 100%)",
+              }}
+              initial={{ height: "0%" }}
+              animate={isLit ? { height: "100%" } : { height: "0%" }}
+              transition={{ duration: 1, ease: EASE }}
+            />
+
+            {/* Light sweep on power-on */}
+            {isLit && !shouldReduceMotion && (
               <motion.div
-                key={lightSweepKey}
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: "linear-gradient(105deg, transparent 34%, hsl(var(--burgundy-light) / 0.08) 44%, hsl(var(--wh) / 0.45) 50%, hsl(var(--burgundy-light) / 0.14) 56%, transparent 66%)",
+                  background: "linear-gradient(105deg, transparent 30%, hsl(var(--burgundy-light) / 0.06) 42%, hsl(var(--wh) / 0.35) 50%, hsl(var(--burgundy-light) / 0.1) 58%, transparent 70%)",
                 }}
-                initial={{ x: "-135%", opacity: 0 }}
-                animate={{ x: "215%", opacity: [0, 1, 1, 0] }}
-                transition={{ duration: 1.25, ease: EASE }}
+                initial={{ x: "-140%" }}
+                animate={{ x: "240%" }}
+                transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
               />
             )}
 
@@ -364,8 +369,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
               <div className="flex shrink-0 items-center gap-4 md:flex-col md:items-start md:gap-3">
                 <motion.div
                   className="relative flex h-16 w-16 items-center justify-center rounded-2xl"
-                  animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { scale: 1.08 } : { scale: 1 }}
-                  transition={{ duration: 0.5, ease: EASE }}
+                  animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { scale: [1, 1.18, 1.1] } : { scale: 0.9 }}
+                  transition={isLit ? { duration: 0.6, times: [0, 0.6, 1], ease: EASE } : { duration: 0.4, ease: EASE }}
                   style={{
                     background: isLit
                       ? "linear-gradient(135deg, hsl(var(--burgundy)), hsl(var(--burgundy-light)))"
@@ -373,7 +378,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
                     border: `1.5px solid ${isLit ? "hsl(var(--burgundy-light) / 0.6)" : "hsl(var(--burgundy-light) / 0.14)"}`,
                     color: isLit ? "hsl(var(--burgundy-fg))" : "hsl(var(--burgundy-light) / 0.56)",
                     boxShadow: isLit ? "0 14px 42px hsl(var(--burgundy) / 0.34), 0 0 28px hsl(var(--burgundy-light) / 0.22)" : "none",
-                    transition: "background 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                    transition: "background 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
                     transform: `translateZ(${isHovered ? 30 : 0}px)`,
                   }}
                 >
@@ -391,8 +396,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
 
                 <motion.span
                   className="font-clash text-3xl font-black md:text-4xl"
-                  animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { opacity: 1, y: 0 } : { opacity: 0.14, y: 0 }}
-                  transition={{ duration: 0.45, ease: EASE }}
+                  animate={shouldReduceMotion ? { opacity: 1 } : isLit ? { opacity: 1, scale: 1.15 } : { opacity: 0.1, scale: 0.85 }}
+                  transition={{ duration: 0.55, ease: EASE }}
                   style={{
                     color: isLit ? "hsl(var(--burgundy-light))" : "hsl(var(--foreground) / 0.42)",
                     textShadow: isLit ? "0 0 38px hsl(var(--burgundy-light) / 0.34)" : "none",
@@ -428,9 +433,9 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
                         ? { opacity: 1, y: 0, scale: 1 }
                         : isLit
                           ? { opacity: 1, y: 0, scale: 1 }
-                          : { opacity: 0.45, y: 4, scale: 0.97 }
+                          : { opacity: 0.2, y: 8, scale: 0.93 }
                       }
-                      transition={{ duration: 0.4, delay: isLit ? ci * 0.06 : 0, ease: EASE }}
+                      transition={{ duration: 0.45, delay: isLit ? 0.2 + ci * 0.08 : 0, ease: EASE }}
                       style={{
                         background: isLit ? "hsl(var(--burgundy-light) / 0.14)" : "hsl(var(--foreground) / 0.02)",
                         border: `1px solid ${isLit ? "hsl(var(--burgundy-light) / 0.3)" : "hsl(var(--foreground) / 0.06)"}`,
