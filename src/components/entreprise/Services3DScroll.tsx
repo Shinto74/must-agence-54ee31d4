@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useRef, useState, useCallback } from "react";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Video, Share2, Rocket, Search } from "lucide-react";
 import svcBgContent from "@/assets/svc-bg-content.jpg";
 import svcBgSocial from "@/assets/svc-bg-social.jpg";
@@ -13,8 +13,7 @@ const SERVICES = [
     icon: <Video size={28} />,
     num: "01",
     title: "Création de Contenu Premium",
-    description:
-      "Production de photos et vidéos professionnelles haute définition pour sublimer votre image de marque.",
+    description: "Production de photos et vidéos professionnelles haute définition pour sublimer votre image de marque.",
     chips: ["Photo HD", "Vidéo corporate", "Motion design", "Drone"],
     bgGradient: "radial-gradient(ellipse 60% 50% at 70% 30%, hsl(30 40% 60% / 0.06) 0%, transparent 70%)",
     bgImage: svcBgContent,
@@ -23,8 +22,7 @@ const SERVICES = [
     icon: <Share2 size={28} />,
     num: "02",
     title: "Social Media Management",
-    description:
-      "Gestion professionnelle de vos réseaux sociaux pour fédérer et engager votre communauté.",
+    description: "Gestion professionnelle de vos réseaux sociaux pour fédérer et engager votre communauté.",
     chips: ["Instagram", "TikTok", "LinkedIn", "Planning éditorial"],
     bgGradient: "radial-gradient(ellipse 55% 45% at 30% 60%, hsl(280 30% 50% / 0.04) 0%, transparent 70%)",
     bgImage: svcBgSocial,
@@ -33,8 +31,7 @@ const SERVICES = [
     icon: <Rocket size={28} />,
     num: "03",
     title: "Campagnes Publicitaires",
-    description:
-      "Création et pilotage de campagnes ultra-performantes sur Google Ads, Meta Ads et TikTok Ads.",
+    description: "Création et pilotage de campagnes ultra-performantes sur Google Ads, Meta Ads et TikTok Ads.",
     chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Retargeting"],
     bgGradient: "radial-gradient(ellipse 50% 50% at 60% 40%, hsl(20 50% 55% / 0.05) 0%, transparent 70%)",
     bgImage: svcBgAds,
@@ -43,8 +40,7 @@ const SERVICES = [
     icon: <Search size={28} />,
     num: "04",
     title: "SEO & Référencement",
-    description:
-      "Optimisation de votre visibilité sur les moteurs de recherche pour attirer un trafic qualifié.",
+    description: "Optimisation de votre visibilité sur les moteurs de recherche pour attirer un trafic qualifié.",
     chips: ["Audit SEO", "Netlinking", "Content SEO", "Local SEO"],
     bgGradient: "radial-gradient(ellipse 50% 55% at 40% 50%, hsl(200 30% 50% / 0.04) 0%, transparent 70%)",
     bgImage: svcBgSeo,
@@ -58,11 +54,15 @@ interface CardLayerProps {
   index: number;
   total: number;
   scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"];
+  hoveredCard: number | null;
+  onHover: (index: number | null) => void;
 }
 
-const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
+const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }: CardLayerProps) => {
   const segmentSize = 1 / total;
   const center = (index + 0.5) * segmentSize;
+  const [showRipple, setShowRipple] = useState(false);
+  const [showSweep, setShowSweep] = useState(false);
 
   const rawDistance = useTransform(scrollYProgress, (v) => (v - center) / segmentSize);
   const distance = useSpring(rawDistance, SPRING_CONFIG);
@@ -76,41 +76,52 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
   const glowOpacity = useTransform(distance, [-1, 0, 1], [0, 1, 0]);
   const borderOpacity = useTransform(distance, [-1, 0, 1], [0.06, 0.5, 0.06]);
 
+  const isHovered = hoveredCard === index;
+  const isSiblingHovered = hoveredCard !== null && hoveredCard !== index;
+
+  const handleMouseEnter = useCallback(() => {
+    onHover(index);
+    setShowRipple(true);
+    setShowSweep(true);
+    setTimeout(() => setShowRipple(false), 800);
+    setTimeout(() => setShowSweep(false), 700);
+  }, [index, onHover]);
+
+  const handleMouseLeave = useCallback(() => {
+    onHover(null);
+  }, [onHover]);
+
   return (
     <motion.div
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
       style={{
-        zIndex: useTransform(distance, (d) => Math.round((1 - Math.abs(d)) * 100)),
+        zIndex: useTransform(distance, (d) => Math.round((1 - Math.abs(d)) * 100) + (isHovered ? 50 : 0)),
         perspective: "1200px",
       }}
     >
-      {/* ── Multi-layer glow behind card ── */}
-      {/* Primary warm glow */}
+      {/* Multi-layer glow behind card */}
       <motion.div
         className="absolute rounded-full pointer-events-none"
         style={{
           width: "min(95vw, 900px)",
           height: 500,
-          background:
-            "radial-gradient(ellipse 70% 60% at 50% 50%, hsl(43 55% 55% / 0.18) 0%, hsl(43 52% 39% / 0.06) 45%, transparent 72%)",
+          background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsl(43 55% 55% / 0.18) 0%, hsl(43 52% 39% / 0.06) 45%, transparent 72%)",
           filter: "blur(50px)",
           opacity: glowOpacity,
         }}
       />
-      {/* Secondary halo — wider, softer */}
       <motion.div
         className="absolute rounded-full pointer-events-none"
         style={{
           width: "min(110vw, 1200px)",
           height: 600,
-          background:
-            "radial-gradient(ellipse 80% 70% at 50% 45%, hsl(35 40% 70% / 0.08) 0%, transparent 65%)",
+          background: "radial-gradient(ellipse 80% 70% at 50% 45%, hsl(35 40% 70% / 0.08) 0%, transparent 65%)",
           filter: "blur(80px)",
           opacity: useTransform(glowOpacity, (o) => o * 0.6),
         }}
       />
 
-      {/* Contextual atmosphere per service */}
+      {/* Contextual atmosphere */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -125,41 +136,82 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
           width: "min(88vw, 780px)",
           translateZ: z,
           scale,
-          opacity,
+          opacity: useTransform(opacity, (o) => isSiblingHovered ? o * 0.5 : o),
           rotateX,
           y,
-          filter: useTransform(blur, (b) => `blur(${b}px)`),
+          filter: useTransform(blur, (b) => {
+            const extraBlur = isSiblingHovered ? 2 : 0;
+            return `blur(${b + extraBlur}px)`;
+          }),
           transformStyle: "preserve-3d",
+          transition: "filter 0.5s ease",
         }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <motion.div
           className="relative overflow-hidden rounded-[1.5rem] p-8 md:p-10 lg:p-12"
+          animate={isHovered ? { y: -6 } : { y: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
           style={{
-            background:
-              "linear-gradient(155deg, hsl(40 20% 97%) 0%, hsl(40 15% 95%) 40%, hsl(40 10% 92%) 100%)",
+            background: "linear-gradient(155deg, hsl(40 20% 97%) 0%, hsl(40 15% 95%) 40%, hsl(40 10% 92%) 100%)",
             borderWidth: 1.5,
             borderStyle: "solid",
-            borderColor: useTransform(borderOpacity, (o) => `hsl(43 55% 55% / ${o})`),
-            boxShadow: useTransform(glowOpacity, (o) =>
-              o > 0.3
-                ? `0 40px 100px -20px hsl(43 52% 39% / ${0.25 * o}), 0 0 80px hsl(43 55% 55% / ${0.12 * o}), 0 20px 60px -10px hsl(0 0% 0% / ${0.08 * o}), inset 0 1px 0 hsl(0 0% 100% / 0.4)`
-                : "0 4px 12px -8px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)"
-            ),
+            borderColor: useTransform(borderOpacity, (o) => `hsl(43 55% 55% / ${isHovered ? Math.max(o, 0.6) : o})`),
+            boxShadow: isHovered
+              ? "0 50px 120px -20px hsl(43 52% 39% / 0.3), 0 0 100px hsl(43 55% 55% / 0.18), 0 25px 70px -10px hsl(0 0% 0% / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
+              : undefined,
           }}
         >
           {/* Top accent line */}
           <motion.div
             className="absolute top-0 left-0 right-0 h-[2px]"
             style={{
-              background:
-                "linear-gradient(90deg, transparent 5%, hsl(43 55% 55% / 0.6) 50%, transparent 95%)",
+              background: "linear-gradient(90deg, transparent 5%, hsl(43 55% 55% / 0.6) 50%, transparent 95%)",
               opacity: glowOpacity,
               transformOrigin: "center",
               scaleX: useTransform(glowOpacity, [0, 1], [0, 1]),
             }}
           />
 
-          {/* Contextual background image — heavily blurred atmosphere */}
+          {/* ── Ripple effect on hover ── */}
+          <AnimatePresence>
+            {showRipple && (
+              <motion.div
+                className="absolute pointer-events-none rounded-full"
+                style={{
+                  left: "50%",
+                  top: "50%",
+                  x: "-50%",
+                  y: "-50%",
+                  border: "1.5px solid hsl(43 55% 55% / 0.25)",
+                }}
+                initial={{ width: 0, height: 0, opacity: 0.6 }}
+                animate={{ width: 800, height: 800, opacity: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* ── Light sweep on hover ── */}
+          <AnimatePresence>
+            {showSweep && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none z-30"
+                initial={{ x: "-120%" }}
+                animate={{ x: "220%" }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+                style={{
+                  background: "linear-gradient(105deg, transparent 30%, hsl(43 55% 55% / 0.06) 42%, hsl(0 0% 100% / 0.18) 50%, hsl(43 55% 55% / 0.08) 58%, transparent 70%)",
+                  width: "60%",
+                }}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* Contextual background image */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.5rem]">
             <img
               src={svc.bgImage}
@@ -168,11 +220,11 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
               className="absolute inset-0 w-full h-full object-cover"
               style={{
                 filter: "blur(25px) saturate(0.4)",
-                opacity: 0.08,
+                opacity: isHovered ? 0.12 : 0.08,
                 transform: "scale(1.15)",
+                transition: "opacity 0.6s ease",
               }}
             />
-            {/* Light overlay for readability */}
             <div
               className="absolute inset-0"
               style={{
@@ -181,22 +233,20 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
             />
           </div>
 
-          {/* Bottom accent line — mirrored */}
+          {/* Bottom accent line */}
           <motion.div
             className="absolute bottom-0 left-0 right-0 h-[1px]"
             style={{
-              background:
-                "linear-gradient(90deg, transparent 15%, hsl(43 55% 55% / 0.15) 50%, transparent 85%)",
+              background: "linear-gradient(90deg, transparent 15%, hsl(43 55% 55% / 0.15) 50%, transparent 85%)",
               opacity: glowOpacity,
             }}
           />
 
-          {/* Inner subtle grain texture overlay */}
+          {/* Grain texture */}
           <div
             className="absolute inset-0 pointer-events-none opacity-[0.03] rounded-[1.5rem]"
             style={{
-              backgroundImage:
-                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+              backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
             }}
           />
 
@@ -221,19 +271,33 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
           {/* Content */}
           <div className="relative z-10 flex flex-col gap-6 md:flex-row md:gap-8">
             <div className="flex shrink-0 items-center gap-4 md:flex-col md:items-start md:gap-3">
-              <div
-                className="flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-700"
+              {/* Icon with pulse on hover */}
+              <motion.div
+                className="flex h-16 w-16 items-center justify-center rounded-2xl"
+                animate={isHovered ? { scale: [1, 1.12, 1.06], boxShadow: "0 18px 52px hsl(43 52% 39% / 0.4), 0 0 40px hsl(43 55% 55% / 0.3)" } : { scale: 1 }}
+                transition={isHovered ? { duration: 0.6, ease: EASE } : { duration: 0.4 }}
                 style={{
-                  background:
-                    "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
+                  background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
                   border: "1.5px solid hsl(43 55% 55% / 0.6)",
                   color: "hsl(0 0% 100%)",
-                  boxShadow:
-                    "0 14px 42px hsl(43 52% 39% / 0.3), 0 0 30px hsl(43 55% 55% / 0.2)",
+                  boxShadow: "0 14px 42px hsl(43 52% 39% / 0.3), 0 0 30px hsl(43 55% 55% / 0.2)",
                 }}
               >
                 {svc.icon}
-              </div>
+                {/* Pulse ring on hover */}
+                <AnimatePresence>
+                  {isHovered && (
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl pointer-events-none"
+                      style={{ border: "2px solid hsl(43 55% 55% / 0.3)" }}
+                      initial={{ scale: 1, opacity: 0.7 }}
+                      animate={{ scale: 1.5, opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: EASE }}
+                    />
+                  )}
+                </AnimatePresence>
+              </motion.div>
 
               <span
                 className="font-clash text-3xl font-black md:text-4xl"
@@ -248,8 +312,8 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
 
             <div className="flex-1">
               <h3
-                className="mb-3 font-clash text-xl font-black md:text-2xl"
-                style={{ color: "hsl(43 52% 39%)" }}
+                className="mb-3 font-clash text-xl font-black md:text-2xl transition-colors duration-500"
+                style={{ color: isHovered ? "hsl(43 50% 32%)" : "hsl(43 52% 39%)" }}
               >
                 {svc.title}
               </h3>
@@ -260,18 +324,21 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
                 {svc.description}
               </p>
               <div className="flex flex-wrap gap-2.5">
-                {svc.chips.map((chip) => (
-                  <span
+                {svc.chips.map((chip, ci) => (
+                  <motion.span
                     key={chip}
                     className="rounded-xl px-4 py-2 text-[11px] font-mono font-medium"
+                    animate={isHovered ? { y: -2, scale: 1.03 } : { y: 0, scale: 1 }}
+                    transition={{ duration: 0.35, delay: ci * 0.04, ease: EASE }}
                     style={{
-                      background: "hsl(43 55% 55% / 0.12)",
-                      border: "1px solid hsl(43 55% 55% / 0.25)",
+                      background: isHovered ? "hsl(43 55% 55% / 0.18)" : "hsl(43 55% 55% / 0.12)",
+                      border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.4)" : "hsl(43 55% 55% / 0.25)"}`,
                       color: "hsl(43 52% 39%)",
+                      transition: "background 0.4s ease, border-color 0.4s ease",
                     }}
                   >
                     {chip}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </div>
@@ -281,17 +348,14 @@ const CardLayer = ({ svc, index, total, scrollYProgress }: CardLayerProps) => {
           <div
             className="absolute -top-20 -right-20 h-[300px] w-[300px] rounded-full pointer-events-none"
             style={{
-              background:
-                "radial-gradient(circle, hsl(43 55% 55% / 0.1) 0%, hsl(35 40% 70% / 0.04) 40%, transparent 72%)",
+              background: "radial-gradient(circle, hsl(43 55% 55% / 0.1) 0%, hsl(35 40% 70% / 0.04) 40%, transparent 72%)",
             }}
           />
-
           {/* Decorative orb — bottom left */}
           <div
             className="absolute -bottom-16 -left-16 h-[200px] w-[200px] rounded-full pointer-events-none"
             style={{
-              background:
-                "radial-gradient(circle, hsl(43 52% 39% / 0.06) 0%, transparent 70%)",
+              background: "radial-gradient(circle, hsl(43 52% 39% / 0.06) 0%, transparent 70%)",
             }}
           />
         </motion.div>
@@ -324,16 +388,13 @@ const ProgressDots = ({
                 Math.abs(a - i) < 0.6 ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0.2)"
               ),
               boxShadow: useTransform(smoothActive, (a) =>
-                Math.abs(a - i) < 0.6
-                  ? "0 0 12px hsl(43 55% 55% / 0.5)"
-                  : "none"
+                Math.abs(a - i) < 0.6 ? "0 0 12px hsl(43 55% 55% / 0.5)" : "none"
               ),
               scale: useTransform(smoothActive, (a) =>
                 Math.abs(a - i) < 0.6 ? 1.4 : 1
               ),
             }}
           />
-          {/* Service label next to active dot */}
           <motion.span
             className="font-mono text-[9px] uppercase tracking-[0.15em] whitespace-nowrap hidden md:block"
             style={{
@@ -356,7 +417,7 @@ const ProgressDots = ({
   );
 };
 
-/* ── Decorative floating elements in the viewport ── */
+/* ── Decorative floating elements ── */
 const AmbientDecorations = ({ scrollYProgress }: { scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"] }) => {
   const rotate1 = useTransform(scrollYProgress, [0, 1], [0, 180]);
   const rotate2 = useTransform(scrollYProgress, [0, 1], [45, -135]);
@@ -365,37 +426,18 @@ const AmbientDecorations = ({ scrollYProgress }: { scrollYProgress: ReturnType<t
 
   return (
     <>
-      {/* Floating diamond shape — top left */}
       <motion.div
         className="absolute top-[15%] left-[8%] w-16 h-16 pointer-events-none opacity-[0.06]"
-        style={{
-          border: "1px solid hsl(43 55% 55%)",
-          rotate: rotate1,
-          y: y1,
-          borderRadius: "4px",
-        }}
+        style={{ border: "1px solid hsl(43 55% 55%)", rotate: rotate1, y: y1, borderRadius: "4px" }}
       />
-
-      {/* Floating circle — bottom right */}
       <motion.div
         className="absolute bottom-[20%] right-[12%] w-20 h-20 rounded-full pointer-events-none opacity-[0.04]"
-        style={{
-          border: "1px solid hsl(43 55% 55%)",
-          y: y2,
-        }}
+        style={{ border: "1px solid hsl(43 55% 55%)", y: y2 }}
       />
-
-      {/* Thin diagonal line — top right */}
       <motion.div
         className="absolute top-[25%] right-[20%] w-[120px] h-[1px] pointer-events-none opacity-[0.06]"
-        style={{
-          background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.4), transparent)",
-          rotate: rotate2,
-          y: y1,
-        }}
+        style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.4), transparent)", rotate: rotate2, y: y1 }}
       />
-
-      {/* Small plus sign — left center */}
       <motion.div
         className="absolute top-[45%] left-[5%] pointer-events-none opacity-[0.07]"
         style={{ y: y2, color: "hsl(43 55% 55%)" }}
@@ -405,19 +447,13 @@ const AmbientDecorations = ({ scrollYProgress }: { scrollYProgress: ReturnType<t
           <line x1="2" y1="8" x2="14" y2="8" />
         </svg>
       </motion.div>
-
-      {/* Dot cluster — bottom left */}
       <div className="absolute bottom-[30%] left-[15%] pointer-events-none opacity-[0.05]">
         {[0, 1, 2].map((row) =>
           [0, 1, 2].map((col) => (
             <div
               key={`${row}-${col}`}
               className="absolute w-1 h-1 rounded-full"
-              style={{
-                background: "hsl(43 55% 55%)",
-                left: col * 8,
-                top: row * 8,
-              }}
+              style={{ background: "hsl(43 55% 55%)", left: col * 8, top: row * 8 }}
             />
           ))
         )}
@@ -428,14 +464,18 @@ const AmbientDecorations = ({ scrollYProgress }: { scrollYProgress: ReturnType<t
 
 const Services3DScroll = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
+  const handleHover = useCallback((index: number | null) => {
+    setHoveredCard(index);
+  }, []);
+
   return (
     <section id="services" ref={containerRef} className="relative" style={{ height: `${(SERVICES.length + 1) * 100}vh` }}>
-      {/* Sticky viewport */}
       <div
         className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
         style={{
@@ -443,54 +483,34 @@ const Services3DScroll = () => {
           background: "linear-gradient(180deg, hsl(40 20% 97%) 0%, hsl(38 18% 94%) 40%, hsl(40 15% 96%) 100%)",
         }}
       >
-        {/* Full-screen subtle warm gradient atmosphere */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background:
-              "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 80% / 0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.04) 0%, transparent 55%), radial-gradient(ellipse 50% 40% at 80% 60%, hsl(35 45% 65% / 0.05) 0%, transparent 50%)",
+            background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(43 40% 80% / 0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 70%, hsl(43 52% 39% / 0.04) 0%, transparent 55%), radial-gradient(ellipse 50% 40% at 80% 60%, hsl(35 45% 65% / 0.05) 0%, transparent 50%)",
           }}
         />
-
-        {/* Vignette edges for cinematic depth */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 50%, hsl(40 20% 97% / 0.6) 100%)",
-          }}
+          style={{ background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 50%, hsl(40 20% 97% / 0.6) 100%)" }}
         />
-
-        {/* Grain texture */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.025]"
           style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
           }}
         />
 
-        {/* Animated ambient decorations */}
         <AmbientDecorations scrollYProgress={scrollYProgress} />
 
-        {/* Background decorative orbs */}
         <div
           className="absolute top-20 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle, hsl(43 55% 55% / 0.06) 0%, transparent 55%)",
-            filter: "blur(20px)",
-          }}
+          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.06) 0%, transparent 55%)", filter: "blur(20px)" }}
         />
         <div
           className="absolute bottom-10 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle, hsl(43 55% 55% / 0.05) 0%, transparent 55%)",
-            filter: "blur(20px)",
-          }}
+          style={{ background: "radial-gradient(circle, hsl(43 55% 55% / 0.05) 0%, transparent 55%)", filter: "blur(20px)" }}
         />
 
-        {/* Section header — fades out as scroll begins */}
         <motion.div
           className="absolute top-16 left-6 md:left-12 z-20"
           style={{
@@ -499,35 +519,20 @@ const Services3DScroll = () => {
           }}
         >
           <div className="flex items-center gap-3 mb-5">
-            <div
-              className="w-12 h-[1.5px]"
-              style={{
-                background:
-                  "linear-gradient(to right, hsl(43 55% 55%), transparent)",
-              }}
-            />
-            <span
-              className="font-mono text-[10px] uppercase tracking-[0.3em]"
-              style={{ color: "hsl(43 55% 55%)" }}
-            >
+            <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>
               Services
             </span>
           </div>
           <h2 className="font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[0.95]" style={{ color: "hsl(0 0% 10%)" }}>
             Ce qu'on fait
             <br />
-            <span
-              style={{
-                color: "hsl(43 55% 55%)",
-                textShadow: "0 0 40px hsl(43 55% 55% / 0.2)",
-              }}
-            >
+            <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.2)" }}>
               pour vous
             </span>
           </h2>
         </motion.div>
 
-        {/* 3D Card layers */}
         {SERVICES.map((svc, i) => (
           <CardLayer
             key={svc.title}
@@ -535,10 +540,11 @@ const Services3DScroll = () => {
             index={i}
             total={SERVICES.length}
             scrollYProgress={scrollYProgress}
+            hoveredCard={hoveredCard}
+            onHover={handleHover}
           />
         ))}
 
-        {/* Progress dots */}
         <ProgressDots total={SERVICES.length} scrollYProgress={scrollYProgress} />
       </div>
     </section>
