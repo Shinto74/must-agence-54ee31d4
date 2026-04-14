@@ -79,8 +79,8 @@ const EntrepriseHero = () => {
         />
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/30" />
-        {/* Burgundy tint overlay */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsl(var(--burgundy) / 0.25) 0%, transparent 60%)" }} />
+        {/* Gold tint overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsl(43 52% 39% / 0.3) 0%, transparent 60%)" }} />
         {/* Bottom gradient fade to cream */}
         <div className="absolute bottom-0 left-0 right-0 h-40" style={{ background: "linear-gradient(to bottom, transparent, #FAF9F6)" }} />
       </motion.div>
