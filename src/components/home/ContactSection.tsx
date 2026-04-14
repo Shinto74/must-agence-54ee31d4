@@ -34,6 +34,13 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
   const [selectOpen, setSelectOpen] = useState(false);
   const [budgetOpen, setBudgetOpen] = useState(false);
 
+  // Listen for global event from CTA buttons
+  useEffect(() => {
+    const handler = () => setModalOpen(true);
+    window.addEventListener("open-contact-modal", handler);
+    return () => window.removeEventListener("open-contact-modal", handler);
+  }, []);
+
   const budgetOptions = ["1 000 € – 3 000 €", "3 000 € – 5 000 €", "5 000 € – 10 000 €", "10 000 € – 20 000 €", "20 000 € +"];
 
   const handleSubmit = async (e: React.FormEvent) => {
