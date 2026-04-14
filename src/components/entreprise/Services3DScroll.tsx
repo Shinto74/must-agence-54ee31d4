@@ -16,8 +16,8 @@ const SERVICES = [
     description:
       "Production de photos et vidéos professionnelles haute définition pour sublimer votre image de marque.",
     chips: ["Photo HD", "Vidéo corporate", "Motion design", "Drone"],
-    // Contextual bg keyword for atmosphere
     bgGradient: "radial-gradient(ellipse 60% 50% at 70% 30%, hsl(30 40% 60% / 0.06) 0%, transparent 70%)",
+    bgImage: svcBgContent,
   },
   {
     icon: <Share2 size={28} />,
@@ -27,6 +27,7 @@ const SERVICES = [
       "Gestion professionnelle de vos réseaux sociaux pour fédérer et engager votre communauté.",
     chips: ["Instagram", "TikTok", "LinkedIn", "Planning éditorial"],
     bgGradient: "radial-gradient(ellipse 55% 45% at 30% 60%, hsl(280 30% 50% / 0.04) 0%, transparent 70%)",
+    bgImage: svcBgSocial,
   },
   {
     icon: <Rocket size={28} />,
@@ -36,6 +37,7 @@ const SERVICES = [
       "Création et pilotage de campagnes ultra-performantes sur Google Ads, Meta Ads et TikTok Ads.",
     chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Retargeting"],
     bgGradient: "radial-gradient(ellipse 50% 50% at 60% 40%, hsl(20 50% 55% / 0.05) 0%, transparent 70%)",
+    bgImage: svcBgAds,
   },
   {
     icon: <Search size={28} />,
@@ -45,6 +47,7 @@ const SERVICES = [
       "Optimisation de votre visibilité sur les moteurs de recherche pour attirer un trafic qualifié.",
     chips: ["Audit SEO", "Netlinking", "Content SEO", "Local SEO"],
     bgGradient: "radial-gradient(ellipse 50% 55% at 40% 50%, hsl(200 30% 50% / 0.04) 0%, transparent 70%)",
+    bgImage: svcBgSeo,
   },
 ];
 
