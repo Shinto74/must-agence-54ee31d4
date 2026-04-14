@@ -184,7 +184,7 @@ const EntrepriseHero = () => {
 
 /* ═══ MARQUEE SEPARATOR ═══ */
 const MarqueeSep = () => (
-  <div className="overflow-hidden py-8" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)", borderBottom: "1px solid hsl(var(--foreground) / 0.05)" }}>
+  <div className="overflow-hidden py-8" style={{ borderTop: "1px solid hsl(var(--border))", borderBottom: "1px solid hsl(var(--border))" }}>
     <div className="flex gap-16 animate-mq whitespace-nowrap">
       {[...Array(3)].flatMap((_, i) =>
         ["CONTENU", "SOCIAL MEDIA", "ADS", "SEO", "STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING"].map((w, j) => (
