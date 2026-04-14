@@ -12,11 +12,11 @@ interface Orbit3DShowcaseProps {
   cards: OrbitCard[];
 }
 
-const ORBIT_RADIUS_X = 380; // ellipse width
-const ORBIT_RADIUS_Y = 140; // ellipse depth (perspective)
-const CARD_W = 200;
-const CARD_H = 260;
-const ROTATION_SPEED = 0.0004; // radians per ms — slow & premium
+const ORBIT_RADIUS_X = 520; // ellipse width
+const ORBIT_RADIUS_Y = 180; // ellipse depth (perspective)
+const CARD_W = 280;
+const CARD_H = 360;
+const ROTATION_SPEED = -0.0003; // negative = right to left, slow & premium
 
 const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
