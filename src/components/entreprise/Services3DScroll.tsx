@@ -106,7 +106,7 @@ const CardLayer = ({ svc, index, total, scrollYProgress, hoveredCard, onHover }:
         style={{
           width: "min(95vw, 900px)",
           height: 500,
-          background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsl(43 55% 55% / 0.18) 0%, hsl(43 52% 39% / 0.06) 45%, transparent 72%)",
+          background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsl(43 55% 55% / 0.12) 0%, hsl(43 52% 39% / 0.04) 45%, transparent 72%)",
           filter: "blur(50px)",
           opacity: glowOpacity,
         }}
