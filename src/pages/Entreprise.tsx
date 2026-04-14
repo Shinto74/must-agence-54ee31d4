@@ -455,7 +455,11 @@ const ServicesSection = () => {
       <div className="max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-[1fr_2.2fr] gap-16 md:gap-24">
           {/* Left sticky header */}
-          <div className="lg:sticky lg:top-32 lg:self-start">
+          <motion.div
+            className="lg:sticky lg:top-32 lg:self-start"
+            animate={{ y: [0, -8, 0, 8, 0] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          >
             <motion.div {...fadeUp()} className="rv flex items-center gap-3 mb-5">
               <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
               <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>Services</span>
@@ -465,11 +469,7 @@ const ServicesSection = () => {
               <br />
               <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.2)" }}>pour vous</span>
             </motion.h2>
-            <motion.p
-              className="rv text-muted-foreground text-sm md:text-[15px] leading-relaxed max-w-sm mb-8"
-              animate={{ y: [0, -6, 0, 6, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            >
+            <motion.p className="rv text-muted-foreground text-sm md:text-[15px] leading-relaxed max-w-sm mb-8">
               Chaque service est conçu pour maximiser votre impact digital
               et générer un retour mesurable.
             </motion.p>
@@ -482,7 +482,7 @@ const ServicesSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
             />
-          </div>
+          </motion.div>
 
           {/* Right — 3D cards */}
           <div className="space-y-8">
