@@ -69,7 +69,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: accentColor }}>Navigation</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : accentColor }}>Navigation</p>
             <nav className="flex flex-col gap-2.5">
               {[
                 { label: "Accueil", to: "/" },
@@ -80,9 +80,9 @@ const Footer = () => {
                   key={item.to}
                   to={item.to}
                   className="text-sm transition-colors duration-300 w-fit"
-                  style={{ color: isEntreprise ? "hsl(0 0% 55%)" : "hsl(var(--muted-foreground))" }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "#fff" : "hsl(var(--foreground))"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(0 0% 55%)" : ""; }}
+                  style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 30% 97%)" : "hsl(var(--foreground))"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
                 >
                   {item.label}
                 </Link>
@@ -91,13 +91,13 @@ const Footer = () => {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: accentColor }}>Contact</p>
-            <div className="flex flex-col gap-2.5 text-sm" style={{ color: isEntreprise ? "hsl(0 0% 55%)" : "hsl(var(--muted-foreground))" }}>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : accentColor }}>Contact</p>
+            <div className="flex flex-col gap-2.5 text-sm" style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}>
               <a
                 href={`mailto:${SITE.contact.email}`}
                 className="transition-colors duration-300"
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(0 0% 55%)" : ""; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
               >
                 {SITE.contact.email}
               </a>
@@ -105,7 +105,7 @@ const Footer = () => {
                 href={`tel:${SITE.contact.phone}`}
                 className="transition-colors duration-300"
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(0 0% 55%)" : ""; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
               >
                 {SITE.contact.phone}
               </a>
@@ -114,11 +114,11 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: `1px solid ${isEntreprise ? "hsl(43 55% 55% / 0.15)" : "hsl(var(--border))"}` }}>
-          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(43 55% 55% / 0.5)" : "hsl(var(--muted-foreground) / 0.6)" }}>
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: `1px solid ${isEntreprise ? "hsl(45 40% 28%)" : "hsl(var(--border))"}` }}>
+          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(45 20% 70%)" : "hsl(var(--muted-foreground) / 0.6)" }}>
             © {new Date().getFullYear()} {SITE.name} — Tous droits réservés.
           </p>
-          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(43 55% 55% / 0.35)" : "hsl(var(--muted-foreground) / 0.4)" }}>
+          <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(45 20% 62%)" : "hsl(var(--muted-foreground) / 0.4)" }}>
             Fait avec précision à Paris.
           </p>
         </div>
