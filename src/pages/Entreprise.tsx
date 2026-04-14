@@ -81,8 +81,8 @@ const EntrepriseHero = () => {
         style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
 
       {/* Subtle horizontal lines */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 80px, hsl(var(--foreground) / 0.5) 80px, hsl(var(--foreground) / 0.5) 81px)" }} />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 80px, hsl(0 0% 0% / 0.08) 80px, hsl(0 0% 0% / 0.08) 81px)" }} />
 
       <motion.div style={{ y: yText, opacity }} className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 py-32">
         <motion.div
@@ -184,7 +184,7 @@ const EntrepriseHero = () => {
 
 /* ═══ MARQUEE SEPARATOR ═══ */
 const MarqueeSep = () => (
-  <div className="overflow-hidden py-8" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)", borderBottom: "1px solid hsl(var(--foreground) / 0.05)" }}>
+  <div className="overflow-hidden py-8" style={{ borderTop: "1px solid hsl(var(--border))", borderBottom: "1px solid hsl(var(--border))" }}>
     <div className="flex gap-16 animate-mq whitespace-nowrap">
       {[...Array(3)].flatMap((_, i) =>
         ["CONTENU", "SOCIAL MEDIA", "ADS", "SEO", "STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING"].map((w, j) => (
