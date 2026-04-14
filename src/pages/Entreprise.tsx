@@ -195,7 +195,7 @@ const MarqueeSep = () => (
         ["CONTENU", "SOCIAL MEDIA", "ADS", "SEO", "STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING"].map((w, j) => (
           <span key={`${i}-${j}`} className="font-clash text-sm md:text-base font-semibold tracking-[0.15em] text-foreground/10 uppercase flex items-center gap-6">
             {w}
-            <span className="w-1.5 h-1.5 rounded-full bg-burgundy/30" />
+            <span className="w-1.5 h-1.5 rounded-full bg-burgundy-light/50" />
           </span>
         ))
       )}
