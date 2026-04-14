@@ -248,7 +248,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
   const shouldReduceMotion = useReducedMotion();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const isInView = useInView(cardRef, { amount: 0.4, margin: "0px 0px -15% 0px" });
+  const isInView = useInView(cardRef, { amount: 0.25, margin: "0px 0px -8% 0px" });
   const isLit = isInView || isHovered;
   const fromRight = index % 2 === 1;
 
@@ -270,10 +270,10 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       ref={cardRef}
       className="group relative cursor-default"
       style={{ perspective: "1200px" }}
-      initial={{ opacity: 0.3, x: fromRight ? 120 : -120, scale: 0.85, rotateY: fromRight ? -8 : 8 }}
+      initial={{ opacity: 0, x: fromRight ? 80 : -80, scale: 0.92, rotateY: fromRight ? -5 : 5 }}
       whileInView={{ opacity: 1, x: 0, scale: 1, rotateY: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 1.1, delay: index * 0.1, ease: EASE }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 1, delay: index * 0.12, ease: EASE }}
     >
       {/* Golden halo behind card */}
       <motion.div
@@ -301,8 +301,8 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
       >
         <motion.div
           className="relative overflow-hidden rounded-[1.5rem]"
-          animate={shouldReduceMotion ? {} : isLit ? { y: -12, scale: 1.03 } : { y: 0, scale: 0.92 }}
-          transition={{ duration: 0.8, ease: EASE }}
+          animate={shouldReduceMotion ? {} : isLit ? { y: -10, scale: 1.015 } : { y: 8, scale: 0.97 }}
+          transition={{ duration: 0.9, ease: EASE }}
         >
           {/* Animated border trace — draws itself around the card */}
           <svg
@@ -410,7 +410,7 @@ const ServiceCard3D = ({ svc, index }: { svc: typeof SERVICES[0]; index: number 
 
                 <motion.span
                   className="font-clash text-3xl font-black md:text-4xl"
-                  animate={shouldReduceMotion ? {} : isLit ? { opacity: 1, x: 0 } : { opacity: 0.08, x: fromRight ? 10 : -10 }}
+                  animate={shouldReduceMotion ? {} : isLit ? { opacity: 1, x: 0 } : { opacity: 0.15, x: fromRight ? 8 : -8 }}
                   transition={{ duration: 0.6, ease: EASE }}
                   style={{
                     color: isLit ? "hsl(var(--burgundy-light))" : "hsl(var(--foreground) / 0.3)",
