@@ -523,6 +523,7 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
 
 const ReferencesSection = () => {
   const ref = useScrollReveal();
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.3), transparent)" }} />
@@ -545,9 +546,15 @@ const ReferencesSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-7">
           {REFERENCES.map((r, i) => (
-            <ReferenceCard key={r.name} r={r} index={i} />
+            <ReferenceCard
+              key={r.name} r={r} index={i}
+              anyHovered={hoveredIdx !== null}
+              isHovered={hoveredIdx === i}
+              onHover={() => setHoveredIdx(i)}
+              onLeave={() => setHoveredIdx(null)}
+            />
           ))}
         </div>
 
