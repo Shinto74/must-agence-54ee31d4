@@ -23,6 +23,7 @@ const queryClient = new QueryClient();
 const AnimatedRoutes = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isCheckout = location.pathname.startsWith("/checkout");
   const isGateway = location.pathname === "/";
 
   if (isAdmin) {
