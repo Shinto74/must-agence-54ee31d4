@@ -61,13 +61,13 @@ const GatewayPage = () => {
 
           <Link
             to="/artiste"
-            className="relative z-10 h-full flex flex-col items-start justify-end pb-6 md:pb-[16vh] px-6 md:px-14"
+            className="relative z-10 h-full flex flex-col items-center text-center justify-end pb-8 px-6 md:items-start md:text-left md:pb-[16vh] md:px-14"
           >
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.4 }}
-              className="font-clash font-black text-2xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-2 md:mb-3"
+              className="font-clash font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-2 md:mb-3"
             >
               Pôle Artiste
             </motion.h2>
@@ -75,7 +75,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0 }}
               animate={ready ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="font-outfit text-xs md:text-sm text-foreground/40 mb-4 md:mb-8 max-w-xs"
+              className="font-outfit text-xs md:text-sm text-foreground/40 mb-5 md:mb-8 max-w-xs"
             >
               Musique · Influence · Lancement
             </motion.p>
@@ -83,7 +83,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="inline-flex items-center gap-3 px-6 md:px-8 py-3 md:py-3.5 rounded-full font-mono text-xs md:text-sm uppercase tracking-[0.12em]"
+              className="inline-flex items-center gap-3 px-7 py-3 md:px-8 md:py-3.5 rounded-full font-mono text-xs md:text-sm uppercase tracking-[0.12em]"
               style={{
                 background: "hsl(73 100% 50%)",
                 color: "hsl(var(--primary-foreground))",
