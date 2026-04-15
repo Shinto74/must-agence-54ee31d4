@@ -380,6 +380,9 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
   anyHovered: boolean; isHovered: boolean;
   onHover: () => void; onLeave: () => void;
 }) => {
+  const gold = "43 55% 55%";
+  const goldDark = "43 52% 35%";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -390,126 +393,129 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       style={{
-        filter: anyHovered && !isHovered ? "saturate(0.4) brightness(0.96)" : "saturate(1) brightness(1)",
-        opacity: anyHovered && !isHovered ? 0.6 : 1,
+        filter: anyHovered && !isHovered ? "saturate(0.35) brightness(0.95)" : "saturate(1) brightness(1)",
+        opacity: anyHovered && !isHovered ? 0.55 : 1,
         transition: "filter 0.7s cubic-bezier(0.16,1,0.3,1), opacity 0.7s cubic-bezier(0.16,1,0.3,1)",
       }}
     >
-      {/* Outer glow — light from above */}
+      {/* Outer ambient glow */}
       <div
-        className="absolute -inset-3 rounded-3xl pointer-events-none"
+        className="absolute -inset-4 rounded-3xl pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse at 50% 0%, hsl(43 55% 55% / 0.08) 0%, transparent 70%)",
+          background: `radial-gradient(ellipse at 50% 30%, hsl(${gold} / 0.1) 0%, transparent 65%)`,
           opacity: isHovered ? 1 : 0,
           transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1)",
         }}
       />
 
       <motion.div
-        className="relative rounded-[22px] overflow-hidden"
+        className="relative rounded-[20px] overflow-hidden"
         style={{
           background: isHovered
-            ? "linear-gradient(170deg, hsl(40 25% 96%) 0%, hsl(42 20% 93%) 100%)"
-            : "linear-gradient(170deg, hsl(40 15% 96%) 0%, hsl(40 10% 94%) 100%)",
-          border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.35)" : "hsl(0 0% 0% / 0.06)"}`,
+            ? "linear-gradient(168deg, hsl(42 30% 97%) 0%, hsl(40 22% 92%) 100%)"
+            : "linear-gradient(168deg, hsl(42 18% 96%) 0%, hsl(40 12% 93.5%) 100%)",
+          border: `1.5px solid ${isHovered ? `hsl(${gold} / 0.45)` : "hsl(0 0% 0% / 0.05)"}`,
           boxShadow: isHovered
-            ? "0 20px 50px hsl(0 0% 0% / 0.08), 0 8px 20px hsl(0 0% 0% / 0.05), 0 0 0 0.5px hsl(43 55% 55% / 0.15)"
-            : "0 2px 12px hsl(0 0% 0% / 0.04), 0 1px 3px hsl(0 0% 0% / 0.03)",
-          transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+            ? `0 25px 60px hsl(0 0% 0% / 0.1), 0 8px 24px hsl(0 0% 0% / 0.06), 0 0 0 0.5px hsl(${gold} / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.7)`
+            : "0 2px 10px hsl(0 0% 0% / 0.04), 0 1px 4px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
+          transition: "all 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
-        animate={{ y: isHovered ? -4 : 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        animate={{ y: isHovered ? -6 : 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Shimmer / light sweep effect */}
+        {/* Top gold accent line */}
         <div
-          className="absolute inset-0 z-[2] pointer-events-none overflow-hidden"
-          style={{ borderRadius: "22px" }}
-        >
-          <motion.div
-            className="absolute top-0 -left-full w-[60%] h-full"
-            style={{
-              background: "linear-gradient(105deg, transparent 40%, hsl(0 0% 100% / 0.12) 50%, transparent 60%)",
-            }}
-            animate={isHovered ? { left: ["−100%", "200%"] } : {}}
-            transition={{ duration: 1.2, ease: "linear", delay: 0.15 }}
-          />
-        </div>
-
-        {/* Subtle grain texture overlay */}
-        <div
-          className="absolute inset-0 z-[1] pointer-events-none"
+          className="absolute top-0 left-[10%] right-[10%] h-[2px] z-10"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E")`,
-            opacity: 0.5,
-            mixBlendMode: "multiply",
+            background: `linear-gradient(90deg, transparent, hsl(${gold}), transparent)`,
+            opacity: isHovered ? 0.8 : 0,
+            transition: "opacity 0.5s ease",
           }}
         />
 
-        <div className="relative z-[5] p-8 md:p-10 flex flex-col items-center text-center min-h-[210px] justify-center gap-5">
-          {/* Signature circle — premium glass object */}
+        {/* Shimmer sweep */}
+        {isHovered && (
+          <motion.div
+            className="absolute inset-0 z-[3] pointer-events-none"
+            style={{
+              background: "linear-gradient(105deg, transparent 35%, hsl(0 0% 100% / 0.15) 48%, hsl(0 0% 100% / 0.08) 52%, transparent 65%)",
+            }}
+            initial={{ x: "-100%" }}
+            animate={{ x: "200%" }}
+            transition={{ duration: 1, ease: "linear", delay: 0.1 }}
+          />
+        )}
+
+        <div className="relative z-[5] px-6 py-10 md:px-8 md:py-12 flex flex-col items-center text-center min-h-[220px] justify-center gap-6">
+          {/* Signature circle — neumorphic premium */}
           <motion.div
             className="relative"
-            animate={{ scale: isHovered ? 1.06 : 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            animate={{ scale: isHovered ? 1.08 : 1 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Circle glow */}
+            {/* Glow behind circle */}
             <div
-              className="absolute inset-[-6px] rounded-full pointer-events-none"
+              className="absolute inset-[-10px] rounded-full pointer-events-none"
               style={{
-                background: "radial-gradient(circle, hsl(43 55% 55% / 0.12) 0%, transparent 70%)",
+                background: `radial-gradient(circle, hsl(${gold} / 0.18) 0%, transparent 65%)`,
                 opacity: isHovered ? 1 : 0,
-                transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1)",
+                transition: "opacity 0.7s ease",
               }}
             />
+
+            {/* The circle */}
             <div
-              className="w-[76px] h-[76px] md:w-[90px] md:h-[90px] rounded-full flex items-center justify-center relative"
+              className="w-[82px] h-[82px] md:w-[100px] md:h-[100px] rounded-full flex items-center justify-center relative"
               style={{
-                background: "linear-gradient(155deg, hsl(0 0% 98%) 0%, hsl(0 0% 93%) 100%)",
-                border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.3)" : "hsl(0 0% 0% / 0.06)"}`,
+                background: isHovered
+                  ? "linear-gradient(145deg, hsl(42 25% 95%) 0%, hsl(40 20% 88%) 100%)"
+                  : "linear-gradient(145deg, hsl(0 0% 95%) 0%, hsl(0 0% 89%) 100%)",
+                border: `1.5px solid ${isHovered ? `hsl(${gold} / 0.45)` : "hsl(0 0% 0% / 0.07)"}`,
                 boxShadow: isHovered
-                  ? "0 8px 25px hsl(0 0% 0% / 0.06), inset 0 2px 4px hsl(0 0% 100% / 0.8), inset 0 -1px 3px hsl(0 0% 0% / 0.04), 0 0 20px hsl(43 55% 55% / 0.08)"
-                  : "0 4px 12px hsl(0 0% 0% / 0.04), inset 0 2px 4px hsl(0 0% 100% / 0.7), inset 0 -1px 2px hsl(0 0% 0% / 0.03)",
-                transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+                  ? `8px 8px 20px hsl(0 0% 0% / 0.08), -4px -4px 12px hsl(0 0% 100% / 0.9), inset 0 1px 3px hsl(0 0% 100% / 0.6), 0 0 25px hsl(${gold} / 0.12)`
+                  : "6px 6px 16px hsl(0 0% 0% / 0.06), -3px -3px 10px hsl(0 0% 100% / 0.8), inset 0 1px 2px hsl(0 0% 100% / 0.5)",
+                transition: "all 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
-              {/* Inner light reflection — top */}
+              {/* Glass highlight — top crescent */}
               <div
-                className="absolute top-[3px] left-[12%] right-[12%] h-[35%] rounded-full pointer-events-none"
+                className="absolute top-[4px] left-[15%] right-[15%] h-[30%] rounded-[50%] pointer-events-none"
                 style={{
-                  background: "linear-gradient(180deg, hsl(0 0% 100% / 0.7) 0%, transparent 100%)",
-                  borderRadius: "50%",
+                  background: "linear-gradient(180deg, hsl(0 0% 100% / 0.65) 0%, transparent 100%)",
                 }}
               />
+
+              {/* Logo */}
               <img
                 src={r.logo}
                 alt={r.name}
                 loading="lazy"
-                className="w-10 h-10 md:w-12 md:h-12 object-contain relative z-10"
+                className="w-10 h-10 md:w-13 md:h-13 object-contain relative z-10"
                 style={{
-                  opacity: isHovered ? 0.85 : 0.5,
-                  filter: isHovered ? "grayscale(0%)" : "grayscale(100%)",
-                  transition: "all 0.7s cubic-bezier(0.16,1,0.3,1)",
+                  opacity: isHovered ? 0.9 : 0.55,
+                  filter: isHovered ? "grayscale(0%) contrast(1.1)" : "grayscale(100%) contrast(0.9)",
+                  transition: "all 0.6s cubic-bezier(0.16,1,0.3,1)",
                 }}
               />
             </div>
           </motion.div>
 
-          {/* Typography — Luxe */}
+          {/* Typography */}
           <div>
             <p
-              className="font-clash font-bold text-[15px] md:text-[17px] tracking-[0.02em] mb-1.5"
+              className="font-clash font-bold text-[15px] md:text-[17px] tracking-[0.03em] mb-1.5 leading-tight"
               style={{
-                color: isHovered ? "hsl(43 52% 35%)" : "hsl(0 0% 18%)",
-                transition: "color 0.6s cubic-bezier(0.16,1,0.3,1)",
+                color: isHovered ? `hsl(${goldDark})` : "hsl(0 0% 15%)",
+                transition: "color 0.5s ease",
               }}
             >
               {r.name}
             </p>
             <p
-              className="font-mono text-[8.5px] uppercase tracking-[0.25em] font-medium"
+              className="font-mono text-[8px] uppercase tracking-[0.28em] font-semibold"
               style={{
-                color: isHovered ? "hsl(43 55% 55%)" : "hsl(43 40% 60% / 0.5)",
-                transition: "color 0.6s cubic-bezier(0.16,1,0.3,1)",
+                color: isHovered ? `hsl(${gold})` : `hsl(${gold} / 0.45)`,
+                transition: "color 0.5s ease",
               }}
             >
               {r.subtitle}
@@ -517,13 +523,13 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
           </div>
         </div>
 
-        {/* Bottom accent line */}
+        {/* Bottom accent */}
         <div
-          className="absolute bottom-0 left-[15%] right-[15%] h-[1px]"
+          className="absolute bottom-0 left-[12%] right-[12%] h-[1.5px]"
           style={{
-            background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.4), transparent)",
+            background: `linear-gradient(90deg, transparent, hsl(${gold} / 0.35), transparent)`,
             opacity: isHovered ? 1 : 0,
-            transition: "opacity 0.6s ease",
+            transition: "opacity 0.5s ease",
           }}
         />
       </motion.div>
