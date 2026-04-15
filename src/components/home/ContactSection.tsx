@@ -29,11 +29,10 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
   const accentDark = isEntreprise ? "43 52% 39%" : "var(--neon)";
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState({ type: formOptions[0], name: "", email: "", phone: "", budget: "", message: "" });
+  const [form, setForm] = useState({ type: formOptions[0], nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
   const [sending, setSending] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
-  const [selectOpen, setSelectOpen] = useState(false);
-  const [budgetOpen, setBudgetOpen] = useState(false);
+  const [secteurOpen, setSecteurOpen] = useState(false);
 
   // Listen for global event from CTA buttons
   useEffect(() => {
