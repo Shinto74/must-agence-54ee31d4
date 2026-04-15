@@ -77,8 +77,18 @@ const RouteAwareLoader = ({ onComplete }: { onComplete: () => void }) => {
 const App = () => {
   const [loaded, setLoaded] = useState(false);
   const handleLoaded = useCallback(() => {
-    window.scrollTo(0, 0);
+    // Remove any hash to prevent browser auto-scrolling to #contact etc.
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    // Force again after a tick (some browsers defer scroll restoration)
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    });
     setLoaded(true);
   }, []);
 
