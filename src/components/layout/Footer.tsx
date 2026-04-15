@@ -124,7 +124,7 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
             Fait avec précision à Paris.
           </p>
           <Link
-            to="/admin-login"
+            to="/admin/login"
             className="text-[10px] font-mono opacity-30 hover:opacity-60 transition-opacity"
             style={{ color: isEntreprise ? "hsl(45 20% 62%)" : "hsl(var(--muted-foreground))" }}
           >
