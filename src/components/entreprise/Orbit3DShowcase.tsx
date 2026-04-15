@@ -97,22 +97,22 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
           animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.15, 0.4] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         />
-        {/* Logo container */}
+        {/* Logo container — dark mode */}
         <div
           className="relative flex items-center justify-center rounded-full"
           style={{
             width: 140,
             height: 140,
-            background: "radial-gradient(circle, hsl(var(--card)) 0%, hsl(var(--background)) 100%)",
+            background: "radial-gradient(circle, hsl(0 0% 12%) 0%, hsl(0 0% 6%) 100%)",
             border: "1.5px solid hsl(43 55% 55% / 0.35)",
-            boxShadow: "0 0 60px hsl(43 55% 55% / 0.12), 0 0 120px hsl(43 55% 55% / 0.06), inset 0 0 30px hsl(43 55% 55% / 0.05)",
+            boxShadow: "0 0 60px hsl(43 55% 55% / 0.12), 0 0 120px hsl(43 55% 55% / 0.06), inset 0 0 30px hsl(0 0% 0% / 0.4)",
           }}
         >
           <img
             src={SITE.logoWhite}
             alt="Must Agence"
             className="h-14 w-auto"
-            style={{ filter: "drop-shadow(0 0 12px hsl(43 55% 55% / 0.4))" }}
+            style={{ filter: "brightness(2) drop-shadow(0 0 12px hsl(43 55% 55% / 0.5))" }}
           />
         </div>
         <span
