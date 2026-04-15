@@ -574,18 +574,53 @@ const ReferencesSection = () => {
         style={{ background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.05) 0%, transparent 60%)" }} />
 
       <div className="max-w-[1400px] mx-auto">
-        <motion.div {...fadeUp()} className="rv text-center mb-20">
+        <motion.div className="rv text-center mb-20">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, transparent, hsl(43 55% 55%))" }} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>Références</span>
-            <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to left, transparent, hsl(43 55% 55%))" }} />
+            <motion.div
+              className="w-12 h-[1.5px]"
+              style={{ background: "linear-gradient(to right, transparent, hsl(43 55% 55%))", transformOrigin: "right" }}
+              initial={{ scaleX: 0, opacity: 0 }}
+              whileInView={{ scaleX: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            />
+            <motion.span
+              className="font-mono text-[10px] uppercase tracking-[0.3em]"
+              style={{ color: "hsl(43 55% 55%)" }}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Références
+            </motion.span>
+            <motion.div
+              className="w-12 h-[1.5px]"
+              style={{ background: "linear-gradient(to left, transparent, hsl(43 55% 55%))", transformOrigin: "left" }}
+              initial={{ scaleX: 0, opacity: 0 }}
+              whileInView={{ scaleX: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            />
           </div>
-          <h2 className="font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
+          <motion.h2
+            className="font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4"
+            initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
             Ils nous font <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.3)" }}>confiance</span>
-          </h2>
-          <p className="text-muted-foreground text-sm max-w-md mx-auto">
+          </motion.h2>
+          <motion.p
+            className="text-muted-foreground text-sm max-w-md mx-auto"
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             Des marques ambitieuses qui ont choisi l'excellence.
-          </p>
+          </motion.p>
         </motion.div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
