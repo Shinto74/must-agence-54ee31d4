@@ -74,15 +74,41 @@ const EntrepriseHero = () => {
   const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const scrollBlur = useTransform(scrollYProgress, [0.3, 0.7], [0, 6]);
 
-  /* Phase states for cinematic text reveal */
-  const [phase, setPhase] = useState(0); // 0=invisible, 1=fade+blur, 2=sharp+glow, 3=sweep
+  /* Wait for the initial loader to finish before starting reveal.
+     The App fires "loader-complete" right after setting loaded=true.
+     If the event already fired (late mount), start immediately. */
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase(1), 400);   // start fade-in
-    const t2 = setTimeout(() => setPhase(2), 1600);   // sharp + glow
-    const t3 = setTimeout(() => setPhase(3), 2800);   // light sweep
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    // Check if loader already completed (the body will have the class or loaded state)
+    const checkReady = () => {
+      // If document is already scrollable (loader done), start immediately
+      if (document.querySelector('main')) {
+        setReady(true);
+      }
+    };
+    
+    const onLoaderComplete = () => setReady(true);
+    window.addEventListener("loader-complete", onLoaderComplete);
+    
+    // Fallback: start after a generous delay if event was missed
+    const fallback = setTimeout(() => setReady(true), 2800);
+    // Also check immediately in case loader already finished
+    checkReady();
+    
+    return () => {
+      window.removeEventListener("loader-complete", onLoaderComplete);
+      clearTimeout(fallback);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    const t1 = setTimeout(() => setPhase(1), 200);    // start fade-in
+    const t2 = setTimeout(() => setPhase(2), 1200);    // sharp + glow
+    const t3 = setTimeout(() => setPhase(3), 2200);    // light sweep
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [ready]);
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden">
