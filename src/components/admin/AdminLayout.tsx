@@ -3,16 +3,17 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import {
   LogOut, Users, Music, Building2, Package, BarChart3,
-  Briefcase, MessageSquare, Settings, Menu, X, Image,
+  Briefcase, MessageSquare, Settings, Menu, X, Image, CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type AdminTab =
-  | "editeur" | "demandes" | "equipe" | "artistes" | "clients"
+  | "editeur" | "paiements" | "demandes" | "equipe" | "artistes" | "clients"
   | "packs" | "stats" | "services" | "settings";
 
 const NAV: { key: AdminTab; label: string; icon: React.ElementType }[] = [
   { key: "editeur", label: "Éditeur visuel", icon: Image },
+  { key: "paiements", label: "Paiements", icon: CreditCard },
   { key: "demandes", label: "Demandes", icon: MessageSquare },
   { key: "equipe", label: "Équipe", icon: Users },
   { key: "artistes", label: "Artistes", icon: Music },

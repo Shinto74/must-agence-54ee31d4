@@ -156,6 +156,9 @@ export type Database = {
           id: string
           message: string
           name: string
+          phone: string | null
+          service: string | null
+          status: string
           type: string
         }
         Insert: {
@@ -164,6 +167,9 @@ export type Database = {
           id?: string
           message?: string
           name: string
+          phone?: string | null
+          service?: string | null
+          status?: string
           type: string
         }
         Update: {
@@ -172,6 +178,9 @@ export type Database = {
           id?: string
           message?: string
           name?: string
+          phone?: string | null
+          service?: string | null
+          status?: string
           type?: string
         }
         Relationships: []
@@ -357,6 +366,60 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          environment: string
+          id: string
+          pack_id: string | null
+          pack_name: string
+          price_id: string | null
+          status: string
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          environment?: string
+          id?: string
+          pack_id?: string | null
+          pack_name: string
+          price_id?: string | null
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          environment?: string
+          id?: string
+          pack_id?: string | null
+          pack_name?: string
+          price_id?: string | null
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       portfolio_cases: {
         Row: {
           description: string
@@ -441,6 +504,7 @@ export type Database = {
           id: string
           profile: string
           project_desc: string
+          status: string
         }
         Insert: {
           budget?: string
@@ -450,6 +514,7 @@ export type Database = {
           id?: string
           profile?: string
           project_desc?: string
+          status?: string
         }
         Update: {
           budget?: string
@@ -459,6 +524,7 @@ export type Database = {
           id?: string
           profile?: string
           project_desc?: string
+          status?: string
         }
         Relationships: []
       }

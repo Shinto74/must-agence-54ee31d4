@@ -14,6 +14,8 @@ import Artiste from "./pages/Artiste";
 import Entreprise from "./pages/Entreprise";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import CheckoutPage from "./pages/CheckoutPage";
+import CheckoutReturn from "./pages/CheckoutReturn";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +23,7 @@ const queryClient = new QueryClient();
 const AnimatedRoutes = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isCheckout = location.pathname.startsWith("/checkout");
   const isGateway = location.pathname === "/";
 
   if (isAdmin) {
@@ -28,6 +31,15 @@ const AnimatedRoutes = () => {
       <Routes location={location}>
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/login" element={<AdminLogin />} />
+      </Routes>
+    );
+  }
+
+  if (isCheckout) {
+    return (
+      <Routes location={location}>
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkout/confirmation" element={<CheckoutReturn />} />
       </Routes>
     );
   }
@@ -54,16 +66,18 @@ const AnimatedRoutes = () => {
 const AppShell = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isCheckout = location.pathname.startsWith("/checkout");
   const isGateway = location.pathname === "/";
+  const hideChrome = isAdmin || isCheckout || isGateway;
 
   return (
     <>
-      {!isAdmin && !isGateway && <CustomCursor />}
-      {!isAdmin && !isGateway && <Header />}
-      <main className={isAdmin ? "" : isGateway ? "" : "min-h-screen"}>
+      {!hideChrome && <CustomCursor />}
+      {!hideChrome && <Header />}
+      <main className={hideChrome ? "" : "min-h-screen"}>
         <AnimatedRoutes />
       </main>
-      {!isAdmin && !isGateway && <Footer />}
+      {!hideChrome && <Footer />}
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, useInView } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Music, Megaphone, Palette, ListMusic, Zap, Users, PenTool, Newspaper, Search, Target, MessageCircle, Youtube, Info, X, BarChart3, Lightbulb, Rocket, TrendingUp, Network } from "lucide-react";
 import QuoteWizard from "@/components/artiste/QuoteWizard";
@@ -186,7 +187,14 @@ const TheArtistBonus = ({ text }: { text: string }) => (
 );
 
 /* ─── PACK CARD ─── */
+const PACK_PRICE_MAP: Record<string, string> = {
+  "Pack 1": "essentiel_once",
+  "Pack 2": "ascension_once",
+  "Pack 3": "explosion_once",
+};
+
 const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistText: string; onOpenQuote?: () => void }) => {
+  const navigate = useNavigate();
   const packTooltips = TOOLTIPS[pack.number] || {};
 
   // Matching: trouve le tooltip dont la feature commence par la clé
@@ -242,15 +250,19 @@ const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistT
           Obtenir un devis
         </button>
       ) : (
-        <a href="#contact"
+        <button
+          onClick={() => {
+            const priceId = PACK_PRICE_MAP[pack.number];
+            if (priceId) navigate(`/checkout?pack=${priceId}`);
+          }}
           className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
             pack.featured
               ? "bg-primary text-primary-foreground hover:brightness-110"
               : "border border-border text-foreground hover:border-primary/40 hover:text-primary"
           }`}
         >
-          Nous contacter
-        </a>
+          Choisir ce pack
+        </button>
       )}
     </div>
   );
