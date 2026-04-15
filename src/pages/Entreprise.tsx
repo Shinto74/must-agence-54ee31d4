@@ -490,10 +490,10 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
                 src={r.logo}
                 alt={r.name}
                 loading="lazy"
-                className="w-10 h-10 md:w-13 md:h-13 object-contain relative z-10"
+                className="w-12 h-12 md:w-14 md:h-14 object-contain relative z-10"
                 style={{
-                  opacity: isHovered ? 0.9 : 0.55,
-                  filter: isHovered ? "grayscale(0%) contrast(1.1)" : "grayscale(100%) contrast(0.9)",
+                  opacity: isHovered ? 0.95 : 0.7,
+                  filter: isHovered ? "grayscale(0%) contrast(1.15)" : "grayscale(80%) contrast(1)",
                   transition: "all 0.6s cubic-bezier(0.16,1,0.3,1)",
                 }}
               />
@@ -503,18 +503,18 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
           {/* Typography */}
           <div>
             <p
-              className="font-clash font-bold text-[15px] md:text-[17px] tracking-[0.03em] mb-1.5 leading-tight"
+              className="font-clash font-bold text-[17px] md:text-[19px] tracking-[0.02em] mb-2 leading-tight"
               style={{
-                color: isHovered ? `hsl(${goldDark})` : "hsl(0 0% 15%)",
+                color: isHovered ? `hsl(${goldDark})` : "hsl(0 0% 12%)",
                 transition: "color 0.5s ease",
               }}
             >
               {r.name}
             </p>
             <p
-              className="font-mono text-[8px] uppercase tracking-[0.28em] font-semibold"
+              className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold"
               style={{
-                color: isHovered ? `hsl(${gold})` : `hsl(${gold} / 0.45)`,
+                color: isHovered ? `hsl(${gold})` : `hsl(${gold} / 0.6)`,
                 transition: "color 0.5s ease",
               }}
             >
