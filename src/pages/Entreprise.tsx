@@ -8,6 +8,11 @@ import ContactSection from "@/components/home/ContactSection";
 import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
 import Services3DScroll from "@/components/entreprise/Services3DScroll";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
+import logoGrandsBuf from "@/assets/logos/les-grands-buffets.png";
+import logoLeclerc from "@/assets/logos/leclerc.png";
+import logoNovotel from "@/assets/logos/novotel.png";
+import logoBasicFit from "@/assets/logos/basic-fit.png";
+import logoYamaha from "@/assets/logos/yamaha.png";
 import sectorGastronomie from "@/assets/sector-gastronomie.jpg";
 import sectorHotellerie from "@/assets/sector-hotellerie.jpg";
 import sectorBeaute from "@/assets/sector-beaute.jpg";
@@ -353,11 +358,11 @@ const ExpertiseSection = () => {
 
 /* ═══ REFERENCES — PREMIUM SHOWCASE ═══ */
 const REFERENCES = [
-  { name: "Les Grands Buffets", subtitle: "Narbonne", initial: "GB" },
-  { name: "Leclerc", subtitle: "Grande distribution", initial: "LC" },
-  { name: "Novotel", subtitle: "Hôtellerie", initial: "NV" },
-  { name: "Basic-Fit", subtitle: "Sport & Fitness", initial: "BF" },
-  { name: "Yamaha", subtitle: "Automobile & Moto", initial: "YM" },
+  { name: "Les Grands Buffets", subtitle: "Narbonne", initial: "GB", logo: logoGrandsBuf },
+  { name: "Leclerc", subtitle: "Grande distribution", initial: "LC", logo: logoLeclerc },
+  { name: "Novotel", subtitle: "Hôtellerie", initial: "NV", logo: logoNovotel },
+  { name: "Basic-Fit", subtitle: "Sport & Fitness", initial: "BF", logo: logoBasicFit },
+  { name: "Yamaha", subtitle: "Automobile & Moto", initial: "YM", logo: logoYamaha },
 ];
 
 const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number }) => {
@@ -428,15 +433,16 @@ const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number })
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
               )}
-              <span
-                className="font-clash font-black text-base"
+              <img
+                src={r.logo}
+                alt={r.name}
+                loading="lazy"
+                className="w-10 h-10 object-contain"
                 style={{
-                  color: hovered ? "#fff" : "hsl(43 55% 55%)",
-                  transition: "color 0.4s ease",
+                  filter: hovered ? "brightness(10)" : "none",
+                  transition: "filter 0.4s ease",
                 }}
-              >
-                {r.initial}
-              </span>
+              />
             </div>
           </motion.div>
 
