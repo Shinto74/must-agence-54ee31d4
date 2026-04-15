@@ -152,16 +152,36 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
     { icon: <MapPin size={16} />, label: location, href: undefined, show: !!location },
   ].filter(i => i.show);
 
-  return (
+   return (
     <>
       <section id="contact" ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
         {/* Background effects */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/3 w-[700px] h-[700px] rounded-full" style={{ background: `radial-gradient(ellipse, hsl(${accent} / 0.03) 0%, transparent 65%)` }} />
-          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: `radial-gradient(ellipse, hsl(${accent} / 0.02) 0%, transparent 65%)` }} />
+          <div className="absolute top-0 left-1/3 w-[700px] h-[700px] rounded-full" style={{ background: `radial-gradient(ellipse, hsl(${accent} / 0.04) 0%, transparent 65%)` }} />
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: `radial-gradient(ellipse, hsl(${accent} / 0.03) 0%, transparent 65%)` }} />
+          {/* Floating orbs */}
+          <motion.div
+            className="absolute top-[20%] right-[15%] w-3 h-3 rounded-full"
+            style={{ background: `hsl(${accent} / 0.3)` }}
+            animate={{ y: [0, -15, 0], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-[30%] left-[10%] w-2 h-2 rounded-full"
+            style={{ background: `hsl(${accent} / 0.25)` }}
+            animate={{ y: [0, -10, 0], x: [0, 5, 0], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          />
+          <motion.div
+            className="absolute top-[60%] right-[25%] w-1.5 h-1.5 rounded-full"
+            style={{ background: `hsl(${accent} / 0.2)` }}
+            animate={{ y: [0, -12, 0], opacity: [0.15, 0.4, 0.15] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          />
         </div>
 
         <div className="max-w-[900px] mx-auto relative text-center">
+          {/* Section label */}
           <motion.div
             className="rv flex items-center justify-center gap-3 mb-6"
             initial={{ opacity: 0, y: 20 }}
@@ -169,13 +189,28 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
             transition={{ duration: 0.6, ease: EASE }}
             viewport={{ once: true }}
           >
-            <div className="w-10 h-[2px] rounded-full" style={{ background: `linear-gradient(to right, transparent, hsl(${accent}))` }} />
+            <motion.div
+              className="w-10 h-[2px] rounded-full"
+              style={{ background: `linear-gradient(to right, transparent, hsl(${accent}))` }}
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
+              viewport={{ once: true }}
+            />
             <span className="font-mono text-[11px] uppercase tracking-[0.25em] font-medium" style={{ color: `hsl(${accent})` }}>
               Contact
             </span>
-            <div className="w-10 h-[2px] rounded-full" style={{ background: `linear-gradient(to left, transparent, hsl(${accent}))` }} />
+            <motion.div
+              className="w-10 h-[2px] rounded-full"
+              style={{ background: `linear-gradient(to left, transparent, hsl(${accent}))` }}
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
+              viewport={{ once: true }}
+            />
           </motion.div>
 
+          {/* Heading */}
           <motion.h2
             className="rv font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black text-foreground tracking-tight leading-[1.05] mb-5"
             initial={{ opacity: 0, y: 40 }}
@@ -198,7 +233,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
           </motion.p>
 
           <motion.p
-            className="rv text-sm leading-[1.9] max-w-lg mx-auto mb-12"
+            className="rv text-sm leading-[1.9] max-w-lg mx-auto mb-14"
             style={{ color: "hsl(var(--foreground) / 0.45)" }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -208,65 +243,76 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
             {subtext}
           </motion.p>
 
-          <div className="mb-14" />
+          {/* Decorative separator */}
+          <motion.div
+            className="flex items-center justify-center gap-3 mb-14"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.25 }}
+            viewport={{ once: true }}
+          >
+            <div className="w-16 h-[1px]" style={{ background: `linear-gradient(to right, transparent, hsl(${accent} / 0.3))` }} />
+            <motion.div
+              className="w-2 h-2 rounded-full"
+              style={{ background: `hsl(${accent} / 0.4)` }}
+              animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0.7, 0.4] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <div className="w-16 h-[1px]" style={{ background: `linear-gradient(to left, transparent, hsl(${accent} / 0.3))` }} />
+          </motion.div>
 
           {/* Contact info row */}
           <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-6 md:gap-10 mb-8"
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 md:gap-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
             viewport={{ once: true }}
           >
             {contactItems.map((item, idx) => (
-              <div key={idx}>
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.35 + idx * 0.1, ease: EASE }}
+                viewport={{ once: true }}
+              >
                 {item.href ? (
                   <motion.a
                     href={item.href}
                     className="group flex items-center gap-3 transition-all duration-300"
-                    whileHover={{ y: -2 }}
+                    whileHover={{ y: -3 }}
                   >
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    <motion.div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
                       style={{
-                        background: `hsl(${accent} / 0.07)`,
-                        border: `1px solid hsl(${accent} / 0.12)`,
+                        background: `hsl(${accent} / 0.08)`,
+                        border: `1px solid hsl(${accent} / 0.15)`,
                         color: `hsl(${accent})`,
+                      }}
+                      whileHover={{
+                        background: `hsl(${accent} / 0.15)`,
+                        boxShadow: `0 0 20px hsl(${accent} / 0.1)`,
                       }}
                     >
                       {item.icon}
-                    </div>
-                    <span className="text-sm text-foreground/55 group-hover:text-foreground transition-colors duration-300">{item.label}</span>
+                    </motion.div>
+                    <span className="text-sm text-foreground/55 group-hover:text-foreground transition-colors duration-300 font-medium">{item.label}</span>
                   </motion.a>
                 ) : (
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                      style={{ background: `hsl(${accent} / 0.07)`, border: `1px solid hsl(${accent} / 0.12)`, color: `hsl(${accent})` }}
+                      className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                      style={{ background: `hsl(${accent} / 0.08)`, border: `1px solid hsl(${accent} / 0.15)`, color: `hsl(${accent})` }}
                     >
                       {item.icon}
                     </div>
-                    <span className="text-sm text-foreground/55">{item.label}</span>
+                    <span className="text-sm text-foreground/55 font-medium">{item.label}</span>
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))}
           </motion.div>
-
-          {/* WhatsApp */}
-          <motion.a
-            href={whatsappUrl} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-7 py-4 rounded-full font-mono text-sm uppercase tracking-wider font-bold"
-            style={{ background: "#25D366", color: "#fff", boxShadow: "0 0 30px rgba(37,211,102,0.2)" }}
-            whileHover={{ y: -3, boxShadow: "0 8px 40px rgba(37,211,102,0.35)", scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: EASE }}
-            viewport={{ once: true }}
-          >
-            <MessageSquare size={16} /> WhatsApp
-          </motion.a>
         </div>
       </section>
 
