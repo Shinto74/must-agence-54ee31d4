@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { MessageSquare, Phone, MapPin, Send, ChevronDown, ArrowRight, Sparkles, X } from "lucide-react";
@@ -263,7 +264,8 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
         </div>
       </section>
 
-      {/* ═══ CONTACT MODAL — PREMIUM ═══ */}
+      {/* ═══ CONTACT MODAL — PREMIUM (Portal to body) ═══ */}
+      {createPortal(
       <AnimatePresence>
         {modalOpen && (
           <motion.div
@@ -450,7 +452,9 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+      )}
     </>
   );
 };
