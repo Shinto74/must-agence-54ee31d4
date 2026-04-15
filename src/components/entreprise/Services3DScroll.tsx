@@ -6,10 +6,8 @@ import svcBgSocial from "@/assets/svc-bg-social.jpg";
 import svcBgAds from "@/assets/svc-bg-ads.jpg";
 import svcBgSeo from "@/assets/svc-bg-seo.jpg";
 import svcSectionBg from "@/assets/svc-section-bg.jpg";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const AUTO_INTERVAL = 5000; // 5s per card
 
 const SERVICES = [
   {
@@ -49,24 +47,58 @@ const SERVICES = [
 const Services3DScroll = () => {
   const [active, setActive] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [paused, setPaused] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
-  const sectionRef = useScrollReveal();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lastScrollTop = useRef(0);
+  const scrollCooldown = useRef(false);
+
+  // Scroll-driven: each scroll event inside sticky section changes card
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Only intercept if section is in sticky position (visible)
+      const rect = container.getBoundingClientRect();
+      const stickyEl = container.querySelector("[data-sticky]") as HTMLElement;
+      if (!stickyEl) return;
+
+      const stickyRect = stickyEl.getBoundingClientRect();
+      // Check if sticky element is actually stuck (top near 0)
+      const isStuck = stickyRect.top <= 5 && rect.bottom > window.innerHeight;
+
+      if (!isStuck) return;
+      if (scrollCooldown.current) {
+        e.preventDefault();
+        return;
+      }
+
+      const delta = e.deltaY;
+      if (Math.abs(delta) < 15) return;
+
+      if (delta > 0 && active < SERVICES.length - 1) {
+        e.preventDefault();
+        scrollCooldown.current = true;
+        setDirection(1);
+        setActive((prev) => Math.min(prev + 1, SERVICES.length - 1));
+        setTimeout(() => { scrollCooldown.current = false; }, 800);
+      } else if (delta < 0 && active > 0) {
+        e.preventDefault();
+        scrollCooldown.current = true;
+        setDirection(-1);
+        setActive((prev) => Math.max(prev - 1, 0));
+        setTimeout(() => { scrollCooldown.current = false; }, 800);
+      }
+      // If at first card scrolling up, or last card scrolling down, let page scroll naturally
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [active]);
 
   const goTo = useCallback((idx: number) => {
     setDirection(idx > active ? 1 : -1);
     setActive(idx);
   }, [active]);
-
-  // Auto-cycle
-  useEffect(() => {
-    if (paused) return;
-    timerRef.current = setInterval(() => {
-      setDirection(1);
-      setActive((prev) => (prev + 1) % SERVICES.length);
-    }, AUTO_INTERVAL);
-    return () => clearInterval(timerRef.current);
-  }, [paused]);
 
   const svc = SERVICES[active];
 
@@ -99,12 +131,15 @@ const Services3DScroll = () => {
   return (
     <section
       id="services"
-      ref={sectionRef}
-      className="relative z-[1] py-0"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      ref={containerRef}
+      className="relative z-[1]"
+      style={{ height: `${(SERVICES.length + 1) * 100}vh` }}
     >
-      <div className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ perspective: "1200px" }}>
+      <div
+        data-sticky
+        className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
+        style={{ perspective: "1200px" }}
+      >
         {/* Dark background */}
         <div className="absolute inset-0" style={{
           background: "linear-gradient(180deg, #0e0e0e 0%, #131210 30%, #151311 50%, #131210 70%, #0e0e0e 100%)",
@@ -143,7 +178,7 @@ const Services3DScroll = () => {
         }} />
 
         {/* Section title */}
-        <div className="absolute top-16 left-6 md:left-12 z-20 rv">
+        <div className="absolute top-16 left-6 md:left-12 z-20">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
             <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>
@@ -159,7 +194,7 @@ const Services3DScroll = () => {
           </h2>
         </div>
 
-        {/* Card carousel */}
+        {/* Card */}
         <div className="relative z-20 w-full flex items-center justify-center" style={{ minHeight: 420 }}>
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -288,52 +323,43 @@ const Services3DScroll = () => {
           </AnimatePresence>
         </div>
 
-        {/* Progress dots — bottom center */}
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 flex items-center gap-4">
+        {/* Progress dots — RIGHT side */}
+        <div className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-4">
           {SERVICES.map((s, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
-              className="relative flex items-center gap-2 group"
+              className="group flex items-center gap-3"
               aria-label={`Service ${s.num}`}
             >
-              <div
-                className="w-3 h-3 rounded-full transition-all duration-500"
-                style={{
+              <motion.div
+                className="w-3 h-3 rounded-full"
+                animate={{
                   background: i === active ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0.2)",
-                  boxShadow: i === active ? "0 0 14px hsl(43 55% 55% / 0.5)" : "none",
-                  transform: i === active ? "scale(1.3)" : "scale(1)",
+                  boxShadow: i === active ? "0 0 14px hsl(43 55% 55% / 0.5)" : "0 0 0px transparent",
+                  scale: i === active ? 1.4 : 1,
                 }}
+                transition={{ duration: 0.4, ease: EASE }}
               />
-              {/* Auto-progress ring on active dot */}
-              {i === active && !paused && (
-                <svg className="absolute -inset-1 w-5 h-5" viewBox="0 0 20 20">
-                  <circle
-                    cx="10" cy="10" r="8"
-                    fill="none"
-                    stroke="hsl(43 55% 55% / 0.4)"
-                    strokeWidth="1.5"
-                    strokeDasharray={50.27}
-                    strokeDashoffset={50.27}
-                    strokeLinecap="round"
-                    style={{
-                      animation: `progress-ring ${AUTO_INTERVAL}ms linear forwards`,
-                    }}
-                  />
-                </svg>
-              )}
+              {/* Label appears for active dot */}
+              <AnimatePresence>
+                {i === active && (
+                  <motion.span
+                    className="font-mono text-[9px] uppercase tracking-[0.15em] whitespace-nowrap hidden md:block"
+                    style={{ color: "hsl(43 55% 55%)" }}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -8 }}
+                    transition={{ duration: 0.3, ease: EASE }}
+                  >
+                    {s.num}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </button>
           ))}
         </div>
       </div>
-
-      {/* Progress ring keyframe */}
-      <style>{`
-        @keyframes progress-ring {
-          from { stroke-dashoffset: 50.27; }
-          to { stroke-dashoffset: 0; }
-        }
-      `}</style>
     </section>
   );
 };
