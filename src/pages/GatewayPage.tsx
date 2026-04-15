@@ -151,7 +151,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="hidden md:block font-clash font-black text-2xl tracking-[0.12em] uppercase"
+              className="hidden md:block font-clash font-black text-2xl tracking-[0.12em] uppercase whitespace-nowrap"
               style={{
                 color: hovered === "entreprise" ? "rgba(197,163,85,0.95)" : "hsl(73 100% 50%)",
                 textShadow: hovered === "entreprise"
