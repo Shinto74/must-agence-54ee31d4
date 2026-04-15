@@ -172,12 +172,23 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
                   transition: "box-shadow 0.4s ease, border-color 0.4s ease",
                 }}
               >
-                {/* Image */}
-                <img
+                {/* Image with micro-video Ken Burns effect */}
+                <motion.img
                   src={card.img}
                   alt={card.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
+                  animate={{
+                    scale: [1.05, 1.15, 1.08, 1.12, 1.05],
+                    x: [0, -8, 4, -3, 0],
+                    y: [0, -5, 3, -2, 0],
+                  }}
+                  transition={{
+                    duration: 12 + index * 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  style={{ willChange: "transform" }}
                 />
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
