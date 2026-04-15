@@ -123,12 +123,12 @@ const GatewayPage = () => {
               <div
                 className="absolute inset-0 rounded-full"
                 style={{
-                  border: `1.5px solid ${hovered === "entreprise" ? "rgba(255,255,255,0.45)" : "rgba(204,255,0,0.45)"}`,
+                  border: `1.5px solid ${hovered === "entreprise" ? "rgba(197,163,85,0.55)" : "rgba(204,255,0,0.45)"}`,
                   boxShadow: hovered === "entreprise"
-                    ? "0 0 30px rgba(255,255,255,0.12)"
+                    ? "0 0 30px rgba(197,163,85,0.15)"
                     : "0 0 30px rgba(204,255,0,0.15)",
                   background: hovered === "entreprise"
-                    ? "rgba(255,255,255,0.04)"
+                    ? "rgba(197,163,85,0.06)"
                     : "rgba(204,255,0,0.04)",
                   transition: "all 0.5s ease",
                 }}
@@ -137,7 +137,7 @@ const GatewayPage = () => {
                 src={SITE.logoGreen}
                 alt={SITE.name}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 md:h-14 w-auto"
-                style={{ opacity: hovered === "entreprise" ? 0 : 1, transition: "opacity 0.4s ease" }}
+                style={{ opacity: hovered === "entreprise" ? 0 : 1, transition: "opacity 0.4s ease", filter: "none" }}
               />
               <img
                 src={SITE.logoWhite}
@@ -153,9 +153,9 @@ const GatewayPage = () => {
               transition={{ duration: 0.7, delay: 0.3 }}
               className="hidden md:block font-clash font-black text-2xl tracking-[0.12em] uppercase"
               style={{
-                color: hovered === "entreprise" ? "rgba(255,255,255,0.9)" : "hsl(73 100% 50%)",
+                color: hovered === "entreprise" ? "rgba(197,163,85,0.95)" : "hsl(73 100% 50%)",
                 textShadow: hovered === "entreprise"
-                  ? "0 0 30px rgba(255,255,255,0.15)"
+                  ? "0 0 30px rgba(197,163,85,0.2)"
                   : "0 0 30px rgba(204,255,0,0.2)",
                 transition: "color 0.5s ease, text-shadow 0.5s ease",
               }}
@@ -195,7 +195,7 @@ const GatewayPage = () => {
             <div
               className="absolute inset-0"
               style={{
-                background: "radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.05) 0%, transparent 60%)",
+                background: "radial-gradient(ellipse at 50% 60%, rgba(197,163,85,0.1) 0%, transparent 60%)",
                 opacity: hovered === "entreprise" ? 1 : 0,
                 transition: "opacity 0.6s ease",
               }}
@@ -218,7 +218,8 @@ const GatewayPage = () => {
               initial={{ opacity: 0 }}
               animate={ready ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="font-outfit text-xs md:text-sm text-foreground/40 mb-5 md:mb-8 max-w-xs"
+              className="font-outfit text-xs md:text-sm mb-5 md:mb-8 max-w-xs"
+              style={{ color: "rgba(197,163,85,0.6)" }}
             >
               Influence · Growth · Branding
             </motion.p>
@@ -228,12 +229,12 @@ const GatewayPage = () => {
               transition={{ duration: 0.5, delay: 0.8 }}
               className="inline-flex items-center gap-3 px-7 py-3 md:px-8 md:py-3.5 rounded-full font-mono text-xs md:text-sm uppercase tracking-[0.12em]"
               style={{
-                background: "rgba(255,255,255,0.08)",
+                background: "rgba(197,163,85,0.12)",
                 backdropFilter: "blur(12px)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                color: "rgba(255,255,255,0.8)",
+                border: "1px solid rgba(197,163,85,0.3)",
+                color: "rgba(197,163,85,0.9)",
                 boxShadow: hovered === "entreprise"
-                  ? "0 0 30px rgba(255,255,255,0.12)"
+                  ? "0 0 30px rgba(197,163,85,0.2)"
                   : "none",
                 transform: hovered === "entreprise" ? "scale(1.05)" : "scale(1)",
                 transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
