@@ -69,18 +69,18 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
     }
   };
 
-  const inputBase = `w-full rounded-2xl px-5 py-4 text-[15px] font-outfit outline-none transition-all duration-500 ${isEntreprise ? "placeholder:text-black/55" : "placeholder:text-white/25"}`;
+  const inputBase = `w-full rounded-xl px-4 py-3 text-[13px] font-outfit outline-none transition-all duration-400 ${isEntreprise ? "placeholder:text-black/40" : "placeholder:text-white/25"}`;
   const getInputStyle = (field: string) => ({
     background: isEntreprise
-      ? focusField === field ? "hsl(38 18% 92%)" : "hsl(38 14% 93.5%)"
+      ? focusField === field ? "hsl(40 20% 96%)" : "hsl(40 15% 97%)"
       : focusField === field ? "hsl(0 0% 100% / 0.07)" : "hsl(0 0% 100% / 0.04)",
     border: focusField === field
-      ? `2px solid hsl(${accent} / 0.65)`
-      : `1.5px solid ${isEntreprise ? "hsl(0 0% 0% / 0.2)" : "hsl(0 0% 100% / 0.08)"}`,
-    color: isEntreprise ? "hsl(0 0% 5%)" : "hsl(0 0% 95%)",
+      ? `1.5px solid hsl(${accent} / 0.5)`
+      : `1px solid ${isEntreprise ? "hsl(0 0% 0% / 0.1)" : "hsl(0 0% 100% / 0.08)"}`,
+    color: isEntreprise ? "hsl(0 0% 8%)" : "hsl(0 0% 95%)",
     boxShadow: focusField === field
-      ? `0 0 20px hsl(${accent} / 0.1), inset 0 1px 0 hsl(${accent} / 0.08)`
-      : isEntreprise ? "inset 0 1px 3px hsl(0 0% 0% / 0.06)" : "none",
+      ? `0 0 0 3px hsl(${accent} / 0.08)`
+      : "none",
   });
 
   const CustomSelect = ({
@@ -93,7 +93,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`${inputBase} text-left flex items-center justify-between cursor-pointer`}
+        className={`${inputBase} text-left flex items-center justify-between cursor-pointer !py-3`}
         style={getInputStyle(field)}
         onFocus={() => setFocusField(field)}
         onBlur={() => { setFocusField(null); setTimeout(() => setOpen(false), 200); }}
@@ -387,158 +387,177 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
                 <X size={18} />
               </motion.button>
 
-              <form onSubmit={handleSubmit} className="p-7 md:p-9 space-y-5">
+              <form onSubmit={handleSubmit} className="px-6 py-6 md:px-8 md:py-7 space-y-4">
                 {/* Header */}
                 <motion.div
-                  className="mb-3"
+                  className="mb-1"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15, duration: 0.4, ease: EASE }}
                 >
-                  <div className="flex items-center gap-2.5 mb-3">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `hsl(${accent} / 0.1)` }}>
-                      <Sparkles size={14} style={{ color: `hsl(${accent})` }} />
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `hsl(${accent} / 0.1)` }}>
+                      <Sparkles size={12} style={{ color: `hsl(${accent})` }} />
                     </div>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.25em] font-medium" style={{ color: `hsl(${accent})` }}>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.25em] font-medium" style={{ color: `hsl(${accent})` }}>
                       Formulaire de contact
                     </span>
                   </div>
-                  <h3 className="font-clash font-bold text-xl" style={{ color: isEntreprise ? "hsl(0 0% 15%)" : "hsl(0 0% 95%)" }}>
+                  <h3 className="font-clash font-bold text-lg" style={{ color: isEntreprise ? "hsl(0 0% 15%)" : "hsl(0 0% 95%)" }}>
                     Parlons de votre projet
                   </h3>
                 </motion.div>
 
                 {/* Service type chips */}
-                {[
-                  { content: (
-                    <div className="flex flex-wrap gap-2">
-                      {formOptions.map(opt => (
-                        <motion.button
-                          key={opt}
-                          type="button"
-                          onClick={() => setForm({ ...form, type: opt })}
-                          className="px-4 py-2.5 rounded-full text-[13px] font-mono tracking-wide transition-all duration-300 cursor-pointer"
-                          style={{
-                            background: form.type === opt ? `hsl(${accent})` : (isEntreprise ? "hsl(38 14% 93.5%)" : "hsl(0 0% 100% / 0.04)"),
-                            color: form.type === opt ? (isEntreprise ? "#fff" : "hsl(0 0% 5%)") : (isEntreprise ? "hsl(0 0% 30%)" : "hsl(0 0% 70%)"),
-                            border: `1.5px solid ${form.type === opt ? `hsl(${accent})` : (isEntreprise ? "hsl(0 0% 0% / 0.12)" : "hsl(0 0% 100% / 0.08)")}`,
-                            boxShadow: form.type === opt ? `0 4px 15px hsl(${accent} / 0.25)` : "none",
-                          }}
-                          whileHover={{ y: -1 }}
-                          whileTap={{ scale: 0.96 }}
-                        >
-                          {opt}
-                        </motion.button>
-                      ))}
-                    </div>
-                  ), delay: 0.2 },
-                  { content: (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <motion.input
-                        type="text" placeholder="Votre nom" value={form.nom}
-                        onChange={e => setForm({ ...form, nom: e.target.value })}
-                        onFocus={() => setFocusField("nom")} onBlur={() => setFocusField(null)}
-                        required className={inputBase} style={getInputStyle("nom")}
-                      />
-                      <motion.input
-                        type="text" placeholder="Votre prénom" value={form.prenom}
-                        onChange={e => setForm({ ...form, prenom: e.target.value })}
-                        onFocus={() => setFocusField("prenom")} onBlur={() => setFocusField(null)}
-                        className={inputBase} style={getInputStyle("prenom")}
-                      />
-                    </div>
-                  ), delay: 0.25 },
-                  { content: (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <motion.input
-                        type="text" placeholder="Votre entreprise" value={form.entreprise}
-                        onChange={e => setForm({ ...form, entreprise: e.target.value })}
-                        onFocus={() => setFocusField("entreprise")} onBlur={() => setFocusField(null)}
-                        className={inputBase} style={getInputStyle("entreprise")}
-                      />
-                      <CustomSelect
-                        value={form.secteur} options={secteurOptions} open={secteurOpen} setOpen={setSecteurOpen}
-                        onChange={v => setForm({ ...form, secteur: v })} placeholder="Secteur d'activité" field="secteur"
-                      />
-                    </div>
-                  ), delay: 0.3 },
-                  { content: (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.35, ease: EASE }}
+                >
+                  <div className="flex flex-wrap gap-1.5">
+                    {formOptions.map(opt => (
+                      <motion.button
+                        key={opt}
+                        type="button"
+                        onClick={() => setForm({ ...form, type: opt })}
+                        className="px-3.5 py-2 rounded-full text-[11px] font-mono tracking-wide transition-all duration-300 cursor-pointer"
+                        style={{
+                          background: form.type === opt ? `hsl(${accent})` : (isEntreprise ? "hsl(40 15% 97%)" : "hsl(0 0% 100% / 0.04)"),
+                          color: form.type === opt ? (isEntreprise ? "#fff" : "hsl(0 0% 5%)") : (isEntreprise ? "hsl(0 0% 35%)" : "hsl(0 0% 70%)"),
+                          border: `1px solid ${form.type === opt ? `hsl(${accent})` : (isEntreprise ? "hsl(0 0% 0% / 0.1)" : "hsl(0 0% 100% / 0.08)")}`,
+                          boxShadow: form.type === opt ? `0 2px 10px hsl(${accent} / 0.2)` : "none",
+                        }}
+                        whileHover={{ y: -1 }}
+                        whileTap={{ scale: 0.96 }}
+                      >
+                        {opt}
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Separator */}
+                <div className="h-px w-full" style={{ background: isEntreprise ? "hsl(0 0% 0% / 0.06)" : "hsl(0 0% 100% / 0.06)" }} />
+
+                {/* Identity fields */}
+                <motion.div
+                  className="space-y-3"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25, duration: 0.35, ease: EASE }}
+                >
+                  <div className="grid grid-cols-2 gap-3">
                     <motion.input
-                      type="email" placeholder="Votre email" value={form.email}
-                      onChange={e => setForm({ ...form, email: e.target.value })}
-                      onFocus={() => setFocusField("email")} onBlur={() => setFocusField(null)}
-                      required className={inputBase} style={getInputStyle("email")}
+                      type="text" placeholder="Nom" value={form.nom}
+                      onChange={e => setForm({ ...form, nom: e.target.value })}
+                      onFocus={() => setFocusField("nom")} onBlur={() => setFocusField(null)}
+                      required className={inputBase} style={getInputStyle("nom")}
                     />
-                  ), delay: 0.32 },
-                  { content: (
                     <motion.input
-                      type="tel" placeholder="Votre téléphone" value={form.phone}
-                      onChange={e => setForm({ ...form, phone: e.target.value })}
-                      onFocus={() => setFocusField("phone")} onBlur={() => setFocusField(null)}
-                      className={inputBase} style={getInputStyle("phone")}
+                      type="text" placeholder="Prénom" value={form.prenom}
+                      onChange={e => setForm({ ...form, prenom: e.target.value })}
+                      onFocus={() => setFocusField("prenom")} onBlur={() => setFocusField(null)}
+                      className={inputBase} style={getInputStyle("prenom")}
                     />
-                  ), delay: 0.34 },
-                  { content: (
-                    <div>
-                      <div className="flex items-center justify-between mb-3 px-1">
-                        <span className="text-[13px] font-mono tracking-wide" style={{ color: isEntreprise ? "hsl(0 0% 30%)" : "hsl(0 0% 65%)" }}>Budget estimé</span>
-                        <span className="text-[15px] font-clash font-bold" style={{ color: `hsl(${accent})` }}>{formatBudget(form.budget)}</span>
-                      </div>
-                      <div className="relative px-1">
-                        <input
-                          type="range"
-                          min={budgetMin} max={budgetMax} step={budgetStep}
-                          value={form.budget}
-                          onChange={e => setForm({ ...form, budget: Number(e.target.value) })}
-                          className="w-full h-2 rounded-full appearance-none cursor-pointer"
-                          style={{
-                            background: `linear-gradient(to right, hsl(${accent}) 0%, hsl(${accent}) ${((form.budget - budgetMin) / (budgetMax - budgetMin)) * 100}%, ${isEntreprise ? "hsl(38 14% 90%)" : "hsl(0 0% 100% / 0.08)"} ${((form.budget - budgetMin) / (budgetMax - budgetMin)) * 100}%, ${isEntreprise ? "hsl(38 14% 90%)" : "hsl(0 0% 100% / 0.08)"} 100%)`,
-                            accentColor: `hsl(${accent})`,
-                          }}
-                        />
-                        <div className="flex justify-between mt-2">
-                          <span className="text-[10px] font-mono" style={{ color: isEntreprise ? "hsl(0 0% 50%)" : "hsl(0 0% 50%)" }}>1k€</span>
-                          <span className="text-[10px] font-mono" style={{ color: isEntreprise ? "hsl(0 0% 50%)" : "hsl(0 0% 50%)" }}>25k€+</span>
-                        </div>
-                      </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <motion.input
+                      type="text" placeholder="Entreprise" value={form.entreprise}
+                      onChange={e => setForm({ ...form, entreprise: e.target.value })}
+                      onFocus={() => setFocusField("entreprise")} onBlur={() => setFocusField(null)}
+                      className={inputBase} style={getInputStyle("entreprise")}
+                    />
+                    <CustomSelect
+                      value={form.secteur} options={secteurOptions} open={secteurOpen} setOpen={setSecteurOpen}
+                      onChange={v => setForm({ ...form, secteur: v })} placeholder="Secteur" field="secteur"
+                    />
+                  </div>
+                </motion.div>
+
+                {/* Contact fields */}
+                <motion.div
+                  className="space-y-3"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.35, ease: EASE }}
+                >
+                  <motion.input
+                    type="email" placeholder="Email" value={form.email}
+                    onChange={e => setForm({ ...form, email: e.target.value })}
+                    onFocus={() => setFocusField("email")} onBlur={() => setFocusField(null)}
+                    required className={inputBase} style={getInputStyle("email")}
+                  />
+                  <motion.input
+                    type="tel" placeholder="Téléphone" value={form.phone}
+                    onChange={e => setForm({ ...form, phone: e.target.value })}
+                    onFocus={() => setFocusField("phone")} onBlur={() => setFocusField(null)}
+                    className={inputBase} style={getInputStyle("phone")}
+                  />
+                </motion.div>
+
+                {/* Budget slider */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.34, duration: 0.35, ease: EASE }}
+                >
+                  <div className="rounded-xl px-4 py-3" style={{
+                    background: isEntreprise ? "hsl(40 15% 97%)" : "hsl(0 0% 100% / 0.03)",
+                    border: `1px solid ${isEntreprise ? "hsl(0 0% 0% / 0.06)" : "hsl(0 0% 100% / 0.06)"}`,
+                  }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-mono tracking-wide" style={{ color: isEntreprise ? "hsl(0 0% 35%)" : "hsl(0 0% 65%)" }}>Budget estimé</span>
+                      <span className="text-[14px] font-clash font-bold" style={{ color: `hsl(${accent})` }}>{formatBudget(form.budget)}</span>
                     </div>
-                  ), delay: 0.36 },
-                  { content: (
-                    <motion.textarea
-                      placeholder="Décrivez votre projet, vos ambitions..." rows={4} value={form.message}
-                      onChange={e => setForm({ ...form, message: e.target.value })}
-                      onFocus={() => setFocusField("message")} onBlur={() => setFocusField(null)}
-                      required className={`${inputBase} resize-none`} style={getInputStyle("message")}
+                    <input
+                      type="range"
+                      min={budgetMin} max={budgetMax} step={budgetStep}
+                      value={form.budget}
+                      onChange={e => setForm({ ...form, budget: Number(e.target.value) })}
+                      className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, hsl(${accent}) 0%, hsl(${accent}) ${((form.budget - budgetMin) / (budgetMax - budgetMin)) * 100}%, ${isEntreprise ? "hsl(38 14% 90%)" : "hsl(0 0% 100% / 0.08)"} ${((form.budget - budgetMin) / (budgetMax - budgetMin)) * 100}%, ${isEntreprise ? "hsl(38 14% 90%)" : "hsl(0 0% 100% / 0.08)"} 100%)`,
+                        accentColor: `hsl(${accent})`,
+                      }}
                     />
-                  ), delay: 0.38 },
-                ].map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: item.delay, duration: 0.35, ease: EASE }}
-                  >
-                    {item.content}
-                  </motion.div>
-                ))}
+                    <div className="flex justify-between mt-1">
+                      <span className="text-[9px] font-mono" style={{ color: isEntreprise ? "hsl(0 0% 55%)" : "hsl(0 0% 50%)" }}>1k€</span>
+                      <span className="text-[9px] font-mono" style={{ color: isEntreprise ? "hsl(0 0% 55%)" : "hsl(0 0% 50%)" }}>25k€+</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Message */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.37, duration: 0.35, ease: EASE }}
+                >
+                  <motion.textarea
+                    placeholder="Décrivez votre projet, vos ambitions..." rows={3} value={form.message}
+                    onChange={e => setForm({ ...form, message: e.target.value })}
+                    onFocus={() => setFocusField("message")} onBlur={() => setFocusField(null)}
+                    required className={`${inputBase} resize-none`} style={getInputStyle("message")}
+                  />
+                </motion.div>
 
                 {/* Submit */}
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45, duration: 0.35, ease: EASE }}
+                  transition={{ delay: 0.42, duration: 0.35, ease: EASE }}
                 >
                   <motion.button
                     type="submit" disabled={sending}
-                    className="w-full mt-1 py-5 font-mono text-sm uppercase tracking-[0.15em] font-bold disabled:opacity-50 group cursor-pointer relative overflow-hidden"
+                    className="w-full py-3.5 font-mono text-[11px] uppercase tracking-[0.15em] font-bold disabled:opacity-50 group cursor-pointer relative overflow-hidden"
                     style={{
                       background: isEntreprise ? `linear-gradient(135deg, hsl(${accentDark}), hsl(${accent}))` : "hsl(var(--primary))",
                       color: isEntreprise ? "#fff" : "hsl(var(--primary-foreground))",
-                      borderRadius: "18px",
-                      boxShadow: `0 8px 30px hsl(${accent} / 0.25), 0 0 0 1px hsl(${accent} / 0.15)`,
+                      borderRadius: "14px",
+                      boxShadow: `0 4px 20px hsl(${accent} / 0.2), 0 0 0 1px hsl(${accent} / 0.12)`,
                       border: "none",
                     }}
-                    whileHover={{ y: -2, boxShadow: `0 12px 40px hsl(${accent} / 0.35), 0 0 60px hsl(${accent} / 0.1)` }}
+                    whileHover={{ y: -2, boxShadow: `0 8px 30px hsl(${accent} / 0.3), 0 0 40px hsl(${accent} / 0.08)` }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   >
@@ -549,7 +568,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
                       animate={{ x: ["-100%", "200%"] }}
                       transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "linear" }}
                     />
-                    <span className="flex items-center justify-center gap-3 relative z-10">
+                    <span className="flex items-center justify-center gap-2.5 relative z-10">
                       {sending ? (
                         <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 1.2, repeat: Infinity }}>
                           Envoi en cours...
@@ -557,7 +576,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
                       ) : (
                         <>
                           Envoyer ma demande
-                          <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+                          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
                         </>
                       )}
                     </span>
