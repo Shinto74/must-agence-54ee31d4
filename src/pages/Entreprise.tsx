@@ -77,9 +77,8 @@ const EntrepriseHero = () => {
   /* Phase states for cinematic text reveal */
   const [phase, setPhase] = useState(0); // 0=invisible, 1=fade+blur, 2=sharp+glow, 3=sweep
 
-  /* Wait for the initial loader to finish before starting reveal. */
-     The App fires "loader-complete" right after setting loaded=true.
-     If the event already fired (late mount), start immediately. */
+  // Wait for the initial loader to finish before starting reveal
+  // Uses a fallback timeout in case the event was missed
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
