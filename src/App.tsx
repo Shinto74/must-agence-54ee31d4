@@ -88,6 +88,7 @@ const App = () => {
     // Force again after a tick (some browsers defer scroll restoration)
     requestAnimationFrame(() => {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+      (window as any).__loaderDone = true;
       window.dispatchEvent(new Event("loader-complete"));
     });
     setLoaded(true);
