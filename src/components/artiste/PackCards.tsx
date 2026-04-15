@@ -187,7 +187,14 @@ const TheArtistBonus = ({ text }: { text: string }) => (
 );
 
 /* ─── PACK CARD ─── */
+const PACK_PRICE_MAP: Record<string, string> = {
+  "Pack 1": "essentiel_once",
+  "Pack 2": "ascension_once",
+  "Pack 3": "explosion_once",
+};
+
 const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistText: string; onOpenQuote?: () => void }) => {
+  const navigate = useNavigate();
   const packTooltips = TOOLTIPS[pack.number] || {};
 
   // Matching: trouve le tooltip dont la feature commence par la clé
