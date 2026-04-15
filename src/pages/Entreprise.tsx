@@ -466,7 +466,7 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
           />
         )}
 
-        <div className="relative z-[5] px-6 py-10 md:px-8 md:py-12 flex flex-col items-center text-center min-h-[220px] justify-center gap-6">
+        <div className="relative z-[5] px-6 py-10 md:px-8 md:py-12 flex flex-col items-center text-center h-[260px] md:h-[280px] justify-center gap-6">
           {/* Signature circle — neumorphic premium */}
           <motion.div
             className="relative"
