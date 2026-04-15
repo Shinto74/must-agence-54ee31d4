@@ -1,7 +1,8 @@
+import { forwardRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { SITE } from "@/lib/constants";
 
-const Footer = () => {
+const Footer = forwardRef<HTMLElement>((_props, ref) => {
   const location = useLocation();
   const isEntreprise = location.pathname === "/entreprise";
   const gold = "hsl(43 55% 55%)";
@@ -17,6 +18,7 @@ const Footer = () => {
 
   return (
     <footer
+      ref={ref}
       className="relative border-t pt-16 pb-8"
       style={{
         background: isEntreprise
@@ -125,6 +127,8 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = "Footer";
 
 export default Footer;

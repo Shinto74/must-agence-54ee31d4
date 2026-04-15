@@ -250,11 +250,11 @@ const EntrepriseHero = () => {
             <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
           </motion.button>
           <motion.a href="#services"
-            className="group px-10 py-[1.125rem] rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-white/60 hover:text-white"
-            style={{ border: "1px solid rgba(255,255,255,0.2)" }}
+            className="group px-10 py-[1.125rem] rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-white/80 hover:text-white text-center"
+            style={{ border: "1.5px solid rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
             whileHover={{
-              borderColor: "rgba(255,255,255,0.4)",
-              background: "rgba(255,255,255,0.05)",
+              borderColor: "rgba(255,255,255,0.55)",
+              background: "rgba(255,255,255,0.12)",
             }}
           >
             Découvrir nos services
@@ -800,10 +800,14 @@ const Entreprise = () => {
   }, []);
 
   return (
-    <div className="page-bg page-bg--entreprise">
+    <div className="page-bg page-bg--entreprise relative">
       <EntrepriseHero />
       <MarqueeSep />
       <Services3DScroll />
+      {/* Transition gradient: dark Services → cream Expertise */}
+      <div className="h-32 pointer-events-none" style={{
+        background: "linear-gradient(to bottom, #0a0a0a, #1a1714 30%, #3d3528 50%, #8a7d6a 70%, #FAF9F6)",
+      }} />
       <ExpertiseSection />
       <ReferencesSection />
       <FinalCta />
