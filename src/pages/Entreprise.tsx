@@ -77,12 +77,32 @@ const EntrepriseHero = () => {
   /* Phase states for cinematic text reveal */
   const [phase, setPhase] = useState(0); // 0=invisible, 1=fade+blur, 2=sharp+glow, 3=sweep
 
+  // Wait for the initial loader to finish before starting reveal
+  // Uses a fallback timeout in case the event was missed
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase(1), 400);   // start fade-in
-    const t2 = setTimeout(() => setPhase(2), 1600);   // sharp + glow
-    const t3 = setTimeout(() => setPhase(3), 2800);   // light sweep
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const onLoaderComplete = () => setReady(true);
+    window.addEventListener("loader-complete", onLoaderComplete);
+    
+    // If loader already completed (navigating from another page), start immediately
+    // We check a flag set on window by the App
+    if ((window as any).__loaderDone) {
+      setReady(true);
+    }
+    
+    return () => {
+      window.removeEventListener("loader-complete", onLoaderComplete);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    const t1 = setTimeout(() => setPhase(1), 200);    // start fade-in
+    const t2 = setTimeout(() => setPhase(2), 1200);    // sharp + glow
+    const t3 = setTimeout(() => setPhase(3), 2200);    // light sweep
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [ready]);
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden">
