@@ -41,23 +41,30 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
     return () => window.removeEventListener("open-contact-modal", handler);
   }, []);
 
-  const budgetOptions = ["1 000 € – 3 000 €", "3 000 € – 5 000 €", "5 000 € – 10 000 €", "10 000 € – 20 000 €", "20 000 € +"];
+  const budgetMin = 1000;
+  const budgetMax = 25000;
+  const budgetStep = 500;
+
+  const secteurOptions = ["Gastronomie", "Hôtellerie", "Beauté & Bien-être", "Sport & Fitness", "Automobile", "Grande Distribution", "Mode & Luxe", "Immobilier", "Santé", "Tech & Startup", "Autre"];
+
+  const formatBudget = (v: number) => v >= budgetMax ? `${(v / 1000).toFixed(0)}k€ +` : `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k€`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return;
+    if (!form.nom.trim() || !form.email.trim() || !form.message.trim()) return;
     setSending(true);
     const { error } = await supabase.from("contact_submissions").insert({
-      type: form.type, name: form.name.trim(),
+      type: form.type,
+      name: `${form.prenom.trim()} ${form.nom.trim()}`.trim(),
       email: form.email.trim(),
-      message: `Téléphone: ${form.phone}\nBudget: ${form.budget}\n\n${form.message.trim()}`,
+      message: `Entreprise: ${form.entreprise}\nSecteur: ${form.secteur}\nTéléphone: ${form.phone}\nBudget: ${formatBudget(form.budget)}\n\n${form.message.trim()}`,
     });
     setSending(false);
     if (error) {
       toast.error("Erreur lors de l'envoi. Réessayez.");
     } else {
       toast.success("Message envoyé ! On revient vers vous en 24h.");
-      setForm({ type: formOptions[0], name: "", email: "", phone: "", budget: "", message: "" });
+      setForm({ type: formOptions[0], nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
       setModalOpen(false);
     }
   };
