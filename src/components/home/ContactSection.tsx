@@ -408,30 +408,68 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                   </h3>
                 </motion.div>
 
-                {/* Fields with stagger animation */}
+                {/* Service type chips */}
                 {[
                   { content: (
-                    <CustomSelect
-                      value={form.type} options={formOptions} open={selectOpen} setOpen={setSelectOpen}
-                      onChange={v => setForm({ ...form, type: v })} placeholder="Type de projet" field="type"
-                    />
+                    <div className="flex flex-wrap gap-2">
+                      {formOptions.map(opt => (
+                        <motion.button
+                          key={opt}
+                          type="button"
+                          onClick={() => setForm({ ...form, type: opt })}
+                          className="px-4 py-2.5 rounded-full text-[13px] font-mono tracking-wide transition-all duration-300 cursor-pointer"
+                          style={{
+                            background: form.type === opt ? `hsl(${accent})` : (isEntreprise ? "hsl(38 14% 93.5%)" : "hsl(0 0% 100% / 0.04)"),
+                            color: form.type === opt ? (isEntreprise ? "#fff" : "hsl(0 0% 5%)") : (isEntreprise ? "hsl(0 0% 30%)" : "hsl(0 0% 70%)"),
+                            border: `1.5px solid ${form.type === opt ? `hsl(${accent})` : (isEntreprise ? "hsl(0 0% 0% / 0.12)" : "hsl(0 0% 100% / 0.08)")}`,
+                            boxShadow: form.type === opt ? `0 4px 15px hsl(${accent} / 0.25)` : "none",
+                          }}
+                          whileHover={{ y: -1 }}
+                          whileTap={{ scale: 0.96 }}
+                        >
+                          {opt}
+                        </motion.button>
+                      ))}
+                    </div>
                   ), delay: 0.2 },
                   { content: (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <motion.input
-                        type="text" placeholder="Votre nom" value={form.name}
-                        onChange={e => setForm({ ...form, name: e.target.value })}
-                        onFocus={() => setFocusField("name")} onBlur={() => setFocusField(null)}
-                        required className={inputBase} style={getInputStyle("name")}
+                        type="text" placeholder="Votre nom" value={form.nom}
+                        onChange={e => setForm({ ...form, nom: e.target.value })}
+                        onFocus={() => setFocusField("nom")} onBlur={() => setFocusField(null)}
+                        required className={inputBase} style={getInputStyle("nom")}
                       />
                       <motion.input
-                        type="email" placeholder="Votre email" value={form.email}
-                        onChange={e => setForm({ ...form, email: e.target.value })}
-                        onFocus={() => setFocusField("email")} onBlur={() => setFocusField(null)}
-                        required className={inputBase} style={getInputStyle("email")}
+                        type="text" placeholder="Votre prénom" value={form.prenom}
+                        onChange={e => setForm({ ...form, prenom: e.target.value })}
+                        onFocus={() => setFocusField("prenom")} onBlur={() => setFocusField(null)}
+                        className={inputBase} style={getInputStyle("prenom")}
                       />
                     </div>
                   ), delay: 0.25 },
+                  { content: (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <motion.input
+                        type="text" placeholder="Votre entreprise" value={form.entreprise}
+                        onChange={e => setForm({ ...form, entreprise: e.target.value })}
+                        onFocus={() => setFocusField("entreprise")} onBlur={() => setFocusField(null)}
+                        className={inputBase} style={getInputStyle("entreprise")}
+                      />
+                      <CustomSelect
+                        value={form.secteur} options={secteurOptions} open={secteurOpen} setOpen={setSecteurOpen}
+                        onChange={v => setForm({ ...form, secteur: v })} placeholder="Secteur d'activité" field="secteur"
+                      />
+                    </div>
+                  ), delay: 0.3 },
+                  { content: (
+                    <motion.input
+                      type="email" placeholder="Votre email" value={form.email}
+                      onChange={e => setForm({ ...form, email: e.target.value })}
+                      onFocus={() => setFocusField("email")} onBlur={() => setFocusField(null)}
+                      required className={inputBase} style={getInputStyle("email")}
+                    />
+                  ), delay: 0.32 },
                   { content: (
                     <motion.input
                       type="tel" placeholder="Votre téléphone" value={form.phone}
@@ -439,13 +477,32 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                       onFocus={() => setFocusField("phone")} onBlur={() => setFocusField(null)}
                       className={inputBase} style={getInputStyle("phone")}
                     />
-                  ), delay: 0.3 },
+                  ), delay: 0.34 },
                   { content: (
-                    <CustomSelect
-                      value={form.budget} options={budgetOptions} open={budgetOpen} setOpen={setBudgetOpen}
-                      onChange={v => setForm({ ...form, budget: v })} placeholder="Sélectionnez un budget" field="budget"
-                    />
-                  ), delay: 0.35 },
+                    <div>
+                      <div className="flex items-center justify-between mb-3 px-1">
+                        <span className="text-[13px] font-mono tracking-wide" style={{ color: isEntreprise ? "hsl(0 0% 30%)" : "hsl(0 0% 65%)" }}>Budget estimé</span>
+                        <span className="text-[15px] font-clash font-bold" style={{ color: `hsl(${accent})` }}>{formatBudget(form.budget)}</span>
+                      </div>
+                      <div className="relative px-1">
+                        <input
+                          type="range"
+                          min={budgetMin} max={budgetMax} step={budgetStep}
+                          value={form.budget}
+                          onChange={e => setForm({ ...form, budget: Number(e.target.value) })}
+                          className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                          style={{
+                            background: `linear-gradient(to right, hsl(${accent}) 0%, hsl(${accent}) ${((form.budget - budgetMin) / (budgetMax - budgetMin)) * 100}%, ${isEntreprise ? "hsl(38 14% 90%)" : "hsl(0 0% 100% / 0.08)"} ${((form.budget - budgetMin) / (budgetMax - budgetMin)) * 100}%, ${isEntreprise ? "hsl(38 14% 90%)" : "hsl(0 0% 100% / 0.08)"} 100%)`,
+                            accentColor: `hsl(${accent})`,
+                          }}
+                        />
+                        <div className="flex justify-between mt-2">
+                          <span className="text-[10px] font-mono" style={{ color: isEntreprise ? "hsl(0 0% 50%)" : "hsl(0 0% 50%)" }}>1k€</span>
+                          <span className="text-[10px] font-mono" style={{ color: isEntreprise ? "hsl(0 0% 50%)" : "hsl(0 0% 50%)" }}>25k€+</span>
+                        </div>
+                      </div>
+                    </div>
+                  ), delay: 0.36 },
                   { content: (
                     <motion.textarea
                       placeholder="Décrivez votre projet, vos ambitions..." rows={4} value={form.message}
@@ -453,7 +510,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
                       onFocus={() => setFocusField("message")} onBlur={() => setFocusField(null)}
                       required className={`${inputBase} resize-none`} style={getInputStyle("message")}
                     />
-                  ), delay: 0.4 },
+                  ), delay: 0.38 },
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
