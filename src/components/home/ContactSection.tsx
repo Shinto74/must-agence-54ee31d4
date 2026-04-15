@@ -93,7 +93,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`${inputBase} text-left flex items-center justify-between cursor-pointer`}
+        className={`${inputBase} text-left flex items-center justify-between cursor-pointer !py-3`}
         style={getInputStyle(field)}
         onFocus={() => setFocusField(field)}
         onBlur={() => { setFocusField(null); setTimeout(() => setOpen(false), 200); }}
