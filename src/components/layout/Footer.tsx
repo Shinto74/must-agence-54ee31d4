@@ -18,6 +18,7 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
 
   return (
     <footer
+      ref={ref}
       className="relative border-t pt-16 pb-8"
       style={{
         background: isEntreprise
