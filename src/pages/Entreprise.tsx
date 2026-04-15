@@ -393,8 +393,8 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       style={{
-        filter: anyHovered && !isHovered ? "saturate(0.35) brightness(0.95)" : "saturate(1) brightness(1)",
-        opacity: anyHovered && !isHovered ? 0.55 : 1,
+        filter: anyHovered && !isHovered ? "saturate(0.5) brightness(0.97)" : "saturate(1) brightness(1)",
+        opacity: anyHovered && !isHovered ? 0.7 : 1,
         transition: "filter 0.7s cubic-bezier(0.16,1,0.3,1), opacity 0.7s cubic-bezier(0.16,1,0.3,1)",
       }}
     >
@@ -412,7 +412,7 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
         className="relative rounded-[20px] overflow-hidden"
         style={{
           background: isHovered
-            ? "linear-gradient(168deg, hsl(42 30% 97%) 0%, hsl(40 22% 92%) 100%)"
+            ? "linear-gradient(168deg, hsl(42 35% 97%) 0%, hsl(40 28% 91%) 100%)"
             : "linear-gradient(168deg, hsl(42 18% 96%) 0%, hsl(40 12% 93.5%) 100%)",
           border: `1.5px solid ${isHovered ? `hsl(${gold} / 0.45)` : "hsl(0 0% 0% / 0.05)"}`,
           boxShadow: isHovered
@@ -465,7 +465,7 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
 
             {/* The circle */}
             <div
-              className="w-[82px] h-[82px] md:w-[100px] md:h-[100px] rounded-full flex items-center justify-center relative"
+              className="w-[100px] h-[100px] md:w-[110px] md:h-[110px] rounded-full flex items-center justify-center relative"
               style={{
                 background: isHovered
                   ? "linear-gradient(145deg, hsl(42 25% 95%) 0%, hsl(40 20% 88%) 100%)"
@@ -490,10 +490,10 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
                 src={r.logo}
                 alt={r.name}
                 loading="lazy"
-                className="w-12 h-12 md:w-14 md:h-14 object-contain relative z-10"
+                className="w-14 h-14 md:w-16 md:h-16 object-contain relative z-10"
                 style={{
-                  opacity: isHovered ? 0.95 : 0.7,
-                  filter: isHovered ? "grayscale(0%) contrast(1.15)" : "grayscale(80%) contrast(1)",
+                  opacity: isHovered ? 1 : 0.8,
+                  filter: isHovered ? "grayscale(0%) contrast(1.15)" : "grayscale(60%) contrast(1)",
                   transition: "all 0.6s cubic-bezier(0.16,1,0.3,1)",
                 }}
               />
@@ -562,7 +562,7 @@ const ReferencesSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-7">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
           {REFERENCES.map((r, i) => (
             <ReferenceCard
               key={r.name} r={r} index={i}
