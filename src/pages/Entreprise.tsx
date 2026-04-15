@@ -403,49 +403,22 @@ const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number })
           }}
         />
 
-        <div className="relative z-10 p-8 md:p-10 flex flex-col items-center text-center min-h-[200px] justify-center">
-          {/* Monogram circle */}
-          <motion.div
-            className="relative mb-6"
-            animate={{ scale: hovered ? 1.1 : 1 }}
-            transition={{ duration: 0.5, ease: EASE }}
-          >
-            {/* Outer ring */}
-            <div
-              className="w-16 h-16 rounded-full flex items-center justify-center relative"
-              style={{
-                background: hovered
-                  ? "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))"
-                  : "hsl(43 52% 39% / 0.08)",
-                boxShadow: hovered
-                  ? "0 8px 25px hsl(43 52% 39% / 0.3), 0 0 30px hsl(43 55% 55% / 0.15)"
-                  : "none",
-                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-              }}
-            >
-              {/* Pulse ring */}
-              {hovered && (
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ border: "2px solid hsl(43 55% 55% / 0.3)" }}
-                  initial={{ scale: 1, opacity: 0.8 }}
-                  animate={{ scale: 1.6, opacity: 0 }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-              )}
-              <img
-                src={r.logo}
-                alt={r.name}
-                loading="lazy"
-                className="w-10 h-10 object-contain"
-                style={{
-                  filter: hovered ? "brightness(10)" : "none",
-                  transition: "filter 0.4s ease",
-                }}
-              />
-            </div>
-          </motion.div>
+        {/* Logo as card background */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]">
+          <img
+            src={r.logo}
+            alt={r.name}
+            loading="lazy"
+            className="w-20 h-20 md:w-24 md:h-24 object-contain"
+            style={{
+              opacity: hovered ? 0.18 : 0.08,
+              filter: "grayscale(100%)",
+              transition: "opacity 0.5s ease",
+            }}
+          />
+        </div>
 
+        <div className="relative z-10 p-8 md:p-10 flex flex-col items-center text-center min-h-[200px] justify-center">
           {/* Name */}
           <p
             className="font-clash font-bold text-base md:text-lg mb-2"
