@@ -113,12 +113,12 @@ const GatewayPage = () => {
             }}
           />
 
-          <div className="relative z-10 flex items-center gap-3 md:flex-col md:gap-2">
+          <div className="relative z-10 flex flex-col items-center justify-center gap-2">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-12 h-12 md:w-24 md:h-24"
+              className="relative w-14 h-14 md:w-24 md:h-24"
             >
               <div
                 className="absolute inset-0 rounded-full"
@@ -136,13 +136,13 @@ const GatewayPage = () => {
               <img
                 src={SITE.logoGreen}
                 alt={SITE.name}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-7 md:h-14 w-auto"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 md:h-14 w-auto"
                 style={{ opacity: hovered === "entreprise" ? 0 : 1, transition: "opacity 0.4s ease" }}
               />
               <img
                 src={SITE.logoWhite}
                 alt={SITE.name}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-7 md:h-14 w-auto"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 md:h-14 w-auto"
                 style={{ opacity: hovered === "entreprise" ? 1 : 0, transition: "opacity 0.4s ease" }}
               />
             </motion.div>
@@ -151,7 +151,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="font-clash font-black text-base md:text-2xl tracking-[0.12em] uppercase"
+              className="hidden md:block font-clash font-black text-2xl tracking-[0.12em] uppercase"
               style={{
                 color: hovered === "entreprise" ? "rgba(255,255,255,0.9)" : "hsl(73 100% 50%)",
                 textShadow: hovered === "entreprise"
