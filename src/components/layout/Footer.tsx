@@ -123,6 +123,13 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
           <p className="text-[11px] font-mono" style={{ color: isEntreprise ? "hsl(45 20% 62%)" : "hsl(var(--muted-foreground) / 0.4)" }}>
             Fait avec précision à Paris.
           </p>
+          <Link
+            to="/admin-login"
+            className="text-[10px] font-mono opacity-30 hover:opacity-60 transition-opacity"
+            style={{ color: isEntreprise ? "hsl(45 20% 62%)" : "hsl(var(--muted-foreground))" }}
+          >
+            Administration
+          </Link>
         </div>
       </div>
     </footer>
