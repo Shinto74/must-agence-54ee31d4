@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Users, Music, Building2, Package, BarChart3,
-  Briefcase, MessageSquare, Settings, Menu, X, Image, CreditCard,
+  Briefcase, MessageSquare, Settings, Menu, X, Image, CreditCard, ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
