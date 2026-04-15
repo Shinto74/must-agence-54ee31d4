@@ -424,12 +424,12 @@ const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number })
             className="w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center relative"
             style={{
               background: hovered
-                ? "linear-gradient(145deg, hsl(43 40% 95%), hsl(43 30% 88%))"
-                : "linear-gradient(145deg, hsl(0 0% 96%), hsl(0 0% 92%))",
-              border: `2px solid ${hovered ? "hsl(43 55% 55% / 0.6)" : "hsl(0 0% 0% / 0.1)"}`,
+                ? "linear-gradient(145deg, hsl(0 0% 22%), hsl(0 0% 16%))"
+                : "linear-gradient(145deg, hsl(0 0% 25%), hsl(0 0% 18%))",
+              border: `2px solid ${hovered ? "hsl(43 55% 55% / 0.6)" : "hsl(0 0% 0% / 0.18)"}`,
               boxShadow: hovered
-                ? "0 0 30px hsl(43 55% 55% / 0.25), 0 0 60px hsl(43 55% 55% / 0.1), inset 0 2px 4px hsl(0 0% 100% / 0.6)"
-                : "0 4px 15px hsl(0 0% 0% / 0.06), inset 0 1px 2px hsl(0 0% 100% / 0.5)",
+                ? "0 0 30px hsl(43 55% 55% / 0.25), 0 0 60px hsl(43 55% 55% / 0.1), inset 0 2px 4px hsl(0 0% 100% / 0.08)"
+                : "0 4px 15px hsl(0 0% 0% / 0.12), inset 0 1px 2px hsl(0 0% 100% / 0.05)",
               transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
@@ -439,8 +439,8 @@ const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number })
               loading="lazy"
               className="w-11 h-11 md:w-14 md:h-14 object-contain"
               style={{
-                opacity: hovered ? 0.9 : 0.6,
-                filter: hovered ? "grayscale(0%)" : "grayscale(80%)",
+                opacity: hovered ? 1 : 0.75,
+                filter: hovered ? "grayscale(0%) brightness(1.8)" : "grayscale(100%) brightness(1.6)",
                 transition: "all 0.5s ease",
               }}
             />
