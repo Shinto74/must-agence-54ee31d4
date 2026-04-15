@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, forwardRef } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -20,7 +20,7 @@ interface ContactSectionProps {
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const ContactSection = ({ heading, text, subtext, email, phone, location, whatsappUrl, formOptions }: ContactSectionProps) => {
+const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ heading, text, subtext, email, phone, location, whatsappUrl, formOptions }, _ref) => {
   const ref = useScrollReveal();
   const loc = useLocation();
   const isEntreprise = loc.pathname === "/entreprise";
