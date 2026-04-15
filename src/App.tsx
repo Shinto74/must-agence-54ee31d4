@@ -76,7 +76,11 @@ const RouteAwareLoader = ({ onComplete }: { onComplete: () => void }) => {
 
 const App = () => {
   const [loaded, setLoaded] = useState(false);
-  const handleLoaded = useCallback(() => setLoaded(true), []);
+  const handleLoaded = useCallback(() => {
+    window.scrollTo(0, 0);
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    setLoaded(true);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
