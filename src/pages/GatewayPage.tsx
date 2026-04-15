@@ -184,7 +184,7 @@ const GatewayPage = () => {
               alt="Entreprise"
               className="w-full h-full object-cover"
               style={{
-                opacity: hovered === "entreprise" ? 0.5 : 0.25,
+                opacity: hovered === "entreprise" ? 0.5 : 0.35,
                 transform: hovered === "entreprise" ? "scale(1.08)" : "scale(1)",
                 filter: hovered === "entreprise" ? "grayscale(0%)" : "grayscale(70%)",
                 transition: "all 0.8s cubic-bezier(0.16,1,0.3,1)",
