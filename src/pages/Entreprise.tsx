@@ -412,7 +412,7 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
         className="relative rounded-[20px] overflow-hidden"
         style={{
           background: isHovered
-            ? "linear-gradient(168deg, hsl(42 30% 97%) 0%, hsl(40 22% 92%) 100%)"
+            ? "linear-gradient(168deg, hsl(42 35% 97%) 0%, hsl(40 28% 91%) 100%)"
             : "linear-gradient(168deg, hsl(42 18% 96%) 0%, hsl(40 12% 93.5%) 100%)",
           border: `1.5px solid ${isHovered ? `hsl(${gold} / 0.45)` : "hsl(0 0% 0% / 0.05)"}`,
           boxShadow: isHovered
