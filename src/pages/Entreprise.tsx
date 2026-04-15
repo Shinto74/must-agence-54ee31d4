@@ -365,109 +365,157 @@ const REFERENCES = [
   { name: "Yamaha", subtitle: "Automobile & Moto", initial: "YM", logo: logoYamaha },
 ];
 
-const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number }) => {
-  const [hovered, setHovered] = useState(false);
-
+const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
+  r: typeof REFERENCES[0]; index: number;
+  anyHovered: boolean; isHovered: boolean;
+  onHover: () => void; onLeave: () => void;
+}) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 60, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.8, delay: index * 0.12, ease: EASE }}
-      className="group relative cursor-default"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 1, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="relative cursor-default"
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      style={{
+        filter: anyHovered && !isHovered ? "saturate(0.4) brightness(0.96)" : "saturate(1) brightness(1)",
+        opacity: anyHovered && !isHovered ? 0.6 : 1,
+        transition: "filter 0.7s cubic-bezier(0.16,1,0.3,1), opacity 0.7s cubic-bezier(0.16,1,0.3,1)",
+      }}
     >
-      <motion.div
-        className="relative rounded-2xl overflow-hidden"
+      {/* Outer glow — light from above */}
+      <div
+        className="absolute -inset-3 rounded-3xl pointer-events-none"
         style={{
-          background: hovered
-            ? "linear-gradient(165deg, hsl(40 28% 94%), hsl(43 32% 90%))"
-            : "linear-gradient(165deg, hsl(40 20% 95%), hsl(40 15% 93%))",
-          border: `2px solid ${hovered ? "hsl(43 55% 55% / 0.55)" : "hsl(0 0% 0% / 0.08)"}`,
-          boxShadow: hovered
-            ? "0 30px 60px hsl(43 52% 39% / 0.2), 0 10px 20px hsl(0 0% 0% / 0.08), 0 0 0 1px hsl(43 55% 55% / 0.15), inset 0 1px 0 hsl(0 0% 100% / 0.6)"
-            : "0 4px 16px hsl(0 0% 0% / 0.06), 0 1px 3px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
-          transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+          background: "radial-gradient(ellipse at 50% 0%, hsl(43 55% 55% / 0.08) 0%, transparent 70%)",
+          opacity: isHovered ? 1 : 0,
+          transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1)",
         }}
-        animate={{ y: hovered ? -10 : 0 }}
-        transition={{ duration: 0.5, ease: EASE }}
-      >
-        {/* Top gold accent */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{
-            background: "linear-gradient(90deg, transparent 10%, hsl(43 55% 55%), hsl(43 60% 65%), hsl(43 55% 55%), transparent 90%)",
-            opacity: hovered ? 1 : 0,
-            transition: "opacity 0.5s ease",
-          }}
-        />
+      />
 
-        {/* Layer 1: Background brand image — blurred, low opacity */}
-        <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
-          <img
-            src={r.logo}
-            alt=""
-            loading="lazy"
-            className="w-full h-full object-contain scale-[1.8]"
+      <motion.div
+        className="relative rounded-[22px] overflow-hidden"
+        style={{
+          background: isHovered
+            ? "linear-gradient(170deg, hsl(40 25% 96%) 0%, hsl(42 20% 93%) 100%)"
+            : "linear-gradient(170deg, hsl(40 15% 96%) 0%, hsl(40 10% 94%) 100%)",
+          border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.35)" : "hsl(0 0% 0% / 0.06)"}`,
+          boxShadow: isHovered
+            ? "0 20px 50px hsl(0 0% 0% / 0.08), 0 8px 20px hsl(0 0% 0% / 0.05), 0 0 0 0.5px hsl(43 55% 55% / 0.15)"
+            : "0 2px 12px hsl(0 0% 0% / 0.04), 0 1px 3px hsl(0 0% 0% / 0.03)",
+          transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+        animate={{ y: isHovered ? -4 : 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {/* Shimmer / light sweep effect */}
+        <div
+          className="absolute inset-0 z-[2] pointer-events-none overflow-hidden"
+          style={{ borderRadius: "22px" }}
+        >
+          <motion.div
+            className="absolute top-0 -left-full w-[60%] h-full"
             style={{
-              opacity: hovered ? 0.12 : 0.05,
-              filter: "blur(12px) grayscale(100%)",
-              transition: "opacity 0.6s ease, filter 0.6s ease",
+              background: "linear-gradient(105deg, transparent 40%, hsl(0 0% 100% / 0.12) 50%, transparent 60%)",
             }}
+            animate={isHovered ? { left: ["−100%", "200%"] } : {}}
+            transition={{ duration: 1.2, ease: "linear", delay: 0.15 }}
           />
         </div>
 
-        {/* Layer 2: Central circle with logo — bigger & more contrast */}
-        <div className="relative z-[5] p-8 md:p-10 flex flex-col items-center text-center min-h-[200px] justify-center gap-4">
-          <div
-            className="w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center relative"
-            style={{
-              background: hovered
-                ? "linear-gradient(145deg, hsl(43 40% 95%), hsl(43 30% 88%))"
-                : "linear-gradient(145deg, hsl(0 0% 96%), hsl(0 0% 92%))",
-              border: `2px solid ${hovered ? "hsl(43 55% 55% / 0.6)" : "hsl(0 0% 0% / 0.1)"}`,
-              boxShadow: hovered
-                ? "0 0 30px hsl(43 55% 55% / 0.25), 0 0 60px hsl(43 55% 55% / 0.1), inset 0 2px 4px hsl(0 0% 100% / 0.6)"
-                : "0 4px 15px hsl(0 0% 0% / 0.06), inset 0 1px 2px hsl(0 0% 100% / 0.5)",
-              transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-            }}
+        {/* Subtle grain texture overlay */}
+        <div
+          className="absolute inset-0 z-[1] pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E")`,
+            opacity: 0.5,
+            mixBlendMode: "multiply",
+          }}
+        />
+
+        <div className="relative z-[5] p-8 md:p-10 flex flex-col items-center text-center min-h-[210px] justify-center gap-5">
+          {/* Signature circle — premium glass object */}
+          <motion.div
+            className="relative"
+            animate={{ scale: isHovered ? 1.06 : 1 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <img
-              src={r.logo}
-              alt={r.name}
-              loading="lazy"
-              className="w-11 h-11 md:w-14 md:h-14 object-contain"
+            {/* Circle glow */}
+            <div
+              className="absolute inset-[-6px] rounded-full pointer-events-none"
               style={{
-                opacity: hovered ? 0.9 : 0.6,
-                filter: hovered ? "grayscale(0%)" : "grayscale(80%)",
-                transition: "all 0.5s ease",
+                background: "radial-gradient(circle, hsl(43 55% 55% / 0.12) 0%, transparent 70%)",
+                opacity: isHovered ? 1 : 0,
+                transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1)",
               }}
             />
-          </div>
+            <div
+              className="w-[76px] h-[76px] md:w-[90px] md:h-[90px] rounded-full flex items-center justify-center relative"
+              style={{
+                background: "linear-gradient(155deg, hsl(0 0% 98%) 0%, hsl(0 0% 93%) 100%)",
+                border: `1px solid ${isHovered ? "hsl(43 55% 55% / 0.3)" : "hsl(0 0% 0% / 0.06)"}`,
+                boxShadow: isHovered
+                  ? "0 8px 25px hsl(0 0% 0% / 0.06), inset 0 2px 4px hsl(0 0% 100% / 0.8), inset 0 -1px 3px hsl(0 0% 0% / 0.04), 0 0 20px hsl(43 55% 55% / 0.08)"
+                  : "0 4px 12px hsl(0 0% 0% / 0.04), inset 0 2px 4px hsl(0 0% 100% / 0.7), inset 0 -1px 2px hsl(0 0% 0% / 0.03)",
+                transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            >
+              {/* Inner light reflection — top */}
+              <div
+                className="absolute top-[3px] left-[12%] right-[12%] h-[35%] rounded-full pointer-events-none"
+                style={{
+                  background: "linear-gradient(180deg, hsl(0 0% 100% / 0.7) 0%, transparent 100%)",
+                  borderRadius: "50%",
+                }}
+              />
+              <img
+                src={r.logo}
+                alt={r.name}
+                loading="lazy"
+                className="w-10 h-10 md:w-12 md:h-12 object-contain relative z-10"
+                style={{
+                  opacity: isHovered ? 0.85 : 0.5,
+                  filter: isHovered ? "grayscale(0%)" : "grayscale(100%)",
+                  transition: "all 0.7s cubic-bezier(0.16,1,0.3,1)",
+                }}
+              />
+            </div>
+          </motion.div>
 
-          {/* Layer 3: Text — foreground */}
+          {/* Typography — Luxe */}
           <div>
             <p
-              className="font-clash font-bold text-base md:text-lg mb-1"
+              className="font-clash font-bold text-[15px] md:text-[17px] tracking-[0.02em] mb-1.5"
               style={{
-                color: hovered ? "hsl(43 52% 39%)" : "hsl(0 0% 20%)",
-                transition: "color 0.4s ease",
+                color: isHovered ? "hsl(43 52% 35%)" : "hsl(0 0% 18%)",
+                transition: "color 0.6s cubic-bezier(0.16,1,0.3,1)",
               }}
             >
               {r.name}
             </p>
             <p
-              className="font-mono text-[9px] uppercase tracking-[0.2em]"
+              className="font-mono text-[8.5px] uppercase tracking-[0.25em] font-medium"
               style={{
-                color: hovered ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0.55)",
-                transition: "color 0.4s ease",
+                color: isHovered ? "hsl(43 55% 55%)" : "hsl(43 40% 60% / 0.5)",
+                transition: "color 0.6s cubic-bezier(0.16,1,0.3,1)",
               }}
             >
               {r.subtitle}
             </p>
           </div>
         </div>
+
+        {/* Bottom accent line */}
+        <div
+          className="absolute bottom-0 left-[15%] right-[15%] h-[1px]"
+          style={{
+            background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.4), transparent)",
+            opacity: isHovered ? 1 : 0,
+            transition: "opacity 0.6s ease",
+          }}
+        />
       </motion.div>
     </motion.div>
   );
@@ -475,6 +523,7 @@ const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number })
 
 const ReferencesSection = () => {
   const ref = useScrollReveal();
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.3), transparent)" }} />
@@ -497,9 +546,15 @@ const ReferencesSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-7">
           {REFERENCES.map((r, i) => (
-            <ReferenceCard key={r.name} r={r} index={i} />
+            <ReferenceCard
+              key={r.name} r={r} index={i}
+              anyHovered={hoveredIdx !== null}
+              isHovered={hoveredIdx === i}
+              onHover={() => setHoveredIdx(i)}
+              onLeave={() => setHoveredIdx(null)}
+            />
           ))}
         </div>
 
