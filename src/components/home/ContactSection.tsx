@@ -572,6 +572,8 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       )}
     </>
   );
-};
+});
+
+ContactSection.displayName = "ContactSection";
 
 export default ContactSection;
