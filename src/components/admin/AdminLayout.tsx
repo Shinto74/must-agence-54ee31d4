@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Users, Music, Building2, Package, BarChart3,
-  Briefcase, MessageSquare, Settings, Menu, X, Image, CreditCard,
+  Briefcase, MessageSquare, Settings, Menu, X, Image, CreditCard, ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -71,7 +71,13 @@ export default function AdminLayout({ children }: Props) {
             </button>
           ))}
         </nav>
-        <div className="p-3 border-t border-border">
+        <div className="p-3 border-t border-border space-y-1">
+          <Link
+            to="/"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+          >
+            <ExternalLink size={16} /> Retour au site
+          </Link>
           <button
             onClick={signOut}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-destructive transition-colors"
