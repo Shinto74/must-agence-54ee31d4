@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const CustomCursor = () => {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -7,6 +8,22 @@ const CustomCursor = () => {
   const ringPos = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number>(0);
   const [isHover, setIsHover] = useState(false);
+  const location = useLocation();
+  const isEntreprise = location.pathname === "/entreprise";
+
+  // Gold for Entreprise, Neon for Artiste
+  const dotColor = isEntreprise ? "hsl(43 55% 55%)" : "hsl(73 100% 50%)";
+  const ringColor = isEntreprise
+    ? `hsl(43 55% 55% / ${isHover ? 0.45 : 0.25})`
+    : `hsl(73 100% 50% / ${isHover ? 0.5 : 0.3})`;
+  const dotGlow = isEntreprise
+    ? "0 0 8px hsl(43 55% 55% / 0.5)"
+    : "0 0 6px hsl(73 100% 50% / 0.6)";
+  const ringBg = isHover
+    ? isEntreprise
+      ? "hsl(43 55% 55% / 0.06)"
+      : "hsl(73 100% 50% / 0.06)"
+    : "transparent";
 
   useEffect(() => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
@@ -15,14 +32,11 @@ const CustomCursor = () => {
     const onMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
-
-      // Point central — instantané
       if (dotRef.current) {
         dotRef.current.style.transform = `translate(${e.clientX - 2.5}px, ${e.clientY - 2.5}px)`;
       }
     };
 
-    // Anneau — delayed (lerp)
     const animate = () => {
       const dx = mouse.current.x - ringPos.current.x;
       const dy = mouse.current.y - ringPos.current.y;
@@ -38,7 +52,6 @@ const CustomCursor = () => {
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    // Hover detection on interactive elements
     const onOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (target.closest("a, button, [role='button'], input, textarea, select, .cursor-pointer, [data-cursor-hover]")) {
@@ -67,7 +80,6 @@ const CustomCursor = () => {
 
   return (
     <>
-      {/* Point central 5px — Neon */}
       <div
         ref={dotRef}
         className="fixed top-0 left-0 z-[9999] pointer-events-none"
@@ -75,13 +87,11 @@ const CustomCursor = () => {
           width: 5,
           height: 5,
           borderRadius: "50%",
-          background: "hsl(73 100% 50%)",
-          boxShadow: "0 0 6px hsl(73 100% 50% / 0.6)",
+          background: dotColor,
+          boxShadow: dotGlow,
           willChange: "transform",
         }}
       />
-
-      {/* Anneau — delayed, 32px normal / 52px hover */}
       <div
         ref={ringRef}
         className="fixed top-0 left-0 z-[9998] pointer-events-none"
@@ -89,8 +99,8 @@ const CustomCursor = () => {
           width: isHover ? 52 : 32,
           height: isHover ? 52 : 32,
           borderRadius: "50%",
-          border: `1.5px solid hsl(73 100% 50% / ${isHover ? 0.5 : 0.3})`,
-          background: isHover ? "hsl(73 100% 50% / 0.06)" : "transparent",
+          border: `1.5px solid ${ringColor}`,
+          background: ringBg,
           willChange: "transform",
           transition: "width 250ms cubic-bezier(0.16,1,0.3,1), height 250ms cubic-bezier(0.16,1,0.3,1), border-color 300ms, background 300ms",
         }}
