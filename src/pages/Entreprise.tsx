@@ -331,13 +331,23 @@ const ExpertiseSection = () => {
               style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}
               whileHover={{ y: -6, borderColor: "hsl(43 55% 55% / 0.3)" }}
             >
-              <img
+              <motion.img
                 src={sector.img}
                 alt={sector.name}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
                 width={800}
                 height={600}
+                animate={{
+                  scale: [1.05, 1.14, 1.08, 1.12, 1.05],
+                  x: [0, -6, 3, -2, 0],
+                  y: [0, -4, 2, -1, 0],
+                }}
+                transition={{
+                  duration: 10 + i * 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/90" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
