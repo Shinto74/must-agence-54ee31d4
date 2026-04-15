@@ -433,15 +433,16 @@ const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number })
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
               )}
-              <span
-                className="font-clash font-black text-base"
+              <img
+                src={r.logo}
+                alt={r.name}
+                loading="lazy"
+                className="w-10 h-10 object-contain"
                 style={{
-                  color: hovered ? "#fff" : "hsl(43 55% 55%)",
-                  transition: "color 0.4s ease",
+                  filter: hovered ? "brightness(10)" : "none",
+                  transition: "filter 0.4s ease",
                 }}
-              >
-                {r.initial}
-              </span>
+              />
             </div>
           </motion.div>
 
