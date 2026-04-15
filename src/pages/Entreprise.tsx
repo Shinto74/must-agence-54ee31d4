@@ -82,25 +82,17 @@ const EntrepriseHero = () => {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    // Check if loader already completed (the body will have the class or loaded state)
-    const checkReady = () => {
-      // If document is already scrollable (loader done), start immediately
-      if (document.querySelector('main')) {
-        setReady(true);
-      }
-    };
-    
     const onLoaderComplete = () => setReady(true);
     window.addEventListener("loader-complete", onLoaderComplete);
     
-    // Fallback: start after a generous delay if event was missed
-    const fallback = setTimeout(() => setReady(true), 2800);
-    // Also check immediately in case loader already finished
-    checkReady();
+    // If loader already completed (navigating from another page), start immediately
+    // We check a flag set on window by the App
+    if ((window as any).__loaderDone) {
+      setReady(true);
+    }
     
     return () => {
       window.removeEventListener("loader-complete", onLoaderComplete);
-      clearTimeout(fallback);
     };
   }, []);
 
