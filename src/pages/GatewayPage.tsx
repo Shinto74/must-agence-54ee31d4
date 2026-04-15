@@ -204,13 +204,13 @@ const GatewayPage = () => {
 
           <Link
             to="/entreprise"
-            className="relative z-10 h-full flex flex-col items-start md:items-end justify-start pt-6 md:justify-end md:pt-0 md:pb-[16vh] px-6 md:px-14"
+            className="relative z-10 h-full flex flex-col items-center text-center justify-center px-6 md:items-end md:text-right md:justify-end md:pb-[16vh] md:px-14"
           >
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="font-clash font-black text-2xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-2 md:mb-3 md:text-right"
+              className="font-clash font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-2 md:mb-3"
             >
               Pôle Entreprise
             </motion.h2>
@@ -218,7 +218,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0 }}
               animate={ready ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="font-outfit text-xs md:text-sm text-foreground/40 mb-4 md:mb-8 md:text-right max-w-xs"
+              className="font-outfit text-xs md:text-sm text-foreground/40 mb-5 md:mb-8 max-w-xs"
             >
               Influence · Growth · Branding
             </motion.p>
@@ -226,7 +226,7 @@ const GatewayPage = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.8 }}
-              className="inline-flex items-center gap-3 px-6 md:px-8 py-3 md:py-3.5 rounded-full font-mono text-xs md:text-sm uppercase tracking-[0.12em]"
+              className="inline-flex items-center gap-3 px-7 py-3 md:px-8 md:py-3.5 rounded-full font-mono text-xs md:text-sm uppercase tracking-[0.12em]"
               style={{
                 background: "rgba(255,255,255,0.08)",
                 backdropFilter: "blur(12px)",
