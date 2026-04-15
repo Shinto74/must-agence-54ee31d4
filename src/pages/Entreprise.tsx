@@ -403,43 +403,70 @@ const ReferenceCard = ({ r, index }: { r: typeof REFERENCES[0]; index: number })
           }}
         />
 
-        {/* Logo as card background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]">
+        {/* Layer 1: Background brand image — blurred, low opacity */}
+        <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
           <img
             src={r.logo}
-            alt={r.name}
+            alt=""
             loading="lazy"
-            className="w-20 h-20 md:w-24 md:h-24 object-contain"
+            className="w-full h-full object-contain scale-[1.8]"
             style={{
-              opacity: hovered ? 0.18 : 0.08,
-              filter: "grayscale(100%)",
-              transition: "opacity 0.5s ease",
+              opacity: hovered ? 0.1 : 0.04,
+              filter: "blur(12px) grayscale(100%)",
+              transition: "opacity 0.6s ease, filter 0.6s ease",
             }}
           />
         </div>
 
-        <div className="relative z-10 p-8 md:p-10 flex flex-col items-center text-center min-h-[200px] justify-center">
-          {/* Name */}
-          <p
-            className="font-clash font-bold text-base md:text-lg mb-2"
+        {/* Layer 2: Central circle with logo/initials + glow */}
+        <div className="relative z-[5] p-8 md:p-10 flex flex-col items-center text-center min-h-[200px] justify-center gap-4">
+          <div
+            className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center relative"
             style={{
-              color: hovered ? "hsl(43 52% 39%)" : "hsl(var(--foreground))",
-              transition: "color 0.4s ease",
+              background: hovered
+                ? "linear-gradient(145deg, hsl(43 40% 95%), hsl(43 30% 90%))"
+                : "hsl(var(--foreground) / 0.04)",
+              border: `1.5px solid ${hovered ? "hsl(43 55% 55% / 0.5)" : "hsl(var(--foreground) / 0.08)"}`,
+              boxShadow: hovered
+                ? "0 0 25px hsl(43 55% 55% / 0.2), 0 0 60px hsl(43 55% 55% / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.6)"
+                : "0 2px 10px hsl(0 0% 0% / 0.03)",
+              transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            {r.name}
-          </p>
+            <img
+              src={r.logo}
+              alt={r.name}
+              loading="lazy"
+              className="w-9 h-9 md:w-11 md:h-11 object-contain"
+              style={{
+                opacity: hovered ? 0.85 : 0.5,
+                filter: hovered ? "grayscale(0%)" : "grayscale(100%)",
+                transition: "all 0.5s ease",
+              }}
+            />
+          </div>
 
-          {/* Subtitle */}
-          <p
-            className="font-mono text-[9px] uppercase tracking-[0.2em]"
-            style={{
-              color: hovered ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0.45)",
-              transition: "color 0.4s ease",
-            }}
-          >
-            {r.subtitle}
-          </p>
+          {/* Layer 3: Text — foreground */}
+          <div>
+            <p
+              className="font-clash font-bold text-base md:text-lg mb-1"
+              style={{
+                color: hovered ? "hsl(43 52% 39%)" : "hsl(var(--foreground))",
+                transition: "color 0.4s ease",
+              }}
+            >
+              {r.name}
+            </p>
+            <p
+              className="font-mono text-[9px] uppercase tracking-[0.2em]"
+              style={{
+                color: hovered ? "hsl(43 55% 55%)" : "hsl(43 55% 55% / 0.45)",
+                transition: "color 0.4s ease",
+              }}
+            >
+              {r.subtitle}
+            </p>
+          </div>
         </div>
       </motion.div>
     </motion.div>
