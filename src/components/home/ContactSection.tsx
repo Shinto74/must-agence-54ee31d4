@@ -63,18 +63,18 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
     }
   };
 
-  const inputBase = `w-full rounded-2xl px-5 py-4 text-sm font-outfit outline-none transition-all duration-500 ${isEntreprise ? "placeholder:text-black/45" : "placeholder:text-white/20"}`;
+  const inputBase = `w-full rounded-2xl px-5 py-4 text-[15px] font-outfit outline-none transition-all duration-500 ${isEntreprise ? "placeholder:text-black/55" : "placeholder:text-white/25"}`;
   const getInputStyle = (field: string) => ({
     background: isEntreprise
-      ? focusField === field ? "hsl(40 20% 95%)" : "hsl(40 15% 96%)"
+      ? focusField === field ? "hsl(38 18% 92%)" : "hsl(38 14% 93.5%)"
       : focusField === field ? "hsl(0 0% 100% / 0.07)" : "hsl(0 0% 100% / 0.04)",
     border: focusField === field
-      ? `2px solid hsl(${accent} / 0.6)`
-      : `1.5px solid ${isEntreprise ? "hsl(0 0% 0% / 0.15)" : "hsl(0 0% 100% / 0.08)"}`,
-    color: isEntreprise ? "hsl(0 0% 8%)" : "hsl(0 0% 95%)",
+      ? `2px solid hsl(${accent} / 0.65)`
+      : `1.5px solid ${isEntreprise ? "hsl(0 0% 0% / 0.2)" : "hsl(0 0% 100% / 0.08)"}`,
+    color: isEntreprise ? "hsl(0 0% 5%)" : "hsl(0 0% 95%)",
     boxShadow: focusField === field
-      ? `0 0 20px hsl(${accent} / 0.08), inset 0 1px 0 hsl(${accent} / 0.06)`
-      : isEntreprise ? "inset 0 1px 2px hsl(0 0% 0% / 0.04)" : "none",
+      ? `0 0 20px hsl(${accent} / 0.1), inset 0 1px 0 hsl(${accent} / 0.08)`
+      : isEntreprise ? "inset 0 1px 3px hsl(0 0% 0% / 0.06)" : "none",
   });
 
   const CustomSelect = ({
@@ -92,7 +92,7 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
         onFocus={() => setFocusField(field)}
         onBlur={() => { setFocusField(null); setTimeout(() => setOpen(false), 200); }}
       >
-        <span style={{ color: value ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.2)" }}>
+        <span style={{ color: value ? (isEntreprise ? "hsl(0 0% 5%)" : "hsl(var(--foreground))") : (isEntreprise ? "hsl(0 0% 0% / 0.5)" : "hsl(var(--foreground) / 0.2)") }}>
           {value || placeholder}
         </span>
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3, ease: EASE }}>
