@@ -72,23 +72,26 @@ const Services3DScroll = () => {
 
   const cardVariants = {
     enter: (dir: number) => ({
-      x: dir > 0 ? 120 : -120,
+      y: dir > 0 ? 100 : -100,
       opacity: 0,
-      scale: 0.92,
-      rotateY: dir > 0 ? 8 : -8,
+      scale: 0.85,
+      rotateX: dir > 0 ? -12 : 12,
+      filter: "blur(6px)",
     }),
     center: {
-      x: 0,
+      y: 0,
       opacity: 1,
       scale: 1,
-      rotateY: 0,
+      rotateX: 0,
+      filter: "blur(0px)",
       transition: { duration: 0.7, ease: EASE },
     },
     exit: (dir: number) => ({
-      x: dir > 0 ? -120 : 120,
+      y: dir > 0 ? -100 : 100,
       opacity: 0,
-      scale: 0.92,
-      rotateY: dir > 0 ? -8 : 8,
+      scale: 0.85,
+      rotateX: dir > 0 ? 12 : -12,
+      filter: "blur(6px)",
       transition: { duration: 0.5, ease: EASE },
     }),
   };
