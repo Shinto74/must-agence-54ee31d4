@@ -66,16 +66,18 @@ const AnimatedRoutes = () => {
 const AppShell = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isCheckout = location.pathname.startsWith("/checkout");
   const isGateway = location.pathname === "/";
+  const hideChrome = isAdmin || isCheckout || isGateway;
 
   return (
     <>
-      {!isAdmin && !isGateway && <CustomCursor />}
-      {!isAdmin && !isGateway && <Header />}
-      <main className={isAdmin ? "" : isGateway ? "" : "min-h-screen"}>
+      {!hideChrome && <CustomCursor />}
+      {!hideChrome && <Header />}
+      <main className={hideChrome ? "" : "min-h-screen"}>
         <AnimatedRoutes />
       </main>
-      {!isAdmin && !isGateway && <Footer />}
+      {!hideChrome && <Footer />}
     </>
   );
 };
