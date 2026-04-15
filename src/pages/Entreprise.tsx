@@ -470,8 +470,14 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
           {/* Signature circle — neumorphic premium */}
           <motion.div
             className="relative"
-            animate={{ scale: isHovered ? 1.08 : 1 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            animate={{
+              scale: isHovered ? 1.08 : 1,
+              y: isHovered ? 0 : [0, -4, 0],
+            }}
+            transition={isHovered
+              ? { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+              : { y: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.4 }, scale: { duration: 0.7 } }
+            }
           >
             {/* Glow behind circle */}
             <div
