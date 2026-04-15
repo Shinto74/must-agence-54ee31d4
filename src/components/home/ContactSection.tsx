@@ -63,16 +63,18 @@ const ContactSection = ({ heading, text, subtext, email, phone, location, whatsa
     }
   };
 
-  const inputBase = `w-full rounded-2xl px-5 py-4 text-sm font-outfit outline-none transition-all duration-500 ${isEntreprise ? "placeholder:text-black/35" : "placeholder:text-white/20"}`;
+  const inputBase = `w-full rounded-2xl px-5 py-4 text-sm font-outfit outline-none transition-all duration-500 ${isEntreprise ? "placeholder:text-black/45" : "placeholder:text-white/20"}`;
   const getInputStyle = (field: string) => ({
     background: isEntreprise
-      ? focusField === field ? "hsl(0 0% 0% / 0.06)" : "hsl(0 0% 0% / 0.03)"
+      ? focusField === field ? "hsl(40 20% 95%)" : "hsl(40 15% 96%)"
       : focusField === field ? "hsl(0 0% 100% / 0.07)" : "hsl(0 0% 100% / 0.04)",
     border: focusField === field
-      ? `1.5px solid hsl(${accent} / 0.45)`
-      : `1.5px solid ${isEntreprise ? "hsl(0 0% 0% / 0.1)" : "hsl(0 0% 100% / 0.08)"}`,
-    color: isEntreprise ? "hsl(0 0% 10%)" : "hsl(0 0% 95%)",
-    boxShadow: focusField === field ? `0 0 30px hsl(${accent} / 0.06), inset 0 1px 0 hsl(${accent} / 0.05)` : "none",
+      ? `2px solid hsl(${accent} / 0.6)`
+      : `1.5px solid ${isEntreprise ? "hsl(0 0% 0% / 0.15)" : "hsl(0 0% 100% / 0.08)"}`,
+    color: isEntreprise ? "hsl(0 0% 8%)" : "hsl(0 0% 95%)",
+    boxShadow: focusField === field
+      ? `0 0 20px hsl(${accent} / 0.08), inset 0 1px 0 hsl(${accent} / 0.06)`
+      : isEntreprise ? "inset 0 1px 2px hsl(0 0% 0% / 0.04)" : "none",
   });
 
   const CustomSelect = ({
