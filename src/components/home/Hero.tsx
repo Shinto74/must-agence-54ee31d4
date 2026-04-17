@@ -1,8 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SITE } from "@/lib/constants";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
-const VIDEO_URL = "https://cdn.jsdelivr.net/gh/Shinto74/IMAGES@ee9be1c404afd60483c0caf409121c884ae142f1/must-agence/14819394_1280_720_25fps.mp4";
+const DEFAULT_VIDEO_URL = "https://cdn.jsdelivr.net/gh/Shinto74/IMAGES@ee9be1c404afd60483c0caf409121c884ae142f1/must-agence/14819394_1280_720_25fps.mp4";
 
 const BRAND_LETTERS = [
   { char: "M", color: "hsl(0 0% 100%)" },
@@ -22,6 +23,14 @@ const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [videoReady, setVideoReady] = useState(false);
+  const { get } = useSiteSettings();
+  const VIDEO_URL = get("hero_artiste_video_url", DEFAULT_VIDEO_URL);
+  const heroLabel = get("hero_artiste_label", "Influence Artistique");
+  const heroTitleLine1 = get("hero_artiste_title_line1", SITE.hero.titleLine1);
+  const heroTitleAccent = get("hero_artiste_title_accent", SITE.hero.titleAccent);
+  const heroSubtitle = get("hero_artiste_subtitle", "Agence d'influence spécialisée musique et marques.");
+  const heroCtaPrimary = get("hero_artiste_cta_primary", SITE.hero.ctaPrimary);
+  const heroCtaSecondary = get("hero_artiste_cta_secondary", SITE.hero.ctaSecondary);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {

@@ -4,13 +4,13 @@ import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Users, Music, Building2, Package, BarChart3,
   Briefcase, MessageSquare, Settings, Menu, X, Image, CreditCard, ExternalLink,
-  LayoutDashboard, Search, Bell,
+  LayoutDashboard, Search, Bell, FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminNotifications } from "./useAdminNotifications";
 
 export type AdminTab =
-  | "dashboard" | "editeur" | "paiements" | "demandes" | "equipe" | "artistes" | "clients"
+  | "dashboard" | "editeur" | "contenu" | "paiements" | "demandes" | "equipe" | "artistes" | "clients"
   | "packs" | "stats" | "services" | "settings";
 
 type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" | "paiements" };
@@ -35,6 +35,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Contenu",
     items: [
       { key: "editeur", label: "Éditeur visuel", icon: Image },
+      { key: "contenu", label: "Contenu sections", icon: FileText },
       { key: "packs", label: "Packs", icon: Package },
       { key: "services", label: "Services", icon: Briefcase },
     ],
