@@ -8,6 +8,7 @@ interface Props {
   options?: { label: string; value: string }[];
   placeholder?: string;
   imageFolder?: string;
+  hint?: string;
 }
 
 const LABELS: Record<string, string> = {
@@ -40,13 +41,24 @@ const LABELS: Record<string, string> = {
   display_order: "Ordre d'affichage",
 };
 
-export default function AdminField({ label, type = "text", value, onChange, options, placeholder, imageFolder }: Props) {
+const inputBase =
+  "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all";
+
+export default function AdminField({ label, type = "text", value, onChange, options, placeholder, imageFolder, hint }: Props) {
   const displayLabel = LABELS[label] || label;
+
+  const Label = () => (
+    <label className="block text-[11px] font-mono text-slate-500 uppercase tracking-wider mb-1.5 font-medium">
+      {displayLabel}
+    </label>
+  );
+
+  const Hint = () => (hint ? <p className="mt-1 text-[11px] text-slate-400">{hint}</p> : null);
 
   if (type === "image") {
     return (
       <div>
-        <label className="block text-xs font-mono text-muted-foreground uppercase mb-1.5">{displayLabel}</label>
+        <Label />
         <ImageUpload value={value || ""} onChange={onChange} folder={imageFolder || "uploads"} />
         {value && (
           <input
@@ -54,23 +66,24 @@ export default function AdminField({ label, type = "text", value, onChange, opti
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="Ou collez une URL"
-            className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-xs text-muted-foreground focus:outline-none focus:border-primary/40"
+            className={`mt-2 ${inputBase} text-xs`}
           />
         )}
+        <Hint />
       </div>
     );
   }
 
   if (type === "checkbox") {
     return (
-      <label className="flex items-center gap-3 py-2 cursor-pointer">
+      <label className="flex items-center gap-3 py-2 cursor-pointer group">
         <input
           type="checkbox"
           checked={!!value}
           onChange={(e) => onChange(e.target.checked)}
-          className="w-4 h-4 rounded border-border accent-primary"
+          className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 focus:ring-2 focus:ring-offset-0"
         />
-        <span className="text-sm text-foreground">{displayLabel}</span>
+        <span className="text-sm text-slate-700 group-hover:text-slate-900 transition-colors">{displayLabel}</span>
       </label>
     );
   }
@@ -78,17 +91,18 @@ export default function AdminField({ label, type = "text", value, onChange, opti
   if (type === "select" && options) {
     return (
       <div>
-        <label className="block text-xs font-mono text-muted-foreground uppercase mb-1.5">{displayLabel}</label>
+        <Label />
         <select
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/40"
+          className={inputBase}
         >
           <option value="">— Choisir —</option>
           {options.map((o) => (
             <option key={o.value} value={o.value}>{o.label}</option>
           ))}
         </select>
+        <Hint />
       </div>
     );
   }
@@ -96,28 +110,30 @@ export default function AdminField({ label, type = "text", value, onChange, opti
   if (type === "textarea") {
     return (
       <div>
-        <label className="block text-xs font-mono text-muted-foreground uppercase mb-1.5">{displayLabel}</label>
+        <Label />
         <textarea
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           rows={3}
-          className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/40 resize-none"
+          className={`${inputBase} resize-none`}
         />
+        <Hint />
       </div>
     );
   }
 
   return (
     <div>
-      <label className="block text-xs font-mono text-muted-foreground uppercase mb-1.5">{displayLabel}</label>
+      <Label />
       <input
         type="text"
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/40"
+        className={inputBase}
       />
+      <Hint />
     </div>
   );
 }
