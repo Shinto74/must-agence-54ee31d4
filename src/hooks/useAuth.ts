@@ -55,7 +55,10 @@ export function useAuth() {
       if (initialized.current) setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(safety);
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
