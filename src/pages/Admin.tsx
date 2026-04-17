@@ -1,4 +1,5 @@
 import AdminLayout from "@/components/admin/AdminLayout";
+import DashboardPanel from "@/components/admin/panels/DashboardPanel";
 import VisualEditorPanel from "@/components/admin/panels/VisualEditorPanel";
 import PaiementsPanel from "@/components/admin/panels/PaiementsPanel";
 import DemandesPanel from "@/components/admin/panels/DemandesPanel";
@@ -14,6 +15,7 @@ const Admin = () => (
   <AdminLayout>
     {(tab) => (
       <>
+        {tab === "dashboard" && <DashboardPanel />}
         {tab === "editeur" && <VisualEditorPanel />}
         {tab === "paiements" && <PaiementsPanel />}
         {tab === "demandes" && <DemandesPanel />}
