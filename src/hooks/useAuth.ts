@@ -43,12 +43,12 @@ export function useAuth() {
         clearTimeout(safety);
       });
 
-    // 2. Listen for subsequent changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    // 2. Listen for subsequent changes — never await inside the callback (deadlock risk)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       const u = session?.user ?? null;
       setUser(u);
       if (u) {
-        await checkAdmin(u);
+        setTimeout(() => { checkAdmin(u); }, 0);
       } else {
         setIsAdmin(false);
       }
