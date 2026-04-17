@@ -305,20 +305,26 @@ const EntrepriseHero = () => {
 };
 
 /* ═══ MARQUEE SEPARATOR ═══ */
-const MarqueeSep = () => (
-  <div className="overflow-hidden py-10" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.1)", borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
-    <div className="flex gap-14 animate-mq whitespace-nowrap">
-      {[...Array(3)].flatMap((_, i) =>
-        ["STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING", "CONTENU", "SOCIAL MEDIA", "ADS", "SEO"].map((w, j) => (
-          <span key={`${i}-${j}`} className="font-clash text-base md:text-lg font-bold tracking-[0.2em] uppercase flex items-center gap-8" style={{ color: "hsl(43 52% 39% / 0.55)" }}>
-            {w}
-            <span className="w-2 h-2 rounded-full" style={{ background: "hsl(43 55% 55%)" }} />
-          </span>
-        ))
-      )}
+const MarqueeSep = () => {
+  const { data: items } = useMarqueeItems("entreprise");
+  const words = (items && items.length > 0)
+    ? items.filter((i: any) => i.kind === "word").map((i: any) => i.text_value)
+    : ["STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING", "CONTENU", "SOCIAL MEDIA", "ADS", "SEO"];
+  return (
+    <div className="overflow-hidden py-10" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.1)", borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
+      <div className="flex gap-14 animate-mq whitespace-nowrap">
+        {[...Array(3)].flatMap((_, i) =>
+          words.map((w, j) => (
+            <span key={`${i}-${j}`} className="font-clash text-base md:text-lg font-bold tracking-[0.2em] uppercase flex items-center gap-8" style={{ color: "hsl(43 52% 39% / 0.55)" }}>
+              {w}
+              <span className="w-2 h-2 rounded-full" style={{ background: "hsl(43 55% 55%)" }} />
+            </span>
+          ))
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 
 

@@ -27,7 +27,7 @@ const Artiste = () => {
       <ClipPortugal />
       <Vision />
       <Team members={team || []} />
-      <CtaBand {...ARTISTE_PAGE.ctaBand} />
+      <CtaBand {...ARTISTE_PAGE.ctaBand} settingsPrefix="ctaband_artiste" />
       <ContactSection
         heading={ARTISTE_PAGE.contact.heading}
         text={ARTISTE_PAGE.contact.text}
