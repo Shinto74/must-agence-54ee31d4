@@ -229,7 +229,7 @@ const Hero = () => {
               letterSpacing: "0.06em",
             }}
           >
-            Agence d'influence spécialisée musique et marques.
+            {heroSubtitle}
           </motion.p>
 
           {/* Buttons */}
@@ -250,7 +250,7 @@ const Hero = () => {
                 boxShadow: "0 0 20px hsl(73 100% 50% / 0.15), inset 0 1px 0 hsl(73 100% 70% / 0.3)",
               }}
             >
-              {SITE.hero.ctaPrimary}
+              {heroCtaPrimary}
             </motion.a>
             <motion.a
               href="#poles"
@@ -264,7 +264,7 @@ const Hero = () => {
                 color: "hsla(0,0%,100%,0.7)",
               }}
             >
-              {SITE.hero.ctaSecondary}
+              {heroCtaSecondary}
             </motion.a>
           </motion.div>
         </div>
