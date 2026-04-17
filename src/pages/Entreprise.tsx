@@ -8,6 +8,7 @@ import ContactSection from "@/components/home/ContactSection";
 import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
 import Services3DScroll from "@/components/entreprise/Services3DScroll";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
+import { useEntrepriseSectors } from "@/hooks/useSiteContent";
 import logoGrandsBuf from "@/assets/logos/les-grands-buffets.png";
 import logoLeclerc from "@/assets/logos/leclerc.png";
 import logoNovotel from "@/assets/logos/novotel.png";
@@ -317,6 +318,14 @@ const SECTORS = [
 
 const ExpertiseSection = () => {
   const ref = useScrollReveal();
+  const { data: dbSectors } = useEntrepriseSectors();
+  const sectors = (dbSectors && dbSectors.length > 0)
+    ? dbSectors.map((s: any) => ({
+        name: s.name,
+        img: s.icon || SECTORS[0]?.img, // icon column repurposed for image url; fallback
+        desc: s.description,
+      }))
+    : SECTORS;
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.25), transparent)" }} />
@@ -340,12 +349,12 @@ const ExpertiseSection = () => {
 
         {/* Desktop: 3D Orbit */}
         <div className="hidden lg:block">
-          <Orbit3DShowcase cards={SECTORS} />
+          <Orbit3DShowcase cards={sectors} />
         </div>
 
         {/* Mobile: Grid fallback */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:hidden">
-          {SECTORS.map((sector, i) => (
+          {sectors.map((sector, i) => (
             <motion.div key={sector.name} {...fadeUp(i * 0.08)}
               className="rv group relative rounded-2xl cursor-default transition-all duration-700 overflow-hidden aspect-[4/3]"
               style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}

@@ -1,13 +1,14 @@
 import { useRef, useMemo, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useTheArtistFeatures, useSiteSettings } from "@/hooks/useSiteContent";
 import theartistALogo from "@/assets/theartist-a-logo.png";
 
-const FEATURES = [
-  { title: "Feed", desc: "Partage & découvre" },
-  { title: "Portfolio", desc: "Bio, CV, tarifs" },
-  { title: "Booking", desc: "Réserve facilement" },
-  { title: "Chat", desc: "Échange en direct" },
+const FALLBACK_FEATURES = [
+  { title: "Feed", description: "Partage & découvre" },
+  { title: "Portfolio", description: "Bio, CV, tarifs" },
+  { title: "Booking", description: "Réserve facilement" },
+  { title: "Chat", description: "Échange en direct" },
 ];
 
 /* Subtle orbit ring */
@@ -76,7 +77,21 @@ const TheArtistShowcase = () => {
   const logoAreaInView = useInView(logoAreaRef, { once: true, margin: "-40px" });
   const [showLogo, setShowLogo] = useState(false);
 
-  // Show logo after particles have converged (max particle delay 0.8 + duration 1.5 = 2.3s, add buffer)
+  const { data: dbFeatures } = useTheArtistFeatures();
+  const { get } = useSiteSettings();
+
+  const features = (dbFeatures && dbFeatures.length > 0)
+    ? dbFeatures.map((f: any) => ({ title: f.title, description: f.description }))
+    : FALLBACK_FEATURES;
+
+  const kicker = get("theartist_kicker", "Partenaire officiel");
+  const titlePart1 = get("theartist_title_part1", "Le réseau pro-social");
+  const titlePart2 = get("theartist_title_part2", "dédié au monde artistique.");
+  const ctaLabel = get("theartist_cta_label", "Découvrir TheArtist");
+  const ctaUrl = get("theartist_cta_url", "https://www.theartist.life/");
+  const footerText = get("theartist_footer_text", "Offert avec nos packs — jusqu'à 8 mois d'accès");
+
+  // Show logo after particles have converged
   useEffect(() => {
     if (logoAreaInView && !showLogo) {
       const timer = setTimeout(() => setShowLogo(true), 2400);
@@ -149,7 +164,7 @@ const TheArtistShowcase = () => {
           >
             <span className="w-8 h-px bg-primary/50" />
             <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary">
-              Partenaire officiel
+              {kicker}
             </p>
             <span className="w-8 h-px bg-primary/50" />
           </motion.div>
@@ -161,14 +176,14 @@ const TheArtistShowcase = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            Le réseau pro-social{" "}
-            <span className="text-primary">dédié au monde artistique.</span>
+            {titlePart1}{" "}
+            <span className="text-primary">{titlePart2}</span>
           </motion.h2>
         </div>
 
         {/* ── Feature pills ── */}
         <div ref={gridRef} className="flex flex-wrap justify-center gap-3 mb-8">
-          {FEATURES.map((feat, i) => (
+          {features.map((feat, i) => (
             <motion.div
               key={feat.title}
               initial={{ opacity: 0, y: 20, scale: 0.85 }}
@@ -202,7 +217,7 @@ const TheArtistShowcase = () => {
                 transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
               />
               <span className="font-clash text-[11px] font-semibold text-foreground relative z-10">{feat.title}</span>
-              <span className="text-[10px] text-muted-foreground hidden sm:inline relative z-10">{feat.desc}</span>
+              <span className="text-[10px] text-muted-foreground hidden sm:inline relative z-10">{feat.description}</span>
             </motion.div>
           ))}
         </div>
@@ -216,10 +231,10 @@ const TheArtistShowcase = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <p className="text-[11px] text-muted-foreground/80 mb-4">
-            Offert avec nos packs — jusqu'à <strong className="text-primary">8 mois</strong> d'accès
+            {footerText}
           </p>
           <motion.a
-            href="https://www.theartist.life/"
+            href={ctaUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative inline-flex items-center gap-2 px-7 py-3 rounded-full bg-primary text-primary-foreground font-clash font-bold text-xs uppercase tracking-wider overflow-hidden"
@@ -247,7 +262,7 @@ const TheArtistShowcase = () => {
               animate={{ translateX: ["-100%", "100%"] }}
               transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
             />
-            <span className="relative z-10">Découvrir TheArtist</span>
+            <span className="relative z-10">{ctaLabel}</span>
           </motion.a>
         </motion.div>
       </div>

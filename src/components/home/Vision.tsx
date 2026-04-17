@@ -1,20 +1,28 @@
 import { SITE } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const Vision = () => {
   const ref = useScrollReveal();
+  const { get } = useSiteSettings();
+
+  const label = get("vision_kicker", SITE.vision.label);
+  const titleLine1 = get("vision_title_line1", SITE.vision.titleLine1);
+  const titleLine2 = get("vision_title_line2", SITE.vision.titleLine2);
+  const quote = get("vision_quote", SITE.vision.quote);
+  const text = get("vision_text", SITE.vision.text);
 
   return (
     <section ref={ref} className="py-24 px-6">
       <div className="max-w-[1000px] mx-auto">
         {/* Label */}
         <p className="rv font-mono text-xs uppercase tracking-[0.2em] text-primary mb-6 text-center">
-          {SITE.vision.label}
+          {label}
         </p>
 
         {/* Titre */}
         <h2 className="rv font-clash text-3xl md:text-5xl font-bold text-foreground leading-tight mb-12 text-center">
-          {SITE.vision.titleLine1} <span className="text-primary">{SITE.vision.titleLine2}</span>
+          {titleLine1} <span className="text-primary">{titleLine2}</span>
         </h2>
 
         {/* Citation — carte premium */}
@@ -41,7 +49,7 @@ const Vision = () => {
           <div className="relative z-10">
             <blockquote className="border-l-2 border-primary pl-6 md:pl-8">
               <p className="text-lg md:text-2xl text-foreground/90 italic leading-relaxed font-clash font-light">
-                "{SITE.vision.quote}"
+                "{quote}"
               </p>
             </blockquote>
           </div>
@@ -49,7 +57,7 @@ const Vision = () => {
 
         {/* Texte explicatif */}
         <p className="rv text-muted-foreground leading-relaxed text-sm md:text-base text-center max-w-[700px] mx-auto mb-10">
-          {SITE.vision.text}
+          {text}
         </p>
 
         {/* Logo signature */}
