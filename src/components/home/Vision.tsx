@@ -49,7 +49,7 @@ const Vision = () => {
           <div className="relative z-10">
             <blockquote className="border-l-2 border-primary pl-6 md:pl-8">
               <p className="text-lg md:text-2xl text-foreground/90 italic leading-relaxed font-clash font-light">
-                "{SITE.vision.quote}"
+                "{quote}"
               </p>
             </blockquote>
           </div>
@@ -57,7 +57,7 @@ const Vision = () => {
 
         {/* Texte explicatif */}
         <p className="rv text-muted-foreground leading-relaxed text-sm md:text-base text-center max-w-[700px] mx-auto mb-10">
-          {SITE.vision.text}
+          {text}
         </p>
 
         {/* Logo signature */}
