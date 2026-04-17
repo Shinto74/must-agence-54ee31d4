@@ -27,8 +27,30 @@ const BRAND_COLORS: Record<string, string> = {
   "SNAPCHAT": "255, 252, 0",
 };
 
-const MarqueeText = ({ words, logos }: MarqueeTextProps) => {
-  const items = logos
+const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
+  // If a page is passed, try to load items from DB. They override words/logos.
+  const { data: dbItems } = useMarqueeItems(page ?? "home");
+  const useDb = !!page && Array.isArray(dbItems) && dbItems.length > 0;
+
+  const items = useDb
+    ? dbItems!.map((it: any, i: number) => {
+        if (it.kind === "logo" && it.image_url) {
+          const brandColor = BRAND_COLORS[it.text_value?.toUpperCase?.() || ""] || "255, 255, 255";
+          return (
+            <div key={i} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
+              <div className="mq-partner">
+                <img src={it.image_url} alt={it.text_value || ""} className="mq-logo" loading="lazy" draggable={false} />
+              </div>
+            </div>
+          );
+        }
+        return (
+          <div key={i} className="mq-item">
+            <span className="mq-word">{it.text_value}</span>
+          </div>
+        );
+      })
+    : logos
     ? logos.map((logo, i) => {
         const brandColor = BRAND_COLORS[logo.name] || "255, 255, 255";
         return (
