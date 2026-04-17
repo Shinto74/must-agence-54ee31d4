@@ -8,6 +8,7 @@ import ContactSection from "@/components/home/ContactSection";
 import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
 import Services3DScroll from "@/components/entreprise/Services3DScroll";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
+import { useEntrepriseSectors } from "@/hooks/useSiteContent";
 import logoGrandsBuf from "@/assets/logos/les-grands-buffets.png";
 import logoLeclerc from "@/assets/logos/leclerc.png";
 import logoNovotel from "@/assets/logos/novotel.png";
