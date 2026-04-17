@@ -231,10 +231,10 @@ const TheArtistShowcase = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <p className="text-[11px] text-muted-foreground/80 mb-4">
-            Offert avec nos packs — jusqu'à <strong className="text-primary">8 mois</strong> d'accès
+            {footerText}
           </p>
           <motion.a
-            href="https://www.theartist.life/"
+            href={ctaUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative inline-flex items-center gap-2 px-7 py-3 rounded-full bg-primary text-primary-foreground font-clash font-bold text-xs uppercase tracking-wider overflow-hidden"
