@@ -1,28 +1,61 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Users, Music, Building2, Package, BarChart3,
   Briefcase, MessageSquare, Settings, Menu, X, Image, CreditCard, ExternalLink,
+  LayoutDashboard, Search, Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAdminNotifications } from "./useAdminNotifications";
 
 export type AdminTab =
-  | "editeur" | "paiements" | "demandes" | "equipe" | "artistes" | "clients"
+  | "dashboard" | "editeur" | "paiements" | "demandes" | "equipe" | "artistes" | "clients"
   | "packs" | "stats" | "services" | "settings";
 
-const NAV: { key: AdminTab; label: string; icon: React.ElementType }[] = [
-  { key: "editeur", label: "Éditeur visuel", icon: Image },
-  { key: "paiements", label: "Paiements", icon: CreditCard },
-  { key: "demandes", label: "Demandes", icon: MessageSquare },
-  { key: "equipe", label: "Équipe", icon: Users },
-  { key: "artistes", label: "Artistes", icon: Music },
-  { key: "clients", label: "Clients", icon: Building2 },
-  { key: "packs", label: "Packs", icon: Package },
-  { key: "stats", label: "Statistiques", icon: BarChart3 },
-  { key: "services", label: "Services", icon: Briefcase },
-  { key: "settings", label: "Paramètres", icon: Settings },
+type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" | "paiements" };
+type NavGroup = { label: string; items: NavItem[] };
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "Vue d'ensemble",
+    items: [
+      { key: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
+      { key: "stats", label: "Statistiques", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Business",
+    items: [
+      { key: "paiements", label: "Paiements", icon: CreditCard, badge: "paiements" },
+      { key: "demandes", label: "Demandes", icon: MessageSquare, badge: "demandes" },
+    ],
+  },
+  {
+    label: "Contenu",
+    items: [
+      { key: "editeur", label: "Éditeur visuel", icon: Image },
+      { key: "packs", label: "Packs", icon: Package },
+      { key: "services", label: "Services", icon: Briefcase },
+    ],
+  },
+  {
+    label: "Personnes",
+    items: [
+      { key: "equipe", label: "Équipe", icon: Users },
+      { key: "artistes", label: "Artistes", icon: Music },
+      { key: "clients", label: "Clients", icon: Building2 },
+    ],
+  },
+  {
+    label: "Système",
+    items: [
+      { key: "settings", label: "Paramètres", icon: Settings },
+    ],
+  },
 ];
+
+const ALL_ITEMS = NAV_GROUPS.flatMap((g) => g.items);
 
 interface Props {
   children: (tab: AdminTab) => React.ReactNode;
@@ -30,13 +63,24 @@ interface Props {
 
 export default function AdminLayout({ children }: Props) {
   const { user, isAdmin, loading, signOut } = useAuth();
-  const [tab, setTab] = useState<AdminTab>("editeur");
+  const [tab, setTab] = useState<AdminTab>("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const notifs = useAdminNotifications();
+
+  const filteredGroups = useMemo(() => {
+    if (!search.trim()) return NAV_GROUPS;
+    const q = search.toLowerCase();
+    return NAV_GROUPS.map((g) => ({
+      ...g,
+      items: g.items.filter((i) => i.label.toLowerCase().includes(q)),
+    })).filter((g) => g.items.length > 0);
+  }, [search]);
 
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-slate-500 font-mono text-sm">Chargement…</p>
       </div>
     );
   if (!user || !isAdmin) return <Navigate to="/admin/login" replace />;
@@ -46,97 +90,172 @@ export default function AdminLayout({ children }: Props) {
     setMobileOpen(false);
   };
 
+  const currentItem = ALL_ITEMS.find((i) => i.key === tab);
+  const totalNotifs = notifs.demandes + notifs.paiements;
+
+  const renderNavItem = (item: NavItem) => {
+    const Icon = item.icon;
+    const count = item.badge ? notifs[item.badge] : 0;
+    const active = tab === item.key;
+    return (
+      <button
+        key={item.key}
+        onClick={() => select(item.key)}
+        className={cn(
+          "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all group",
+          active
+            ? "bg-slate-900 text-white font-medium shadow-sm"
+            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+        )}
+      >
+        <Icon size={16} className={cn("shrink-0", active ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
+        <span className="flex-1 text-left">{item.label}</span>
+        {count > 0 && (
+          <span
+            className={cn(
+              "min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-mono font-bold flex items-center justify-center",
+              active ? "bg-white/20 text-white" : "bg-red-500 text-white"
+            )}
+          >
+            {count > 99 ? "99+" : count}
+          </span>
+        )}
+      </button>
+    );
+  };
+
+  const sidebar = (
+    <>
+      {/* Brand */}
+      <div className="px-5 py-5 border-b border-slate-200">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-clash font-bold text-sm">M</div>
+          <div>
+            <h1 className="font-clash text-sm font-bold text-slate-900 leading-tight">MUST Admin</h1>
+            <p className="text-[10px] text-slate-500 font-mono">Tableau de bord</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="px-3 pt-3 pb-2">
+        <div className="relative">
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Rechercher…"
+            className="w-full pl-8 pr-2 py-2 text-xs rounded-lg bg-slate-100 border border-transparent focus:border-slate-300 focus:bg-white focus:outline-none transition-colors text-slate-900 placeholder:text-slate-400"
+          />
+        </div>
+      </div>
+
+      {/* Nav grouped */}
+      <nav className="flex-1 px-3 py-2 space-y-5 overflow-y-auto">
+        {filteredGroups.map((group) => (
+          <div key={group.label}>
+            <p className="px-3 mb-1.5 text-[10px] font-mono text-slate-400 uppercase tracking-wider font-medium">
+              {group.label}
+            </p>
+            <div className="space-y-0.5">{group.items.map(renderNavItem)}</div>
+          </div>
+        ))}
+        {filteredGroups.length === 0 && (
+          <p className="text-xs text-slate-400 text-center py-4">Aucun résultat</p>
+        )}
+      </nav>
+
+      {/* Profile + actions */}
+      <div className="p-3 border-t border-slate-200 space-y-2">
+        <div className="flex items-center gap-2.5 px-2 py-2">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
+            {(user.email || "A").charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium text-slate-900 truncate">{user.email?.split("@")[0]}</p>
+            <p className="text-[10px] text-slate-500 truncate">Administrateur</p>
+          </div>
+        </div>
+        <Link
+          to="/"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+        >
+          <ExternalLink size={14} /> Retour au site
+        </Link>
+        <button
+          onClick={signOut}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+        >
+          <LogOut size={14} /> Déconnexion
+        </button>
+      </div>
+    </>
+  );
+
   return (
-    <div className="min-h-screen flex bg-background">
+    <div className="min-h-screen flex bg-slate-50">
       {/* Sidebar — desktop */}
-      <aside className="hidden lg:flex flex-col w-56 border-r border-border bg-surface shrink-0">
-        <div className="p-5 border-b border-border">
-          <h1 className="font-clash text-lg font-bold text-foreground">Must Admin</h1>
-          <p className="text-[11px] text-muted-foreground font-mono mt-0.5">Tableau de bord</p>
-        </div>
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          {NAV.map(({ key, label, icon: Icon }) => (
-            <button
-              key={key}
-              onClick={() => select(key)}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all",
-                tab === key
-                  ? "bg-primary text-primary-foreground font-medium"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
-              )}
-            >
-              <Icon size={16} />
-              {label}
-            </button>
-          ))}
-        </nav>
-        <div className="p-3 border-t border-border space-y-1">
-          <Link
-            to="/"
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
-          >
-            <ExternalLink size={16} /> Retour au site
-          </Link>
-          <button
-            onClick={signOut}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-destructive transition-colors"
-          >
-            <LogOut size={16} /> Déconnexion
-          </button>
-        </div>
+      <aside className="hidden lg:flex flex-col w-64 border-r border-slate-200 bg-white shrink-0">
+        {sidebar}
       </aside>
 
-      {/* Mobile overlay */}
+      {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute left-0 top-0 bottom-0 w-64 bg-surface border-r border-border flex flex-col">
-            <div className="p-5 flex justify-between items-center border-b border-border">
-              <h1 className="font-clash text-lg font-bold text-foreground">Must Admin</h1>
-              <button onClick={() => setMobileOpen(false)} className="text-muted-foreground"><X size={20} /></button>
-            </div>
-            <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-              {NAV.map(({ key, label, icon: Icon }) => (
-                <button
-                  key={key}
-                  onClick={() => select(key)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all",
-                    tab === key
-                      ? "bg-primary text-primary-foreground font-medium"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
-                  )}
-                >
-                  <Icon size={16} />
-                  {label}
-                </button>
-              ))}
-            </nav>
-            <div className="p-3 border-t border-border">
-              <button onClick={signOut} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-destructive transition-colors">
-                <LogOut size={16} /> Déconnexion
-              </button>
-            </div>
+          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-white border-r border-slate-200 flex flex-col">
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="absolute top-4 right-3 p-1.5 rounded-md text-slate-500 hover:bg-slate-100 z-10"
+            >
+              <X size={18} />
+            </button>
+            {sidebar}
           </aside>
         </div>
       )}
 
-      {/* Main content */}
+      {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile header */}
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 border-b border-border bg-surface">
-          <button onClick={() => setMobileOpen(true)} className="text-foreground"><Menu size={22} /></button>
-          <h1 className="font-clash text-base font-bold text-foreground">Must Admin</h1>
-          <button onClick={signOut} className="text-muted-foreground"><LogOut size={18} /></button>
+        {/* Top bar */}
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 px-4 lg:px-8 py-3 border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="lg:hidden p-1.5 rounded-md text-slate-600 hover:bg-slate-100"
+            >
+              <Menu size={20} />
+            </button>
+            <div className="min-w-0">
+              <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider hidden sm:block">Admin</p>
+              <h2 className="font-clash text-base lg:text-lg font-bold text-slate-900 truncate">
+                {currentItem?.label || "Tableau de bord"}
+              </h2>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => select("demandes")}
+              className="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+              title="Notifications"
+            >
+              <Bell size={16} />
+              {totalNotifs > 0 && (
+                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white" />
+              )}
+            </button>
+            <Link
+              to="/"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+            >
+              <ExternalLink size={13} /> Voir le site
+            </Link>
+          </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-          <h2 className="font-clash text-2xl font-bold text-foreground mb-6">
-            {NAV.find((n) => n.key === tab)?.label}
-          </h2>
-          {children(tab)}
-        </main>
+        <main className="flex-1 overflow-y-auto p-4 lg:p-8">{children(tab)}</main>
       </div>
     </div>
   );
