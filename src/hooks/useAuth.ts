@@ -19,14 +19,29 @@ export function useAuth() {
       }
     };
 
+    // Safety: never stay loading more than 5s
+    const safety = setTimeout(() => {
+      if (!initialized.current) {
+        initialized.current = true;
+        setLoading(false);
+      }
+    }, 5000);
+
     // 1. Restore session first
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      const u = session?.user ?? null;
-      setUser(u);
-      if (u) await checkAdmin(u);
-      setLoading(false);
-      initialized.current = true;
-    });
+    supabase.auth.getSession()
+      .then(async ({ data: { session } }) => {
+        const u = session?.user ?? null;
+        setUser(u);
+        if (u) await checkAdmin(u);
+      })
+      .catch((err) => {
+        console.error("[useAuth] getSession error:", err);
+      })
+      .finally(() => {
+        initialized.current = true;
+        setLoading(false);
+        clearTimeout(safety);
+      });
 
     // 2. Listen for subsequent changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
