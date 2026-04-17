@@ -149,6 +149,30 @@ export type Database = {
           },
         ]
       }
+      clip_portugal_advantages: {
+        Row: {
+          description: string
+          display_order: number
+          icon: string
+          id: string
+          title: string
+        }
+        Insert: {
+          description?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          title: string
+        }
+        Update: {
+          description?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           created_at: string
@@ -182,6 +206,30 @@ export type Database = {
           service?: string | null
           status?: string
           type?: string
+        }
+        Relationships: []
+      }
+      entreprise_sectors: {
+        Row: {
+          description: string
+          display_order: number
+          icon: string
+          id: string
+          name: string
+        }
+        Insert: {
+          description?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          description?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          name?: string
         }
         Relationships: []
       }
@@ -292,6 +340,33 @@ export type Database = {
           question?: string
           title?: string
           type?: string
+        }
+        Relationships: []
+      }
+      marquee_items: {
+        Row: {
+          display_order: number
+          id: string
+          image_url: string
+          kind: string
+          page: string
+          text_value: string
+        }
+        Insert: {
+          display_order?: number
+          id?: string
+          image_url?: string
+          kind?: string
+          page: string
+          text_value?: string
+        }
+        Update: {
+          display_order?: number
+          id?: string
+          image_url?: string
+          kind?: string
+          page?: string
+          text_value?: string
         }
         Relationships: []
       }
@@ -712,6 +787,27 @@ export type Database = {
           name?: string
           role?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      theartist_features: {
+        Row: {
+          description: string
+          display_order: number
+          id: string
+          title: string
+        }
+        Insert: {
+          description?: string
+          display_order?: number
+          id?: string
+          title: string
+        }
+        Update: {
+          description?: string
+          display_order?: number
+          id?: string
+          title?: string
         }
         Relationships: []
       }
