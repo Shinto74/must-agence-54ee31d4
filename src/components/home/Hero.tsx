@@ -104,7 +104,7 @@ const Hero = () => {
           >
             <div className="w-8 h-px bg-primary/50" />
             <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-primary/70">
-              Influence Artistique
+              {heroLabel}
             </span>
             <div className="w-8 h-px bg-primary/50" />
           </motion.div>
@@ -201,14 +201,14 @@ const Hero = () => {
                 textShadow: "0 4px 60px hsla(0,0%,0%,0.5)",
               }}
             >
-              {SITE.hero.titleLine1}{" "}
+              {heroTitleLine1}{" "}
               <span
                 style={{
                   color: "hsl(73 100% 50%)",
                   textShadow: "0 0 50px hsl(73 100% 50% / 0.25)",
                 }}
               >
-                {SITE.hero.titleAccent}
+                {heroTitleAccent}
               </span>
             </h1>
           </motion.div>
