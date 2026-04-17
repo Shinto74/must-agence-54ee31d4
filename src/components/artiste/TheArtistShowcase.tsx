@@ -183,7 +183,7 @@ const TheArtistShowcase = () => {
 
         {/* ── Feature pills ── */}
         <div ref={gridRef} className="flex flex-wrap justify-center gap-3 mb-8">
-          {FEATURES.map((feat, i) => (
+          {features.map((feat, i) => (
             <motion.div
               key={feat.title}
               initial={{ opacity: 0, y: 20, scale: 0.85 }}
@@ -217,7 +217,7 @@ const TheArtistShowcase = () => {
                 transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
               />
               <span className="font-clash text-[11px] font-semibold text-foreground relative z-10">{feat.title}</span>
-              <span className="text-[10px] text-muted-foreground hidden sm:inline relative z-10">{feat.desc}</span>
+              <span className="text-[10px] text-muted-foreground hidden sm:inline relative z-10">{feat.description}</span>
             </motion.div>
           ))}
         </div>
