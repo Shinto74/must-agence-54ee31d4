@@ -1,3 +1,5 @@
+import { useMarqueeItems } from "@/hooks/useSiteContent";
+
 interface LogoItem {
   name: string;
   logoUrl?: string;
@@ -7,6 +9,8 @@ interface LogoItem {
 interface MarqueeTextProps {
   words?: string[];
   logos?: LogoItem[];
+  /** Optional: fetch items from DB for this page; overrides words/logos when items exist */
+  page?: "home" | "artiste" | "entreprise";
 }
 
 const SPACING = 100;
