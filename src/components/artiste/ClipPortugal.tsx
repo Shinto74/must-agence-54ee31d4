@@ -97,7 +97,7 @@ const ClipPortugal = () => {
             viewport={{ once: true }}
           />
           <span className="font-mono text-[11px] uppercase tracking-[0.25em]" style={{ color: "hsl(var(--neon))" }}>
-            Exclusivité Must Agence
+            {cpKicker}
           </span>
         </motion.div>
 
@@ -108,7 +108,7 @@ const ClipPortugal = () => {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
         >
-          Tournez votre clip
+          {cpTitle1}
         </motion.h2>
         <motion.h2
           className="rv font-clash text-4xl md:text-6xl font-black tracking-tight leading-[1.1] mb-8"
@@ -118,7 +118,7 @@ const ClipPortugal = () => {
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
         >
-          au Portugal
+          {cpTitle2}
         </motion.h2>
         <motion.p
           className="rv max-w-xl text-sm md:text-base leading-[1.8] mb-14"
@@ -334,7 +334,7 @@ const ClipPortugal = () => {
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.3 }}
             >
-              Commencer l'aventure
+              {cpCta}
               <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
             </motion.button>
           </div>
