@@ -77,7 +77,21 @@ const TheArtistShowcase = () => {
   const logoAreaInView = useInView(logoAreaRef, { once: true, margin: "-40px" });
   const [showLogo, setShowLogo] = useState(false);
 
-  // Show logo after particles have converged (max particle delay 0.8 + duration 1.5 = 2.3s, add buffer)
+  const { data: dbFeatures } = useTheArtistFeatures();
+  const { get } = useSiteSettings();
+
+  const features = (dbFeatures && dbFeatures.length > 0)
+    ? dbFeatures.map((f: any) => ({ title: f.title, description: f.description }))
+    : FALLBACK_FEATURES;
+
+  const kicker = get("theartist_kicker", "Partenaire officiel");
+  const titlePart1 = get("theartist_title_part1", "Le réseau pro-social");
+  const titlePart2 = get("theartist_title_part2", "dédié au monde artistique.");
+  const ctaLabel = get("theartist_cta_label", "Découvrir TheArtist");
+  const ctaUrl = get("theartist_cta_url", "https://www.theartist.life/");
+  const footerText = get("theartist_footer_text", "Offert avec nos packs — jusqu'à 8 mois d'accès");
+
+  // Show logo after particles have converged
   useEffect(() => {
     if (logoAreaInView && !showLogo) {
       const timer = setTimeout(() => setShowLogo(true), 2400);
