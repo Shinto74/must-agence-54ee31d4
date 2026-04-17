@@ -349,12 +349,12 @@ const ExpertiseSection = () => {
 
         {/* Desktop: 3D Orbit */}
         <div className="hidden lg:block">
-          <Orbit3DShowcase cards={SECTORS} />
+          <Orbit3DShowcase cards={sectors} />
         </div>
 
         {/* Mobile: Grid fallback */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:hidden">
-          {SECTORS.map((sector, i) => (
+          {sectors.map((sector, i) => (
             <motion.div key={sector.name} {...fadeUp(i * 0.08)}
               className="rv group relative rounded-2xl cursor-default transition-all duration-700 overflow-hidden aspect-[4/3]"
               style={{ border: "1px solid hsl(var(--foreground) / 0.08)" }}
