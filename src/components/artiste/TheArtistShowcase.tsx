@@ -262,7 +262,7 @@ const TheArtistShowcase = () => {
               animate={{ translateX: ["-100%", "100%"] }}
               transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
             />
-            <span className="relative z-10">Découvrir TheArtist</span>
+            <span className="relative z-10">{ctaLabel}</span>
           </motion.a>
         </motion.div>
       </div>
