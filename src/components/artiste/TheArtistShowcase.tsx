@@ -1,13 +1,14 @@
 import { useRef, useMemo, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useTheArtistFeatures, useSiteSettings } from "@/hooks/useSiteContent";
 import theartistALogo from "@/assets/theartist-a-logo.png";
 
-const FEATURES = [
-  { title: "Feed", desc: "Partage & découvre" },
-  { title: "Portfolio", desc: "Bio, CV, tarifs" },
-  { title: "Booking", desc: "Réserve facilement" },
-  { title: "Chat", desc: "Échange en direct" },
+const FALLBACK_FEATURES = [
+  { title: "Feed", description: "Partage & découvre" },
+  { title: "Portfolio", description: "Bio, CV, tarifs" },
+  { title: "Booking", description: "Réserve facilement" },
+  { title: "Chat", description: "Échange en direct" },
 ];
 
 /* Subtle orbit ring */
