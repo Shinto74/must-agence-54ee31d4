@@ -8,7 +8,7 @@ import ContactSection from "@/components/home/ContactSection";
 import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
 import Services3DScroll from "@/components/entreprise/Services3DScroll";
 import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
-import { useEntrepriseSectors } from "@/hooks/useSiteContent";
+import { useEntrepriseSectors, useSiteSettings, useMarqueeItems } from "@/hooks/useSiteContent";
 import logoGrandsBuf from "@/assets/logos/les-grands-buffets.png";
 import logoLeclerc from "@/assets/logos/leclerc.png";
 import logoNovotel from "@/assets/logos/novotel.png";
@@ -69,6 +69,23 @@ const AnimatedCounter = ({ value, suffix = "" }: { value: string; suffix?: strin
 const EntrepriseHero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { get } = useSiteSettings();
+  const heroVideo = get("hero_entreprise_video_url", HERO_VIDEO_URL);
+  const heroTag = get("hero_entreprise_tag", "Pôle Entreprise");
+  const heroLine1 = get("hero_entreprise_title_line1", "Une stratégie digitale");
+  const heroLine2 = get("hero_entreprise_title_line2", "pensée pour performer");
+  const heroDesc = get("hero_entreprise_description", "Nous accompagnons les marques ambitieuses dans leur croissance grâce à une approche complète : contenu, visibilité et performance mesurable.");
+  const heroCta1 = get("hero_entreprise_cta_primary", "Demander un audit gratuit");
+  const heroCta2 = get("hero_entreprise_cta_secondary", "Découvrir nos services");
+  const stat1Value = get("hero_entreprise_stat1_value", "150");
+  const stat1Suffix = get("hero_entreprise_stat1_suffix", "+");
+  const stat1Label = get("hero_entreprise_stat1_label", "Projets livrés");
+  const stat2Value = get("hero_entreprise_stat2_value", "98");
+  const stat2Suffix = get("hero_entreprise_stat2_suffix", "%");
+  const stat2Label = get("hero_entreprise_stat2_label", "Clients satisfaits");
+  const stat3Value = get("hero_entreprise_stat3_value", "3");
+  const stat3Suffix = get("hero_entreprise_stat3_suffix", "M+");
+  const stat3Label = get("hero_entreprise_stat3_label", "Vues générées");
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
   const yText = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const scrollOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
@@ -113,7 +130,7 @@ const EntrepriseHero = () => {
           ref={videoRef}
           autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          src={HERO_VIDEO_URL}
+          src={heroVideo}
         />
         {/* Deeper cinematic overlay – 55% black */}
         <div className="absolute inset-0" style={{
@@ -157,7 +174,7 @@ const EntrepriseHero = () => {
             style={{ transformOrigin: "left" }}
           />
           <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-white/80 font-medium">
-            Pôle Entreprise
+            {heroTag}
           </span>
         </motion.div>
 
@@ -178,13 +195,13 @@ const EntrepriseHero = () => {
         >
           {/* Light sweep overlay on text */}
           <span className="relative inline-block">
-            Une stratégie digitale
+            {heroLine1}
             <br />
             <span
               className="text-burgundy-light relative inline-block"
               style={{ textShadow: phase >= 2 ? "0 0 50px hsl(43 55% 55% / 0.6)" : "none" }}
             >
-              pensée pour performer
+              {heroLine2}
               {/* Light sweep effect */}
               <span
                 className="absolute inset-0 pointer-events-none overflow-hidden"
@@ -222,8 +239,7 @@ const EntrepriseHero = () => {
             textShadow: phase >= 2 ? "0 2px 10px rgba(0,0,0,0.3)" : "none",
           }}
         >
-          Nous accompagnons les marques ambitieuses dans leur croissance
-          grâce à une approche complète : contenu, visibilité et performance mesurable.
+          {heroDesc}
         </motion.p>
 
         {/* CTAs */}
@@ -247,7 +263,7 @@ const EntrepriseHero = () => {
             }}
             whileTap={{ scale: 0.97 }}
           >
-            Demander un audit gratuit
+            {heroCta1}
             <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
           </motion.button>
           <motion.a href="#services"
@@ -258,7 +274,7 @@ const EntrepriseHero = () => {
               background: "rgba(255,255,255,0.12)",
             }}
           >
-            Découvrir nos services
+            {heroCta2}
           </motion.a>
         </motion.div>
 
@@ -271,9 +287,9 @@ const EntrepriseHero = () => {
           transition={{ duration: 0.8, delay: 0.35, ease: EASE }}
         >
           {[
-            { value: "150", suffix: "+", label: "Projets livrés" },
-            { value: "98", suffix: "%", label: "Clients satisfaits" },
-            { value: "3", suffix: "M+", label: "Vues générées" },
+            { value: stat1Value, suffix: stat1Suffix, label: stat1Label },
+            { value: stat2Value, suffix: stat2Suffix, label: stat2Label },
+            { value: stat3Value, suffix: stat3Suffix, label: stat3Label },
           ].map((stat) => (
             <div key={stat.label}>
               <p className="font-clash text-3xl md:text-4xl font-black text-burgundy-light mb-1 drop-shadow-md">
@@ -289,20 +305,26 @@ const EntrepriseHero = () => {
 };
 
 /* ═══ MARQUEE SEPARATOR ═══ */
-const MarqueeSep = () => (
-  <div className="overflow-hidden py-10" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.1)", borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
-    <div className="flex gap-14 animate-mq whitespace-nowrap">
-      {[...Array(3)].flatMap((_, i) =>
-        ["STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING", "CONTENU", "SOCIAL MEDIA", "ADS", "SEO"].map((w, j) => (
-          <span key={`${i}-${j}`} className="font-clash text-base md:text-lg font-bold tracking-[0.2em] uppercase flex items-center gap-8" style={{ color: "hsl(43 52% 39% / 0.55)" }}>
-            {w}
-            <span className="w-2 h-2 rounded-full" style={{ background: "hsl(43 55% 55%)" }} />
-          </span>
-        ))
-      )}
+const MarqueeSep = () => {
+  const { data: items } = useMarqueeItems("entreprise");
+  const words = (items && items.length > 0)
+    ? items.filter((i: any) => i.kind === "word").map((i: any) => i.text_value)
+    : ["STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING", "CONTENU", "SOCIAL MEDIA", "ADS", "SEO"];
+  return (
+    <div className="overflow-hidden py-10" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.1)", borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
+      <div className="flex gap-14 animate-mq whitespace-nowrap">
+        {[...Array(3)].flatMap((_, i) =>
+          words.map((w, j) => (
+            <span key={`${i}-${j}`} className="font-clash text-base md:text-lg font-bold tracking-[0.2em] uppercase flex items-center gap-8" style={{ color: "hsl(43 52% 39% / 0.55)" }}>
+              {w}
+              <span className="w-2 h-2 rounded-full" style={{ background: "hsl(43 55% 55%)" }} />
+            </span>
+          ))
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 
 

@@ -1,13 +1,21 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 interface CtaBandProps {
   title: string;
   subtitle: string;
   button: string;
+  settingsPrefix?: string; // e.g. "ctaband_artiste" or "ctaband_entreprise"
 }
 
-const CtaBand = ({ title, subtitle, button }: CtaBandProps) => {
+const CtaBand = ({ title, subtitle, button, settingsPrefix }: CtaBandProps) => {
   const ref = useScrollReveal();
+  const { get } = useSiteSettings();
+  if (settingsPrefix) {
+    title = get(`${settingsPrefix}_title`, title);
+    subtitle = get(`${settingsPrefix}_subtitle`, subtitle);
+    button = get(`${settingsPrefix}_button`, button);
+  }
 
   return (
     <section ref={ref} className="py-24 px-6">

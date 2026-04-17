@@ -1,8 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SITE } from "@/lib/constants";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
-const VIDEO_URL = "https://cdn.jsdelivr.net/gh/Shinto74/IMAGES@ee9be1c404afd60483c0caf409121c884ae142f1/must-agence/14819394_1280_720_25fps.mp4";
+const DEFAULT_VIDEO_URL = "https://cdn.jsdelivr.net/gh/Shinto74/IMAGES@ee9be1c404afd60483c0caf409121c884ae142f1/must-agence/14819394_1280_720_25fps.mp4";
 
 const BRAND_LETTERS = [
   { char: "M", color: "hsl(0 0% 100%)" },
@@ -22,6 +23,14 @@ const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [videoReady, setVideoReady] = useState(false);
+  const { get } = useSiteSettings();
+  const VIDEO_URL = get("hero_artiste_video_url", DEFAULT_VIDEO_URL);
+  const heroLabel = get("hero_artiste_label", "Influence Artistique");
+  const heroTitleLine1 = get("hero_artiste_title_line1", SITE.hero.titleLine1);
+  const heroTitleAccent = get("hero_artiste_title_accent", SITE.hero.titleAccent);
+  const heroSubtitle = get("hero_artiste_subtitle", "Agence d'influence spécialisée musique et marques.");
+  const heroCtaPrimary = get("hero_artiste_cta_primary", SITE.hero.ctaPrimary);
+  const heroCtaSecondary = get("hero_artiste_cta_secondary", SITE.hero.ctaSecondary);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -95,7 +104,7 @@ const Hero = () => {
           >
             <div className="w-8 h-px bg-primary/50" />
             <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-primary/70">
-              Influence Artistique
+              {heroLabel}
             </span>
             <div className="w-8 h-px bg-primary/50" />
           </motion.div>
@@ -192,14 +201,14 @@ const Hero = () => {
                 textShadow: "0 4px 60px hsla(0,0%,0%,0.5)",
               }}
             >
-              {SITE.hero.titleLine1}{" "}
+              {heroTitleLine1}{" "}
               <span
                 style={{
                   color: "hsl(73 100% 50%)",
                   textShadow: "0 0 50px hsl(73 100% 50% / 0.25)",
                 }}
               >
-                {SITE.hero.titleAccent}
+                {heroTitleAccent}
               </span>
             </h1>
           </motion.div>
@@ -220,7 +229,7 @@ const Hero = () => {
               letterSpacing: "0.06em",
             }}
           >
-            Agence d'influence spécialisée musique et marques.
+            {heroSubtitle}
           </motion.p>
 
           {/* Buttons */}
@@ -241,7 +250,7 @@ const Hero = () => {
                 boxShadow: "0 0 20px hsl(73 100% 50% / 0.15), inset 0 1px 0 hsl(73 100% 70% / 0.3)",
               }}
             >
-              {SITE.hero.ctaPrimary}
+              {heroCtaPrimary}
             </motion.a>
             <motion.a
               href="#poles"
@@ -255,7 +264,7 @@ const Hero = () => {
                 color: "hsla(0,0%,100%,0.7)",
               }}
             >
-              {SITE.hero.ctaSecondary}
+              {heroCtaSecondary}
             </motion.a>
           </motion.div>
         </div>

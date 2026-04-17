@@ -24,7 +24,7 @@ const Index = () => {
       <CompanyReferences categories={clients || []} />
       <Vision />
       <Team members={team || []} />
-      <CtaBand {...SITE.ctaBand} />
+      <CtaBand {...SITE.ctaBand} settingsPrefix="ctaband_home" />
       <ContactSection
         heading={SITE.contact.heading}
         text={SITE.contact.text}
