@@ -164,7 +164,7 @@ const TheArtistShowcase = () => {
           >
             <span className="w-8 h-px bg-primary/50" />
             <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary">
-              Partenaire officiel
+              {kicker}
             </p>
             <span className="w-8 h-px bg-primary/50" />
           </motion.div>
@@ -176,8 +176,8 @@ const TheArtistShowcase = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            Le réseau pro-social{" "}
-            <span className="text-primary">dédié au monde artistique.</span>
+            {titlePart1}{" "}
+            <span className="text-primary">{titlePart2}</span>
           </motion.h2>
         </div>
 
