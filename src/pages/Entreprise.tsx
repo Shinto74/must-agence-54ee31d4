@@ -318,6 +318,14 @@ const SECTORS = [
 
 const ExpertiseSection = () => {
   const ref = useScrollReveal();
+  const { data: dbSectors } = useEntrepriseSectors();
+  const sectors = (dbSectors && dbSectors.length > 0)
+    ? dbSectors.map((s: any) => ({
+        name: s.name,
+        img: s.icon || SECTORS[0]?.img, // icon column repurposed for image url; fallback
+        desc: s.description,
+      }))
+    : SECTORS;
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.25), transparent)" }} />
