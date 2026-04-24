@@ -215,6 +215,7 @@ export type Database = {
           display_order: number
           icon: string
           id: string
+          image_url: string
           name: string
         }
         Insert: {
@@ -222,6 +223,7 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_url?: string
           name: string
         }
         Update: {
@@ -229,6 +231,7 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_url?: string
           name?: string
         }
         Relationships: []
