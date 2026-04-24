@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAdminCrud } from "../useAdminCrud";
 import AdminField from "../AdminField";
 import AdminForm from "../AdminForm";
 import AdminList from "../AdminList";
 import { cn } from "@/lib/utils";
 import {
-  Megaphone, Globe2, Sparkles, Film, Quote, Lightbulb, ListChecks, Type,
+  Megaphone, Globe2, Sparkles, Film, Lightbulb, ListChecks, Type,
 } from "lucide-react";
 
 type SubKey =
-  | "marquee" | "sectors" | "theartist" | "clip"
+  | "identite" | "marquee" | "sectors" | "theartist" | "clip"
   | "expertise" | "process" | "textes_artiste" | "textes_entreprise" | "textes_home";
 
 const SUBS: { key: SubKey; label: string; icon: any; desc: string }[] = [
+  { key: "identite",  label: "Logos & Identité",    icon: Sparkles,   desc: "Logos blanc/vert, nom de marque, contact" },
   { key: "marquee",   label: "Bandeaux défilants",  icon: Megaphone,  desc: "Mots et logos défilants par page" },
   { key: "sectors",   label: "Secteurs Entreprise", icon: Globe2,     desc: "Cards de l'orbite 3D côté entreprise" },
   { key: "theartist", label: "TheArtist",           icon: Sparkles,   desc: "Pills features & textes" },
@@ -37,47 +38,67 @@ function Card({ title, subtitle, children }: { title: string; subtitle?: string;
 }
 
 /* ─── Settings sub-editor (filter by prefix) ─── */
-function SettingsList({ keys }: { keys: { key: string; label: string; multiline?: boolean }[] }) {
+function SettingRow({ k, label, multiline, type }: { k: string; label: string; multiline?: boolean; type?: "image" }) {
   const crud = useAdminCrud("site_settings", { idField: "key", orderBy: "key" });
-  const items = keys.map((k) => {
-    const found = crud.data.find((s: any) => s.key === k.key);
-    return found || { key: k.key, value: "", type: k.multiline ? "textarea" : "text" };
-  });
+  const dbValue = crud.data.find((s: any) => s.key === k)?.value || "";
+  const [local, setLocal] = useState<string>(dbValue);
+  const [touched, setTouched] = useState(false);
+
+  // Sync from DB when not currently editing
+  useEffect(() => {
+    if (!touched) setLocal(dbValue);
+  }, [dbValue, touched]);
+
+  const handleSave = async () => {
+    await crud.save({ key: k, value: local, type: type === "image" ? "image" : multiline ? "textarea" : "text" } as any);
+    setTouched(false);
+  };
 
   return (
+    <div className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50/40">
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-1.5">{label}</p>
+        {type === "image" ? (
+          <AdminField
+            label=""
+            type="image"
+            value={local}
+            onChange={(v) => { setLocal(v); setTouched(true); }}
+            imageFolder="settings"
+          />
+        ) : multiline ? (
+          <textarea
+            value={local}
+            onChange={(e) => { setLocal(e.target.value); setTouched(true); }}
+            rows={3}
+            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400"
+          />
+        ) : (
+          <input
+            type="text"
+            value={local}
+            onChange={(e) => { setLocal(e.target.value); setTouched(true); }}
+            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400"
+          />
+        )}
+      </div>
+      <button
+        onClick={handleSave}
+        disabled={crud.saving || !touched}
+        className="shrink-0 px-3 py-2 mt-6 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        {touched ? "Enregistrer" : "✓"}
+      </button>
+    </div>
+  );
+}
+
+function SettingsList({ keys }: { keys: { key: string; label: string; multiline?: boolean; type?: "image" }[] }) {
+  return (
     <div className="space-y-3">
-      {items.map((item: any) => {
-        const meta = keys.find((k) => k.key === item.key)!;
-        return (
-          <div key={item.key} className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50/40">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-1">{meta.label}</p>
-              {meta.multiline ? (
-                <textarea
-                  value={item.value || ""}
-                  onChange={(e) => crud.setEditing({ ...item, value: e.target.value })}
-                  rows={3}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400"
-                />
-              ) : (
-                <input
-                  type="text"
-                  value={item.value || ""}
-                  onChange={(e) => crud.setEditing({ ...item, value: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400"
-                />
-              )}
-            </div>
-            <button
-              onClick={() => crud.save({ ...item, type: meta.multiline ? "textarea" : "text" } as any)}
-              disabled={crud.saving}
-              className="shrink-0 px-3 py-2 mt-5 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 disabled:opacity-50"
-            >
-              Enregistrer
-            </button>
-          </div>
-        );
-      })}
+      {keys.map((k) => (
+        <SettingRow key={k.key} k={k.key} label={k.label} multiline={k.multiline} type={k.type} />
+      ))}
     </div>
   );
 }
@@ -331,7 +352,7 @@ function GenericCrud({ table }: { table: "expertise_artiste" | "expertise_entrep
 
 /* ─── Main panel ─── */
 export default function ContentSectionsPanel() {
-  const [active, setActive] = useState<SubKey>("marquee");
+  const [active, setActive] = useState<SubKey>("identite");
   const current = SUBS.find((s) => s.key === active)!;
 
   return (
@@ -376,6 +397,19 @@ export default function ContentSectionsPanel() {
           </div>
         </div>
 
+        {active === "identite" && (
+          <Card title="Logos & Identité" subtitle="Logos affichés dans le header, footer et sections — uploadez vos PNG transparents">
+            <SettingsList keys={[
+              { key: "logo_white", label: "Logo blanc (header dark / footer)", type: "image" },
+              { key: "logo_green", label: "Logo vert (header accueil / signature)", type: "image" },
+              { key: "brand_name", label: "Nom de marque (texte à côté du logo)" },
+              { key: "footer_tagline", label: "Footer — Tagline", multiline: true },
+              { key: "contact_email", label: "Email de contact" },
+              { key: "contact_phone", label: "Téléphone" },
+              { key: "contact_location", label: "Localisation" },
+            ]} />
+          </Card>
+        )}
         {active === "marquee" && <MarqueePanel />}
         {active === "sectors" && <SectorsPanel />}
         {active === "theartist" && <TheArtistPanel />}
