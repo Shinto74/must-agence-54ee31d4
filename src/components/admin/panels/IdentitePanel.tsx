@@ -7,7 +7,7 @@ export default function IdentitePanel() {
         <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Site / Global</p>
         <h2 className="font-clash text-2xl font-bold text-slate-900">Identité & Global</h2>
         <p className="text-xs text-slate-500 mt-1">
-          Logos, marque et coordonnées qui apparaissent partout sur le site.
+          Logos, marque, coordonnées et images globales utilisées partout sur le site.
         </p>
       </div>
 
@@ -27,6 +27,25 @@ export default function IdentitePanel() {
         fields={[
           { key: "logo_white", label: "Logo blanc", type: "image" },
           { key: "logo_green", label: "Logo vert", type: "image" },
+        ]}
+      />
+
+      <SettingsBlock
+        title="Vidéo Hero principale"
+        description="Vidéo de fond du hero d'accueil et du pôle artiste"
+        imageFolder="videos"
+        fields={[
+          { key: "hero_video_url", label: "URL vidéo MP4", type: "image", hint: "Uploader un .mp4 ou coller une URL" },
+        ]}
+      />
+
+      <SettingsBlock
+        title="Page Gateway (sélecteur Artiste / Entreprise)"
+        description="Images de fond des deux côtés de la page d'entrée"
+        imageFolder="gateway"
+        fields={[
+          { key: "gateway_image_artiste", label: "Image — côté Artiste", type: "image" },
+          { key: "gateway_image_entreprise", label: "Image — côté Entreprise", type: "image" },
         ]}
       />
 
