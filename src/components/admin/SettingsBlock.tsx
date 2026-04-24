@@ -104,7 +104,7 @@ function SettingRow({ field, crud, imageFolder }: { field: SettingField; crud: R
             onBlur={onBlur}
             placeholder={field.placeholder}
             rows={3}
-            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 resize-none"
+            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 resize-none"
           />
         ) : (
           <input
@@ -116,7 +116,7 @@ function SettingRow({ field, crud, imageFolder }: { field: SettingField; crud: R
             }}
             onBlur={onBlur}
             placeholder={field.placeholder}
-            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
           />
         )}
         <div className="absolute -right-1 -top-1 flex items-center gap-1">
