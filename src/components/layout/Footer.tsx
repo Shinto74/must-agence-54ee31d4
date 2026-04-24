@@ -43,11 +43,12 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src={SITE.logoWhite} alt={SITE.name} className="h-9 w-auto" />
-              <span className="font-clash font-bold text-xl" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : "hsl(var(--foreground))" }}>MUST AGENCE</span>
+              <img src={logoWhite} alt={SITE.name} className="h-9 w-auto" />
+              <span className="font-clash font-bold text-xl" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : "hsl(var(--foreground))" }}>{brandName}</span>
             </div>
             <p className="text-sm leading-relaxed mb-6" style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}>
-              Agence d'influence spécialisée musique et marques. Paris, France.
+              {footerTagline}
+            </p>
             </p>
             <div className="flex gap-3">
               {[
