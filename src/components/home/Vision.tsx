@@ -11,6 +11,7 @@ const Vision = () => {
   const titleLine2 = get("vision_title_line2", SITE.vision.titleLine2);
   const quote = get("vision_quote", SITE.vision.quote);
   const text = get("vision_text", SITE.vision.text);
+  const logoSignature = get("logo_green", SITE.logoGreen);
 
   return (
     <section ref={ref} className="py-24 px-6">
@@ -63,7 +64,7 @@ const Vision = () => {
         {/* Logo signature */}
         <div className="rv flex items-center justify-center gap-3">
           <div className="w-8 h-px bg-gradient-to-r from-transparent to-primary/30" />
-          <img src={SITE.logoGreen} alt={SITE.name} className="h-8 w-auto opacity-50" />
+          <img src={logoSignature} alt={SITE.name} className="h-8 w-auto opacity-50" />
           <div className="w-8 h-px bg-gradient-to-l from-transparent to-primary/30" />
         </div>
       </div>

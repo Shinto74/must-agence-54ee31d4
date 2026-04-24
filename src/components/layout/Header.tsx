@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { SITE } from "@/lib/constants";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 import { Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -15,6 +16,10 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const lastScrollY = useRef(0);
+  const { get } = useSiteSettings();
+  const logoWhite = get("logo_white", SITE.logoWhite);
+  const logoGreen = get("logo_green", SITE.logoGreen);
+  const brandName = get("brand_name", "MUST AGENCE");
 
   useEffect(() => {
     const onScroll = () => {
@@ -104,7 +109,7 @@ const Header = () => {
         <Link to="/" className="flex items-center gap-3 shrink-0 relative z-10 group">
           <div className="relative">
             <img
-              src={isEntreprise ? SITE.logoWhite : isArtiste ? SITE.logoWhite : SITE.logoGreen}
+              src={isEntreprise ? logoWhite : isArtiste ? logoWhite : logoGreen}
               alt={SITE.name}
               className="h-7 md:h-9 w-auto relative z-10 transition-transform duration-300 group-hover:scale-105"
               style={{
@@ -118,7 +123,7 @@ const Header = () => {
               color: needsDarkText ? goldDark : "hsl(0 0% 90%)",
             }}
           >
-            MUST AGENCE
+            {brandName}
           </span>
         </Link>
 

@@ -1,9 +1,18 @@
 import { forwardRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { SITE } from "@/lib/constants";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const Footer = forwardRef<HTMLElement>((_props, ref) => {
   const location = useLocation();
+  const { get } = useSiteSettings();
+  const logoWhite = get("logo_white", SITE.logoWhite);
+  const brandName = get("brand_name", SITE.name?.toUpperCase() || "MUST AGENCE");
+  const contactEmail = get("contact_email", SITE.contact.email);
+  const contactPhone = get("contact_phone", SITE.contact.phone);
+  const contactLocation = get("contact_location", SITE.contact.location);
+  const footerTagline = get("footer_tagline", "Agence d'influence spécialisée musique et marques. Paris, France.");
+
   const isEntreprise = location.pathname === "/entreprise";
   const gold = "hsl(43 55% 55%)";
   const goldBg = "hsl(43 55% 55% / 0.5)";
