@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload, X, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   value: string;
@@ -17,17 +18,21 @@ export default function ImageUpload({ value, onChange, bucket = "site-assets", f
 
   const upload = async (file: File) => {
     setUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const safeName = file.name.replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9-_]+/g, "-").replace(/^-+|-+$/g, "");
+    const path = `${folder}/${Date.now()}-${safeName || "image"}.${ext}`;
     const { error } = await supabase.storage.from(bucket).upload(path, file, { upsert: true });
     if (error) {
-      alert("Erreur lors de l'upload : " + error.message);
+      toast.error("Erreur lors de l'upload : " + error.message);
+      setPreview(null);
       setUploading(false);
       return;
     }
     const { data } = supabase.storage.from(bucket).getPublicUrl(path);
     onChange(data.publicUrl);
     setPreview(null);
+    if (inputRef.current) inputRef.current.value = "";
+    toast.success("Image envoyée ✓");
     setUploading(false);
   };
 
