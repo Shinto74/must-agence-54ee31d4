@@ -11,6 +11,7 @@ export interface SettingField {
   type?: SettingFieldType;
   placeholder?: string;
   hint?: string;
+  imageFolder?: string;
 }
 
 interface Props {
@@ -35,7 +36,7 @@ export default function SettingsBlock({ title, description, fields, imageFolder 
       </header>
       <div className="space-y-4">
         {fields.map((f) => (
-          <SettingRow key={f.key} field={f} crud={crud} imageFolder={imageFolder} />
+          <SettingRow key={f.key} field={f} crud={crud} imageFolder={f.imageFolder || imageFolder} />
         ))}
       </div>
     </section>
