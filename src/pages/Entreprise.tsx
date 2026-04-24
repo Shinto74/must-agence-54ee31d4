@@ -340,11 +340,17 @@ const SECTORS = [
 
 const ExpertiseSection = () => {
   const ref = useScrollReveal();
+  const { get } = useSiteSettings();
   const { data: dbSectors } = useEntrepriseSectors();
+  const sectionTitle = get("entreprise_sectors_title", "Des secteurs que l'on maîtrise");
+  const sectionSubtitle = get(
+    "entreprise_sectors_subtitle",
+    "Notre expertise nous permet de comprendre les enjeux spécifiques de chaque industrie et d'adapter notre stratégie en conséquence."
+  );
   const sectors = (dbSectors && dbSectors.length > 0)
     ? dbSectors.map((s: any) => ({
         name: s.name,
-        img: s.icon || SECTORS[0]?.img, // icon column repurposed for image url; fallback
+        img: s.image_url || s.icon || SECTORS.find((fallback) => fallback.name === s.name)?.img || SECTORS[0]?.img,
         desc: s.description,
       }))
     : SECTORS;
@@ -360,12 +366,10 @@ const ExpertiseSection = () => {
             <div className="w-8 h-[1.5px] bg-burgundy-light" />
           </div>
           <h2 className="font-clash text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-5">
-            Des secteurs que l'on
-            <span className="text-burgundy-light"> maîtrise</span>
+            {sectionTitle}
           </h2>
           <p className="text-muted-foreground text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-            Notre expertise nous permet de comprendre les enjeux spécifiques de chaque industrie
-            et d'adapter notre stratégie en conséquence.
+            {sectionSubtitle}
           </p>
         </motion.div>
 

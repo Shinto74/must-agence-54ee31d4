@@ -60,15 +60,13 @@ export default function AdminField({ label, type = "text", value, onChange, opti
       <div>
         <Label />
         <ImageUpload value={value || ""} onChange={onChange} folder={imageFolder || "uploads"} />
-        {value && (
-          <input
-            type="text"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="Ou collez une URL"
-            className={`mt-2 ${inputBase} text-xs`}
-          />
-        )}
+        <input
+          type="text"
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Uploader ou coller une URL"
+          className={`mt-2 ${inputBase} text-xs`}
+        />
         <Hint />
       </div>
     );

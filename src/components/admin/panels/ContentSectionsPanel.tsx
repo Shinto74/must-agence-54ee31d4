@@ -195,7 +195,7 @@ function MarqueePanel() {
 function SectorsPanel() {
   const crud = useAdminCrud("entreprise_sectors");
   return (
-    <Card title="Secteurs Entreprise" subtitle="Cards affichées dans l'orbite 3D — utilisez l'URL d'une image dans 'icon'">
+    <Card title="Secteurs Entreprise" subtitle="Cards affichées dans l'orbite 3D avec emoji/icône + image de fond modifiable">
       <AdminList
         items={crud.data}
         isLoading={crud.isLoading}
@@ -205,7 +205,11 @@ function SectorsPanel() {
         onDelete={crud.remove}
         renderItem={(item) => (
           <div className="flex items-center gap-3">
-            {item.icon && <img src={item.icon} alt="" className="w-10 h-10 object-cover rounded-lg" />}
+            {item.image_url ? (
+              <img src={item.image_url} alt="" className="w-10 h-10 object-cover rounded-lg" />
+            ) : (
+              <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-base">{item.icon || "•"}</div>
+            )}
             <div>
               <p className="text-sm font-medium text-slate-900">{item.name}</p>
               <p className="text-xs text-slate-500 truncate">{item.description}</p>
@@ -216,7 +220,8 @@ function SectorsPanel() {
       {crud.editing && (
         <AdminForm onSave={() => crud.save(crud.editing!)} onCancel={() => crud.setEditing(null)} saving={crud.saving}>
           <AdminField label="name" value={crud.editing.name} onChange={(v) => crud.setEditing({ ...crud.editing!, name: v })} />
-          <AdminField label="icon (URL image)" type="image" value={crud.editing.icon} onChange={(v) => crud.setEditing({ ...crud.editing!, icon: v })} imageFolder="sectors" />
+          <AdminField label="icon" value={crud.editing.icon} onChange={(v) => crud.setEditing({ ...crud.editing!, icon: v })} hint="Emoji ou courte icône texte" />
+          <AdminField label="image_url" type="image" value={crud.editing.image_url} onChange={(v) => crud.setEditing({ ...crud.editing!, image_url: v })} imageFolder="sectors" hint="Image de fond affichée sur le site" />
           <AdminField label="description" type="textarea" value={crud.editing.description} onChange={(v) => crud.setEditing({ ...crud.editing!, description: v })} />
           <AdminField label="display_order" value={crud.editing.display_order} onChange={(v) => crud.setEditing({ ...crud.editing!, display_order: parseInt(v) || 0 })} />
         </AdminForm>
