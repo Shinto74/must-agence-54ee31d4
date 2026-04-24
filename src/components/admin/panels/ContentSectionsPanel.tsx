@@ -352,7 +352,7 @@ function GenericCrud({ table }: { table: "expertise_artiste" | "expertise_entrep
 
 /* ─── Main panel ─── */
 export default function ContentSectionsPanel() {
-  const [active, setActive] = useState<SubKey>("marquee");
+  const [active, setActive] = useState<SubKey>("identite");
   const current = SUBS.find((s) => s.key === active)!;
 
   return (
@@ -397,6 +397,19 @@ export default function ContentSectionsPanel() {
           </div>
         </div>
 
+        {active === "identite" && (
+          <Card title="Logos & Identité" subtitle="Logos affichés dans le header, footer et sections — uploadez vos PNG transparents">
+            <SettingsList keys={[
+              { key: "logo_white", label: "Logo blanc (header dark / footer)", type: "image" },
+              { key: "logo_green", label: "Logo vert (header accueil / signature)", type: "image" },
+              { key: "brand_name", label: "Nom de marque (texte à côté du logo)" },
+              { key: "footer_tagline", label: "Footer — Tagline", multiline: true },
+              { key: "contact_email", label: "Email de contact" },
+              { key: "contact_phone", label: "Téléphone" },
+              { key: "contact_location", label: "Localisation" },
+            ]} />
+          </Card>
+        )}
         {active === "marquee" && <MarqueePanel />}
         {active === "sectors" && <SectorsPanel />}
         {active === "theartist" && <TheArtistPanel />}
