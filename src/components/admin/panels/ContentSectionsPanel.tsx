@@ -37,47 +37,67 @@ function Card({ title, subtitle, children }: { title: string; subtitle?: string;
 }
 
 /* ─── Settings sub-editor (filter by prefix) ─── */
-function SettingsList({ keys }: { keys: { key: string; label: string; multiline?: boolean }[] }) {
+function SettingRow({ k, label, multiline, type }: { k: string; label: string; multiline?: boolean; type?: "image" }) {
   const crud = useAdminCrud("site_settings", { idField: "key", orderBy: "key" });
-  const items = keys.map((k) => {
-    const found = crud.data.find((s: any) => s.key === k.key);
-    return found || { key: k.key, value: "", type: k.multiline ? "textarea" : "text" };
-  });
+  const dbValue = crud.data.find((s: any) => s.key === k)?.value || "";
+  const [local, setLocal] = useState<string>(dbValue);
+  const [touched, setTouched] = useState(false);
+
+  // Sync from DB when not currently editing
+  if (!touched && local !== dbValue) {
+    setLocal(dbValue);
+  }
+
+  const handleSave = async () => {
+    await crud.save({ key: k, value: local, type: type === "image" ? "image" : multiline ? "textarea" : "text" } as any);
+    setTouched(false);
+  };
 
   return (
+    <div className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50/40">
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-1.5">{label}</p>
+        {type === "image" ? (
+          <AdminField
+            label=""
+            type="image"
+            value={local}
+            onChange={(v) => { setLocal(v); setTouched(true); }}
+            imageFolder="settings"
+          />
+        ) : multiline ? (
+          <textarea
+            value={local}
+            onChange={(e) => { setLocal(e.target.value); setTouched(true); }}
+            rows={3}
+            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400"
+          />
+        ) : (
+          <input
+            type="text"
+            value={local}
+            onChange={(e) => { setLocal(e.target.value); setTouched(true); }}
+            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400"
+          />
+        )}
+      </div>
+      <button
+        onClick={handleSave}
+        disabled={crud.saving || !touched}
+        className="shrink-0 px-3 py-2 mt-6 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        {touched ? "Enregistrer" : "✓"}
+      </button>
+    </div>
+  );
+}
+
+function SettingsList({ keys }: { keys: { key: string; label: string; multiline?: boolean; type?: "image" }[] }) {
+  return (
     <div className="space-y-3">
-      {items.map((item: any) => {
-        const meta = keys.find((k) => k.key === item.key)!;
-        return (
-          <div key={item.key} className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50/40">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-1">{meta.label}</p>
-              {meta.multiline ? (
-                <textarea
-                  value={item.value || ""}
-                  onChange={(e) => crud.setEditing({ ...item, value: e.target.value })}
-                  rows={3}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400"
-                />
-              ) : (
-                <input
-                  type="text"
-                  value={item.value || ""}
-                  onChange={(e) => crud.setEditing({ ...item, value: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-400"
-                />
-              )}
-            </div>
-            <button
-              onClick={() => crud.save({ ...item, type: meta.multiline ? "textarea" : "text" } as any)}
-              disabled={crud.saving}
-              className="shrink-0 px-3 py-2 mt-5 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 disabled:opacity-50"
-            >
-              Enregistrer
-            </button>
-          </div>
-        );
-      })}
+      {keys.map((k) => (
+        <SettingRow key={k.key} k={k.key} label={k.label} multiline={k.multiline} type={k.type} />
+      ))}
     </div>
   );
 }
