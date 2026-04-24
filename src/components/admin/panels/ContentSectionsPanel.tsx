@@ -9,10 +9,11 @@ import {
 } from "lucide-react";
 
 type SubKey =
-  | "marquee" | "sectors" | "theartist" | "clip"
+  | "identite" | "marquee" | "sectors" | "theartist" | "clip"
   | "expertise" | "process" | "textes_artiste" | "textes_entreprise" | "textes_home";
 
 const SUBS: { key: SubKey; label: string; icon: any; desc: string }[] = [
+  { key: "identite",  label: "Logos & Identité",    icon: Sparkles,   desc: "Logos blanc/vert, nom de marque, contact" },
   { key: "marquee",   label: "Bandeaux défilants",  icon: Megaphone,  desc: "Mots et logos défilants par page" },
   { key: "sectors",   label: "Secteurs Entreprise", icon: Globe2,     desc: "Cards de l'orbite 3D côté entreprise" },
   { key: "theartist", label: "TheArtist",           icon: Sparkles,   desc: "Pills features & textes" },
