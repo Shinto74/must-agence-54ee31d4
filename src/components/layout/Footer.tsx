@@ -49,7 +49,7 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
             <p className="text-sm leading-relaxed mb-6" style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}>
               {footerTagline}
             </p>
-            </p>
+            
             <div className="flex gap-3">
               {[
                 { label: "IG", href: "#" },
@@ -106,22 +106,22 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
             <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : accentColor }}>Contact</p>
             <div className="flex flex-col gap-2.5 text-sm" style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}>
               <a
-                href={`mailto:${SITE.contact.email}`}
+                href={`mailto:${contactEmail}`}
                 className="transition-colors duration-300"
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
               >
-                {SITE.contact.email}
+                {contactEmail}
               </a>
               <a
-                href={`tel:${SITE.contact.phone}`}
+                href={`tel:${contactPhone}`}
                 className="transition-colors duration-300"
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
               >
-                {SITE.contact.phone}
+                {contactPhone}
               </a>
-              <span>{SITE.contact.location}</span>
+              <span>{contactLocation}</span>
             </div>
           </div>
         </div>
