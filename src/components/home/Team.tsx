@@ -13,12 +13,8 @@ interface TeamProps {
   members?: TeamMember[];
 }
 
-const IMAGES = [
-  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1200&h=1600&fit=crop&q=90",
-  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=1200&h=1600&fit=crop&q=90",
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1200&h=1600&fit=crop&q=90",
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200&h=1600&fit=crop&q=90",
-];
+// Placeholder images used only when no team_member.image_url is uploaded yet
+const PLACEHOLDER = "/placeholder.svg";
 
 const FALLBACK: TeamMember[] = [
   { name: "Alexandre Martin", initials: "AM", role: "Creative Director", description: "Architecte de la vision, gardien de l'âme créative de chaque projet." },
@@ -47,7 +43,7 @@ const Team = ({ members }: TeamProps) => {
   }, [data.length]);
 
   const m = data[activeIndex];
-  const img = m.image_url || IMAGES[activeIndex % IMAGES.length];
+  const img = m.image_url || PLACEHOLDER;
 
   return (
     <div ref={containerRef} style={{ height: `${data.length * 100}vh` }}>
