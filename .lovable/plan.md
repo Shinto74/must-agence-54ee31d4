@@ -1,118 +1,133 @@
+## Objectif
+Refondre le CRM pour qu’il soit simple, logique et sans doublons, avec une organisation centrée sur les pages du site, et internaliser tous les contenus utilisés pour ne plus dépendre de liens externes.
 
+## Constats actuels
+- Le CRM mélange plusieurs logiques :
+  - édition par table métier (`Packs`, `Services`, `Équipe`, `Artistes`, `Clients`)
+  - édition par regroupement éditorial (`Contenu sections`)
+  - pseudo entrée globale (`Éditeur visuel`)
+- Une partie du contenu est éditable à plusieurs endroits.
+- Les `site_settings` servent de conteneur trop générique, ce qui produit une liste de paramètres difficile à comprendre.
+- Une partie des images, vidéos et logos repose encore sur des URLs externes ou sur des constantes locales.
+- L’organisation suit la technique, pas la logique métier d’édition.
 
-# Audit complet — Cahier des charges vs. site actuel
+## Plan proposé
 
-## Résumé des écarts identifiés
+### 1. Repenser la navigation admin par page
+Remplacer la sidebar actuelle par une structure simple :
+- Dashboard
+- Demandes
+- Paiements
+- Accueil
+- Page Artiste
+- Page Entreprise
+- Global / Identité
+- Paramètres techniques
 
-Après analyse complète des 3 parties du cahier des charges, du LOVABLE_MIGRATION.md et du code actuel, voici les problèmes à corriger.
+Chaque onglet regroupera uniquement ce qui alimente réellement la page correspondante.
 
----
+### 2. Fusionner l’édition en un seul point cohérent
+Supprimer le doublon entre `Éditeur visuel`, `Contenu sections`, `Packs`, `Services`, `Équipe`, `Artistes`, `Clients`.
 
-## PARTIE 1 — Identité Visuelle & Structure
+Nouvelle logique :
+- `Accueil` : hero, vision, CTA, stats, équipe, pôles, portfolio, contact, marquee home
+- `Page Artiste` : hero, services, expertise, process, packs, TheArtist, Clip Portugal, artistes, marquee artiste
+- `Page Entreprise` : hero, secteurs, services, expertise, process, clients, marquee entreprise
+- `Global / Identité` : logos, nom de marque, footer, header, contacts, réseaux
+- `Paramètres techniques` : seulement ce qui ne relève pas du contenu marketing
 
-### Conforme
-- Dark mode #0A0A0A avec accent vert fluo #CCFF00
-- Polices Clash Display, Outfit, JetBrains Mono
-- Pôle Artiste et Pôle Entreprise séparés
-- Création Visuelle, Stratégie de Lancement, Marketing & Influence, Brand Content, Booking — tous les 6 services artiste sont présents
-- Pôle Entreprise : Social Media, Production de Contenu, Growth Marketing, Branding & Design, E-Réputation — les 6 services sont présents
-- Équipe présente
-- Portfolio / Références présent
-- Contact avec formulaire + WhatsApp
+### 3. Transformer les paramètres techniques en formulaires lisibles
+Au lieu d’exposer une liste brute de clés, afficher des sections métier avec labels clairs.
 
-### Écarts à corriger
-1. **Contact : numéro de téléphone absent de l'affichage** — Le cahier mentionne un lien WhatsApp ET un téléphone. Le `ContactSection` n'affiche pas le téléphone (`phone` n'est même pas passé en prop ni rendu).
-2. **Contact : adresse "Paris, France" absente** — Le cahier mentionne une localisation. Non affichée.
+Exemples :
+- `Hero Entreprise`
+  - Badge
+  - Titre ligne 1
+  - Titre ligne 2
+  - Description
+  - CTA principal
+  - CTA secondaire
+  - Vidéo
+- `Identité`
+  - Logo blanc
+  - Logo vert
+  - Nom de marque
+  - Email
+  - Téléphone
 
----
+Les clés internes resteront masquées.
 
-## PARTIE 2 — Packs & Formulaire Devis
+### 4. Garder la base actuelle au départ, mais masquer sa complexité
+Dans un premier temps :
+- conserver les tables existantes
+- conserver `site_settings` pour les champs simples
+- réorganiser l’interface admin par page et par section
+- retirer les écrans redondants
 
-### Conforme
-- 3 packs avec bons tarifs (350€, 550€, 1500€ HT)
-- Pack 2 a le badge "Recommandé"
-- Bonus et textes de réassurance corrects
-- Formulaire devis 5 étapes avec les bons types (radio, textarea, date, checkbox)
-- Options de profil : Artiste Indépendant / Label / Entreprise
-- Options budget : Moins de 1k€ / 1k€–3k€ / 3k€–5k€ / +5k€
-- Options attentes : Notoriété / Ventes / Image de marque / Accompagnement humain
-- CTA "Demander un devis personnalisé" sous les packs
-- Section sur-mesure avec texte correct
+Dans un second temps, normaliser si certaines zones restent trop dispersées.
 
-### Écarts à corriger
-3. **Pack 1 features incomplètes** — Le cahier des charges (Partie 2) détaille :
-   - "Promotion Playlisting (1 mois) : Placement sur Spotify, Deezer, Apple Music (Niches précises, trafic qualifié)"
-   - "Ads Pop-up Multi-plateformes : Promotion d'un teaser (Google, Meta, TikTok) avec lien de redirection direct"
-   - "DA & Stratégie Social Media : Planning éditorial personnalisé pour optimiser votre feed et l'algorithme"
-   
-   Dans le code, les features sont raccourcies. Les descriptions détaillées après les ":" sont tronquées.
+### 5. Importer dans le backend tous les contenus dépendants de liens externes
+Ajouter un lot dédié pour supprimer la dépendance aux URLs externes.
 
-4. **Pack 2 features incomplètes** — Même problème, les détails après ":" sont absents :
-   - "Playlisting Étendu : Campagne massive auprès d'un réseau élargi de curateurs et playlists majeures"
-   - "Double Impact Publicitaire : Promotion de 2 teasers publicitaires pour une visibilité omniprésente"
-   - "Community Management (1 mois) : Un CM dédié s'immerge dans votre projet pour animer et engager votre communauté"
-   - "Content Design : Création de visuels de résultats (Stats playlists, certifications, caps franchis)"
+Travail prévu :
+- recenser tous les médias externes encore utilisés dans le front et dans les constantes
+- rapatrier ces fichiers dans le stockage du projet
+- remplacer les URLs externes par des URLs internes stockées dans la base
+- s’assurer que logos, images, vidéos et assets modifiables passent tous par le backend et le CRM
+- identifier ce qui doit vivre dans `site_settings` et ce qui doit rester dans des tables dédiées
 
-5. **Pack 3 features incomplètes** — Détails tronqués pour les 7 features.
+Objectif :
+- plus de dépendance GitHub/CDN externe pour les contenus métier du site
+- tous les médias importants modifiables depuis le CRM
+- le site reste fonctionnel même si les liens externes disparaissent
 
-6. **CTA "Nous contacter" ou "Demander un devis" manquant après chaque pack** — Le cahier dit "Intégrer des boutons Nous contacter ou Demander un devis après chaque description de pack". Les cards ont un bouton "Nous contacter" vers #contact. C'est conforme mais pointe vers le contact général et non vers le formulaire de devis (#devis). A vérifier si c'est volontaire.
+### 6. Sécuriser le mapping “CRM -> site”
+Pour chaque écran admin, vérifier précisément :
+- quels composants front lisent quelles données
+- quels champs sont encore hardcodés
+- quels contenus sont en double
+- quels formulaires admin modifient vraiment le rendu du site
+- quels médias sont encore locaux ou externes au lieu d’être pilotés par la base
 
-7. **Icônes modernes pour chaque point des packs** — Le cahier dit "Utiliser des icônes modernes pour chaque point des packs". Actuellement les features utilisent un simple "✓" vert.
+Livrable attendu : une cartographie propre entre chaque bloc du CRM, la source de données et la section réelle du site.
 
----
+### 7. Simplifier l’expérience d’édition
+Dans chaque page admin :
+- sections repliables
+- aperçu clair quand utile
+- boutons Ajouter / Modifier / Supprimer cohérents
+- upload direct dans le stockage du projet
+- intitulés français clairs
+- suppression des écrans techniques inutiles
 
-## PARTIE 3 — Références & Design
+### 8. Audit final après refonte
+À la fin, produire un audit clair avec :
+- ce qui est modifiable depuis le CRM
+- ce qui est désormais internalisé dans la base et le stockage
+- ce qui est encore hardcodé
+- ce qui est encore local/externe
+- ce qui est relié en direct au site
+- ce qui reste à faire pour rendre le back-office totalement pilotable
 
-### Conforme
-- 19 artistes avec les bonnes photos et catégories (Urbain 7, Pop/Variété 4, Électro/International 8)
-- 15 logos entreprises avec les 4 bonnes sous-catégories
-- Animations parallax/fade-in au scroll
-- Logos entreprises : marquee défilant sobre, monochrome au repos
-- Artistes : portraits avec animations grayscale → couleur au hover
+## Résultat attendu
+Un CRM beaucoup plus simple à comprendre :
+- on édite une page depuis l’onglet de cette page
+- on ne voit plus plusieurs fois le même contenu
+- les réglages techniques sont séparés du contenu marketing
+- les textes, listes, images, logos et vidéos importants sont modifiables depuis un seul endroit logique
+- le site ne dépend plus de liens externes pour ses contenus métier
 
-### Écarts à corriger
-8. **"Le Pain Quotidien" — nom raccourci** — Dans constants.ts ligne 165, le nom est "Le Pain Quotidien" ce qui est correct. Conforme.
+## Détails techniques
+- Réorganiser `src/components/admin/AdminLayout.tsx` pour une navigation par page.
+- Remplacer ou refondre `VisualEditorPanel` et `ContentSectionsPanel` pour produire des panels orientés page.
+- Réutiliser `useAdminCrud` et les tables existantes (`artists`, `clients`, `packs`, `services_*`, `site_settings`, `marquee_items`, `entreprise_sectors`, etc.) sans exposer leur structure technique dans l’UI.
+- Ajouter une couche de configuration UI côté admin pour grouper les champs par page/section.
+- Auditer les composants front qui consomment encore des constantes, des assets locaux ou des liens externes.
+- Rapatrier les médias externes vers le stockage du projet, puis mettre à jour les données pour qu’elles pointent vers des URLs internes.
+- Prévoir, si nécessaire, de nouveaux champs de données uniquement quand ils servent réellement l’édition et évitent des hacks dans `site_settings`.
 
-9. **Logos entreprises hover : le cahier dit "reprend ses couleurs au survol"** — L'implémentation utilise `grayscale(1) opacity(.4)` → `grayscale-0 opacity(100) scale(1.08)`. Conforme.
-
-10. **Artistes visuels "portraits/covers avec des animations fluides (fade-in, parallax)"** — Le fade-in au scroll est là. Le parallax sur les cartes artistes n'est pas implémenté (seulement le grayscale → color + scale). Écart mineur.
-
----
-
-## LOVABLE_MIGRATION.md — Écarts additionnels
-
-11. **Vision section : pas de logo affiché** — Le migration doc dit "Vision (quote + texte + logo)". Le composant Vision n'affiche pas le logo Must Agence.
-
-12. **Footer : liens manquants** — Le migration doc mentionne les liens : Pôle Artiste, Pôle Entreprise, Équipe, Portfolio, Contact. Le footer actuel n'a que Accueil, Pôle Artiste, Pôle Entreprise. Il manque Équipe, Portfolio, Contact.
-
-13. **Footer description manquante** — "Agence d'influence spécialisée musique et marques. Paris." devrait apparaître dans le footer.
-
----
-
-## Plan de corrections
-
-### Fichiers à modifier
-
-**1. `src/lib/constants.ts`** — Enrichir les features des 3 packs avec les descriptions complètes du cahier des charges Partie 2.
-
-**2. `src/components/home/ContactSection.tsx`** — Ajouter l'affichage du téléphone et de la localisation (passer `phone` et `location` en props).
-
-**3. `src/pages/Index.tsx`** — Passer phone et location au ContactSection.
-
-**4. `src/components/home/Vision.tsx`** — Ajouter le logo Must Agence.
-
-**5. `src/components/layout/Footer.tsx`** — Ajouter les liens Équipe, Portfolio, Contact + description agence + mention Paris.
-
-**6. `src/components/artiste/PackCards.tsx`** — (Optionnel) Remplacer les "✓" par des icônes modernes via Lucide icons.
-
-### Ce qui est déjà conforme (pas de changement nécessaire)
-- Structure des 3 pages (Home, Artiste, Entreprise)
-- Ordre des sections sur chaque page
-- Les 19 artistes et 15 logos avec bonnes catégories
-- Design system (couleurs, polices, easing)
-- Packs : tarifs, badges, bonus, réassurance
-- Formulaire devis 5 étapes
-- Animations (curseur, loader, slash transition, scroll reveal, compteurs, orbes, marquee, hover effects)
-- Header avec navigation
-- Section sur-mesure + CTA
-
+## Recommandation d’exécution
+Je recommande 3 étapes :
+1. Refonte complète du CRM par page et suppression des doublons visuels.
+2. Internalisation de tous les médias et contenus encore dépendants de sources externes.
+3. Audit final de raccordement pour lister ce qui reste hardcodé et ce qui doit encore être branché.
