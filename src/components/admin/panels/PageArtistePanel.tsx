@@ -65,7 +65,8 @@ export default function PageArtistePanel() {
           { key: "clip_portugal_subtitle", label: "Sous-titre", type: "textarea" },
           { key: "clip_portugal_cta", label: "Bouton — texte court" },
           { key: "clip_portugal_cta_label", label: "Bouton — texte long" },
-          { key: "clip_portugal_video_url", label: "URL vidéo / image poster", type: "image" },
+          { key: "clip_portugal_video_url", label: "URL vidéo MP4", type: "image", imageFolder: "videos" },
+          { key: "clip_portugal_poster", label: "Image poster (avant lecture)", type: "image", imageFolder: "videos" },
         ]}
       />
       <ClipPortugalEditor />
