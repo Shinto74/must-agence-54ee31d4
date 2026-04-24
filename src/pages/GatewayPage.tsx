@@ -3,15 +3,17 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { SITE } from "@/lib/constants";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 type Side = "artiste" | "entreprise" | null;
 
-const IMG_ARTISTE =
-  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&q=80";
-const IMG_ENTREPRISE =
-  "https://images.unsplash.com/photo-1637137467932-844c5736adc3?w=1400&q=80";
+const DEFAULT_IMG_ARTISTE = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&q=80";
+const DEFAULT_IMG_ENTREPRISE = "https://images.unsplash.com/photo-1637137467932-844c5736adc3?w=1400&q=80";
 
 const GatewayPage = () => {
+  const { get } = useSiteSettings();
+  const IMG_ARTISTE = get("gateway_image_artiste", DEFAULT_IMG_ARTISTE);
+  const IMG_ENTREPRISE = get("gateway_image_entreprise", DEFAULT_IMG_ENTREPRISE);
   const [hovered, setHovered] = useState<Side>(null);
   const [ready, setReady] = useState(false);
 

@@ -20,6 +20,7 @@ const ClipPortugal = () => {
   const cpTitle1 = get("clip_portugal_title_line1", "Tournez votre clip");
   const cpTitle2 = get("clip_portugal_title_line2", "au Portugal");
   const cpCta = get("clip_portugal_cta", "Commencer l'aventure");
+  const cpPoster = get("clip_portugal_poster", "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1200&q=80");
 
   const handlePlay = () => {
     if (videoRef.current) {
@@ -187,7 +188,7 @@ const ClipPortugal = () => {
               <video
                 ref={videoRef}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                poster="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1200&q=80"
+                poster={cpPoster}
                 loop playsInline muted
               />
 
