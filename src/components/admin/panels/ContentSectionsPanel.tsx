@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAdminCrud } from "../useAdminCrud";
 import AdminField from "../AdminField";
 import AdminForm from "../AdminForm";
 import AdminList from "../AdminList";
 import { cn } from "@/lib/utils";
 import {
-  Megaphone, Globe2, Sparkles, Film, Quote, Lightbulb, ListChecks, Type,
+  Megaphone, Globe2, Sparkles, Film, Lightbulb, ListChecks, Type,
 } from "lucide-react";
 
 type SubKey =
@@ -44,9 +44,9 @@ function SettingRow({ k, label, multiline, type }: { k: string; label: string; m
   const [touched, setTouched] = useState(false);
 
   // Sync from DB when not currently editing
-  if (!touched && local !== dbValue) {
-    setLocal(dbValue);
-  }
+  useEffect(() => {
+    if (!touched) setLocal(dbValue);
+  }, [dbValue, touched]);
 
   const handleSave = async () => {
     await crud.save({ key: k, value: local, type: type === "image" ? "image" : multiline ? "textarea" : "text" } as any);
