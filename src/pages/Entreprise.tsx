@@ -551,17 +551,20 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
                 }}
               />
 
-              {/* Logo */}
-              <img
+              {/* Logo (avec fade lors d'un changement de logo via la rotation) */}
+              <motion.img
+                key={r.logo || r.name}
                 src={r.logo}
                 alt={r.name}
                 loading="lazy"
                 className="w-14 h-14 md:w-16 md:h-16 object-contain relative z-10"
-                style={{
+                initial={{ opacity: 0, scale: 0.85, filter: "blur(4px)" }}
+                animate={{
                   opacity: isHovered ? 1 : 0.8,
-                  filter: isHovered ? "grayscale(0%) contrast(1.15)" : "grayscale(60%) contrast(1)",
-                  transition: "all 0.6s cubic-bezier(0.16,1,0.3,1)",
+                  scale: 1,
+                  filter: isHovered ? "grayscale(0%) contrast(1.15) blur(0px)" : "grayscale(60%) contrast(1) blur(0px)",
                 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               />
             </div>
           </motion.div>
