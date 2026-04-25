@@ -1,6 +1,7 @@
 import SettingsBlock from "../SettingsBlock";
 import MarqueeEditor from "./editors/MarqueeEditor";
 import SectorsEditor from "./editors/SectorsEditor";
+import ClientsEditor from "./editors/ClientsEditor";
 
 /**
  * Page Entreprise — sections SPÉCIFIQUES uniquement, dans l'ordre EXACT du rendu :
@@ -68,6 +69,8 @@ export default function PageEntreprisePanel() {
         ]}
       />
       <SectorsEditor />
+
+      <ClientsEditor />
 
       <SettingsBlock
         title="4. CTA Band — Bannière finale"

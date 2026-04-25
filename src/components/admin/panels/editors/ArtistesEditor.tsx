@@ -1,13 +1,18 @@
 import TableEditor from "./TableEditor";
 import TabbedEditor from "./TabbedEditor";
 import ArtistGalleryEditor from "./ArtistGalleryEditor";
+import ArtistDetailsInline from "./ArtistDetailsInline";
 import { useAdminCrud } from "../../useAdminCrud";
 
 /**
- * Éditeur Artistes — UX repensée :
- *   - Catégories en haut (table classique, simple).
- *   - Artistes en TabbedEditor : un onglet par artiste, formulaire toujours ouvert,
- *     avec galerie multi-images intégrée (plus de perte d'image quand on en change).
+ * Éditeur Artistes UNIFIÉ — un seul endroit pour gérer :
+ *   - Catégories (table simple en haut)
+ *   - Artistes (TabbedEditor) avec dans chaque onglet :
+ *       1. Identité (nom / catégorie / position)
+ *       2. Fiche détaillée (stratégie / description / KPI / plateformes) — popup au clic
+ *       3. Galerie photos (multi-images sans perte)
+ *
+ * Remplace l'ancien duo ArtistesEditor + ArtistDetailsEditor.
  */
 export default function ArtistesEditor() {
   const cats = useAdminCrud("artist_categories");
@@ -36,7 +41,7 @@ export default function ArtistesEditor() {
       <TabbedEditor
         table="artists"
         title="Artistes"
-        description="Cliquez sur un artiste pour modifier sa fiche et gérer sa galerie photos."
+        description="Cliquez sur un artiste pour modifier sa fiche, ses KPI affichés dans la popup et sa galerie photos."
         itemNoun="artiste"
         accentHue={73}
         initialRecord={{
@@ -51,7 +56,10 @@ export default function ArtistesEditor() {
         ]}
         renderTabLabel={(a) => a.name || "(sans nom)"}
         renderSubEditors={(artist) => (
-          <ArtistGalleryEditor artistId={artist.id} currentImageUrl={artist.image_url || ""} />
+          <>
+            <ArtistDetailsInline artistId={artist.id} />
+            <ArtistGalleryEditor artistId={artist.id} currentImageUrl={artist.image_url || ""} />
+          </>
         )}
       />
     </div>

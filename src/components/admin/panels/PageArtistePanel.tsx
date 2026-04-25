@@ -3,27 +3,23 @@ import MarqueeEditor from "./editors/MarqueeEditor";
 import PacksEditor from "./editors/PacksEditor";
 import TheArtistFeaturesEditor from "./editors/TheArtistFeaturesEditor";
 import ClipPortugalEditor from "./editors/ClipPortugalEditor";
-
 import PillarItemsEditor from "./editors/PillarItemsEditor";
-import ArtistDetailsEditor from "./editors/ArtistDetailsEditor";
+import ArtistesEditor from "./editors/ArtistesEditor";
+import TeamEditor from "./editors/TeamEditor";
 
 /**
  * Page Artiste — sections SPÉCIFIQUES uniquement, dans l'ordre EXACT du rendu :
  *   1. Hero
- *   2. Marquee (artiste)
- *   3. ArtisteServicesV4B (5 piliers split-screen + leurs puces)
- *   4. Références Artistes (titres + carrousel + popup détails)
- *   5. Packs & Tarifs (+ infobulles)
+ *   2. Marquee artiste
+ *   3. Piliers (en-tête + items)
+ *   4. Références artistes (titres + catégories + fiches + galeries)
+ *   5. Packs
  *   6. TheArtist
  *   7. Clip Portugal
- *   8. CtaBand
- *   9. Contact
- *
- * Vision, Équipe → onglet "Sections partagées".
- *
- * NOTE : Les anciennes sections "Services Artiste", "Expertise Artiste",
- * "Process Artiste" et "Statistiques" ont été retirées : elles ne sont
- * plus affichées sur la page (remplacées par les piliers split-screen).
+ *   8. Vision (partagé avec Accueil — modifier ici met à jour partout)
+ *   9. Équipe (partagé avec Accueil — modifier ici met à jour partout)
+ *  10. CtaBand
+ *  11. Contact
  */
 export default function PageArtistePanel() {
   return (
@@ -32,8 +28,7 @@ export default function PageArtistePanel() {
         <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Site / Pages</p>
         <h2 className="font-clash text-2xl font-bold text-slate-900">Page Artiste</h2>
         <p className="text-xs text-slate-500 mt-1">
-          Pôle Music & Entertainment. Vision, Équipe et catégories d'artistes sont dans
-          <strong> Global › Sections partagées</strong>.
+          Pôle Music & Entertainment. Toutes les sections affichées sur la page sont éditables ici, dans l'ordre du rendu.
         </p>
       </div>
 
@@ -80,7 +75,7 @@ export default function PageArtistePanel() {
         ]}
       />
 
-      <ArtistDetailsEditor />
+      <ArtistesEditor />
 
       <PacksEditor />
 
@@ -91,7 +86,7 @@ export default function PageArtistePanel() {
           { key: "theartist_title_part1", label: "Titre — partie 1" },
           { key: "theartist_title_part2", label: "Titre — partie 2" },
           { key: "theartist_cta_label", label: "Texte du bouton" },
-          { key: "theartist_cta_url", label: "URL du bouton", type: "url" },
+          { key: "theartist_cta_url", label: "URL du bouton" },
           { key: "theartist_footer_text", label: "Mention sous le bouton" },
         ]}
       />
@@ -113,7 +108,24 @@ export default function PageArtistePanel() {
       <ClipPortugalEditor />
 
       <SettingsBlock
-        title="8. CTA Band — Bannière finale"
+        title="8. Notre Vision"
+        description="Bloc 'Notre vision' — partagé avec la page d'accueil. Modifier ici met à jour partout."
+        fields={[
+          { key: "vision_kicker", label: "Sur-titre", placeholder: "Notre vision" },
+          { key: "vision_title", label: "Titre", placeholder: "L'influence est une science." },
+          { key: "vision_text", label: "Texte", type: "textarea" },
+        ]}
+      />
+
+      <div>
+        <p className="text-[11px] font-mono text-slate-500 uppercase tracking-wider mb-2 px-1">
+          9. Équipe (partagé avec Accueil)
+        </p>
+        <TeamEditor />
+      </div>
+
+      <SettingsBlock
+        title="10. CTA Band — Bannière finale"
         fields={[
           { key: "ctaband_artiste_title", label: "Titre" },
           { key: "ctaband_artiste_subtitle", label: "Sous-titre" },
@@ -122,7 +134,7 @@ export default function PageArtistePanel() {
       />
 
       <SettingsBlock
-        title="9. Section Contact (page Artiste)"
+        title="11. Section Contact (page Artiste)"
         description="Textes spécifiques au formulaire de la page Artiste."
         fields={[
           { key: "contact_artiste_heading", label: "Titre" },
