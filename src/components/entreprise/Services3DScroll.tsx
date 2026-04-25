@@ -1,69 +1,63 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Video, Share2, Rocket, Search } from "lucide-react";
-import svcBgContent from "@/assets/svc-bg-content.jpg";
-import svcBgSocial from "@/assets/svc-bg-social.jpg";
-import svcBgAds from "@/assets/svc-bg-ads.jpg";
-import svcBgSeo from "@/assets/svc-bg-seo.jpg";
+import * as LucideIcons from "lucide-react";
+import { Sparkles } from "lucide-react";
 import svcSectionBg from "@/assets/svc-section-bg.jpg";
+import { useServicesEntreprise, useSiteSettings } from "@/hooks/useSiteContent";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const SERVICES = [
-  {
-    icon: <Video size={28} />,
-    num: "01",
-    title: "Création de Contenu Premium",
-    description: "Production de photos et vidéos professionnelles haute définition pour sublimer votre image de marque.",
-    chips: ["Photo HD", "Vidéo corporate", "Motion design", "Drone"],
-    bgImage: svcBgContent,
-  },
-  {
-    icon: <Share2 size={28} />,
-    num: "02",
-    title: "Social Media Management",
-    description: "Gestion professionnelle de vos réseaux sociaux pour fédérer et engager votre communauté.",
-    chips: ["Instagram", "TikTok", "LinkedIn", "Planning éditorial"],
-    bgImage: svcBgSocial,
-  },
-  {
-    icon: <Rocket size={28} />,
-    num: "03",
-    title: "Campagnes Publicitaires",
-    description: "Création et pilotage de campagnes ultra-performantes sur Google Ads, Meta Ads et TikTok Ads.",
-    chips: ["Meta Ads", "Google Ads", "TikTok Ads", "Retargeting"],
-    bgImage: svcBgAds,
-  },
-  {
-    icon: <Search size={28} />,
-    num: "04",
-    title: "SEO & Référencement",
-    description: "Optimisation de votre visibilité sur les moteurs de recherche pour attirer un trafic qualifié.",
-    chips: ["Audit SEO", "Netlinking", "Content SEO", "Local SEO"],
-    bgImage: svcBgSeo,
-  },
-];
+/* Resolve a Lucide icon by name (e.g. "Megaphone"), or render an emoji/text fallback. */
+const ServiceIcon = ({ icon }: { icon?: string }) => {
+  if (!icon) return <Sparkles size={28} />;
+  const trimmed = icon.trim();
+  // Try to resolve as a Lucide component
+  const Comp = (LucideIcons as any)[trimmed];
+  if (Comp && typeof Comp === "function") {
+    return <Comp size={28} />;
+  }
+  // Otherwise render as emoji / short text
+  return (
+    <span className="text-2xl leading-none" aria-hidden>
+      {trimmed}
+    </span>
+  );
+};
 
 const Services3DScroll = () => {
+  const { data: dbServices = [] } = useServicesEntreprise();
+  const { get } = useSiteSettings();
+
+  // Fallback minimal — only used while loading or if DB is empty
+  const services = dbServices.length > 0 ? dbServices : [];
+
+  const sectionKicker = get("entreprise_services_kicker", "Services");
+  const sectionTitleLine1 = get("entreprise_services_title_line1", "Ce qu'on fait");
+  const sectionTitleLine2 = get("entreprise_services_title_line2", "pour vous");
+
   const [active, setActive] = useState(0);
   const [direction, setDirection] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const lastScrollTop = useRef(0);
   const scrollCooldown = useRef(false);
+
+  // Reset active index if services change and active is out of range
+  useEffect(() => {
+    if (active >= services.length && services.length > 0) {
+      setActive(0);
+    }
+  }, [services.length, active]);
 
   // Scroll-driven: each scroll event inside sticky section changes card
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || services.length === 0) return;
 
     const handleWheel = (e: WheelEvent) => {
-      // Only intercept if section is in sticky position (visible)
       const rect = container.getBoundingClientRect();
       const stickyEl = container.querySelector("[data-sticky]") as HTMLElement;
       if (!stickyEl) return;
 
       const stickyRect = stickyEl.getBoundingClientRect();
-      // Check if sticky element is actually stuck (top near 0)
       const isStuck = stickyRect.top <= 5 && rect.bottom > window.innerHeight;
 
       if (!isStuck) return;
@@ -75,11 +69,11 @@ const Services3DScroll = () => {
       const delta = e.deltaY;
       if (Math.abs(delta) < 15) return;
 
-      if (delta > 0 && active < SERVICES.length - 1) {
+      if (delta > 0 && active < services.length - 1) {
         e.preventDefault();
         scrollCooldown.current = true;
         setDirection(1);
-        setActive((prev) => Math.min(prev + 1, SERVICES.length - 1));
+        setActive((prev) => Math.min(prev + 1, services.length - 1));
         setTimeout(() => { scrollCooldown.current = false; }, 800);
       } else if (delta < 0 && active > 0) {
         e.preventDefault();
@@ -88,19 +82,24 @@ const Services3DScroll = () => {
         setActive((prev) => Math.max(prev - 1, 0));
         setTimeout(() => { scrollCooldown.current = false; }, 800);
       }
-      // If at first card scrolling up, or last card scrolling down, let page scroll naturally
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
     return () => window.removeEventListener("wheel", handleWheel);
-  }, [active]);
+  }, [active, services.length]);
 
   const goTo = useCallback((idx: number) => {
     setDirection(idx > active ? 1 : -1);
     setActive(idx);
   }, [active]);
 
-  const svc = SERVICES[active];
+  // If no services, render nothing (or a small notice during dev)
+  if (services.length === 0) {
+    return null;
+  }
+
+  const svc = services[active] || services[0];
+  const svcNumber = svc.number || String(active + 1).padStart(2, "0");
 
   const cardVariants = {
     enter: (dir: number) => ({
@@ -133,7 +132,7 @@ const Services3DScroll = () => {
       id="services"
       ref={containerRef}
       className="relative z-[1]"
-      style={{ height: `${(SERVICES.length + 1) * 100}vh` }}
+      style={{ height: `${(services.length + 1) * 100}vh` }}
     >
       <div
         data-sticky
@@ -182,14 +181,14 @@ const Services3DScroll = () => {
           <div className="flex items-center gap-3 mb-5">
             <div className="w-12 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
             <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>
-              Services
+              {sectionKicker}
             </span>
           </div>
           <h2 className="font-clash text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[0.95] text-white">
-            Ce qu'on fait
+            {sectionTitleLine1}
             <br />
             <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.3)" }}>
-              pour vous
+              {sectionTitleLine2}
             </span>
           </h2>
         </div>
@@ -253,7 +252,7 @@ const Services3DScroll = () => {
                         boxShadow: "0 14px 42px hsl(43 52% 39% / 0.3), 0 0 30px hsl(43 55% 55% / 0.2)",
                       }}
                     >
-                      {svc.icon}
+                      <ServiceIcon icon={svc.icon} />
                     </motion.div>
                     <motion.span
                       className="font-clash text-3xl font-black md:text-4xl"
@@ -262,7 +261,7 @@ const Services3DScroll = () => {
                       transition={{ delay: 0.3, duration: 0.5, ease: EASE }}
                       style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.35)" }}
                     >
-                      {svc.num}
+                      {svcNumber}
                     </motion.span>
                   </div>
 
@@ -291,9 +290,9 @@ const Services3DScroll = () => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.45, duration: 0.5 }}
                     >
-                      {svc.chips.map((chip, ci) => (
+                      {(svc.chips || []).map((chip: string, ci: number) => (
                         <motion.span
-                          key={chip}
+                          key={`${chip}-${ci}`}
                           className="rounded-xl px-4 py-2 text-[11px] font-mono font-medium"
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -325,12 +324,12 @@ const Services3DScroll = () => {
 
         {/* Progress dots — RIGHT side */}
         <div className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-4">
-          {SERVICES.map((s, i) => (
+          {services.map((s: any, i: number) => (
             <button
-              key={i}
+              key={s.id || i}
               onClick={() => goTo(i)}
               className="group flex items-center gap-3"
-              aria-label={`Service ${s.num}`}
+              aria-label={`Service ${s.number || i + 1}`}
             >
               <motion.div
                 className="w-3 h-3 rounded-full"
@@ -341,7 +340,6 @@ const Services3DScroll = () => {
                 }}
                 transition={{ duration: 0.4, ease: EASE }}
               />
-              {/* Label appears for active dot */}
               <AnimatePresence>
                 {i === active && (
                   <motion.span
@@ -352,7 +350,7 @@ const Services3DScroll = () => {
                     exit={{ opacity: 0, x: -8 }}
                     transition={{ duration: 0.3, ease: EASE }}
                   >
-                    {s.num}
+                    {s.number || String(i + 1).padStart(2, "0")}
                   </motion.span>
                 )}
               </AnimatePresence>
