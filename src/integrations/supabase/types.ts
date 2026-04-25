@@ -901,6 +901,7 @@ export type Database = {
         Row: {
           description: string
           display_order: number
+          icon: string
           id: string
           number: string
           title: string
@@ -908,6 +909,7 @@ export type Database = {
         Insert: {
           description?: string
           display_order?: number
+          icon?: string
           id?: string
           number: string
           title: string
@@ -915,6 +917,7 @@ export type Database = {
         Update: {
           description?: string
           display_order?: number
+          icon?: string
           id?: string
           number?: string
           title?: string

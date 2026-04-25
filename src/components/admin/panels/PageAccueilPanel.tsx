@@ -23,9 +23,19 @@ export default function PageAccueilPanel() {
       </div>
 
       <SettingsBlock
+        title="0. Centre — Marque & légende"
+        description="Texte central (la marque) et légende en bas d'écran. Le logo se gère dans 'Identité & Logos'."
+        fields={[
+          { key: "gateway_brand_label", label: "Texte central", placeholder: "MUST AGENCE", hint: "Affiché à côté du logo central." },
+          { key: "gateway_bottom_caption", label: "Légende du bas", placeholder: "Influence · Musique · Marques" },
+        ]}
+      />
+
+      <SettingsBlock
         title="1. Côté Pôle Artiste — Textes & boutons"
         description="Textes affichés à gauche (le côté qui s'agrandit au survol)."
         fields={[
+          { key: "gateway_artiste_title", label: "Titre principal", placeholder: "Pôle Artiste" },
           { key: "gateway_artiste_subtitle", label: "Sous-titre", placeholder: "Musique · Influence · Lancement" },
           { key: "gateway_artiste_label", label: "Libellé du bouton", placeholder: "Je suis un Artiste" },
         ]}
@@ -47,6 +57,7 @@ export default function PageAccueilPanel() {
         title="2. Côté Pôle Entreprise — Textes & boutons"
         description="Textes affichés à droite."
         fields={[
+          { key: "gateway_entreprise_title", label: "Titre principal", placeholder: "Pôle Entreprise" },
           { key: "gateway_entreprise_subtitle", label: "Sous-titre", placeholder: "Branding · Stratégie · Croissance" },
           { key: "gateway_entreprise_label", label: "Libellé du bouton", placeholder: "Je suis une Entreprise" },
         ]}

@@ -63,8 +63,8 @@ export default function PageEntreprisePanel() {
         description="En-tête de la section services 3D (composant Services3DScroll)."
         fields={[
           { key: "entreprise_services_kicker", label: "Sur-titre", placeholder: "Services" },
-          { key: "entreprise_services_title", label: "Titre", placeholder: "Ce qu'on fait pour vous" },
-          { key: "entreprise_services_subtitle", label: "Sous-titre", type: "textarea" },
+          { key: "entreprise_services_title_line1", label: "Titre — ligne 1", placeholder: "Ce qu'on fait" },
+          { key: "entreprise_services_title_line2", label: "Titre — ligne 2 (en doré)", placeholder: "pour vous" },
         ]}
       />
       <ServicesEntrepriseEditor />
