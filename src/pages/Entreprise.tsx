@@ -360,6 +360,11 @@ const ExpertiseSection = () => {
 
       <div className="max-w-[1400px] mx-auto">
         <motion.div {...fadeUp()} className="rv text-center mb-8 md:mb-12">
+          {get("logo_green") && (
+            <div className="flex items-center justify-center mb-5">
+              <img src={get("logo_green")} alt="MUST AGENCE" className="h-10 md:h-12 w-auto opacity-80" />
+            </div>
+          )}
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-8 h-[1.5px] bg-burgundy-light" />
             <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-burgundy-light">Expertise terrain</span>
