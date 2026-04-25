@@ -238,32 +238,7 @@ const Services3DScroll = () => {
                 }} />
 
                 {/* Content */}
-                <div className="relative z-10 flex flex-col gap-6 md:flex-row md:gap-8">
-                  <div className="flex shrink-0 items-center gap-4 md:flex-col md:items-start md:gap-3">
-                    <motion.div
-                      className="flex h-16 w-16 items-center justify-center rounded-2xl"
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 0.2, duration: 0.5, ease: EASE }}
-                      style={{
-                        background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
-                        border: "1.5px solid hsl(43 55% 55% / 0.6)",
-                        color: "hsl(0 0% 100%)",
-                        boxShadow: "0 14px 42px hsl(43 52% 39% / 0.3), 0 0 30px hsl(43 55% 55% / 0.2)",
-                      }}
-                    >
-                      <ServiceIcon icon={svc.icon} />
-                    </motion.div>
-                    <motion.span
-                      className="font-clash text-3xl font-black md:text-4xl"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3, duration: 0.5, ease: EASE }}
-                      style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.35)" }}
-                    >
-                      {svcNumber}
-                    </motion.span>
-                  </div>
+                <div className="relative z-10 flex flex-col gap-6">
 
                   <div className="flex-1">
                     <motion.h3
