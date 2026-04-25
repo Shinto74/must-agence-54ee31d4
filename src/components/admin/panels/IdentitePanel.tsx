@@ -1,13 +1,19 @@
 import SettingsBlock from "../SettingsBlock";
+import MediaGalleryEditor from "./editors/MediaGalleryEditor";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 export default function IdentitePanel() {
+  const { get } = useSiteSettings();
+  const logoWhite = get("logo_white");
+  const logoGreen = get("logo_green");
+
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="px-1">
         <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Site / Global</p>
         <h2 className="font-clash text-2xl font-bold text-slate-900">Identité & Global</h2>
         <p className="text-xs text-slate-500 mt-1">
-          Logos, marque, coordonnées et images globales utilisées partout sur le site.
+          Logos, marque et coordonnées utilisés partout sur le site.
         </p>
       </div>
 
@@ -21,31 +27,51 @@ export default function IdentitePanel() {
       />
 
       <SettingsBlock
-        title="Logos"
-        description="Logo blanc utilisé sur fond sombre, vert sur fond clair"
+        title="Logo blanc (fond sombre)"
+        description="Utilisé dans la navbar des pages sombres et au centre de la page d'entrée au survol Entreprise."
         imageFolder="logos"
         fields={[
-          { key: "logo_white", label: "Logo blanc", type: "image" },
-          { key: "logo_green", label: "Logo vert", type: "image" },
+          { key: "logo_white", label: "Logo blanc actif", type: "image" },
         ]}
+      />
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="logo_white"
+        currentUrl={logoWhite}
+        mode="setting"
+        settingKey="logo_white"
+        folder="logos"
+        title="Variantes du logo blanc"
+        aspect="square"
+        invalidateKeys={[["site_settings"]]}
+      />
+
+      <SettingsBlock
+        title="Logo vert (fond clair)"
+        description="Utilisé dans la navbar des pages claires et au centre de la page d'entrée par défaut."
+        imageFolder="logos"
+        fields={[
+          { key: "logo_green", label: "Logo vert actif", type: "image" },
+        ]}
+      />
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="logo_green"
+        currentUrl={logoGreen}
+        mode="setting"
+        settingKey="logo_green"
+        folder="logos"
+        title="Variantes du logo vert"
+        aspect="square"
+        invalidateKeys={[["site_settings"]]}
       />
 
       <SettingsBlock
         title="Vidéo Hero principale"
-        description="Vidéo de fond du hero d'accueil et du pôle artiste"
+        description="Vidéo de fond du hero du pôle Artiste"
         imageFolder="videos"
         fields={[
           { key: "hero_video_url", label: "URL vidéo MP4", type: "image", hint: "Uploader un .mp4 ou coller une URL" },
-        ]}
-      />
-
-      <SettingsBlock
-        title="Page Gateway (sélecteur Artiste / Entreprise)"
-        description="Images de fond des deux côtés de la page d'entrée"
-        imageFolder="gateway"
-        fields={[
-          { key: "gateway_image_artiste", label: "Image — côté Artiste", type: "image" },
-          { key: "gateway_image_entreprise", label: "Image — côté Entreprise", type: "image" },
         ]}
       />
 
