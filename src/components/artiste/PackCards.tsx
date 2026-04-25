@@ -315,6 +315,28 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-80px" });
 
+  const { data: rawPacks = [] } = useQuery({
+    queryKey: ["packs_id_lookup"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("packs").select("id,number");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+  const { data: tooltipRows = [] } = usePackTooltips();
+
+  // Map: pack.number ("Pack 1"…) -> { feature_prefix: tooltip_text }
+  const tooltipsByNumber = useMemo(() => {
+    const out: Record<string, Record<string, string>> = {};
+    (rawPacks as any[]).forEach((p) => {
+      out[p.number] = {};
+      (tooltipRows as any[])
+        .filter((t) => t.pack_id === p.id)
+        .forEach((t) => { out[p.number][t.feature_prefix] = t.tooltip_text; });
+    });
+    return out;
+  }, [rawPacks, tooltipRows]);
+
   const theartistTexts = ["2 mois TheArtist offert", "5 mois TheArtist offert", "8 mois TheArtist offert", "1 an TheArtist offert"];
 
   return (
