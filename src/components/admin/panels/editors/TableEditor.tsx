@@ -54,7 +54,10 @@ export default function TableEditor({
         label={label}
         idField={idField}
         onAdd={startAdd}
-        onEdit={(item) => crud.setEditing(item as any)}
+        onEdit={(item: any) => {
+          const { __index, ...clean } = item;
+          crud.setEditing(clean as any);
+        }}
         onDelete={(id) => crud.remove(id)}
         renderItem={renderItem}
       />
