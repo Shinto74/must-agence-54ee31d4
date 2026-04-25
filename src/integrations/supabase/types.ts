@@ -35,6 +35,74 @@ export type Database = {
         }
         Relationships: []
       }
+      artist_details: {
+        Row: {
+          artist_id: string
+          chiffre: string
+          description: string
+          id: string
+          plateformes: string[]
+          strategie: string
+        }
+        Insert: {
+          artist_id: string
+          chiffre?: string
+          description?: string
+          id?: string
+          plateformes?: string[]
+          strategie?: string
+        }
+        Update: {
+          artist_id?: string
+          chiffre?: string
+          description?: string
+          id?: string
+          plateformes?: string[]
+          strategie?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artist_details_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: true
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      artist_pillars: {
+        Row: {
+          accent_hue: number
+          description: string
+          display_order: number
+          icon: string
+          id: string
+          left_title: string
+          right_title: string
+          statement: string
+        }
+        Insert: {
+          accent_hue?: number
+          description?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          left_title?: string
+          right_title?: string
+          statement?: string
+        }
+        Update: {
+          accent_hue?: number
+          description?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          left_title?: string
+          right_title?: string
+          statement?: string
+        }
+        Relationships: []
+      }
       artists: {
         Row: {
           category_id: string
@@ -402,6 +470,38 @@ export type Database = {
           },
         ]
       }
+      pack_tooltips: {
+        Row: {
+          display_order: number
+          feature_prefix: string
+          id: string
+          pack_id: string
+          tooltip_text: string
+        }
+        Insert: {
+          display_order?: number
+          feature_prefix: string
+          id?: string
+          pack_id: string
+          tooltip_text?: string
+        }
+        Update: {
+          display_order?: number
+          feature_prefix?: string
+          id?: string
+          pack_id?: string
+          tooltip_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pack_tooltips_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       packs: {
         Row: {
           badge: string
@@ -497,6 +597,64 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      pillar_left_items: {
+        Row: {
+          display_order: number
+          id: string
+          pillar_id: string
+          text: string
+        }
+        Insert: {
+          display_order?: number
+          id?: string
+          pillar_id: string
+          text: string
+        }
+        Update: {
+          display_order?: number
+          id?: string
+          pillar_id?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pillar_left_items_pillar_id_fkey"
+            columns: ["pillar_id"]
+            isOneToOne: false
+            referencedRelation: "artist_pillars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pillar_right_items: {
+        Row: {
+          display_order: number
+          id: string
+          pillar_id: string
+          text: string
+        }
+        Insert: {
+          display_order?: number
+          id?: string
+          pillar_id: string
+          text: string
+        }
+        Update: {
+          display_order?: number
+          id?: string
+          pillar_id?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pillar_right_items_pillar_id_fkey"
+            columns: ["pillar_id"]
+            isOneToOne: false
+            referencedRelation: "artist_pillars"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       portfolio_cases: {
         Row: {

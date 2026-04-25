@@ -1,20 +1,40 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { ARTIST_REFERENCES, ARTIST_DETAILS } from "@/lib/constants";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useArtistDetails } from "@/hooks/useArtistePage";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { X, Info } from "lucide-react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ArtistReferencesProps {
-  categories?: { name: string; slug: string; artists: { name: string; image: string }[] }[];
+  categories?: { name: string; slug: string; artists: { name: string; image: string; id?: string }[] }[];
 }
 
 const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
-  const cats = categories || ARTIST_REFERENCES.categories.map((c) => ({
-    name: c.name,
-    slug: c.slug,
-    artists: c.artists.map((a) => ({ name: a.name, image: a.image })),
-  }));
+  const { get } = useSiteSettings();
+  const { data: details = [] } = useArtistDetails();
+  const { data: rawArtists = [] } = useQuery({
+    queryKey: ["artists_raw"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("artists").select("id,name");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  // Map: name -> details from BDD (lookup via artist_id from rawArtists)
+  const detailsByName = useMemo(() => {
+    const m: Record<string, any> = {};
+    (details as any[]).forEach((d) => {
+      const a = (rawArtists as any[]).find((x) => x.id === d.artist_id);
+      if (a) m[a.name] = d;
+    });
+    return m;
+  }, [details, rawArtists]);
+
+  const cats = categories || [];
 
   const allArtists = cats.flatMap((cat) =>
     cat.artists.map((a) => ({ ...a, category: cat.name, slug: cat.slug }))
@@ -81,25 +101,25 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
 
   const handleArtistClick = (artistName: string) => {
     if (didDrag.current) return;
-    setSelectedArtist(ARTIST_DETAILS[artistName] ? artistName : null);
+    setSelectedArtist(detailsByName[artistName] ? artistName : null);
   };
 
   const closeModal = () => setSelectedArtist(null);
 
   const currentArtist = selectedArtist ? allArtists.find((a) => a.name === selectedArtist) : null;
-  const currentDetails = selectedArtist ? ARTIST_DETAILS[selectedArtist] : null;
+  const currentDetails = selectedArtist ? detailsByName[selectedArtist] : null;
 
   return (
     <section ref={sectionRef} className="py-20">
       <div className="max-w-[1400px] mx-auto px-6 mb-8">
         <p className="rv mb-3 font-mono text-xs uppercase tracking-[0.2em] text-primary">
-          {ARTIST_REFERENCES.label}
+          {get("artist_ref_label", "Références Artistes")}
         </p>
         <h2 className="rv font-clash text-3xl font-bold text-foreground md:text-4xl tracking-tight" style={{ wordSpacing: "0.15em" }}>
-          {ARTIST_REFERENCES.titleLine1}
+          {get("artist_ref_title_line1", "Ils nous ont fait confiance")}
         </h2>
         <h2 className="rv font-clash text-3xl font-bold text-primary md:text-4xl tracking-tight" style={{ wordSpacing: "0.15em" }}>
-          {ARTIST_REFERENCES.titleLine2}
+          {get("artist_ref_title_line2", "pour leurs sorties")}
         </h2>
 
         <div className="rv mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
@@ -146,7 +166,7 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
       >
         {[...allArtists, ...allArtists].map((artist, i) => {
           const normalizedIndex = i % allArtists.length;
-          const hasDetails = !!ARTIST_DETAILS[artist.name];
+          const hasDetails = !!detailsByName[artist.name];
           const uniqueKey = `${artist.name}-${i}`;
 
           return (

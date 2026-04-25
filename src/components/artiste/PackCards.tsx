@@ -1,10 +1,13 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Music, Megaphone, Palette, ListMusic, Zap, Users, PenTool, Newspaper, Search, Target, MessageCircle, Youtube, Info, X, BarChart3, Lightbulb, Rocket, TrendingUp, Network } from "lucide-react";
 import QuoteWizard from "@/components/artiste/QuoteWizard";
+import { usePackTooltips } from "@/hooks/useArtistePage";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import theartistIcon from "@/assets/theartist-icon.png";
 import theartistTextLogo from "@/assets/theartist-text.png";
 
@@ -50,33 +53,7 @@ const getFeatureIcon = (feature: string) => {
   return Zap;
 };
 
-/* ─── TOOLTIPS — clés = début exact des feature strings ─── */
-const TOOLTIPS: Record<string, Record<string, string>> = {
-  "Pack 2": {
-    "Playlisting Étendu": "Campagne massive auprès d'un réseau élargi de curateurs et playlists majeures. Notre équipe contacte directement les programmateurs musicaux pour placer votre titre sur les playlists les plus écoutées, maximisant votre visibilité et vos streams.",
-    "Double Impact Publicitaire": "Promotion de 2 teasers publicitaires pour une visibilité omniprésente. Nous créons et diffusons deux campagnes publicitaires distinctes (teaser clip + teaser audio) sur tous les réseaux pour saturer votre audience et créer du buzz.",
-    "Community Management (1 mois)": "Un CM dédié s'immerge dans votre projet pendant 1 mois pour animer et engager votre communauté. Réponses aux commentaires, création de contenu exclusif, interactions stratégiques pour maximiser l'engagement et fidéliser vos fans.",
-    "Content Design": "Création de visuels de résultats professionnels (Stats playlists, certifications, caps franchis, milestones). Ces visuels shareable amplifient votre succès sur les réseaux et créent du contenu authentique pour votre communauté.",
-  },
-  "Pack 3": {
-    "Pitch Éditorial": "Optimisation complète pour le Focus Track (Discover Weekly, Release Radar). Chaque métadonnée, tag et timing optimisé pour maximiser vos chances d'entrer dans les playlists officielles Spotify.",
-    "Playlisting Long Terme": "Campagne poussée et suivie sur 3 mois consécutifs, pas juste au lancement. Nos curateurs continuent à placer votre musique avec ajustements en temps réel basés sur les performances. Durabilité garantie au-delà du day-one.",
-    "YouTube & Google Ads": "Campagne publicitaire ultra-ciblée sur votre Clip Officiel avec ciblage par démographie, intérêts et comportement. Optimisation budget et placements pour maximiser ROI et engagement.",
-    "Accompagnement VIP": "2 mois de Community Management intensif avec groupe WhatsApp personnalisé pour réactivité instantanée. Communication en temps réel 24/7 avec votre équipe dédiée.",
-    "Relations Presse & Médias": "Campagne RP complète pendant 1 mois : pitches auprès de radios nationales, blogs spécialisés, magazines digitaux. Interviews et couverture presse pour asseoir votre légitimité.",
-    "Ads Domination": "Teasers en rotation continue sur Meta (Facebook/Instagram), TikTok et Google avec redirection intelligente. Stratégie multi-plateforme synchronisée pour dominer le feed de votre audience cible.",
-    "SEO Musique": "Référencement naturel optimisé sur toutes les plateformes de streaming (Spotify, Apple Music, YouTube Music). Bonnes catégories, métadonnées et algorithmes — trouvé naturellement sans dépenser en ads.",
-  },
-  "Pack 4": {
-    "Diagnostic Complet (Deep Dive)": "Audit de votre marché, analyse concurrents, identification opportunités cachées. On plonge dans les données, on détecte les gaps, on bâtit sur vos forces.",
-    "Stratégie Propriétaire": "Zéro off-the-shelf. Plan conçu 100% pour vous, itéré avec vous. Pas de template, juste votre solution unique.",
-    "Exécution Full-Stack": "De la playlisting curée à l'influence seeding, en passant par Meta/Google/TikTok Ads synchronisés. Tous les leviers activés en harmonie.",
-    "Creative Direction Personnalisée": "Visuel, narrative, storytelling — construire votre légende. Identité cohérente sur tous les fronts.",
-    "Reporting & Analytics Temps Réel": "Dashboard propriétaire, insights hebdomadaires, pivot strategy quand nécessaire. Transparence totale, décisions data-driven.",
-    "Accès VIP War Room": "Réunions bi-hebdomadaires, escalade rapide, décisions en 48h. Vous êtes dans notre équipe, pas juste un client.",
-    "Réseau Partenaires Déverrouillé": "Booking haut de gamme, collaborations marques premium, opportunités business. Portes ouvertes sur l'écosystème Must Agence.",
-  },
-};
+/* ─── TOOLTIPS — chargés depuis la BDD via usePackTooltips() ─── */
 
 /* ─── TOOLTIP PORTAIL ─── */
 const FeatureTooltip = ({ text, triggerRef }: { text: string; triggerRef: React.RefObject<HTMLButtonElement> }) => {
@@ -193,14 +170,13 @@ const PACK_PRICE_MAP: Record<string, string> = {
   "Pack 3": "explosion_once",
 };
 
-const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistText: string; onOpenQuote?: () => void }) => {
+const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; theartistText: string; onOpenQuote?: () => void; tooltips: Record<string, string> }) => {
   const navigate = useNavigate();
-  const packTooltips = TOOLTIPS[pack.number] || {};
 
   // Matching: trouve le tooltip dont la feature commence par la clé
   const getTooltip = (feature: string) => {
-    for (const key of Object.keys(packTooltips)) {
-      if (feature.startsWith(key)) return packTooltips[key];
+    for (const key of Object.keys(tooltips)) {
+      if (feature.startsWith(key)) return tooltips[key];
     }
     return undefined;
   };
@@ -339,6 +315,28 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-80px" });
 
+  const { data: rawPacks = [] } = useQuery({
+    queryKey: ["packs_id_lookup"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("packs").select("id,number");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+  const { data: tooltipRows = [] } = usePackTooltips();
+
+  // Map: pack.number ("Pack 1"…) -> { feature_prefix: tooltip_text }
+  const tooltipsByNumber = useMemo(() => {
+    const out: Record<string, Record<string, string>> = {};
+    (rawPacks as any[]).forEach((p) => {
+      out[p.number] = {};
+      (tooltipRows as any[])
+        .filter((t) => t.pack_id === p.id)
+        .forEach((t) => { out[p.number][t.feature_prefix] = t.tooltip_text; });
+    });
+    return out;
+  }, [rawPacks, tooltipRows]);
+
   const theartistTexts = ["2 mois TheArtist offert", "5 mois TheArtist offert", "8 mois TheArtist offert", "1 an TheArtist offert"];
 
   return (
@@ -377,7 +375,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
                 }}
                 style={{ transformOrigin: "left center", transformStyle: "preserve-3d" }}
               >
-                <PackCard pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
+                <PackCard pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} tooltips={tooltipsByNumber[pack.number] || {}} />
               </motion.div>
             ))}
           </div>
@@ -390,7 +388,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
           >
-            <PackCard pack={packs[activeTab]} theartistText={theartistTexts[activeTab] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
+            <PackCard pack={packs[activeTab]} theartistText={theartistTexts[activeTab] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} tooltips={tooltipsByNumber[packs[activeTab]?.number] || {}} />
           </motion.div>
         </div>
       </section>
