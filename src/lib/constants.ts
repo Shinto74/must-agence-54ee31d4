@@ -304,7 +304,7 @@ export const ARTISTE_PAGE = {
     { name: "TIKTOK", logoUrl: "https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" },
     { name: "YOUTUBE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" },
     { name: "UNIVERSAL MUSIC", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg" },
-    { name: "THE ARTIST", logoUrl: "https://raw.githubusercontent.com/Shinto74/IMAGES/5cd68f68ab87bf75e69b4962ee444f69d4620d7f/theartist.png", label: "THEARTIST" },
+    { name: "THE ARTIST", logoUrl: "https://syibbaomaexmubbypjyg.supabase.co/storage/v1/object/public/site-assets/marquee/theartist.png", label: "THEARTIST" },
   ],
   ctaBand: {
     title: "Prêt à propulser votre carrière ?",
