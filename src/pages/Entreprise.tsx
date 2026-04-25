@@ -603,34 +603,171 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
   );
 };
 
+/* ═══ ROTATING LOGO CARD — un logo par catégorie qui change toutes les X secondes ═══ */
+const ROTATE_INTERVAL = 3500;
+
+const RotatingCategoryCard = ({
+  categoryName,
+  clients,
+  index,
+}: {
+  categoryName: string;
+  clients: Array<{ id: string; name: string; logo_url: string }>;
+  index: number;
+}) => {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const gold = "43 55% 55%";
+  const goldDark = "43 52% 35%";
+
+  useEffect(() => {
+    if (clients.length <= 1) return;
+    // Décalage pour que toutes les cartes ne tournent pas en même temps
+    const offset = index * 700;
+    const t = setTimeout(() => {
+      const interval = setInterval(() => {
+        setActiveIdx((prev) => (prev + 1) % clients.length);
+      }, ROTATE_INTERVAL);
+      // store on element via closure cleanup
+      (window as any).__rcc_intervals = (window as any).__rcc_intervals || [];
+      (window as any).__rcc_intervals.push(interval);
+    }, offset);
+    return () => {
+      clearTimeout(t);
+    };
+  }, [clients.length, index]);
+
+  // Cleanup intervals on unmount
+  useEffect(() => {
+    return () => {
+      const arr = (window as any).__rcc_intervals as number[] | undefined;
+      if (arr) arr.forEach((id) => clearInterval(id));
+      (window as any).__rcc_intervals = [];
+    };
+  }, []);
+
+  const current = clients[activeIdx];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40, scale: 0.92 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="relative group"
+    >
+      <div
+        className="relative rounded-[20px] overflow-hidden h-[300px] flex flex-col items-center justify-center px-6 py-8 transition-all duration-500"
+        style={{
+          background: "linear-gradient(168deg, hsl(42 18% 96%) 0%, hsl(40 12% 93.5%) 100%)",
+          border: "1.5px solid hsl(0 0% 0% / 0.06)",
+          boxShadow:
+            "0 2px 10px hsl(0 0% 0% / 0.04), 0 1px 4px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
+        }}
+      >
+        {/* Top gold accent line */}
+        <div
+          className="absolute top-0 left-[10%] right-[10%] h-[2px]"
+          style={{ background: `linear-gradient(90deg, transparent, hsl(${gold} / 0.6), transparent)` }}
+        />
+
+        {/* Catégorie */}
+        <p
+          className="font-mono text-[10px] uppercase tracking-[0.25em] font-bold mb-6"
+          style={{ color: `hsl(${gold})` }}
+        >
+          {categoryName}
+        </p>
+
+        {/* Logo qui change avec un fondu */}
+        <div className="relative flex-1 w-full flex items-center justify-center mb-4">
+          {current && (
+            <motion.div
+              key={current.id}
+              initial={{ opacity: 0, scale: 0.85, filter: "blur(6px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-center"
+            >
+              {current.logo_url ? (
+                <img
+                  src={current.logo_url}
+                  alt={current.name}
+                  className="h-16 md:h-20 w-auto max-w-[200px] object-contain"
+                  style={{ filter: "grayscale(20%) contrast(1.1)" }}
+                />
+              ) : (
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center font-clash font-black text-2xl"
+                  style={{
+                    background: "linear-gradient(145deg, hsl(0 0% 95%), hsl(0 0% 89%))",
+                    color: `hsl(${goldDark})`,
+                  }}
+                >
+                  {current.name?.slice(0, 2).toUpperCase()}
+                </div>
+              )}
+              <p
+                className="font-clash font-bold text-[14px] mt-4 text-center"
+                style={{ color: "hsl(0 0% 15%)" }}
+              >
+                {current.name}
+              </p>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Indicateurs de pagination */}
+        {clients.length > 1 && (
+          <div className="flex items-center gap-1.5">
+            {clients.map((_, i) => (
+              <div
+                key={i}
+                className="rounded-full transition-all duration-500"
+                style={{
+                  width: i === activeIdx ? 18 : 5,
+                  height: 5,
+                  background: i === activeIdx ? `hsl(${gold})` : `hsl(${gold} / 0.25)`,
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
 const ReferencesSection = () => {
   const ref = useScrollReveal();
   const { get } = useSiteSettings();
   const { data: dbCategories = [] } = useClientsWithCategories();
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const [activeCatId, setActiveCatId] = useState<string | "all">("all");
 
-  // Fallback statique si la BDD n'a rien
+  // Fallback statique
   const fallbackCategories = [
-    { id: "fallback", name: "Références", clients: REFERENCES.map((r) => ({ id: r.name, name: r.name, logo_url: r.logo, category_id: "fallback", subtitle: r.subtitle })) },
+    {
+      id: "fallback",
+      name: "Références",
+      clients: REFERENCES.map((r) => ({ id: r.name, name: r.name, logo_url: r.logo, category_id: "fallback" })),
+    },
   ];
-  const categories = (dbCategories.length > 0 ? dbCategories : fallbackCategories) as any[];
+  const allCategories = (dbCategories.length > 0 ? dbCategories : fallbackCategories) as any[];
 
-  // Sélection des clients à afficher
-  const displayedClients = activeCatId === "all"
-    ? categories.flatMap((c: any) => c.clients.map((cl: any) => ({ ...cl, _catName: c.name })))
-    : (categories.find((c: any) => c.id === activeCatId)?.clients || []).map((cl: any) => ({ ...cl, _catName: categories.find((c: any) => c.id === activeCatId)?.name }));
-
-  // Doubler pour effet de défilement infini visuel
-  const looped = displayedClients.length > 0
-    ? [...displayedClients, ...displayedClients]
-    : [];
+  // Filtrer : ne garder que les catégories ayant au moins un client, max 4
+  const categories = allCategories.filter((c: any) => c.clients && c.clients.length > 0).slice(0, 4);
 
   const kicker = get("entreprise_ref_kicker", "Références");
   const titlePart1 = get("entreprise_ref_title_part1", "Ils nous font");
   const titleAccent = get("entreprise_ref_title_accent", "confiance");
   const subtitle = get("entreprise_ref_subtitle", "Des marques ambitieuses qui ont choisi l'excellence.");
   const footerNote = get("entreprise_ref_footer_note", "+ de 150 projets réalisés avec succès");
+
+  // Grille responsive selon le nombre de catégories
+  const gridCols =
+    categories.length === 1 ? "grid-cols-1 max-w-md mx-auto"
+      : categories.length === 2 ? "grid-cols-1 md:grid-cols-2"
+        : categories.length === 3 ? "grid-cols-1 md:grid-cols-3"
+          : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
@@ -639,8 +776,8 @@ const ReferencesSection = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full pointer-events-none"
         style={{ background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.05) 0%, transparent 60%)" }} />
 
-      <div className="max-w-[1400px] mx-auto">
-        <motion.div className="rv text-center mb-12">
+      <div className="max-w-[1400px] mx-auto relative">
+        <motion.div className="rv text-center mb-14">
           <div className="flex items-center justify-center gap-3 mb-4">
             <motion.div
               className="w-12 h-[1.5px]"
@@ -689,72 +826,23 @@ const ReferencesSection = () => {
           </motion.p>
         </motion.div>
 
-        {/* Filtres par catégorie */}
-        {categories.length > 1 && (
-          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-10">
-            <button
-              type="button"
-              onClick={() => setActiveCatId("all")}
-              className="px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.18em] transition-all duration-300"
-              style={{
-                background: activeCatId === "all" ? "hsl(43 55% 55%)" : "hsl(0 0% 0% / 0.04)",
-                color: activeCatId === "all" ? "#fff" : "hsl(0 0% 25%)",
-                border: `1px solid ${activeCatId === "all" ? "hsl(43 55% 55%)" : "hsl(0 0% 0% / 0.08)"}`,
-              }}
-            >
-              Toutes
-            </button>
-            {categories.map((c: any) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => setActiveCatId(c.id)}
-                className="px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.18em] transition-all duration-300"
-                style={{
-                  background: activeCatId === c.id ? "hsl(43 55% 55%)" : "hsl(0 0% 0% / 0.04)",
-                  color: activeCatId === c.id ? "#fff" : "hsl(0 0% 25%)",
-                  border: `1px solid ${activeCatId === c.id ? "hsl(43 55% 55%)" : "hsl(0 0% 0% / 0.08)"}`,
-                }}
-              >
-                {c.name}
-              </button>
+        {/* Grille de catégories — chaque carte = 1 catégorie avec rotation des logos */}
+        {categories.length > 0 ? (
+          <div className={`grid ${gridCols} gap-6 md:gap-8`}>
+            {categories.map((cat: any, i: number) => (
+              <RotatingCategoryCard
+                key={cat.id}
+                categoryName={cat.name}
+                clients={cat.clients}
+                index={i}
+              />
             ))}
           </div>
+        ) : (
+          <p className="text-center text-muted-foreground text-sm py-10">
+            Aucune référence à afficher pour le moment.
+          </p>
         )}
-
-        {/* Carrousel défilant infini */}
-        <div className="relative overflow-hidden" style={{
-          maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-          WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-        }}>
-          <div
-            className="flex gap-6 md:gap-8 animate-mq"
-            style={{ width: "max-content", animationDuration: `${Math.max(20, looped.length * 4)}s` }}
-          >
-            {looped.map((cl: any, i: number) => (
-              <div key={`${cl.id}-${i}`} className="w-[220px] md:w-[240px] shrink-0">
-                <ReferenceCard
-                  r={{
-                    name: cl.name,
-                    subtitle: cl._catName || "",
-                    initial: cl.name?.slice(0, 2)?.toUpperCase() || "??",
-                    logo: cl.logo_url || "",
-                  }}
-                  index={i}
-                  anyHovered={hoveredIdx !== null}
-                  isHovered={hoveredIdx === i}
-                  onHover={() => setHoveredIdx(i)}
-                  onLeave={() => setHoveredIdx(null)}
-                />
-              </div>
-            ))}
-            {looped.length === 0 && (
-              <p className="text-center text-muted-foreground text-sm py-10 w-full">
-                Aucun client dans cette catégorie pour le moment.
-              </p>
-            )}
-          </div>
-        </div>
 
         <motion.div {...fadeUp(0.4)} className="rv mt-16 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40">
