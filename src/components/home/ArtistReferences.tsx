@@ -93,25 +93,25 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
 
   const handleArtistClick = (artistName: string) => {
     if (didDrag.current) return;
-    setSelectedArtist(ARTIST_DETAILS[artistName] ? artistName : null);
+    setSelectedArtist(detailsByName[artistName] ? artistName : null);
   };
 
   const closeModal = () => setSelectedArtist(null);
 
   const currentArtist = selectedArtist ? allArtists.find((a) => a.name === selectedArtist) : null;
-  const currentDetails = selectedArtist ? ARTIST_DETAILS[selectedArtist] : null;
+  const currentDetails = selectedArtist ? detailsByName[selectedArtist] : null;
 
   return (
     <section ref={sectionRef} className="py-20">
       <div className="max-w-[1400px] mx-auto px-6 mb-8">
         <p className="rv mb-3 font-mono text-xs uppercase tracking-[0.2em] text-primary">
-          {ARTIST_REFERENCES.label}
+          {get("artist_ref_label", "Références Artistes")}
         </p>
         <h2 className="rv font-clash text-3xl font-bold text-foreground md:text-4xl tracking-tight" style={{ wordSpacing: "0.15em" }}>
-          {ARTIST_REFERENCES.titleLine1}
+          {get("artist_ref_title_line1", "Ils nous ont fait confiance")}
         </h2>
         <h2 className="rv font-clash text-3xl font-bold text-primary md:text-4xl tracking-tight" style={{ wordSpacing: "0.15em" }}>
-          {ARTIST_REFERENCES.titleLine2}
+          {get("artist_ref_title_line2", "pour leurs sorties")}
         </h2>
 
         <div className="rv mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
