@@ -81,6 +81,27 @@ export function useClipPortugalAdvantages() {
   });
 }
 
+/* ─── Services Entreprise (with chips) ─── */
+export function useServicesEntreprise() {
+  return useQuery({
+    queryKey: ["services_entreprise_with_chips"],
+    queryFn: async () => {
+      const [svcRes, chipsRes] = await Promise.all([
+        supabase.from("services_entreprise").select("*").order("display_order"),
+        supabase.from("service_entreprise_chips").select("*").order("display_order"),
+      ]);
+      if (svcRes.error) throw svcRes.error;
+      if (chipsRes.error) throw chipsRes.error;
+      const services = svcRes.data || [];
+      const chips = chipsRes.data || [];
+      return services.map((s: any) => ({
+        ...s,
+        chips: chips.filter((c: any) => c.service_id === s.id).map((c: any) => c.text),
+      }));
+    },
+  });
+}
+
 /* ─── Clients (with categories) for entreprise references ─── */
 export function useClientsWithCategories() {
   return useQuery({
