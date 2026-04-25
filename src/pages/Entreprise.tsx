@@ -770,7 +770,12 @@ const ReferencesSection = () => {
 const FinalCta = () => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-
+  const { get } = useSiteSettings();
+  const kicker = get("final_cta_kicker", "Prêt à grandir ?");
+  const titleLine1 = get("final_cta_title_line1", "Faites passer votre entreprise");
+  const titleLine2 = get("final_cta_title_line2", "au niveau supérieur");
+  const subtitle = get("final_cta_subtitle", "Stratégie sur-mesure, exécution premium et résultats mesurables.\nChaque projet est une mission.");
+  const buttonLabel = get("final_cta_button", "Contactez-nous");
   return (
     <section
       ref={ref}
@@ -854,7 +859,7 @@ const FinalCta = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: EASE }}
         >
-          Prêt à grandir ?
+          {kicker}
         </motion.p>
 
         <motion.h2
@@ -864,22 +869,20 @@ const FinalCta = () => {
           transition={{ duration: 1.4, delay: 0.15, ease: EASE }}
           style={{ textShadow: "0 0 80px hsl(43 55% 55% / 0.15)" }}
         >
-          Faites passer votre entreprise
+          {titleLine1}
           <br />
           <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 50px hsl(43 55% 55% / 0.35)" }}>
-            au niveau supérieur
+            {titleLine2}
           </span>
         </motion.h2>
 
         <motion.p
-          className="text-white/45 text-sm md:text-base max-w-lg mx-auto mb-12 leading-relaxed"
+          className="text-white/45 text-sm md:text-base max-w-lg mx-auto mb-12 leading-relaxed whitespace-pre-line"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.3, ease: EASE }}
         >
-          Stratégie sur-mesure, exécution premium et résultats mesurables.
-          <br />
-          Chaque projet est une mission.
+          {subtitle}
         </motion.p>
 
         <motion.button
