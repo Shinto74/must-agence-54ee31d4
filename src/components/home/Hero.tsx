@@ -31,6 +31,7 @@ const Hero = () => {
   const heroSubtitle = get("hero_artiste_subtitle", "Agence d'influence spécialisée musique et marques.");
   const heroCtaPrimary = get("hero_artiste_cta_primary", SITE.hero.ctaPrimary);
   const heroCtaSecondary = get("hero_artiste_cta_secondary", SITE.hero.ctaSecondary);
+  const logoWhite = get("logo_white", "");
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
