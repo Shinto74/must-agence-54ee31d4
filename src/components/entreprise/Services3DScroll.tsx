@@ -99,7 +99,6 @@ const Services3DScroll = () => {
   }
 
   const svc = services[active] || services[0];
-  const svcNumber = svc.number || String(active + 1).padStart(2, "0");
 
   const cardVariants = {
     enter: (dir: number) => ({
