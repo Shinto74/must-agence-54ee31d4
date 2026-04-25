@@ -603,138 +603,53 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
   );
 };
 
-/* ═══ ROTATING LOGO CARD — un logo par catégorie qui change toutes les X secondes ═══ */
+/* ═══ ROTATING REFERENCE CARD — réutilise le visuel ReferenceCard mais avec un logo qui change toutes les X secondes ═══ */
 const ROTATE_INTERVAL = 3500;
 
-const RotatingCategoryCard = ({
+const RotatingReferenceCard = ({
   categoryName,
   clients,
   index,
+  anyHovered,
+  isHovered,
+  onHover,
+  onLeave,
 }: {
   categoryName: string;
   clients: Array<{ id: string; name: string; logo_url: string }>;
   index: number;
+  anyHovered: boolean;
+  isHovered: boolean;
+  onHover: () => void;
+  onLeave: () => void;
 }) => {
   const [activeIdx, setActiveIdx] = useState(0);
-  const gold = "43 55% 55%";
-  const goldDark = "43 52% 35%";
 
   useEffect(() => {
-    if (clients.length <= 1) return;
-    // Décalage pour que toutes les cartes ne tournent pas en même temps
-    const offset = index * 700;
-    const t = setTimeout(() => {
-      const interval = setInterval(() => {
-        setActiveIdx((prev) => (prev + 1) % clients.length);
-      }, ROTATE_INTERVAL);
-      // store on element via closure cleanup
-      (window as any).__rcc_intervals = (window as any).__rcc_intervals || [];
-      (window as any).__rcc_intervals.push(interval);
-    }, offset);
-    return () => {
-      clearTimeout(t);
-    };
-  }, [clients.length, index]);
+    if (clients.length <= 1 || isHovered) return;
+    const interval = setInterval(() => {
+      setActiveIdx((prev) => (prev + 1) % clients.length);
+    }, ROTATE_INTERVAL + index * 350);
+    return () => clearInterval(interval);
+  }, [clients.length, index, isHovered]);
 
-  // Cleanup intervals on unmount
-  useEffect(() => {
-    return () => {
-      const arr = (window as any).__rcc_intervals as number[] | undefined;
-      if (arr) arr.forEach((id) => clearInterval(id));
-      (window as any).__rcc_intervals = [];
-    };
-  }, []);
-
-  const current = clients[activeIdx];
+  const current = clients[activeIdx] || clients[0];
+  if (!current) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.92 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="relative group"
-    >
-      <div
-        className="relative rounded-[20px] overflow-hidden h-[300px] flex flex-col items-center justify-center px-6 py-8 transition-all duration-500"
-        style={{
-          background: "linear-gradient(168deg, hsl(42 18% 96%) 0%, hsl(40 12% 93.5%) 100%)",
-          border: "1.5px solid hsl(0 0% 0% / 0.06)",
-          boxShadow:
-            "0 2px 10px hsl(0 0% 0% / 0.04), 0 1px 4px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
-        }}
-      >
-        {/* Top gold accent line */}
-        <div
-          className="absolute top-0 left-[10%] right-[10%] h-[2px]"
-          style={{ background: `linear-gradient(90deg, transparent, hsl(${gold} / 0.6), transparent)` }}
-        />
-
-        {/* Catégorie */}
-        <p
-          className="font-mono text-[10px] uppercase tracking-[0.25em] font-bold mb-6"
-          style={{ color: `hsl(${gold})` }}
-        >
-          {categoryName}
-        </p>
-
-        {/* Logo qui change avec un fondu */}
-        <div className="relative flex-1 w-full flex items-center justify-center mb-4">
-          {current && (
-            <motion.div
-              key={current.id}
-              initial={{ opacity: 0, scale: 0.85, filter: "blur(6px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.85 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center"
-            >
-              {current.logo_url ? (
-                <img
-                  src={current.logo_url}
-                  alt={current.name}
-                  className="h-16 md:h-20 w-auto max-w-[200px] object-contain"
-                  style={{ filter: "grayscale(20%) contrast(1.1)" }}
-                />
-              ) : (
-                <div
-                  className="w-20 h-20 rounded-full flex items-center justify-center font-clash font-black text-2xl"
-                  style={{
-                    background: "linear-gradient(145deg, hsl(0 0% 95%), hsl(0 0% 89%))",
-                    color: `hsl(${goldDark})`,
-                  }}
-                >
-                  {current.name?.slice(0, 2).toUpperCase()}
-                </div>
-              )}
-              <p
-                className="font-clash font-bold text-[14px] mt-4 text-center"
-                style={{ color: "hsl(0 0% 15%)" }}
-              >
-                {current.name}
-              </p>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Indicateurs de pagination */}
-        {clients.length > 1 && (
-          <div className="flex items-center gap-1.5">
-            {clients.map((_, i) => (
-              <div
-                key={i}
-                className="rounded-full transition-all duration-500"
-                style={{
-                  width: i === activeIdx ? 18 : 5,
-                  height: 5,
-                  background: i === activeIdx ? `hsl(${gold})` : `hsl(${gold} / 0.25)`,
-                }}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </motion.div>
+    <ReferenceCard
+      r={{
+        name: current.name,
+        subtitle: categoryName,
+        initial: current.name?.slice(0, 2)?.toUpperCase() || "??",
+        logo: current.logo_url || "",
+      }}
+      index={index}
+      anyHovered={anyHovered}
+      isHovered={isHovered}
+      onHover={onHover}
+      onLeave={onLeave}
+    />
   );
 };
 
@@ -742,6 +657,7 @@ const ReferencesSection = () => {
   const ref = useScrollReveal();
   const { get } = useSiteSettings();
   const { data: dbCategories = [] } = useClientsWithCategories();
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   // Fallback statique
   const fallbackCategories = [
@@ -752,8 +668,7 @@ const ReferencesSection = () => {
     },
   ];
   const allCategories = (dbCategories.length > 0 ? dbCategories : fallbackCategories) as any[];
-
-  // Filtrer : ne garder que les catégories ayant au moins un client, max 4
+  // Garde uniquement les catégories non vides, max 4
   const categories = allCategories.filter((c: any) => c.clients && c.clients.length > 0).slice(0, 4);
 
   const kicker = get("entreprise_ref_kicker", "Références");
@@ -762,12 +677,12 @@ const ReferencesSection = () => {
   const subtitle = get("entreprise_ref_subtitle", "Des marques ambitieuses qui ont choisi l'excellence.");
   const footerNote = get("entreprise_ref_footer_note", "+ de 150 projets réalisés avec succès");
 
-  // Grille responsive selon le nombre de catégories
+  // Grille adaptative selon le nombre de catégories (max 4)
   const gridCols =
-    categories.length === 1 ? "grid-cols-1 max-w-md mx-auto"
-      : categories.length === 2 ? "grid-cols-1 md:grid-cols-2"
-        : categories.length === 3 ? "grid-cols-1 md:grid-cols-3"
-          : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+    categories.length === 1 ? "grid-cols-1 max-w-sm mx-auto"
+      : categories.length === 2 ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto"
+        : categories.length === 3 ? "grid-cols-1 sm:grid-cols-3 max-w-5xl mx-auto"
+          : "grid-cols-2 lg:grid-cols-4";
 
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
@@ -776,8 +691,8 @@ const ReferencesSection = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full pointer-events-none"
         style={{ background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.05) 0%, transparent 60%)" }} />
 
-      <div className="max-w-[1400px] mx-auto relative">
-        <motion.div className="rv text-center mb-14">
+      <div className="max-w-[1400px] mx-auto">
+        <motion.div className="rv text-center mb-20">
           <div className="flex items-center justify-center gap-3 mb-4">
             <motion.div
               className="w-12 h-[1.5px]"
@@ -826,15 +741,18 @@ const ReferencesSection = () => {
           </motion.p>
         </motion.div>
 
-        {/* Grille de catégories — chaque carte = 1 catégorie avec rotation des logos */}
         {categories.length > 0 ? (
           <div className={`grid ${gridCols} gap-6 md:gap-8`}>
             {categories.map((cat: any, i: number) => (
-              <RotatingCategoryCard
+              <RotatingReferenceCard
                 key={cat.id}
                 categoryName={cat.name}
                 clients={cat.clients}
                 index={i}
+                anyHovered={hoveredIdx !== null}
+                isHovered={hoveredIdx === i}
+                onHover={() => setHoveredIdx(i)}
+                onLeave={() => setHoveredIdx(null)}
               />
             ))}
           </div>
