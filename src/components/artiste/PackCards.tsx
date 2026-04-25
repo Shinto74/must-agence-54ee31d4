@@ -375,7 +375,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
                 }}
                 style={{ transformOrigin: "left center", transformStyle: "preserve-3d" }}
               >
-                <PackCard pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
+                <PackCard pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} tooltips={tooltipsByNumber[pack.number] || {}} />
               </motion.div>
             ))}
           </div>
@@ -388,7 +388,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
           >
-            <PackCard pack={packs[activeTab]} theartistText={theartistTexts[activeTab] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} />
+            <PackCard pack={packs[activeTab]} theartistText={theartistTexts[activeTab] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} tooltips={tooltipsByNumber[packs[activeTab]?.number] || {}} />
           </motion.div>
         </div>
       </section>
