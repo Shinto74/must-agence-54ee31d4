@@ -465,6 +465,33 @@ export type Database = {
         }
         Relationships: []
       }
+      media_galleries: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          owner_id: string
+          owner_table: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          owner_id: string
+          owner_table: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          owner_id?: string
+          owner_table?: string
+          url?: string
+        }
+        Relationships: []
+      }
       pack_features: {
         Row: {
           display_order: number
