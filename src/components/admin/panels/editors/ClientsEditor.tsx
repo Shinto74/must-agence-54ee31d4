@@ -29,7 +29,6 @@ export default function ClientsEditor() {
         initialRecord={{ name: "", logo_url: "", category_id: catOptions[0]?.value || "" }}
         fields={[
           { key: "name", label: "Nom" },
-          { key: "logo_url", label: "Logo actif", type: "image", imageFolder: "clients" },
           { key: "category_id", label: "Catégorie", type: "select", options: catOptions },
           { key: "display_order", label: "Ordre", type: "number" },
         ]}

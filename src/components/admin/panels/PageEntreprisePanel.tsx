@@ -2,19 +2,17 @@ import SettingsBlock from "../SettingsBlock";
 import MarqueeEditor from "./editors/MarqueeEditor";
 import SectorsEditor from "./editors/SectorsEditor";
 import ClientsEditor from "./editors/ClientsEditor";
+import ServicesEntrepriseEditor from "./editors/ServicesEntrepriseEditor";
 
 /**
- * Page Entreprise — sections SPÉCIFIQUES uniquement, dans l'ordre EXACT du rendu :
- *   1. Hero (+ stats hero hardcodées dans 3 settings)
- *   2. Marquee (entreprise)
- *   3. Sectors (Orbit3D + grille mobile)
- *   4. Services3DScroll (titre dans settings)
- *   5. CtaBand
- *   6. Contact
- *
- * NOTE : "Services Entreprise", "Expertise Entreprise", "Process Entreprise"
- * et "Statistiques (page entreprise)" ont été retirés : ces tables ne sont pas
- * rendues sur la page (la page utilise des composants 3D dédiés).
+ * Page Entreprise — sections dans l'ordre EXACT du rendu front (Entreprise.tsx) :
+ *   1. Hero (+ stats)
+ *   2. Marquee
+ *   3. Services 3D — "Ce qu'on fait pour vous"
+ *   4. Secteurs (titres + Orbit3D)
+ *   5. Références (titres + catégories + clients)
+ *   6. Section finale — "Prêt à grandir"
+ *   7. Contact (page Entreprise)
  */
 export default function PageEntreprisePanel() {
   return (
@@ -22,7 +20,7 @@ export default function PageEntreprisePanel() {
       <div className="px-1">
         <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Site / Pages</p>
         <h2 className="font-clash text-2xl font-bold text-slate-900">Page Entreprise</h2>
-        <p className="text-xs text-slate-500 mt-1">Pôle Corporate & Business.</p>
+        <p className="text-xs text-slate-500 mt-1">Pôle Corporate & Business — sections dans l'ordre du rendu.</p>
       </div>
 
       <SettingsBlock
@@ -61,7 +59,18 @@ export default function PageEntreprisePanel() {
       />
 
       <SettingsBlock
-        title="3. Secteurs — Titres de la section"
+        title="3. Services — Ce qu'on fait pour vous"
+        description="En-tête de la section services 3D (composant Services3DScroll)."
+        fields={[
+          { key: "entreprise_services_kicker", label: "Sur-titre", placeholder: "Services" },
+          { key: "entreprise_services_title", label: "Titre", placeholder: "Ce qu'on fait pour vous" },
+          { key: "entreprise_services_subtitle", label: "Sous-titre", type: "textarea" },
+        ]}
+      />
+      <ServicesEntrepriseEditor />
+
+      <SettingsBlock
+        title="4. Secteurs — En-tête de section"
         fields={[
           { key: "entreprise_sectors_title", label: "Titre" },
           { key: "entreprise_sectors_subtitle", label: "Sous-titre", type: "textarea" },
@@ -70,19 +79,34 @@ export default function PageEntreprisePanel() {
       />
       <SectorsEditor />
 
+      <SettingsBlock
+        title="5. Références — En-tête de section"
+        description="Bloc 'Ils nous font confiance' avec carrousel de logos."
+        fields={[
+          { key: "entreprise_ref_kicker", label: "Sur-titre", placeholder: "Références" },
+          { key: "entreprise_ref_title_part1", label: "Titre — partie 1", placeholder: "Ils nous font" },
+          { key: "entreprise_ref_title_accent", label: "Titre — accent (en doré)", placeholder: "confiance" },
+          { key: "entreprise_ref_subtitle", label: "Sous-titre", type: "textarea" },
+          { key: "entreprise_ref_footer_note", label: "Note de bas de section", placeholder: "+ de 150 projets réalisés avec succès" },
+        ]}
+      />
       <ClientsEditor />
 
       <SettingsBlock
-        title="4. CTA Band — Bannière finale"
+        title="6. Section finale — Prêt à grandir"
+        description="Bandeau immersif sombre juste avant le formulaire de contact."
         fields={[
-          { key: "ctaband_entreprise_title", label: "Titre" },
-          { key: "ctaband_entreprise_subtitle", label: "Sous-titre" },
-          { key: "ctaband_entreprise_button", label: "Texte du bouton" },
+          { key: "final_cta_kicker", label: "Sur-titre", placeholder: "Prêt à grandir ?" },
+          { key: "final_cta_title_line1", label: "Titre — ligne 1", placeholder: "Faites passer votre entreprise" },
+          { key: "final_cta_title_line2", label: "Titre — ligne 2 (en doré)", placeholder: "au niveau supérieur" },
+          { key: "final_cta_subtitle", label: "Sous-titre", type: "textarea" },
+          { key: "final_cta_button", label: "Texte du bouton", placeholder: "Contactez-nous" },
         ]}
       />
 
       <SettingsBlock
-        title="5. Section Contact (page Entreprise)"
+        title="7. Section Contact (page Entreprise)"
+        description="Textes du formulaire. Email / téléphone / adresse se gèrent dans Identité &amp; Global."
         fields={[
           { key: "contact_entreprise_heading", label: "Titre" },
           { key: "contact_entreprise_text", label: "Phrase d'accroche" },

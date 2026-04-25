@@ -14,7 +14,6 @@ export default function TeamEditor() {
         { key: "initials", label: "Initiales" },
         { key: "role", label: "Rôle" },
         { key: "description", label: "Description", type: "textarea" },
-        { key: "image_url", label: "Photo active", type: "image", imageFolder: "team" },
         { key: "display_order", label: "Ordre", type: "number" },
       ]}
       renderItem={(item) => (

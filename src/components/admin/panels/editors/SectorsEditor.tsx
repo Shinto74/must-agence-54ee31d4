@@ -13,7 +13,6 @@ export default function SectorsEditor() {
         { key: "name", label: "Nom" },
         { key: "description", label: "Description", type: "textarea" },
         { key: "icon", label: "Icône (emoji)" },
-        { key: "image_url", label: "Image active", type: "image", imageFolder: "sectors" },
         { key: "display_order", label: "Ordre", type: "number" },
       ]}
       renderItem={(item) => (

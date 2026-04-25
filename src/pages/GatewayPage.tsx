@@ -18,6 +18,10 @@ const GatewayPage = () => {
   const IMG_ENTREPRISE = get("gateway_image_entreprise", DEFAULT_IMG_ENTREPRISE);
   const logoGreen = get("logo_green", DEFAULT_LOGO_GREEN);
   const logoWhite = get("logo_white", DEFAULT_LOGO_WHITE);
+  const artisteSubtitle = get("gateway_artiste_subtitle", "Musique · Influence · Lancement");
+  const artisteLabel = get("gateway_artiste_label", "Je suis un Artiste");
+  const entrepriseSubtitle = get("gateway_entreprise_subtitle", "Branding · Stratégie · Croissance");
+  const entrepriseLabel = get("gateway_entreprise_label", "Je suis une Entreprise");
   const [hovered, setHovered] = useState<Side>(null);
   const [ready, setReady] = useState(false);
 
@@ -83,7 +87,7 @@ const GatewayPage = () => {
               transition={{ duration: 0.5, delay: 0.6 }}
               className="font-outfit text-xs md:text-sm text-foreground/40 mb-5 md:mb-8 max-w-xs"
             >
-              Musique · Influence · Lancement
+              {artisteSubtitle}
             </motion.p>
             <motion.span
               initial={{ opacity: 0, y: 15 }}
@@ -100,7 +104,7 @@ const GatewayPage = () => {
                 transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
               }}
             >
-              Je suis un Artiste
+              {artisteLabel}
               <ArrowRight className="w-4 h-4" />
             </motion.span>
           </Link>
@@ -227,7 +231,7 @@ const GatewayPage = () => {
               className="font-outfit text-xs md:text-sm mb-5 md:mb-8 max-w-xs"
               style={{ color: "rgba(197,163,85,0.6)" }}
             >
-              Influence · Growth · Branding
+              {entrepriseSubtitle}
             </motion.p>
             <motion.span
               initial={{ opacity: 0, y: 15 }}
@@ -246,7 +250,7 @@ const GatewayPage = () => {
                 transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
               }}
             >
-              Je suis une Entreprise
+              {entrepriseLabel}
               <ArrowRight className="w-4 h-4" />
             </motion.span>
           </Link>

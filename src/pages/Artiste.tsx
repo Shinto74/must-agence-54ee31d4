@@ -11,10 +11,12 @@ import CtaBand from "@/components/home/CtaBand";
 import ContactSection from "@/components/home/ContactSection";
 import { SITE, ARTISTE_PAGE, PACKS, QUOTE_STEPS } from "@/lib/constants";
 import { useTeam, useArtists } from "@/hooks/useSupabaseData";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const Artiste = () => {
   const { data: team } = useTeam();
   const { data: artists } = useArtists();
+  const { get } = useSiteSettings();
 
   return (
     <div className="page-bg page-bg--artiste">
@@ -29,12 +31,12 @@ const Artiste = () => {
       <Team members={team || []} />
       <CtaBand {...ARTISTE_PAGE.ctaBand} settingsPrefix="ctaband_artiste" />
       <ContactSection
-        heading={ARTISTE_PAGE.contact.heading}
-        text={ARTISTE_PAGE.contact.text}
-        subtext={ARTISTE_PAGE.contact.subtext}
-        email={ARTISTE_PAGE.contact.email}
-        phone={SITE.contact.phone}
-        location={SITE.contact.location}
+        heading={get("contact_artiste_heading", ARTISTE_PAGE.contact.heading)}
+        text={get("contact_artiste_text", ARTISTE_PAGE.contact.text)}
+        subtext={get("contact_artiste_subtext", ARTISTE_PAGE.contact.subtext)}
+        email={get("contact_email", ARTISTE_PAGE.contact.email)}
+        phone={get("contact_phone", SITE.contact.phone)}
+        location={get("contact_location", SITE.contact.location)}
         whatsappUrl={SITE.contact.whatsappUrl}
         formOptions={ARTISTE_PAGE.contact.formOptions}
       />
