@@ -53,33 +53,7 @@ const getFeatureIcon = (feature: string) => {
   return Zap;
 };
 
-/* ─── TOOLTIPS — clés = début exact des feature strings ─── */
-const TOOLTIPS: Record<string, Record<string, string>> = {
-  "Pack 2": {
-    "Playlisting Étendu": "Campagne massive auprès d'un réseau élargi de curateurs et playlists majeures. Notre équipe contacte directement les programmateurs musicaux pour placer votre titre sur les playlists les plus écoutées, maximisant votre visibilité et vos streams.",
-    "Double Impact Publicitaire": "Promotion de 2 teasers publicitaires pour une visibilité omniprésente. Nous créons et diffusons deux campagnes publicitaires distinctes (teaser clip + teaser audio) sur tous les réseaux pour saturer votre audience et créer du buzz.",
-    "Community Management (1 mois)": "Un CM dédié s'immerge dans votre projet pendant 1 mois pour animer et engager votre communauté. Réponses aux commentaires, création de contenu exclusif, interactions stratégiques pour maximiser l'engagement et fidéliser vos fans.",
-    "Content Design": "Création de visuels de résultats professionnels (Stats playlists, certifications, caps franchis, milestones). Ces visuels shareable amplifient votre succès sur les réseaux et créent du contenu authentique pour votre communauté.",
-  },
-  "Pack 3": {
-    "Pitch Éditorial": "Optimisation complète pour le Focus Track (Discover Weekly, Release Radar). Chaque métadonnée, tag et timing optimisé pour maximiser vos chances d'entrer dans les playlists officielles Spotify.",
-    "Playlisting Long Terme": "Campagne poussée et suivie sur 3 mois consécutifs, pas juste au lancement. Nos curateurs continuent à placer votre musique avec ajustements en temps réel basés sur les performances. Durabilité garantie au-delà du day-one.",
-    "YouTube & Google Ads": "Campagne publicitaire ultra-ciblée sur votre Clip Officiel avec ciblage par démographie, intérêts et comportement. Optimisation budget et placements pour maximiser ROI et engagement.",
-    "Accompagnement VIP": "2 mois de Community Management intensif avec groupe WhatsApp personnalisé pour réactivité instantanée. Communication en temps réel 24/7 avec votre équipe dédiée.",
-    "Relations Presse & Médias": "Campagne RP complète pendant 1 mois : pitches auprès de radios nationales, blogs spécialisés, magazines digitaux. Interviews et couverture presse pour asseoir votre légitimité.",
-    "Ads Domination": "Teasers en rotation continue sur Meta (Facebook/Instagram), TikTok et Google avec redirection intelligente. Stratégie multi-plateforme synchronisée pour dominer le feed de votre audience cible.",
-    "SEO Musique": "Référencement naturel optimisé sur toutes les plateformes de streaming (Spotify, Apple Music, YouTube Music). Bonnes catégories, métadonnées et algorithmes — trouvé naturellement sans dépenser en ads.",
-  },
-  "Pack 4": {
-    "Diagnostic Complet (Deep Dive)": "Audit de votre marché, analyse concurrents, identification opportunités cachées. On plonge dans les données, on détecte les gaps, on bâtit sur vos forces.",
-    "Stratégie Propriétaire": "Zéro off-the-shelf. Plan conçu 100% pour vous, itéré avec vous. Pas de template, juste votre solution unique.",
-    "Exécution Full-Stack": "De la playlisting curée à l'influence seeding, en passant par Meta/Google/TikTok Ads synchronisés. Tous les leviers activés en harmonie.",
-    "Creative Direction Personnalisée": "Visuel, narrative, storytelling — construire votre légende. Identité cohérente sur tous les fronts.",
-    "Reporting & Analytics Temps Réel": "Dashboard propriétaire, insights hebdomadaires, pivot strategy quand nécessaire. Transparence totale, décisions data-driven.",
-    "Accès VIP War Room": "Réunions bi-hebdomadaires, escalade rapide, décisions en 48h. Vous êtes dans notre équipe, pas juste un client.",
-    "Réseau Partenaires Déverrouillé": "Booking haut de gamme, collaborations marques premium, opportunités business. Portes ouvertes sur l'écosystème Must Agence.",
-  },
-};
+/* ─── TOOLTIPS — chargés depuis la BDD via usePackTooltips() ─── */
 
 /* ─── TOOLTIP PORTAIL ─── */
 const FeatureTooltip = ({ text, triggerRef }: { text: string; triggerRef: React.RefObject<HTMLButtonElement> }) => {
