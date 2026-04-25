@@ -240,6 +240,19 @@ const Services3DScroll = () => {
                 <div className="relative z-10 flex flex-col gap-6">
 
                   <div className="flex-1">
+                    <motion.div
+                      className="mb-3 flex items-center gap-3"
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2, duration: 0.5, ease: EASE }}
+                    >
+                      <span
+                        className="font-mono text-xs font-medium tracking-[0.15em]"
+                        style={{ color: "hsl(43 55% 45%)" }}
+                      >
+                        {svc.number || String(active + 1).padStart(2, "0")}
+                      </span>
+                    </motion.div>
                     <motion.h3
                       className="mb-3 font-clash text-xl font-black md:text-2xl"
                       style={{ color: "hsl(0 0% 10%)" }}
