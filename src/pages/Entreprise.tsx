@@ -380,7 +380,7 @@ const ExpertiseSection = () => {
 
         {/* Desktop: 3D Orbit */}
         <div className="hidden lg:block">
-          <Orbit3DShowcase cards={sectors} />
+          <Orbit3DShowcase cards={sectors} centerLogo={get("logo_green")} />
         </div>
 
         {/* Mobile: Grid fallback */}
