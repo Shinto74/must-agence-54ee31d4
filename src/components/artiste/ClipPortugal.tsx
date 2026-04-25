@@ -62,7 +62,23 @@ const ClipPortugal = () => {
     if (!v) return defaultIcon;
     // emoji / texte court → on l'affiche tel quel, gros et lisible
     if (v.length <= 4) {
-      return <span className="text-2xl leading-none" style={{ filter: "drop-shadow(0 0 6px hsl(73 100% 50% / 0.35))" }}>{v}</span>;
+      // Force la teinte verte néon sur les emojis (utilise le mix-blend pour colorer)
+      return (
+        <span
+          className="text-2xl leading-none"
+          style={{
+            color: "hsl(73 100% 50%)",
+            filter: "drop-shadow(0 0 8px hsl(73 100% 50% / 0.5))",
+            // Convertit les emojis colorés en teinte verte néon
+            WebkitTextFillColor: "transparent",
+            background: "hsl(73 100% 50%)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+          }}
+        >
+          {v}
+        </span>
+      );
     }
     // sinon, on suppose une URL d'image
     return <img src={v} alt="" className="w-6 h-6 object-contain" />;
