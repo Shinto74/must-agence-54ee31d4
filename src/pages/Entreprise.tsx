@@ -732,20 +732,21 @@ const ReferencesSection = () => {
             style={{ width: "max-content", animationDuration: `${Math.max(20, looped.length * 4)}s` }}
           >
             {looped.map((cl: any, i: number) => (
-              <ReferenceCard
-                key={`${cl.id}-${i}`}
-                r={{
-                  name: cl.name,
-                  subtitle: cl._catName || "",
-                  initial: cl.name?.slice(0, 2)?.toUpperCase() || "??",
-                  logo: cl.logo_url || "",
-                }}
-                index={i}
-                anyHovered={hoveredIdx !== null}
-                isHovered={hoveredIdx === i}
-                onHover={() => setHoveredIdx(i)}
-                onLeave={() => setHoveredIdx(null)}
-              />
+              <div key={`${cl.id}-${i}`} className="w-[220px] md:w-[240px] shrink-0">
+                <ReferenceCard
+                  r={{
+                    name: cl.name,
+                    subtitle: cl._catName || "",
+                    initial: cl.name?.slice(0, 2)?.toUpperCase() || "??",
+                    logo: cl.logo_url || "",
+                  }}
+                  index={i}
+                  anyHovered={hoveredIdx !== null}
+                  isHovered={hoveredIdx === i}
+                  onHover={() => setHoveredIdx(i)}
+                  onLeave={() => setHoveredIdx(null)}
+                />
+              </div>
             ))}
             {looped.length === 0 && (
               <p className="text-center text-muted-foreground text-sm py-10 w-full">
