@@ -1,5 +1,6 @@
 import { COMPANY_REFERENCES } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 interface CompanyReferencesProps {
   categories?: { name: string; clients: { name: string; logo: string }[] }[];
@@ -25,14 +26,18 @@ const LogoMarquee = ({ clients, direction }: { clients: { name: string; logo: st
 
 const CompanyReferences = ({ categories }: CompanyReferencesProps) => {
   const ref = useScrollReveal();
+  const { get } = useSiteSettings();
   const cats = categories || COMPANY_REFERENCES.categories;
+  const label = get("company_ref_label", COMPANY_REFERENCES.label);
+  const line1 = get("company_ref_title_line1", COMPANY_REFERENCES.titleLine1);
+  const line2 = get("company_ref_title_line2", COMPANY_REFERENCES.titleLine2);
 
   return (
     <section ref={ref} className="py-20 px-6">
       <div className="max-w-[1400px] mx-auto mb-10">
-        <p className="rv font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">{COMPANY_REFERENCES.label}</p>
+        <p className="rv font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">{label}</p>
         <h2 className="rv font-clash text-3xl md:text-4xl font-bold text-foreground">
-          {COMPANY_REFERENCES.titleLine1} <br /><span className="text-primary">{COMPANY_REFERENCES.titleLine2}</span>
+          {line1} <br /><span className="text-primary">{line2}</span>
         </h2>
       </div>
       <div className="max-w-[1400px] mx-auto space-y-2">
