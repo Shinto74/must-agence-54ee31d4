@@ -909,7 +909,7 @@ const FinalCta = () => {
             animate={{ x: ["-100%", "200%"] }}
             transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "linear" }}
           />
-          <span className="relative z-10">Contactez-nous</span>
+          <span className="relative z-10">{buttonLabel}</span>
           <ChevronRight size={16} className="relative z-10 group-hover:translate-x-1.5 transition-transform duration-300" />
         </motion.button>
       </div>
@@ -919,6 +919,7 @@ const FinalCta = () => {
 
 /* ═══ PAGE ═══ */
 const Entreprise = () => {
+  const { get } = useSiteSettings();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -936,12 +937,12 @@ const Entreprise = () => {
       <ReferencesSection />
       <FinalCta />
       <ContactSection
-        heading={ENTREPRISE_PAGE.contact.heading}
-        text={ENTREPRISE_PAGE.contact.text}
-        subtext={ENTREPRISE_PAGE.contact.subtext}
-        email={ENTREPRISE_PAGE.contact.email}
-        phone={SITE.contact.phone}
-        location={SITE.contact.location}
+        heading={get("contact_entreprise_heading", ENTREPRISE_PAGE.contact.heading)}
+        text={get("contact_entreprise_text", ENTREPRISE_PAGE.contact.text)}
+        subtext={get("contact_entreprise_subtext", ENTREPRISE_PAGE.contact.subtext)}
+        email={get("contact_email", ENTREPRISE_PAGE.contact.email)}
+        phone={get("contact_phone", SITE.contact.phone)}
+        location={get("contact_location", SITE.contact.location)}
         whatsappUrl={SITE.contact.whatsappUrl}
         formOptions={ENTREPRISE_PAGE.contact.formOptions}
       />
