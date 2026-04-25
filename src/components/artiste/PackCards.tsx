@@ -244,43 +244,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
   );
 };
 
-/* ─── CARTE DEVIS ─── */
-const DevisPersonnaliseCard = ({ onOpen }: { onOpen: () => void }) => (
-  <div
-    className="relative rounded-2xl p-6 md:p-8 border border-border bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-[0_0_30px_hsl(var(--neon)/0.12),0_0_60px_hsl(var(--neon)/0.06)] flex flex-col"
-    onMouseMove={(e) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      e.currentTarget.style.backgroundImage = `radial-gradient(circle at ${e.clientX - rect.left}px ${e.clientY - rect.top}px, hsl(73 100% 50% / 0.06), transparent 60%)`;
-    }}
-    onMouseLeave={(e) => { e.currentTarget.style.backgroundImage = "none"; }}
-  >
-    <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-mono uppercase tracking-wider">
-      Personnalisé
-    </span>
-    <h3 className="font-clash text-2xl font-bold text-foreground">Devis sur mesure</h3>
-    <p className="text-sm text-muted-foreground mt-2 mb-6 leading-relaxed">
-      On regarde votre stratégie, on identifie les besoins, on bâtit la solution sur mesure.
-    </p>
-    <div className="mb-6">
-      <span className="font-clash text-4xl font-bold text-primary">Sur devis</span>
-    </div>
-    <ul className="space-y-2.5 mb-6 flex-1">
-      {["Audit stratégique complet", "Plan 100% sur mesure", "Accompagnement dédié", "Résultats garantis", "Support prioritaire illimité", "Intégration des partenaires"].map((f, i) => (
-        <li key={i} className="flex items-start gap-2.5 text-sm text-foreground/90">
-          <Zap size={15} className="text-primary mt-0.5 shrink-0" />
-          {f}
-        </li>
-      ))}
-    </ul>
-    <TheArtistBonus text="1 an TheArtist offert" />
-    <p className="text-[11px] text-muted-foreground italic mb-6">Stratégie bâtie pour vos objectifs spécifiques</p>
-    <button onClick={onOpen}
-      className="block w-full text-center py-3 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-primary/40 hover:text-primary transition-all duration-300"
-    >
-      Obtenir un devis
-    </button>
-  </div>
-);
+/* ─── (DevisPersonnaliseCard supprimé : le pack "Devis sur mesure" est désormais 100% piloté par la BDD via le 4ème pack) ─── */
 
 /* ─── MODALE ─── */
 const QuoteModal = ({ steps, onClose }: { steps: any[]; onClose: () => void }) => (
