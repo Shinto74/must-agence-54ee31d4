@@ -1,7 +1,6 @@
 import SettingsBlock from "../SettingsBlock";
 import MarqueeEditor from "./editors/MarqueeEditor";
 import PacksEditor from "./editors/PacksEditor";
-import PackTooltipsEditor from "./editors/PackTooltipsEditor";
 import TheArtistFeaturesEditor from "./editors/TheArtistFeaturesEditor";
 import ClipPortugalEditor from "./editors/ClipPortugalEditor";
 import ArtistPillarsEditor from "./editors/ArtistPillarsEditor";
