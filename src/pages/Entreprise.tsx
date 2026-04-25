@@ -571,15 +571,19 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
 
           {/* Typography */}
           <div>
-            <p
+            <motion.p
+              key={r.name}
               className="font-clash font-bold text-[17px] md:text-[19px] tracking-[0.02em] mb-2 leading-tight"
               style={{
                 color: isHovered ? `hsl(${goldDark})` : "hsl(0 0% 12%)",
                 transition: "color 0.5s ease",
               }}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
               {r.name}
-            </p>
+            </motion.p>
             <p
               className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold"
               style={{
