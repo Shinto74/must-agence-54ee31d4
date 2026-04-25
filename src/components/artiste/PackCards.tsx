@@ -170,14 +170,13 @@ const PACK_PRICE_MAP: Record<string, string> = {
   "Pack 3": "explosion_once",
 };
 
-const PackCard = ({ pack, theartistText, onOpenQuote }: { pack: Pack; theartistText: string; onOpenQuote?: () => void }) => {
+const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; theartistText: string; onOpenQuote?: () => void; tooltips: Record<string, string> }) => {
   const navigate = useNavigate();
-  const packTooltips = TOOLTIPS[pack.number] || {};
 
   // Matching: trouve le tooltip dont la feature commence par la clé
   const getTooltip = (feature: string) => {
-    for (const key of Object.keys(packTooltips)) {
-      if (feature.startsWith(key)) return packTooltips[key];
+    for (const key of Object.keys(tooltips)) {
+      if (feature.startsWith(key)) return tooltips[key];
     }
     return undefined;
   };
