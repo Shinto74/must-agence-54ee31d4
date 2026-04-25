@@ -6,10 +6,6 @@ import { useSiteSettings } from "@/hooks/useSiteContent";
  * Page d'entrée (Gateway) — la VRAIE page d'accueil du site.
  * C'est l'écran scindé : "Pôle Artiste" à gauche / "Pôle Entreprise" à droite,
  * avec le logo central. Aucune autre section n'est rendue ici.
- *
- * Composants concernés : src/pages/GatewayPage.tsx
- * Ne PAS y mettre Vision, Équipe, Hero, Marquee, Références — ils n'apparaissent
- * que sur les pages /artiste et /entreprise.
  */
 export default function PageAccueilPanel() {
   const { get } = useSiteSettings();
@@ -23,15 +19,15 @@ export default function PageAccueilPanel() {
         <h2 className="font-clash text-2xl font-bold text-slate-900">Page d'entrée (Gateway)</h2>
         <p className="text-xs text-slate-500 mt-1">
           Écran d'accueil du site avec le choix entre Pôle Artiste et Pôle Entreprise.
-          Seuls les éléments visibles sur cet écran sont éditables ici.
         </p>
       </div>
 
       <SettingsBlock
-        title="Image de fond — Côté Pôle Artiste"
-        description="L'image qui s'affiche en fond du côté gauche (qui s'agrandit au survol)."
+        title="1. Côté Pôle Artiste — Textes & boutons"
+        description="Textes affichés à gauche (le côté qui s'agrandit au survol)."
         fields={[
-          { key: "gateway_image_artiste", label: "Image active", type: "image", imageFolder: "gateway" },
+          { key: "gateway_artiste_subtitle", label: "Sous-titre", placeholder: "Musique · Influence · Lancement" },
+          { key: "gateway_artiste_label", label: "Libellé du bouton", placeholder: "Je suis un Artiste" },
         ]}
       />
       <MediaGalleryEditor
@@ -41,17 +37,18 @@ export default function PageAccueilPanel() {
         mode="setting"
         settingKey="gateway_image_artiste"
         folder="gateway"
-        title="Galerie — Côté Pôle Artiste"
-        helper="Garde plusieurs visuels en réserve. Clique sur une vignette pour la définir comme image de fond."
+        title="Image de fond — Côté Pôle Artiste"
+        helper="Garde plusieurs visuels en réserve. Clique sur une vignette pour la définir comme image de fond active."
         aspect="landscape"
         invalidateKeys={[["site_settings"]]}
       />
 
       <SettingsBlock
-        title="Image de fond — Côté Pôle Entreprise"
-        description="L'image qui s'affiche en fond du côté droit."
+        title="2. Côté Pôle Entreprise — Textes & boutons"
+        description="Textes affichés à droite."
         fields={[
-          { key: "gateway_image_entreprise", label: "Image active", type: "image", imageFolder: "gateway" },
+          { key: "gateway_entreprise_subtitle", label: "Sous-titre", placeholder: "Branding · Stratégie · Croissance" },
+          { key: "gateway_entreprise_label", label: "Libellé du bouton", placeholder: "Je suis une Entreprise" },
         ]}
       />
       <MediaGalleryEditor
@@ -61,8 +58,8 @@ export default function PageAccueilPanel() {
         mode="setting"
         settingKey="gateway_image_entreprise"
         folder="gateway"
-        title="Galerie — Côté Pôle Entreprise"
-        helper="Garde plusieurs visuels en réserve. Clique sur une vignette pour la définir comme image de fond."
+        title="Image de fond — Côté Pôle Entreprise"
+        helper="Garde plusieurs visuels en réserve. Clique sur une vignette pour la définir comme image de fond active."
         aspect="landscape"
         invalidateKeys={[["site_settings"]]}
       />
