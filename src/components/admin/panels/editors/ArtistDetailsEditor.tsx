@@ -66,7 +66,7 @@ export default function ArtistDetailsEditor() {
 
   return (
     <div className="space-y-4">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5">
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <header className="mb-3">
           <h3 className="font-clash text-base font-bold text-slate-900">Fiches détaillées d'artistes</h3>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -74,20 +74,40 @@ export default function ArtistDetailsEditor() {
           </p>
         </header>
 
-        <label className="block text-[11px] font-mono text-slate-500 uppercase tracking-wider mb-1.5 font-medium">
-          Artiste ciblé
-        </label>
-        <select
-          value={activeArtistId}
-          onChange={(e) => setArtistId(e.target.value)}
-          className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm"
-        >
-          {artists.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.name}
-            </option>
-          ))}
-        </select>
+        <p className="text-[11px] font-mono text-slate-600 uppercase tracking-wider mb-2 font-semibold">
+          Artiste ciblé — cliquez pour éditer sa fiche
+        </p>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {artists.map((a, i) => {
+            const isActive = a.id === activeArtistId;
+            return (
+              <button
+                key={a.id}
+                type="button"
+                onClick={() => setArtistId(a.id)}
+                className={`text-left p-3 rounded-xl border-2 transition-all ${
+                  isActive
+                    ? "border-slate-900 bg-slate-50 shadow-md"
+                    : "border-slate-200 bg-white hover:border-slate-400 hover:bg-slate-50"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 shrink-0">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p className={`text-sm leading-snug truncate ${isActive ? "font-semibold text-slate-900" : "text-slate-700"}`}>
+                    {a.name}
+                  </p>
+                </div>
+                {isActive && (
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500 mt-1.5">
+                    En cours d'édition ↓
+                  </p>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </section>
 
       {activeArtistId && (

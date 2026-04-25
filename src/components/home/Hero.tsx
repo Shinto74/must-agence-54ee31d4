@@ -31,6 +31,7 @@ const Hero = () => {
   const heroSubtitle = get("hero_artiste_subtitle", "Agence d'influence spécialisée musique et marques.");
   const heroCtaPrimary = get("hero_artiste_cta_primary", SITE.hero.ctaPrimary);
   const heroCtaSecondary = get("hero_artiste_cta_secondary", SITE.hero.ctaSecondary);
+  const logoWhite = get("logo_white", "");
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -94,6 +95,23 @@ const Hero = () => {
 
         {/* CONTENT */}
         <div className="relative z-10 text-center w-full max-w-6xl mx-auto px-6">
+
+          {/* Logo MUST AGENCE en haut */}
+          {logoWhite && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="flex justify-center mb-6"
+            >
+              <img
+                src={logoWhite}
+                alt="MUST AGENCE"
+                className="h-14 md:h-20 w-auto"
+                style={{ filter: "drop-shadow(0 0 30px hsl(73 100% 50% / 0.25))" }}
+              />
+            </motion.div>
+          )}
 
           {/* Label tag */}
           <motion.div
