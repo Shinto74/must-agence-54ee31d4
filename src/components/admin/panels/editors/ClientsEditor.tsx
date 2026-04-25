@@ -1,4 +1,5 @@
 import TableEditor from "./TableEditor";
+import MediaGalleryEditor from "./MediaGalleryEditor";
 import { useAdminCrud } from "../../useAdminCrud";
 
 export default function ClientsEditor() {
@@ -28,7 +29,7 @@ export default function ClientsEditor() {
         initialRecord={{ name: "", logo_url: "", category_id: catOptions[0]?.value || "" }}
         fields={[
           { key: "name", label: "Nom" },
-          { key: "logo_url", label: "Logo", type: "image", imageFolder: "clients" },
+          { key: "logo_url", label: "Logo actif", type: "image", imageFolder: "clients" },
           { key: "category_id", label: "Catégorie", type: "select", options: catOptions },
           { key: "display_order", label: "Ordre", type: "number" },
         ]}
@@ -40,6 +41,21 @@ export default function ClientsEditor() {
               <span className="text-indigo-600 text-xs">{getCatName(item.category_id)}</span>
             </p>
           </div>
+        )}
+        renderExtra={(row) => (
+          <MediaGalleryEditor
+            ownerTable="clients"
+            ownerId={row.id}
+            currentUrl={row.logo_url || ""}
+            mode="row"
+            targetTable="clients"
+            targetColumn="logo_url"
+            folder="clients"
+            title="Variantes de logo"
+            helper="Garde plusieurs versions (couleur, N&B, monochrome…). Clique sur une vignette pour la définir comme logo affiché."
+            aspect="square"
+            invalidateKeys={[["admin_clients"], ["clients_with_categories"]]}
+          />
         )}
       />
     </div>

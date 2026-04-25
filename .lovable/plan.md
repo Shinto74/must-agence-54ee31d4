@@ -1,108 +1,77 @@
+## Contexte — ce que j'ai mal compris
 
-## Contexte / diagnostic
+Tu as raison sur tout. Vérifications faites dans le code :
 
-J'ai vérifié la base et le code, voici ce qui cloche réellement :
+1. **La "Page d'accueil" du site = `GatewayPage`** (split Pôle Artiste / Pôle Entreprise). Le composant `Index.tsx` qui contient Hero/Vision/Team/etc. **n'est jamais affiché** : la route `/` est interceptée par `GatewayPage` dans `App.tsx`. Mon panneau "Page d'accueil" éditait donc une page fantôme.
+2. **Vision** et **Équipe** ne sont visibles **que** sur `/artiste` (page utilisateur). À retirer complètement de la "page d'accueil" admin.
+3. **Clip Portugal** : l'icône emoji enregistrée en BDD est ignorée — le composant force un cercle SVG codé en dur (`defaultIcon`).
+4. **Vision** : le champ `vision_quote` (la phrase « Dans un monde de bruit… ») n'est pas exposé dans l'admin, donc impossible à éditer.
+5. **Galerie multi-images** : actuellement seulement sur Artistes — à généraliser à tous les visuels du site.
 
-1. **Vision manque dans l'admin Artiste** : le composant `<Vision />` est bien rendu sur la page Artiste (`src/pages/Artiste.tsx`) mais l'éditeur n'apparaît que dans "Sections partagées".
-2. **Doublon "Catégories d'artistes + Artistes"** : il existe **deux éditeurs différents** pour la même donnée :
-   - `ArtistesEditor` (dans Sections partagées) → version moderne TabbedEditor avec galerie multi-photos, mais sans champs KPI.
-   - `ArtistDetailsEditor` (dans Page Artiste) → uniquement les fiches détails (stratégie, description, plateformes, chiffre) avec une UX confuse : sélecteur d'artiste + liste de fiches (alors qu'on veut UNE fiche par artiste).
-3. **KPI vides** : confirmé en BDD — 9 artistes sur 18 n'ont **aucune ligne** dans `artist_details` (Pierre Garnier, Franglish, Héléna Bailly, Theodora, Jeck, RnBoi, Moral, Ofenbach, The Avener) et le champ `chiffre` est vide partout sauf un. C'est pour ça que rien ne s'affiche.
-4. **"Sections partagées" est un fourre-tout incorrect** : il contient `ClientsEditor` (utilisé seulement sur Accueil + Entreprise, pas Artiste) et `PortfolioEditor` qui n'a rien de partagé non plus.
-5. **Équipe** : `<Team />` est bien partagé Accueil + Artiste, donc l'éditeur peut rester dans "partagées" — mais il faut quand même qu'il soit accessible depuis Page Artiste pour ne pas que l'utilisateur se perde.
+---
 
-## Plan d'action
+## Plan
 
-### 1. Réorganisation des panneaux admin
+### 1. Refondre l'admin pour qu'il colle au site réel
 
-**Page Artiste** (réécriture de `PageArtistePanel.tsx`) — sections dans l'ordre exact du rendu :
-1. Hero
-2. Marquee artiste
-3. Piliers (en-tête + items)
-4. Références artistes — titres + **éditeur Artistes (TabbedEditor unifié)** ← déplacé depuis "partagées", supprime le doublon
-5. Packs
-6. TheArtist
-7. Clip Portugal
-8. **Vision** ← nouveau bloc ici
-9. **Équipe** ← nouveau bloc ici
-10. CtaBand
-11. Contact
+**Renommer "Page d'accueil" → "Page d'entrée (Gateway)"** et n'y mettre QUE ce qui est sur `GatewayPage` :
+- Image de fond Pôle Artiste (avec galerie multi-images, choix de l'active)
+- Image de fond Pôle Entreprise (idem)
+- Logo central (déjà géré dans Identité)
+- Textes des deux côtés (titres, sous-titres, libellés boutons)
+- Baseline du bas (« Influence · Musique · Marques »)
 
-**Page Accueil** (`PageAccueilPanel.tsx`) :
-- Ajouter blocs Vision, Équipe, Références artistes (lecture seule / lien vers la version maître), Catégories clients + Clients.
+**Supprimer du panneau Gateway** : Hero, Marquee, PolesGateway (ce composant n'est jamais rendu), Références, Vision, Équipe, CTA Band, Contact (ils n'existent pas sur cette page).
 
-**Page Entreprise** (`PageEntreprisePanel.tsx`) :
-- Ajouter Catégories clients + Clients (utilisés sur cette page aussi via le hero/refs).
+**Page Artiste** : conserver Vision + Équipe ici (et seulement ici), retirer les mentions « partagé avec accueil ».
 
-**Sections partagées** (`PartagePanel.tsx`) :
-- Renommer en "Référentiels globaux" pour clarifier.
-- Garder uniquement : Vision, Équipe, Artistes (catégories + fiches), Portfolio.
-- Retirer Clients (déplacé vers Accueil + Entreprise).
-- Note explicite : "modifier ici met à jour partout".
+**Page Entreprise** : nettoyer aussi (`ClientsEditor` actuellement dupliqué, à n'afficher que là où c'est pertinent).
 
-### 2. Fusion `ArtistesEditor` + `ArtistDetailsEditor` en UN seul éditeur
+### 2. Compléter la section Vision dans l'admin
 
-Refonte de `ArtistesEditor.tsx` (TabbedEditor) pour qu'**un onglet artiste affiche TOUT** dans une seule fiche :
-- Identité : nom, catégorie, position
-- **KPI / Fiche détaillée (inline, 1-1)** : titre stratégie, description, chiffre clé, plateformes (CSV)
-  - Auto-création de la ligne `artist_details` si elle n'existe pas (upsert sur `artist_id`).
-- Galerie photos (déjà présente)
+Ajouter dans le panneau Page Artiste, section "Notre Vision" :
+- `vision_kicker` (sur-titre — déjà là)
+- `vision_title_line1` + `vision_title_line2` (« L'influence est » / « une science. ») — actuellement absents
+- `vision_quote` (la citation manquante : « Dans un monde de bruit… ») — actuellement absent
+- `vision_text` (déjà là)
 
-Suppression de `ArtistDetailsEditor.tsx` (devenu inutile).
+### 3. Réparer les icônes Clip Portugal
 
-### 3. Seed des fiches manquantes
+Modifier `ClipPortugal.tsx` pour afficher l'icône du DB (emoji ou nom Lucide) au lieu du cercle SVG hardcodé. Si l'icône est un emoji court → l'afficher dans la pastille. Sinon → mapper vers une icône Lucide (Play, Map, Plane, Users, etc.). Garder un fallback élégant.
 
-Insertion en BDD des `artist_details` manquantes pour les 9 artistes sans fiche, avec valeurs par défaut éditables :
-- Stratégie générique cohérente avec leur catégorie
-- Description courte placeholder
-- `chiffre` vide (l'admin remplira)
-- `plateformes` génériques selon catégorie (Spotify/YouTube/TikTok pour urbain, etc.)
+### 4. Système universel de galerie multi-images
 
-### 4. UX : invisibilité du sélecteur "Artiste ciblé"
+Créer un composant `MediaGallery` réutilisable (basé sur le pattern `ArtistGalleryEditor` actuel) + table SQL générique, et l'appliquer à tous les contenus visuels :
 
-Déjà corrigé dans la version actuelle de `ArtistDetailsEditor` (cards). En fusionnant dans TabbedEditor, on bénéficie automatiquement de la visibilité tabs. Plus de problème de contraste.
+| Contenu | Champ image actuel |
+|---|---|
+| Artistes | `artists.image_url` ✅ déjà fait |
+| Clients (logos) | `clients.logo_url` |
+| Équipe (photos) | `team_members.image_url` |
+| Secteurs entreprise | `entreprise_sectors.image_url` |
+| Portfolio cases | (à vérifier) |
+| Hero Artiste (vidéo + poster) | `hero_artiste_video_url` |
+| Hero Entreprise (vidéo) | `hero_entreprise_video_url` |
+| Clip Portugal (vidéo + poster) | `clip_portugal_video_url`, `clip_portugal_poster` |
+| Gateway (images des deux pôles) | `gateway_image_artiste`, `gateway_image_entreprise` |
+| Logos identité (green / white) | `logo_green`, `logo_white` |
 
-## Détails techniques
+**Implémentation** : table `media_galleries(id, owner_table, owner_id, url, display_order, created_at)` + RLS, et un composant `<MediaGalleryEditor ownerTable="..." ownerId="..." activeUrl={...} onSelectActive={...} />` branché partout. Pour les `site_settings` (pas d'`owner_id`), on utilise la `key` comme owner_id virtuel.
 
-```text
-PageArtistePanel
-├── 1. Hero (settings)
-├── 2. Marquee
-├── 3. Piliers (settings + PillarItemsEditor)
-├── 4. Références artistes (settings + ArtistesEditor unifié)
-│        ArtistesEditor
-│        ├── TableEditor "Catégories d'artistes"
-│        └── TabbedEditor "Artistes" — un onglet par artiste
-│             ├── Bloc Identité (TabbedEditor existant)
-│             ├── Bloc Fiche détaillée (NOUVEAU, upsert artist_details)
-│             └── ArtistGalleryEditor (existant)
-├── 5. Packs (PacksEditor)
-├── 6. TheArtist
-├── 7. Clip Portugal
-├── 8. Vision (settings : vision_kicker, vision_title, vision_text)
-├── 9. Équipe (TeamEditor)
-├── 10. CTA
-└── 11. Contact
-```
+### 5. Ordre d'exécution
 
-**Migration de données** (pas de schéma) — INSERT seulement :
-```sql
-INSERT INTO artist_details (artist_id, strategie, description, chiffre, plateformes)
-SELECT a.id, 'Stratégie à définir', 'Description à compléter dans l''admin.', '', '{Spotify,YouTube}'
-FROM artists a
-WHERE NOT EXISTS (SELECT 1 FROM artist_details d WHERE d.artist_id = a.id);
-```
+1. Migration SQL : table `media_galleries` + seed (recopier les `image_url` actuels).
+2. Composant `MediaGalleryEditor` générique.
+3. Refonte `PageAccueilPanel` → `PageGatewayPanel` (renommage + nettoyage radical).
+4. Mise à jour `AdminLayout` (libellé "Page d'entrée").
+5. Compléter le bloc Vision dans `PageArtistePanel` (3 champs manquants).
+6. Mettre à jour `Vision.tsx` pour lire `vision_title_line1/2` séparés.
+7. Fix icônes `ClipPortugal.tsx` (lire le champ `icon` du DB).
+8. Brancher `MediaGalleryEditor` dans : `ClientsEditor`, `TeamEditor`, `SectorsEditor`, panneau Identité, panneau Gateway, panneaux Hero Artiste/Entreprise, section Clip Portugal.
 
-**Composant clé — sous-éditeur fiche inline** dans `ArtistesEditor` :
-```tsx
-function ArtistDetailsInline({ artistId }: { artistId: string }) {
-  const { data, refetch } = useQuery(...artist_details where artist_id);
-  const [draft, setDraft] = useState(data ?? defaultEmpty);
-  const save = () => supabase.from("artist_details").upsert({ artist_id: artistId, ...draft });
-  // formulaire inline avec Stratégie / Description / Chiffre / Plateformes
-}
-```
+---
 
-## Hors scope (déjà OK ou à traiter ensuite)
-- Logo Hero accueil → tu m'as confirmé "INCORRECT" à un tour précédent ; je le retraite après cette restructuration si tu reposes le problème (le code Hero pointe bien sur `logo_white` mais le rendu ne passe pas — sans doute un bug spécifique au composant Hero, à debugger isolément).
-- Loader initial : déjà branché sur `useSiteSettings`.
+## Questions de clarification
+
+- Pour les **logos clients** (souvent un seul logo par marque) : tu veux quand même la galerie multi-versions (utile pour A/B tester un logo couleur vs noir & blanc), ou un simple upload remplaçable suffit ?
+- Pour la **page d'entrée (Gateway)** : tu veux pouvoir éditer aussi les libellés des boutons (« Je suis un Artiste » / « Je suis une Entreprise ») et les sous-titres (« Musique · Influence · Lancement ») ? Ils sont actuellement codés en dur.

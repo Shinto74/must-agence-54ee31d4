@@ -27,10 +27,12 @@ interface Props {
   label: string; // singular noun for "Ajouter un X"
   orderBy?: string;
   idField?: string;
+  /** extra content rendered inside the editing form (e.g. media gallery for the row) */
+  renderExtra?: (row: any) => React.ReactNode;
 }
 
 export default function TableEditor({
-  table, title, description, fields, initialRecord, filter, renderItem, label, orderBy, idField,
+  table, title, description, fields, initialRecord, filter, renderItem, label, orderBy, idField, renderExtra,
 }: Props) {
   const crud = useAdminCrud(table, { orderBy, idField });
   const baseItems = filter ? (crud.data as any[]).filter(filter) : (crud.data as any[]);
@@ -84,6 +86,9 @@ export default function TableEditor({
               }}
             />
           ))}
+          {renderExtra && crud.editing && (crud.editing as any).id && (
+            <div className="mt-4 -mx-2">{renderExtra(crud.editing)}</div>
+          )}
         </AdminForm>
       )}
     </section>

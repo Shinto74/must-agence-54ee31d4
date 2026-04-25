@@ -56,8 +56,19 @@ const ClipPortugal = () => {
       <circle cx="12" cy="12" r="9" strokeLinecap="round" />
     </svg>
   );
+  // Affiche l'icône depuis le DB si présente (emoji court ou symbole), sinon le SVG fallback.
+  const renderIcon = (raw?: string) => {
+    const v = (raw || "").trim();
+    if (!v) return defaultIcon;
+    // emoji / texte court → on l'affiche tel quel, gros et lisible
+    if (v.length <= 4) {
+      return <span className="text-2xl leading-none" style={{ filter: "drop-shadow(0 0 6px hsl(73 100% 50% / 0.35))" }}>{v}</span>;
+    }
+    // sinon, on suppose une URL d'image
+    return <img src={v} alt="" className="w-6 h-6 object-contain" />;
+  };
   const features = (dbAdvantages && dbAdvantages.length > 0)
-    ? dbAdvantages.map((a: any) => ({ title: a.title, desc: a.description, icon: defaultIcon }))
+    ? dbAdvantages.map((a: any) => ({ title: a.title, desc: a.description, icon: renderIcon(a.icon) }))
     : [
         { title: "Décors exclusifs", desc: "Lisbonne, Algarve, Porto — des lieux uniques pour un visuel inédit", icon: defaultIcon },
         { title: "Production complète", desc: "Réalisation, montage, color grading et post-production inclus", icon: defaultIcon },

@@ -8,7 +8,7 @@ import ArtistesEditor from "./editors/ArtistesEditor";
 import TeamEditor from "./editors/TeamEditor";
 
 /**
- * Page Artiste — sections SPÉCIFIQUES uniquement, dans l'ordre EXACT du rendu :
+ * Page Artiste — sections affichées sur /artiste, dans l'ordre EXACT du rendu :
  *   1. Hero
  *   2. Marquee artiste
  *   3. Piliers (en-tête + items)
@@ -16,10 +16,13 @@ import TeamEditor from "./editors/TeamEditor";
  *   5. Packs
  *   6. TheArtist
  *   7. Clip Portugal
- *   8. Vision (partagé avec Accueil — modifier ici met à jour partout)
- *   9. Équipe (partagé avec Accueil — modifier ici met à jour partout)
+ *   8. Vision
+ *   9. Équipe
  *  10. CtaBand
  *  11. Contact
+ *
+ * Vision et Équipe sont SPÉCIFIQUES à cette page (ils ne sont pas affichés sur
+ * la page d'entrée Gateway, ni sur la page Entreprise).
  */
 export default function PageArtistePanel() {
   return (
@@ -109,17 +112,19 @@ export default function PageArtistePanel() {
 
       <SettingsBlock
         title="8. Notre Vision"
-        description="Bloc 'Notre vision' — partagé avec la page d'accueil. Modifier ici met à jour partout."
+        description="Bloc 'Notre vision' — uniquement affiché sur la page Artiste."
         fields={[
           { key: "vision_kicker", label: "Sur-titre", placeholder: "Notre vision" },
-          { key: "vision_title", label: "Titre", placeholder: "L'influence est une science." },
-          { key: "vision_text", label: "Texte", type: "textarea" },
+          { key: "vision_title_line1", label: "Titre — ligne 1", placeholder: "L'influence est" },
+          { key: "vision_title_line2", label: "Titre — ligne 2 (en accent vert)", placeholder: "une science." },
+          { key: "vision_quote", label: "Citation principale (entre guillemets)", type: "textarea", hint: "Ex : Dans un monde de bruit, nous créons le signal..." },
+          { key: "vision_text", label: "Texte sous la citation", type: "textarea" },
         ]}
       />
 
       <div>
         <p className="text-[11px] font-mono text-slate-500 uppercase tracking-wider mb-2 px-1">
-          9. Équipe (partagé avec Accueil)
+          9. Équipe (uniquement page Artiste)
         </p>
         <TeamEditor />
       </div>

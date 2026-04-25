@@ -1,119 +1,76 @@
 import SettingsBlock from "../SettingsBlock";
-import MarqueeEditor from "./editors/MarqueeEditor";
-import ArtistesEditor from "./editors/ArtistesEditor";
-import ClientsEditor from "./editors/ClientsEditor";
-import TeamEditor from "./editors/TeamEditor";
+import MediaGalleryEditor from "./editors/MediaGalleryEditor";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 /**
- * Page Accueil — sections affichées sur Index.tsx, dans l'ordre EXACT du rendu :
- *   1. Hero
- *   2. Marquee (home)
- *   3. PolesGateway (Artiste / Entreprise)
- *   4. ArtistReferences (titres + artistes)
- *   5. CompanyReferences (titres + clients)
- *   6. Vision
- *   7. Team
- *   8. CtaBand
- *   9. Contact
+ * Page d'entrée (Gateway) — la VRAIE page d'accueil du site.
+ * C'est l'écran scindé : "Pôle Artiste" à gauche / "Pôle Entreprise" à droite,
+ * avec le logo central. Aucune autre section n'est rendue ici.
  *
- * Vision, Équipe et Artistes sont partagés avec la page Artiste.
- * Clients sont partagés avec la page Entreprise.
+ * Composants concernés : src/pages/GatewayPage.tsx
+ * Ne PAS y mettre Vision, Équipe, Hero, Marquee, Références — ils n'apparaissent
+ * que sur les pages /artiste et /entreprise.
  */
 export default function PageAccueilPanel() {
+  const { get } = useSiteSettings();
+  const currentArtiste = get("gateway_image_artiste");
+  const currentEntreprise = get("gateway_image_entreprise");
+
   return (
     <div className="space-y-6 max-w-5xl">
       <div className="px-1">
         <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Site / Pages</p>
-        <h2 className="font-clash text-2xl font-bold text-slate-900">Page d'accueil</h2>
+        <h2 className="font-clash text-2xl font-bold text-slate-900">Page d'entrée (Gateway)</h2>
         <p className="text-xs text-slate-500 mt-1">
-          Toutes les sections affichées sur la page d'accueil sont éditables ici, dans l'ordre du rendu.
+          Écran d'accueil du site avec le choix entre Pôle Artiste et Pôle Entreprise.
+          Seuls les éléments visibles sur cet écran sont éditables ici.
         </p>
       </div>
 
       <SettingsBlock
-        title="1. Hero — Bannière d'accueil"
-        description="Premier écran visible par vos visiteurs"
+        title="Image de fond — Côté Pôle Artiste"
+        description="L'image qui s'affiche en fond du côté gauche (qui s'agrandit au survol)."
         fields={[
-          { key: "hero_home_badge", label: "Badge / Tag", placeholder: "MUST AGENCE" },
-          { key: "hero_home_title", label: "Titre principal", type: "textarea" },
-          { key: "hero_home_subtitle", label: "Sous-titre", type: "textarea" },
+          { key: "gateway_image_artiste", label: "Image active", type: "image", imageFolder: "gateway" },
         ]}
       />
-
-      <MarqueeEditor
-        page="home"
-        title="2. Bandeau défilant — Accueil"
-        description="Mots / logos qui défilent sous le hero de l'accueil"
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="gateway_image_artiste"
+        currentUrl={currentArtiste}
+        mode="setting"
+        settingKey="gateway_image_artiste"
+        folder="gateway"
+        title="Galerie — Côté Pôle Artiste"
+        helper="Garde plusieurs visuels en réserve. Clique sur une vignette pour la définir comme image de fond."
+        aspect="landscape"
+        invalidateKeys={[["site_settings"]]}
       />
 
       <SettingsBlock
-        title="3. Pôles Gateway — Cartes Artiste / Entreprise"
-        description="Section qui invite à choisir entre les deux pôles"
+        title="Image de fond — Côté Pôle Entreprise"
+        description="L'image qui s'affiche en fond du côté droit."
         fields={[
-          { key: "polesgateway_kicker", label: "Sur-titre", placeholder: "Nos univers" },
-          { key: "polesgateway_title", label: "Titre" },
-          { key: "polesgateway_subtitle", label: "Sous-titre", type: "textarea" },
+          { key: "gateway_image_entreprise", label: "Image active", type: "image", imageFolder: "gateway" },
         ]}
       />
-
-      <SettingsBlock
-        title="4. Références Artistes — Titres"
-        description="En-tête du carrousel des artistes sur la page d'accueil. (Les artistes eux-mêmes se gèrent depuis Page Artiste — partagé.)"
-        fields={[
-          { key: "artist_ref_label", label: "Sur-titre", placeholder: "Références Artistes" },
-          { key: "artist_ref_title_line1", label: "Titre — ligne 1", placeholder: "Ils nous ont fait confiance" },
-          { key: "artist_ref_title_line2", label: "Titre — ligne 2", placeholder: "pour leurs sorties" },
-        ]}
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="gateway_image_entreprise"
+        currentUrl={currentEntreprise}
+        mode="setting"
+        settingKey="gateway_image_entreprise"
+        folder="gateway"
+        title="Galerie — Côté Pôle Entreprise"
+        helper="Garde plusieurs visuels en réserve. Clique sur une vignette pour la définir comme image de fond."
+        aspect="landscape"
+        invalidateKeys={[["site_settings"]]}
       />
 
-      <SettingsBlock
-        title="5. Références Entreprises — Titres"
-        description="En-tête du carrousel des marques accompagnées."
-        fields={[
-          { key: "company_ref_label", label: "Sur-titre", placeholder: "Références Entreprises" },
-          { key: "company_ref_title_line1", label: "Titre — ligne 1", placeholder: "Ils nous accompagnent" },
-          { key: "company_ref_title_line2", label: "Titre — ligne 2", placeholder: "au quotidien" },
-        ]}
-      />
-
-      <ClientsEditor />
-
-      <SettingsBlock
-        title="6. Notre Vision"
-        description="Bloc 'Notre vision' — partagé avec la page Artiste. Modifier ici met à jour partout."
-        fields={[
-          { key: "vision_kicker", label: "Sur-titre", placeholder: "Notre vision" },
-          { key: "vision_title", label: "Titre" },
-          { key: "vision_text", label: "Texte", type: "textarea" },
-        ]}
-      />
-
-      <div>
-        <p className="text-[11px] font-mono text-slate-500 uppercase tracking-wider mb-2 px-1">
-          7. Équipe (partagé avec Page Artiste)
-        </p>
-        <TeamEditor />
+      <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4 text-xs text-amber-900">
+        <p className="font-semibold mb-1">Logo central</p>
+        <p>Le logo affiché au centre de la page d'entrée se gère depuis l'onglet <strong>Identité &amp; Logos</strong> (logos vert et blanc).</p>
       </div>
-
-      <SettingsBlock
-        title="8. CTA Band — Bannière finale"
-        description="Bandeau d'appel à l'action en bas de page"
-        fields={[
-          { key: "ctaband_home_title", label: "Titre" },
-          { key: "ctaband_home_subtitle", label: "Sous-titre" },
-          { key: "ctaband_home_button", label: "Texte du bouton" },
-        ]}
-      />
-
-      <SettingsBlock
-        title="9. Section Contact"
-        description="Spécifique à la page d'accueil. Coordonnées globales : voir Identité."
-        fields={[
-          { key: "contact_home_heading", label: "Titre" },
-          { key: "contact_home_text", label: "Phrase d'accroche" },
-          { key: "contact_home_subtext", label: "Sous-texte", type: "textarea" },
-        ]}
-      />
     </div>
   );
 }
