@@ -15,7 +15,14 @@ interface ArtistReferencesProps {
 const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
   const { get } = useSiteSettings();
   const { data: details = [] } = useArtistDetails();
-  const { data: rawArtists = [] } = useArtists();
+  const { data: rawArtists = [] } = useQuery({
+    queryKey: ["artists_raw"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("artists").select("id,name");
+      if (error) throw error;
+      return data || [];
+    },
+  });
 
   // Map: name -> details from BDD (lookup via artist_id from rawArtists)
   const detailsByName = useMemo(() => {
