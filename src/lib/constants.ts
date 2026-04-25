@@ -3,13 +3,14 @@
 // Fallback data before Supabase connection
 // ═══════════════════════════════════════
 
-const GH = "https://raw.githubusercontent.com/Shinto74/IMAGES/1ca68ce299df011d586098dc6c1a4202bd2d8dfb/must-agence";
+// Toutes les images sont stockées dans Supabase Storage et servies via la BDD.
+// Les valeurs ci-dessous sont des fallbacks vides — les composants lisent les vraies URL via site_settings.
 
 export const SITE = {
   name: "Must Agence",
   tagline: "Influence Agency",
-  logoWhite: `${GH}/logos/logo_blanc.png`,
-  logoGreen: `${GH}/logos/logo_vert.png`,
+  logoWhite: "",
+  logoGreen: "",
   hero: {
     label: "Must Agence",
     titleLine1: "On ne suit pas les tendances",
