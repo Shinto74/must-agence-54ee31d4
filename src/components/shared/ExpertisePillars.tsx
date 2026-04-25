@@ -1,10 +1,13 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface ExpertiseItem {
-  number: string;
+  number?: string;
   title: string;
   text: string;
 }
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
 
 interface ExpertisePillarsProps {
   items: ExpertiseItem[];
@@ -26,10 +29,10 @@ const ExpertisePillars = ({ items, accentColor }: ExpertisePillarsProps) => {
         </h2>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {items.map((item) => (
-            <div key={item.number} className="rv card-hover rounded-xl border border-border bg-surface p-6 md:p-8">
+          {items.map((item, i) => (
+            <div key={(item as any).id ?? i} className="rv card-hover rounded-xl border border-border bg-surface p-6 md:p-8">
               <span className={`font-mono text-xs ${isNeon ? "text-primary" : "text-foreground/50"}`}>
-                {item.number}.
+                {pad2(i + 1)}.
               </span>
               <h3 className="font-clash font-bold text-xl text-foreground mt-2 mb-3">{item.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>

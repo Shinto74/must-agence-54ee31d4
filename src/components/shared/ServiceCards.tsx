@@ -1,11 +1,14 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface Service {
-  number: string;
+  number?: string;
   title: string;
   description: string;
   chips: string[];
 }
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
 
 interface ServiceCardsProps {
   services: Service[];
@@ -27,13 +30,13 @@ const ServiceCards = ({ services, accentColor }: ServiceCardsProps) => {
         </h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((svc) => (
+          {services.map((svc, i) => (
             <div
-              key={svc.number}
+              key={(svc as any).id ?? i}
               className="rv card-hover rounded-xl border border-border bg-surface p-6"
             >
               <span className={`font-mono text-xs ${isNeon ? "text-primary" : "text-foreground/50"}`}>
-                {svc.number}.
+                {pad2(i + 1)}.
               </span>
               <h3 className="font-clash font-semibold text-foreground text-lg mt-2 mb-3">{svc.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">{svc.description}</p>
