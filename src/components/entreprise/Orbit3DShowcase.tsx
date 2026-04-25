@@ -10,6 +10,7 @@ interface OrbitCard {
 
 interface Orbit3DShowcaseProps {
   cards: OrbitCard[];
+  centerLogo?: string;
 }
 
 const ORBIT_RADIUS_X = 520; // ellipse width
@@ -18,7 +19,8 @@ const CARD_W = 280;
 const CARD_H = 360;
 const ROTATION_SPEED = -0.00022; // slow & premium, never stops
 
-const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
+const Orbit3DShowcase = ({ cards, centerLogo }: Orbit3DShowcaseProps) => {
+  const logoSrc = centerLogo || SITE.logoWhite;
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { amount: 0.3 });
   const [angle, setAngle] = useState(0);
@@ -108,12 +110,16 @@ const Orbit3DShowcase = ({ cards }: Orbit3DShowcaseProps) => {
             boxShadow: "0 0 60px hsl(43 55% 55% / 0.12), 0 0 120px hsl(43 55% 55% / 0.06), inset 0 0 30px hsl(0 0% 0% / 0.4)",
           }}
         >
-          <img
-            src={SITE.logoWhite}
-            alt="Must Agence"
-            className="h-14 w-auto"
-            style={{ filter: "brightness(2) drop-shadow(0 0 12px hsl(43 55% 55% / 0.5))" }}
-          />
+          {logoSrc ? (
+            <img
+              src={logoSrc}
+              alt="MUST AGENCE"
+              className="h-14 w-auto"
+              style={{ filter: "brightness(1.1) drop-shadow(0 0 12px hsl(43 55% 55% / 0.5))" }}
+            />
+          ) : (
+            <span className="font-clash text-3xl font-black text-white tracking-wider">M</span>
+          )}
         </div>
         <span
           className="mt-3 font-clash text-[10px] font-bold uppercase tracking-[0.35em]"
