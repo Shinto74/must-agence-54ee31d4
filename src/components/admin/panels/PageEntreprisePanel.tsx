@@ -1,15 +1,19 @@
 import SettingsBlock from "../SettingsBlock";
 import MarqueeEditor from "./editors/MarqueeEditor";
-import StatsEditor from "./editors/StatsEditor";
 import SectorsEditor from "./editors/SectorsEditor";
-import ServicesEntrepriseEditor from "./editors/ServicesEntrepriseEditor";
-import ExpertiseEntrepriseEditor from "./editors/ExpertiseEntrepriseEditor";
-import ProcessEntrepriseEditor from "./editors/ProcessEntrepriseEditor";
 
 /**
- * Page Entreprise — sections SPÉCIFIQUES.
- * Ordre réel : Hero (+stats hero) → Marquee (entreprise) → Sectors (Orbit3D) →
- *              Services3D → Expertise → Process → CtaBand → Contact
+ * Page Entreprise — sections SPÉCIFIQUES uniquement, dans l'ordre EXACT du rendu :
+ *   1. Hero (+ stats hero hardcodées dans 3 settings)
+ *   2. Marquee (entreprise)
+ *   3. Sectors (Orbit3D + grille mobile)
+ *   4. Services3DScroll (titre dans settings)
+ *   5. CtaBand
+ *   6. Contact
+ *
+ * NOTE : "Services Entreprise", "Expertise Entreprise", "Process Entreprise"
+ * et "Statistiques (page entreprise)" ont été retirés : ces tables ne sont pas
+ * rendues sur la page (la page utilise des composants 3D dédiés).
  */
 export default function PageEntreprisePanel() {
   return (
@@ -35,7 +39,7 @@ export default function PageEntreprisePanel() {
 
       <SettingsBlock
         title="1bis. Hero — Statistiques affichées"
-        description="Trois chiffres-clés sous le hero entreprise"
+        description="Trois chiffres-clés affichés sous le hero entreprise."
         fields={[
           { key: "hero_entreprise_stat1_value", label: "Stat 1 — valeur" },
           { key: "hero_entreprise_stat1_suffix", label: "Stat 1 — suffixe" },
@@ -65,14 +69,8 @@ export default function PageEntreprisePanel() {
       />
       <SectorsEditor />
 
-      <ServicesEntrepriseEditor />
-      <ExpertiseEntrepriseEditor />
-      <ProcessEntrepriseEditor />
-
-      <StatsEditor page="entreprise" title="Statistiques affichées sur la page Entreprise" />
-
       <SettingsBlock
-        title="CTA Band — Bannière finale"
+        title="4. CTA Band — Bannière finale"
         fields={[
           { key: "ctaband_entreprise_title", label: "Titre" },
           { key: "ctaband_entreprise_subtitle", label: "Sous-titre" },
@@ -81,7 +79,7 @@ export default function PageEntreprisePanel() {
       />
 
       <SettingsBlock
-        title="Section Contact (page Entreprise)"
+        title="5. Section Contact (page Entreprise)"
         fields={[
           { key: "contact_entreprise_heading", label: "Titre" },
           { key: "contact_entreprise_text", label: "Phrase d'accroche" },

@@ -1,11 +1,7 @@
 import SettingsBlock from "../SettingsBlock";
 import MarqueeEditor from "./editors/MarqueeEditor";
-import StatsEditor from "./editors/StatsEditor";
 import PacksEditor from "./editors/PacksEditor";
 import PackTooltipsEditor from "./editors/PackTooltipsEditor";
-import ServicesArtisteEditor from "./editors/ServicesArtisteEditor";
-import ExpertiseArtisteEditor from "./editors/ExpertiseArtisteEditor";
-import ProcessArtisteEditor from "./editors/ProcessArtisteEditor";
 import TheArtistFeaturesEditor from "./editors/TheArtistFeaturesEditor";
 import ClipPortugalEditor from "./editors/ClipPortugalEditor";
 import ArtistPillarsEditor from "./editors/ArtistPillarsEditor";
@@ -13,18 +9,22 @@ import PillarItemsEditor from "./editors/PillarItemsEditor";
 import ArtistDetailsEditor from "./editors/ArtistDetailsEditor";
 
 /**
- * Page Artiste — sections SPÉCIFIQUES uniquement.
- * Ordre réel d'apparition sur la page :
+ * Page Artiste — sections SPÉCIFIQUES uniquement, dans l'ordre EXACT du rendu :
  *   1. Hero
  *   2. Marquee (artiste)
- *   3. ArtisteServicesV4B (piliers split-screen)
+ *   3. ArtisteServicesV4B (5 piliers split-screen + leurs puces)
  *   4. Références Artistes (titres + carrousel + popup détails)
  *   5. Packs & Tarifs (+ infobulles)
  *   6. TheArtist
  *   7. Clip Portugal
  *   8. CtaBand
  *   9. Contact
- *  Vision, Équipe et Références (cards) → onglet Sections partagées.
+ *
+ * Vision, Équipe → onglet "Sections partagées".
+ *
+ * NOTE : Les anciennes sections "Services Artiste", "Expertise Artiste",
+ * "Process Artiste" et "Statistiques" ont été retirées : elles ne sont
+ * plus affichées sur la page (remplacées par les piliers split-screen).
  */
 export default function PageArtistePanel() {
   return (
@@ -59,8 +59,8 @@ export default function PageArtistePanel() {
       />
 
       <SettingsBlock
-        title="3. Section Services Artiste — En-tête"
-        description="Titres affichés au-dessus du bloc split-screen des 5 piliers."
+        title="3. Section Piliers — En-tête"
+        description="Titres affichés au-dessus du bloc split-screen des piliers."
         fields={[
           { key: "artiste_services_kicker", label: "Sur-titre", placeholder: "Notre méthode" },
           { key: "artiste_services_title_part1", label: "Titre — partie 1" },
@@ -71,12 +71,6 @@ export default function PageArtistePanel() {
 
       <ArtistPillarsEditor />
       <PillarItemsEditor />
-
-      <ServicesArtisteEditor />
-      <ExpertiseArtisteEditor />
-      <ProcessArtisteEditor />
-
-      <StatsEditor page="artiste" title="Statistiques affichées sur la page Artiste" />
 
       <SettingsBlock
         title="4. Références Artistes — Titres"
