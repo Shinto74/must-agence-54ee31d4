@@ -1,5 +1,6 @@
 import SettingsBlock from "../SettingsBlock";
 import MediaGalleryEditor from "./editors/MediaGalleryEditor";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 /**
  * Page d'entrée (Gateway) — la VRAIE page d'accueil du site.
@@ -11,6 +12,10 @@ import MediaGalleryEditor from "./editors/MediaGalleryEditor";
  * que sur les pages /artiste et /entreprise.
  */
 export default function PageAccueilPanel() {
+  const { get } = useSiteSettings();
+  const currentArtiste = get("gateway_image_artiste");
+  const currentEntreprise = get("gateway_image_entreprise");
+
   return (
     <div className="space-y-6 max-w-5xl">
       <div className="px-1">
@@ -32,14 +37,14 @@ export default function PageAccueilPanel() {
       <MediaGalleryEditor
         ownerTable="site_settings"
         ownerId="gateway_image_artiste"
-        currentUrl=""
+        currentUrl={currentArtiste}
         mode="setting"
         settingKey="gateway_image_artiste"
         folder="gateway"
         title="Galerie — Côté Pôle Artiste"
         helper="Garde plusieurs visuels en réserve. Clique sur une vignette pour la définir comme image de fond."
         aspect="landscape"
-        invalidateKeys={[["site_settings_all"], ["site_settings", "gateway_image_artiste"]]}
+        invalidateKeys={[["site_settings"]]}
       />
 
       <SettingsBlock
@@ -52,14 +57,14 @@ export default function PageAccueilPanel() {
       <MediaGalleryEditor
         ownerTable="site_settings"
         ownerId="gateway_image_entreprise"
-        currentUrl=""
+        currentUrl={currentEntreprise}
         mode="setting"
         settingKey="gateway_image_entreprise"
         folder="gateway"
         title="Galerie — Côté Pôle Entreprise"
         helper="Garde plusieurs visuels en réserve. Clique sur une vignette pour la définir comme image de fond."
         aspect="landscape"
-        invalidateKeys={[["site_settings_all"], ["site_settings", "gateway_image_entreprise"]]}
+        invalidateKeys={[["site_settings"]]}
       />
 
       <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4 text-xs text-amber-900">

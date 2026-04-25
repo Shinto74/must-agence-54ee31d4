@@ -37,7 +37,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Pages du site",
     items: [
-      { key: "page_accueil", label: "Page d'accueil", icon: Home },
+      { key: "page_accueil", label: "Page d'entrée", icon: Home },
       { key: "page_artiste", label: "Page Artiste", icon: Music },
       { key: "page_entreprise", label: "Page Entreprise", icon: Building2 },
     ],
