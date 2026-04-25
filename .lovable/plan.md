@@ -1,133 +1,129 @@
-## Objectif
-Refondre le CRM pour qu’il soit simple, logique et sans doublons, avec une organisation centrée sur les pages du site, et internaliser tous les contenus utilisés pour ne plus dépendre de liens externes.
+## Diagnostic — Pourquoi tout est cassé
 
-## Constats actuels
-- Le CRM mélange plusieurs logiques :
-  - édition par table métier (`Packs`, `Services`, `Équipe`, `Artistes`, `Clients`)
-  - édition par regroupement éditorial (`Contenu sections`)
-  - pseudo entrée globale (`Éditeur visuel`)
-- Une partie du contenu est éditable à plusieurs endroits.
-- Les `site_settings` servent de conteneur trop générique, ce qui produit une liste de paramètres difficile à comprendre.
-- Une partie des images, vidéos et logos repose encore sur des URLs externes ou sur des constantes locales.
-- L’organisation suit la technique, pas la logique métier d’édition.
+J'ai cartographié les bugs en 4 familles :
 
-## Plan proposé
+### 1. Logos invisibles (Gateway `/` + écran de chargement)
+- Les URLs sont **bien en BDD** (`logo_white`, `logo_green` → HTTP 200).
+- MAIS `GatewayPage.tsx` (page `/`) utilise `SITE.logoGreen` / `SITE.logoWhite` hardcodés à `""` dans `src/lib/constants.ts`.
+- Idem pour `InitialLoader.tsx`.
+- → Les composants n'ont jamais lu la BDD pour ces logos.
 
-### 1. Repenser la navigation admin par page
-Remplacer la sidebar actuelle par une structure simple :
-- Dashboard
-- Demandes
-- Paiements
-- Accueil
-- Page Artiste
-- Page Entreprise
-- Global / Identité
-- Paramètres techniques
+### 2. Pack "Devis sur mesure" hardcodé hors BDD
+- BDD = 3 packs uniquement (`L'Essentiel`, `L'Ascension`, `L'Explosion`).
+- Le 4ème (`DevisPersonnaliseCard`) est **hardcodé en dur** dans `PackCards.tsx` (titre, features, bonus, réassurance).
+- → L'admin ne le voit pas et ne peut pas l'éditer.
 
-Chaque onglet regroupera uniquement ce qui alimente réellement la page correspondante.
+### 3. Admin "à l'arrache" : mauvaise UX et champs cachés
+- Le pattern `TableEditor` = liste + bouton "Modifier" qui ouvre un formulaire flottant en bas. Sur des entités riches (packs, piliers, artistes) c'est confus : on voit les items mais on doit re-cliquer pour éditer.
+- Le `<select>` de `AdminField` (catégories d'artistes p.ex.) est blanc sur blanc → invisible.
+- Champs `featured` / "ciblé" / "recommandé" : checkbox standard non distincte.
+- Pas de feedback visuel sur l'item en cours d'édition.
 
-### 2. Fusionner l’édition en un seul point cohérent
-Supprimer le doublon entre `Éditeur visuel`, `Contenu sections`, `Packs`, `Services`, `Équipe`, `Artistes`, `Clients`.
+### 4. Galerie d'artistes : une seule image, pas de versioning
+- Table `artists` = 1 colonne `image_url`. Si on change l'image, l'ancienne est perdue.
+- Demande : pouvoir uploader plusieurs photos, choisir laquelle est active.
 
-Nouvelle logique :
-- `Accueil` : hero, vision, CTA, stats, équipe, pôles, portfolio, contact, marquee home
-- `Page Artiste` : hero, services, expertise, process, packs, TheArtist, Clip Portugal, artistes, marquee artiste
-- `Page Entreprise` : hero, secteurs, services, expertise, process, clients, marquee entreprise
-- `Global / Identité` : logos, nom de marque, footer, header, contacts, réseaux
-- `Paramètres techniques` : seulement ce qui ne relève pas du contenu marketing
+---
 
-### 3. Transformer les paramètres techniques en formulaires lisibles
-Au lieu d’exposer une liste brute de clés, afficher des sections métier avec labels clairs.
+## Plan d'action
 
-Exemples :
-- `Hero Entreprise`
-  - Badge
-  - Titre ligne 1
-  - Titre ligne 2
-  - Description
-  - CTA principal
-  - CTA secondaire
-  - Vidéo
-- `Identité`
-  - Logo blanc
-  - Logo vert
-  - Nom de marque
-  - Email
-  - Téléphone
+### Étape 1 — Fix immédiat des logos (GatewayPage + Loader)
 
-Les clés internes resteront masquées.
+**`src/pages/GatewayPage.tsx`** : remplacer `SITE.logoGreen` et `SITE.logoWhite` par `useSiteSettings().get("logo_green", "")` et `get("logo_white", "")`. Ajouter un fallback URL Supabase pour éviter le rendu vide pendant le chargement.
 
-### 4. Garder la base actuelle au départ, mais masquer sa complexité
-Dans un premier temps :
-- conserver les tables existantes
-- conserver `site_settings` pour les champs simples
-- réorganiser l’interface admin par page et par section
-- retirer les écrans redondants
+**`src/components/shared/InitialLoader.tsx`** : transformer en consommateur `useSiteSettings`. Si la BDD n'a pas encore répondu, afficher un placeholder neutre (le texte "MUST AGENCE" est déjà rendu en bas) plutôt qu'une `<img src="">` cassée.
 
-Dans un second temps, normaliser si certaines zones restent trop dispersées.
+### Étape 2 — Seed le Pack 4 en BDD + supprimer le hardcode
 
-### 5. Importer dans le backend tous les contenus dépendants de liens externes
-Ajouter un lot dédié pour supprimer la dépendance aux URLs externes.
+**Migration data** (via outil insert) :
+- INSERT dans `packs` : `name="Devis sur mesure"`, `subtitle`, `price="Sur devis"`, `price_suffix=""`, `featured=false`, `badge="Personnalisé"`, `bonus="1 an TheArtist offert"`, `reassurance`, `display_order=3`.
+- INSERT dans `pack_features` : les 7 features actuellement hardcodées (`Diagnostic Complet`, `Stratégie Propriétaire`, etc.).
 
-Travail prévu :
-- recenser tous les médias externes encore utilisés dans le front et dans les constantes
-- rapatrier ces fichiers dans le stockage du projet
-- remplacer les URLs externes par des URLs internes stockées dans la base
-- s’assurer que logos, images, vidéos et assets modifiables passent tous par le backend et le CRM
-- identifier ce qui doit vivre dans `site_settings` et ce qui doit rester dans des tables dédiées
+**`src/components/artiste/PackCards.tsx`** :
+- Supprimer le composant `DevisPersonnaliseCard` et son rendu spécial.
+- Tous les packs sont rendus uniformément via `PackCard`.
+- Détection "Pack devis" = `pack.price === "Sur devis"` → bouton "Obtenir un devis" + ouverture modale.
+- Mettre `theartistTexts` en BDD plus tard (out of scope ici, ou via colonne dédiée sur `packs`). Pour l'instant garder la lecture par index.
 
-Objectif :
-- plus de dépendance GitHub/CDN externe pour les contenus métier du site
-- tous les médias importants modifiables depuis le CRM
-- le site reste fonctionnel même si les liens externes disparaissent
+### Étape 3 — Refonte UX du panneau Admin (le gros chantier)
 
-### 6. Sécuriser le mapping “CRM -> site”
-Pour chaque écran admin, vérifier précisément :
-- quels composants front lisent quelles données
-- quels champs sont encore hardcodés
-- quels contenus sont en double
-- quels formulaires admin modifient vraiment le rendu du site
-- quels médias sont encore locaux ou externes au lieu d’être pilotés par la base
+#### 3.1 Composant `AdminField` — Visibilité
+- `select` : ajouter `bg-white` explicite + `text-slate-900` + bordure plus visible. Le select natif a un fond système qui peut être blanc/transparent selon l'OS — forcer les styles.
+- Checkbox "featured" : remplacer par un toggle visuel (switch) avec label clair "⭐ Mis en avant" coloré quand actif.
 
-Livrable attendu : une cartographie propre entre chaque bloc du CRM, la source de données et la section réelle du site.
+#### 3.2 Nouveau composant `TabbedEditor` (remplace `TableEditor` pour packs/piliers/artistes)
+Au lieu de "liste + form flottant", on a :
+- **Header** : grille de cartes-onglets (une par item) montrant `01 — Nom`, état actif visible.
+- **Body** : formulaire d'édition **toujours ouvert** sur l'item sélectionné, plus son sous-contenu (features pour pack, items left/right pour pillar, fiche détails pour artiste).
+- **Actions** : bouton "Ajouter un nouveau" en haut à droite, bouton "Supprimer cet item" rouge en bas du form.
 
-### 7. Simplifier l’expérience d’édition
-Dans chaque page admin :
-- sections repliables
-- aperçu clair quand utile
-- boutons Ajouter / Modifier / Supprimer cohérents
-- upload direct dans le stockage du projet
-- intitulés français clairs
-- suppression des écrans techniques inutiles
+Cas d'usage :
+- `PacksEditor` : tab par pack, dans le tab → champs du pack + sous-éditeur `pack_features` + sous-éditeur `pack_tooltips`.
+- Pillars : tab par pilier, dans le tab → champs + sous-éditeurs left/right items (existant `PillarItemsEditor` à fusionner).
+- Artistes : tab par artiste, dans le tab → champs + galerie + sous-éditeur `artist_details`.
 
-### 8. Audit final après refonte
-À la fin, produire un audit clair avec :
-- ce qui est modifiable depuis le CRM
-- ce qui est désormais internalisé dans la base et le stockage
-- ce qui est encore hardcodé
-- ce qui est encore local/externe
-- ce qui est relié en direct au site
-- ce qui reste à faire pour rendre le back-office totalement pilotable
+#### 3.3 Audit global "couleurs invisibles"
+Passer en revue tous les éditeurs (`SectorsEditor`, `ClientsEditor`, `StatsEditor`, `PortfolioEditor`, etc.) pour vérifier :
+- Aucun texte blanc sur fond blanc.
+- Tous les `select` lisibles.
+- Tous les states "actif/sélectionné" ont un contraste fort.
 
-## Résultat attendu
-Un CRM beaucoup plus simple à comprendre :
-- on édite une page depuis l’onglet de cette page
-- on ne voit plus plusieurs fois le même contenu
-- les réglages techniques sont séparés du contenu marketing
-- les textes, listes, images, logos et vidéos importants sont modifiables depuis un seul endroit logique
-- le site ne dépend plus de liens externes pour ses contenus métier
+### Étape 4 — Galerie multi-images pour artistes
 
-## Détails techniques
-- Réorganiser `src/components/admin/AdminLayout.tsx` pour une navigation par page.
-- Remplacer ou refondre `VisualEditorPanel` et `ContentSectionsPanel` pour produire des panels orientés page.
-- Réutiliser `useAdminCrud` et les tables existantes (`artists`, `clients`, `packs`, `services_*`, `site_settings`, `marquee_items`, `entreprise_sectors`, etc.) sans exposer leur structure technique dans l’UI.
-- Ajouter une couche de configuration UI côté admin pour grouper les champs par page/section.
-- Auditer les composants front qui consomment encore des constantes, des assets locaux ou des liens externes.
-- Rapatrier les médias externes vers le stockage du projet, puis mettre à jour les données pour qu’elles pointent vers des URLs internes.
-- Prévoir, si nécessaire, de nouveaux champs de données uniquement quand ils servent réellement l’édition et évitent des hacks dans `site_settings`.
+**Migration BDD** :
+```sql
+CREATE TABLE artist_images (
+  id uuid PK,
+  artist_id uuid NOT NULL,
+  url text NOT NULL,
+  display_order integer DEFAULT 0,
+  created_at timestamptz DEFAULT now()
+);
+-- RLS : public read, admin CRUD (mêmes patterns que les autres tables)
+```
 
-## Recommandation d’exécution
-Je recommande 3 étapes :
-1. Refonte complète du CRM par page et suppression des doublons visuels.
-2. Internalisation de tous les médias et contenus encore dépendants de sources externes.
-3. Audit final de raccordement pour lister ce qui reste hardcodé et ce qui doit encore être branché.
+Le champ `artists.image_url` reste comme **pointeur vers l'image active** (URL réelle, pas un FK — pour rester compatible avec le frontend existant).
+
+**Nouveau composant `ArtistGalleryEditor`** dans le tab Artiste :
+- Grille de vignettes (toutes les images de la galerie).
+- Une vignette est marquée "Active" (bordure néon) = celle dont l'URL est dans `artists.image_url`.
+- Click sur une vignette = définit cette URL comme active dans `artists.image_url`.
+- Bouton "Ajouter image" = upload vers `artist_images`.
+- Bouton "Supprimer" sur chaque vignette (avec confirmation, et si c'est l'active, en sélectionner une autre auto).
+
+**Seed** : pour chaque artiste existant, copier `artists.image_url` actuelle dans `artist_images` comme première entrée.
+
+### Étape 5 — Cleanup constants
+
+Vider `src/lib/constants.ts` des fallbacks devenus inutiles maintenant que la BDD est seedée et stable. Garder uniquement le strict minimum (textes par défaut courts qui évitent un "blanc" pendant le premier chargement).
+
+---
+
+## Récap fichiers touchés
+
+**Créés** :
+- `src/components/admin/panels/editors/TabbedEditor.tsx` (composant générique)
+- `src/components/admin/panels/editors/ArtistGalleryEditor.tsx`
+- Migration SQL pour `artist_images` + RLS
+- Insert SQL pour seed Pack 4 et galerie artistes
+
+**Modifiés** :
+- `src/pages/GatewayPage.tsx` (logos via BDD)
+- `src/components/shared/InitialLoader.tsx` (logos via BDD)
+- `src/components/artiste/PackCards.tsx` (supprimer DevisPersonnaliseCard)
+- `src/components/admin/AdminField.tsx` (select + switch)
+- `src/components/admin/panels/editors/PacksEditor.tsx` (utilise TabbedEditor)
+- `src/components/admin/panels/editors/PillarItemsEditor.tsx` (intégré dans TabbedEditor pillars)
+- `src/components/admin/panels/editors/ArtistDetailsEditor.tsx` (intégré dans TabbedEditor artistes)
+- `src/components/admin/panels/editors/ArtistesEditor.tsx` (utilise TabbedEditor + galerie)
+- `src/components/admin/panels/PageArtistePanel.tsx` (réorganisation)
+- `src/lib/constants.ts` (cleanup)
+
+---
+
+## Notes d'implémentation
+
+- Pas de régression frontend : la page Artiste continue de lire `artists.image_url` comme avant.
+- Le Pack 4 sera désormais 100% éditable dans l'admin (titre, features, prix, badge).
+- L'audit "couleurs invisibles" sera fait sur **tous** les éditeurs admin, pas seulement ceux cités.
+- Estimation : ~10-12 fichiers modifiés, 2 migrations BDD (1 schéma `artist_images`, 1 data Pack 4 + seed gallery).
