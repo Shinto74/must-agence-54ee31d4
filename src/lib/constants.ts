@@ -3,13 +3,14 @@
 // Fallback data before Supabase connection
 // ═══════════════════════════════════════
 
-const GH = "https://raw.githubusercontent.com/Shinto74/IMAGES/1ca68ce299df011d586098dc6c1a4202bd2d8dfb/must-agence";
+// Toutes les images sont stockées dans Supabase Storage et servies via la BDD.
+// Les valeurs ci-dessous sont des fallbacks vides — les composants lisent les vraies URL via site_settings.
 
 export const SITE = {
   name: "Must Agence",
   tagline: "Influence Agency",
-  logoWhite: `${GH}/logos/logo_blanc.png`,
-  logoGreen: `${GH}/logos/logo_vert.png`,
+  logoWhite: "",
+  logoGreen: "",
   hero: {
     label: "Must Agence",
     titleLine1: "On ne suit pas les tendances",
@@ -65,35 +66,35 @@ export const ARTIST_REFERENCES = {
     {
       name: "Urbain", slug: "urbain",
       artists: [
-        { name: "Zola", image: `${GH}/artistes/zola.jpg` },
-        { name: "Vegedream", image: `${GH}/artistes/vegedream.jpg` },
-        { name: "Franglish", image: `${GH}/artistes/franglish.jpg` },
-        { name: "Keblack", image: `${GH}/artistes/keblack.jpg` },
-        { name: "Ridsa", image: `${GH}/artistes/ridsa.jpg` },
-        { name: "Uzi", image: `${GH}/artistes/uzi.jpg` },
-        { name: "Bouss", image: `${GH}/artistes/bouss.jpg` },
+        { name: "Zola", image: "" },
+        { name: "Vegedream", image: "" },
+        { name: "Franglish", image: "" },
+        { name: "Keblack", image: "" },
+        { name: "Ridsa", image: "" },
+        { name: "Uzi", image: "" },
+        { name: "Bouss", image: "" },
       ],
     },
     {
       name: "Pop / Variété", slug: "pop",
       artists: [
-        { name: "Santa", image: `${GH}/artistes/santa.jpg` },
-        { name: "Pierre Garnier", image: `${GH}/artistes/pierre-garnier.jpg` },
-        { name: "Héléna Bailly", image: `${GH}/artistes/helena-bailly.jpg` },
-        { name: "Jeck", image: `${GH}/artistes/jeck.jpg` },
+        { name: "Santa", image: "" },
+        { name: "Pierre Garnier", image: "" },
+        { name: "Héléna Bailly", image: "" },
+        { name: "Jeck", image: "" },
       ],
     },
     {
       name: "Électro / International", slug: "electro",
       artists: [
-        { name: "Diamond Platnumz", image: `${GH}/artistes/diamond-platnumz.jpeg` },
-        { name: "Beéle", image: `${GH}/artistes/beele.jpg` },
-        { name: "Benny Adam", image: `${GH}/artistes/benny-adam.jpg` },
-        { name: "Theodora", image: `${GH}/artistes/theodora.jfif` },
-        { name: "RnBoi", image: `${GH}/artistes/rnboi.jpg` },
-        { name: "Moral", image: `${GH}/artistes/moral.jfif` },
-        { name: "Ofenbach", image: `${GH}/artistes/ofenbach.jfif` },
-        { name: "The Avener", image: `${GH}/artistes/the-avener.jfif` },
+        { name: "Diamond Platnumz", image: "" },
+        { name: "Beéle", image: "" },
+        { name: "Benny Adam", image: "" },
+        { name: "Theodora", image: "" },
+        { name: "RnBoi", image: "" },
+        { name: "Moral", image: "" },
+        { name: "Ofenbach", image: "" },
+        { name: "The Avener", image: "" },
       ],
     },
   ],
@@ -161,36 +162,36 @@ export const COMPANY_REFERENCES = {
     {
       name: "Hôtellerie & Luxe",
       clients: [
-        { name: "Novotel", logo: `${GH}/clients/novotel.webp` },
-        { name: "Hilton", logo: `${GH}/clients/hilton.webp` },
-        { name: "Jean Claude Biguine", logo: `${GH}/clients/jean-claude-biguine.png` },
+        { name: "Novotel", logo: "" },
+        { name: "Hilton", logo: "" },
+        { name: "Jean Claude Biguine", logo: "" },
       ],
     },
     {
       name: "Lifestyle & Sport",
       clients: [
-        { name: "Fitness Park", logo: `${GH}/clients/fitness-park.webp` },
-        { name: "Basic-Fit", logo: `${GH}/clients/basic-fit.webp` },
-        { name: "JD Sports", logo: `${GH}/clients/jd-sports.webp` },
+        { name: "Fitness Park", logo: "" },
+        { name: "Basic-Fit", logo: "" },
+        { name: "JD Sports", logo: "" },
       ],
     },
     {
       name: "Habitat & Services",
       clients: [
-        { name: "Leroy Merlin", logo: `${GH}/clients/leroy-merlin.webp` },
-        { name: "Point P", logo: `${GH}/clients/point-p.webp` },
-        { name: "Leclerc", logo: `${GH}/clients/leclerc.webp` },
-        { name: "Norauto", logo: `${GH}/clients/norauto.webp` },
+        { name: "Leroy Merlin", logo: "" },
+        { name: "Point P", logo: "" },
+        { name: "Leclerc", logo: "" },
+        { name: "Norauto", logo: "" },
       ],
     },
     {
       name: "Food & Restauration",
       clients: [
-        { name: "Les Grands Buffets", logo: `${GH}/clients/grands-buffets-narbonne.jpg` },
-        { name: "Big Fernand", logo: `${GH}/clients/big-fernand.webp` },
-        { name: "Five Guys", logo: `${GH}/clients/five-guys.webp` },
-        { name: "Le Pain Quotidien", logo: `${GH}/clients/le-pain-quotidien.webp` },
-        { name: "Columbus Café & Co", logo: `${GH}/clients/columbus-cafe.webp` },
+        { name: "Les Grands Buffets", logo: "" },
+        { name: "Big Fernand", logo: "" },
+        { name: "Five Guys", logo: "" },
+        { name: "Le Pain Quotidien", logo: "" },
+        { name: "Columbus Café & Co", logo: "" },
       ],
     },
   ],
@@ -303,7 +304,7 @@ export const ARTISTE_PAGE = {
     { name: "TIKTOK", logoUrl: "https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" },
     { name: "YOUTUBE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" },
     { name: "UNIVERSAL MUSIC", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg" },
-    { name: "THE ARTIST", logoUrl: "https://raw.githubusercontent.com/Shinto74/IMAGES/5cd68f68ab87bf75e69b4962ee444f69d4620d7f/theartist.png", label: "THEARTIST" },
+    { name: "THE ARTIST", logoUrl: "https://syibbaomaexmubbypjyg.supabase.co/storage/v1/object/public/site-assets/marquee/theartist.png", label: "THEARTIST" },
   ],
   ctaBand: {
     title: "Prêt à propulser votre carrière ?",
