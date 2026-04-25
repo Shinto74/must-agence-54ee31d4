@@ -112,7 +112,7 @@ export function usePacks() {
         bonus: p.bonus, reassurance: p.reassurance,
       }));
     },
-    placeholderData: PACKS,
+    placeholderData: PACKS.map((p) => ({ ...p, id: "" })),
   });
 }
 
