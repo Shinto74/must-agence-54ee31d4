@@ -605,7 +605,33 @@ const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
 
 const ReferencesSection = () => {
   const ref = useScrollReveal();
+  const { get } = useSiteSettings();
+  const { data: dbCategories = [] } = useClientsWithCategories();
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [activeCatId, setActiveCatId] = useState<string | "all">("all");
+
+  // Fallback statique si la BDD n'a rien
+  const fallbackCategories = [
+    { id: "fallback", name: "Références", clients: REFERENCES.map((r) => ({ id: r.name, name: r.name, logo_url: r.logo, category_id: "fallback", subtitle: r.subtitle })) },
+  ];
+  const categories = (dbCategories.length > 0 ? dbCategories : fallbackCategories) as any[];
+
+  // Sélection des clients à afficher
+  const displayedClients = activeCatId === "all"
+    ? categories.flatMap((c: any) => c.clients.map((cl: any) => ({ ...cl, _catName: c.name })))
+    : (categories.find((c: any) => c.id === activeCatId)?.clients || []).map((cl: any) => ({ ...cl, _catName: categories.find((c: any) => c.id === activeCatId)?.name }));
+
+  // Doubler pour effet de défilement infini visuel
+  const looped = displayedClients.length > 0
+    ? [...displayedClients, ...displayedClients]
+    : [];
+
+  const kicker = get("entreprise_ref_kicker", "Références");
+  const titlePart1 = get("entreprise_ref_title_part1", "Ils nous font");
+  const titleAccent = get("entreprise_ref_title_accent", "confiance");
+  const subtitle = get("entreprise_ref_subtitle", "Des marques ambitieuses qui ont choisi l'excellence.");
+  const footerNote = get("entreprise_ref_footer_note", "+ de 150 projets réalisés avec succès");
+
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.3), transparent)" }} />
@@ -614,7 +640,7 @@ const ReferencesSection = () => {
         style={{ background: "radial-gradient(ellipse, hsl(43 55% 55% / 0.05) 0%, transparent 60%)" }} />
 
       <div className="max-w-[1400px] mx-auto">
-        <motion.div className="rv text-center mb-20">
+        <motion.div className="rv text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <motion.div
               className="w-12 h-[1.5px]"
@@ -632,7 +658,7 @@ const ReferencesSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              Références
+              {kicker}
             </motion.span>
             <motion.div
               className="w-12 h-[1.5px]"
@@ -650,7 +676,7 @@ const ReferencesSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
-            Ils nous font <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.3)" }}>confiance</span>
+            {titlePart1} <span style={{ color: "hsl(43 55% 55%)", textShadow: "0 0 40px hsl(43 55% 55% / 0.3)" }}>{titleAccent}</span>
           </motion.h2>
           <motion.p
             className="text-muted-foreground text-sm max-w-md mx-auto"
@@ -659,25 +685,79 @@ const ReferencesSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            Des marques ambitieuses qui ont choisi l'excellence.
+            {subtitle}
           </motion.p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
-          {REFERENCES.map((r, i) => (
-            <ReferenceCard
-              key={r.name} r={r} index={i}
-              anyHovered={hoveredIdx !== null}
-              isHovered={hoveredIdx === i}
-              onHover={() => setHoveredIdx(i)}
-              onLeave={() => setHoveredIdx(null)}
-            />
-          ))}
+        {/* Filtres par catégorie */}
+        {categories.length > 1 && (
+          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-10">
+            <button
+              type="button"
+              onClick={() => setActiveCatId("all")}
+              className="px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.18em] transition-all duration-300"
+              style={{
+                background: activeCatId === "all" ? "hsl(43 55% 55%)" : "hsl(0 0% 0% / 0.04)",
+                color: activeCatId === "all" ? "#fff" : "hsl(0 0% 25%)",
+                border: `1px solid ${activeCatId === "all" ? "hsl(43 55% 55%)" : "hsl(0 0% 0% / 0.08)"}`,
+              }}
+            >
+              Toutes
+            </button>
+            {categories.map((c: any) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => setActiveCatId(c.id)}
+                className="px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.18em] transition-all duration-300"
+                style={{
+                  background: activeCatId === c.id ? "hsl(43 55% 55%)" : "hsl(0 0% 0% / 0.04)",
+                  color: activeCatId === c.id ? "#fff" : "hsl(0 0% 25%)",
+                  border: `1px solid ${activeCatId === c.id ? "hsl(43 55% 55%)" : "hsl(0 0% 0% / 0.08)"}`,
+                }}
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Carrousel défilant infini */}
+        <div className="relative overflow-hidden" style={{
+          maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+          WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+        }}>
+          <div
+            className="flex gap-6 md:gap-8 animate-mq"
+            style={{ width: "max-content", animationDuration: `${Math.max(20, looped.length * 4)}s` }}
+          >
+            {looped.map((cl: any, i: number) => (
+              <ReferenceCard
+                key={`${cl.id}-${i}`}
+                r={{
+                  name: cl.name,
+                  subtitle: cl._catName || "",
+                  initial: cl.name?.slice(0, 2)?.toUpperCase() || "??",
+                  logo: cl.logo_url || "",
+                }}
+                index={i}
+                anyHovered={hoveredIdx !== null}
+                isHovered={hoveredIdx === i}
+                onHover={() => setHoveredIdx(i)}
+                onLeave={() => setHoveredIdx(null)}
+              />
+            ))}
+            {looped.length === 0 && (
+              <p className="text-center text-muted-foreground text-sm py-10 w-full">
+                Aucun client dans cette catégorie pour le moment.
+              </p>
+            )}
+          </div>
         </div>
 
         <motion.div {...fadeUp(0.4)} className="rv mt-16 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40">
-            + de 150 projets réalisés avec succès
+            {footerNote}
           </p>
         </motion.div>
       </div>
