@@ -80,3 +80,25 @@ export function useClipPortugalAdvantages() {
     },
   });
 }
+
+/* ─── Clients (with categories) for entreprise references ─── */
+export function useClientsWithCategories() {
+  return useQuery({
+    queryKey: ["clients_with_categories"],
+    queryFn: async () => {
+      const [catsRes, clientsRes] = await Promise.all([
+        supabase.from("client_categories").select("*").order("display_order"),
+        supabase.from("clients").select("*").order("display_order"),
+      ]);
+      if (catsRes.error) throw catsRes.error;
+      if (clientsRes.error) throw clientsRes.error;
+      const cats = catsRes.data || [];
+      const clients = clientsRes.data || [];
+      return cats.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        clients: clients.filter((cl: any) => cl.category_id === c.id),
+      }));
+    },
+  });
+}
