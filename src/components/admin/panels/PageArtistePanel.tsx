@@ -1,10 +1,9 @@
 import SettingsBlock from "../SettingsBlock";
 import MarqueeEditor from "./editors/MarqueeEditor";
 import PacksEditor from "./editors/PacksEditor";
-import PackTooltipsEditor from "./editors/PackTooltipsEditor";
 import TheArtistFeaturesEditor from "./editors/TheArtistFeaturesEditor";
 import ClipPortugalEditor from "./editors/ClipPortugalEditor";
-import ArtistPillarsEditor from "./editors/ArtistPillarsEditor";
+
 import PillarItemsEditor from "./editors/PillarItemsEditor";
 import ArtistDetailsEditor from "./editors/ArtistDetailsEditor";
 
@@ -69,7 +68,6 @@ export default function PageArtistePanel() {
         ]}
       />
 
-      <ArtistPillarsEditor />
       <PillarItemsEditor />
 
       <SettingsBlock
@@ -85,7 +83,6 @@ export default function PageArtistePanel() {
       <ArtistDetailsEditor />
 
       <PacksEditor />
-      <PackTooltipsEditor />
 
       <SettingsBlock
         title="6. TheArtist — Bloc partenaire"

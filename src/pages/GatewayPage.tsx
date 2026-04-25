@@ -9,11 +9,15 @@ type Side = "artiste" | "entreprise" | null;
 
 const DEFAULT_IMG_ARTISTE = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&q=80";
 const DEFAULT_IMG_ENTREPRISE = "https://images.unsplash.com/photo-1637137467932-844c5736adc3?w=1400&q=80";
+const DEFAULT_LOGO_GREEN = "https://syibbaomaexmubbypjyg.supabase.co/storage/v1/object/public/site-assets/settings/logo_green-1777063585519.png";
+const DEFAULT_LOGO_WHITE = "https://syibbaomaexmubbypjyg.supabase.co/storage/v1/object/public/site-assets/settings/logo_white-1777063584906.png";
 
 const GatewayPage = () => {
   const { get } = useSiteSettings();
   const IMG_ARTISTE = get("gateway_image_artiste", DEFAULT_IMG_ARTISTE);
   const IMG_ENTREPRISE = get("gateway_image_entreprise", DEFAULT_IMG_ENTREPRISE);
+  const logoGreen = get("logo_green", DEFAULT_LOGO_GREEN);
+  const logoWhite = get("logo_white", DEFAULT_LOGO_WHITE);
   const [hovered, setHovered] = useState<Side>(null);
   const [ready, setReady] = useState(false);
 
@@ -136,13 +140,13 @@ const GatewayPage = () => {
                 }}
               />
               <img
-                src={SITE.logoGreen}
+                src={logoGreen}
                 alt={SITE.name}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 md:h-14 w-auto"
                 style={{ opacity: hovered === "entreprise" ? 0 : 1, transition: "opacity 0.4s ease", filter: "none" }}
               />
               <img
-                src={SITE.logoWhite}
+                src={logoWhite}
                 alt={SITE.name}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 md:h-14 w-auto"
                 style={{ opacity: hovered === "entreprise" ? 1 : 0, transition: "opacity 0.4s ease" }}

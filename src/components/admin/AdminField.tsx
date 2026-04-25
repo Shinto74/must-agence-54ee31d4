@@ -2,7 +2,7 @@ import ImageUpload from "./ImageUpload";
 
 interface Props {
   label: string;
-  type?: "text" | "textarea" | "checkbox" | "image" | "select";
+  type?: "text" | "textarea" | "checkbox" | "image" | "select" | "number";
   value: any;
   onChange: (val: any) => void;
   options?: { label: string; value: string }[];
@@ -23,7 +23,7 @@ const LABELS: Record<string, string> = {
   subtitle: "Sous-titre",
   price: "Prix",
   price_suffix: "Suffixe prix",
-  featured: "Mis en avant",
+  featured: "⭐ Mis en avant",
   badge: "Badge",
   bonus: "Bonus",
   reassurance: "Réassurance",
@@ -38,22 +38,22 @@ const LABELS: Record<string, string> = {
   key: "Clé",
   type: "Type",
   category_id: "Catégorie",
-  display_order: "Ordre d'affichage",
+  display_order: "Position",
 };
 
 const inputBase =
-  "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all";
+  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all";
 
 export default function AdminField({ label, type = "text", value, onChange, options, placeholder, imageFolder, hint }: Props) {
   const displayLabel = LABELS[label] || label;
 
   const Label = () => (
-    <label className="block text-[11px] font-mono text-slate-500 uppercase tracking-wider mb-1.5 font-medium">
+    <label className="block text-[11px] font-mono text-slate-600 uppercase tracking-wider mb-1.5 font-semibold">
       {displayLabel}
     </label>
   );
 
-  const Hint = () => (hint ? <p className="mt-1 text-[11px] text-slate-400">{hint}</p> : null);
+  const Hint = () => (hint ? <p className="mt-1 text-[11px] text-slate-500">{hint}</p> : null);
 
   if (type === "image") {
     return (
@@ -73,16 +73,36 @@ export default function AdminField({ label, type = "text", value, onChange, opti
   }
 
   if (type === "checkbox") {
+    // Vrai switch visuel — état "actif" très visible (vert + label coloré)
+    const checked = !!value;
     return (
-      <label className="flex items-center gap-3 py-2 cursor-pointer group">
-        <input
-          type="checkbox"
-          checked={!!value}
-          onChange={(e) => onChange(e.target.checked)}
-          className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 focus:ring-2 focus:ring-offset-0"
-        />
-        <span className="text-sm text-slate-700 group-hover:text-slate-900 transition-colors">{displayLabel}</span>
-      </label>
+      <div>
+        <button
+          type="button"
+          onClick={() => onChange(!checked)}
+          className={`flex items-center gap-3 w-full p-3 rounded-lg border-2 transition-all text-left ${
+            checked
+              ? "border-emerald-400 bg-emerald-50"
+              : "border-slate-200 bg-white hover:border-slate-300"
+          }`}
+        >
+          <span
+            className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors ${
+              checked ? "bg-emerald-500" : "bg-slate-300"
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                checked ? "translate-x-[22px]" : "translate-x-0.5"
+              }`}
+            />
+          </span>
+          <span className={`text-sm font-medium ${checked ? "text-emerald-900" : "text-slate-700"}`}>
+            {displayLabel}
+          </span>
+        </button>
+        <Hint />
+      </div>
     );
   }
 
@@ -93,11 +113,14 @@ export default function AdminField({ label, type = "text", value, onChange, opti
         <select
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
-          className={inputBase}
+          // Forçage explicite des couleurs (bg-white + texte slate-900) car certains
+          // OS rendent les <select> natifs blancs sur blancs.
+          className={`${inputBase} appearance-none cursor-pointer pr-8 bg-[url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2212%22%20height=%2212%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%23475569%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><polyline%20points=%226%209%2012%2015%2018%209%22></polyline></svg>')] bg-no-repeat`}
+          style={{ backgroundPosition: "right 10px center" }}
         >
-          <option value="">— Choisir —</option>
+          <option value="" className="text-slate-400">— Choisir —</option>
           {options.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+            <option key={o.value} value={o.value} className="text-slate-900 bg-white">{o.label}</option>
           ))}
         </select>
         <Hint />
@@ -115,6 +138,22 @@ export default function AdminField({ label, type = "text", value, onChange, opti
           placeholder={placeholder}
           rows={3}
           className={`${inputBase} resize-none`}
+        />
+        <Hint />
+      </div>
+    );
+  }
+
+  if (type === "number") {
+    return (
+      <div>
+        <Label />
+        <input
+          type="number"
+          value={value ?? 0}
+          onChange={(e) => onChange(parseInt(e.target.value) || 0)}
+          placeholder={placeholder}
+          className={inputBase}
         />
         <Hint />
       </div>

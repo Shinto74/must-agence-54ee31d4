@@ -70,6 +70,30 @@ export type Database = {
           },
         ]
       }
+      artist_images: {
+        Row: {
+          artist_id: string
+          created_at: string
+          display_order: number
+          id: string
+          url: string
+        }
+        Insert: {
+          artist_id: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          url: string
+        }
+        Update: {
+          artist_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          url?: string
+        }
+        Relationships: []
+      }
       artist_pillars: {
         Row: {
           accent_hue: number
