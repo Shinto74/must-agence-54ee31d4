@@ -1,10 +1,13 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface Step {
-  number: string;
+  number?: string;
   title: string;
   text: string;
 }
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
 
 interface ProcessStepsProps {
   steps: Step[];
@@ -27,13 +30,13 @@ const ProcessSteps = ({ steps, accentColor }: ProcessStepsProps) => {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, i) => (
-            <div key={step.number} className="rv relative">
+            <div key={(step as any).id ?? i} className="rv relative">
               {i < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-border -translate-x-4" />
               )}
               <div className="card-hover rounded-xl border border-border bg-surface p-6">
                 <span className={`font-clash text-3xl font-bold ${isNeon ? "text-primary/30" : "text-foreground/10"}`}>
-                  {step.number}
+                  {pad2(i + 1)}
                 </span>
                 <h3 className="font-clash font-semibold text-foreground text-lg mt-2 mb-2">{step.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{step.text}</p>

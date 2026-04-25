@@ -87,6 +87,9 @@ export function useClients() {
   });
 }
 
+// Helper: pad a number to "01", "02"…
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
 // ── Packs ──
 export function usePacks() {
   return useQuery({
@@ -98,15 +101,18 @@ export function usePacks() {
       const { data: features, error: e2 } = await supabase
         .from("pack_features").select("*").order("display_order");
       if (e2) throw e2;
-      return (packs || []).map((p) => ({
-        number: p.number, name: p.name, subtitle: p.subtitle,
+      return (packs || []).map((p, i) => ({
+        // Numéro auto-généré : Pack 1, Pack 2…
+        number: `Pack ${i + 1}`,
+        id: p.id,
+        name: p.name, subtitle: p.subtitle,
         price: p.price, priceSuffix: p.price_suffix,
         featured: p.featured, badge: p.badge,
         features: (features || []).filter((f) => f.pack_id === p.id).map((f) => f.text),
         bonus: p.bonus, reassurance: p.reassurance,
       }));
     },
-    placeholderData: PACKS,
+    placeholderData: PACKS.map((p) => ({ ...p, id: "" })),
   });
 }
 
@@ -121,8 +127,10 @@ function useServices(table: "services_artiste" | "services_entreprise", chipsTab
       const { data: chips, error: e2 } = await supabase
         .from(chipsTable).select("*").order("display_order");
       if (e2) throw e2;
-      return (svcs || []).map((s) => ({
-        number: s.number, title: s.title, description: s.description,
+      return (svcs || []).map((s, i) => ({
+        id: s.id,
+        number: pad2(i + 1),
+        title: s.title, description: s.description,
         chips: (chips || []).filter((c) => c.service_id === s.id).map((c) => c.text),
       }));
     },
@@ -139,7 +147,11 @@ function useExpertise(table: "expertise_artiste" | "expertise_entreprise", fallb
     queryFn: async () => {
       const { data, error } = await supabase.from(table).select("*").order("display_order");
       if (error) throw error;
-      return (data || []).map((e) => ({ number: e.number, title: e.title, text: e.text }));
+      return (data || []).map((e, i) => ({
+        id: e.id,
+        number: pad2(i + 1),
+        title: e.title, text: e.text,
+      }));
     },
     placeholderData: fallback,
   });
@@ -154,13 +166,18 @@ function useProcess(table: "process_artiste" | "process_entreprise", fallback: t
     queryFn: async () => {
       const { data, error } = await supabase.from(table).select("*").order("display_order");
       if (error) throw error;
-      return (data || []).map((p) => ({ number: p.number, title: p.title, text: p.text }));
+      return (data || []).map((p, i) => ({
+        id: p.id,
+        number: pad2(i + 1),
+        title: p.title, text: p.text,
+      }));
     },
     placeholderData: fallback,
   });
 }
 export const useProcessArtiste = () => useProcess("process_artiste", PROCESS_ARTISTE);
 export const useProcessEntreprise = () => useProcess("process_entreprise", PROCESS_ENTREPRISE);
+
 
 // ── Portfolio ──
 export function usePortfolio() {

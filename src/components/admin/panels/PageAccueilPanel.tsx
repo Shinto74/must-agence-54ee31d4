@@ -45,6 +45,26 @@ export default function PageAccueilPanel() {
       />
 
       <SettingsBlock
+        title="4. Références Artistes — Titres"
+        description="En-tête du carrousel des artistes sur la page d'accueil."
+        fields={[
+          { key: "artist_ref_label", label: "Sur-titre", placeholder: "Références Artistes" },
+          { key: "artist_ref_title_line1", label: "Titre — ligne 1", placeholder: "Ils nous ont fait confiance" },
+          { key: "artist_ref_title_line2", label: "Titre — ligne 2", placeholder: "pour leurs sorties" },
+        ]}
+      />
+
+      <SettingsBlock
+        title="5. Références Entreprises — Titres"
+        description="En-tête du carrousel des marques accompagnées."
+        fields={[
+          { key: "company_ref_label", label: "Sur-titre", placeholder: "Références Entreprises" },
+          { key: "company_ref_title_line1", label: "Titre — ligne 1", placeholder: "Ils nous accompagnent" },
+          { key: "company_ref_title_line2", label: "Titre — ligne 2", placeholder: "au quotidien" },
+        ]}
+      />
+
+      <SettingsBlock
         title="4. CTA Band — Bannière finale"
         description="Bandeau d'appel à l'action en bas de page"
         fields={[

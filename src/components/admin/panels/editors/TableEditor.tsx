@@ -33,7 +33,8 @@ export default function TableEditor({
   table, title, description, fields, initialRecord, filter, renderItem, label, orderBy, idField,
 }: Props) {
   const crud = useAdminCrud(table, { orderBy, idField });
-  const items = filter ? (crud.data as any[]).filter(filter) : crud.data;
+  const baseItems = filter ? (crud.data as any[]).filter(filter) : (crud.data as any[]);
+  const items = baseItems.map((it: any, __index: number) => ({ ...it, __index }));
 
   const startAdd = () => {
     const base: any = { display_order: items.length, ...(initialRecord || {}) };
@@ -53,7 +54,10 @@ export default function TableEditor({
         label={label}
         idField={idField}
         onAdd={startAdd}
-        onEdit={(item) => crud.setEditing(item as any)}
+        onEdit={(item: any) => {
+          const { __index, ...clean } = item;
+          crud.setEditing(clean as any);
+        }}
         onDelete={(id) => crud.remove(id)}
         renderItem={renderItem}
       />

@@ -181,7 +181,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
     return undefined;
   };
 
-  const isQuotePack = pack.number === "Pack 4";
+  const isQuotePack = pack.price === "Sur devis" || pack.number === "Pack 4";
 
   return (
     <div
@@ -318,7 +318,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
   const { data: rawPacks = [] } = useQuery({
     queryKey: ["packs_id_lookup"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("packs").select("id,number");
+      const { data, error } = await supabase.from("packs").select("id,display_order").order("display_order");
       if (error) throw error;
       return data || [];
     },
@@ -326,13 +326,15 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
   const { data: tooltipRows = [] } = usePackTooltips();
 
   // Map: pack.number ("Pack 1"…) -> { feature_prefix: tooltip_text }
+  // pack.number est auto-généré "Pack {index+1}" via le hook usePacks
   const tooltipsByNumber = useMemo(() => {
     const out: Record<string, Record<string, string>> = {};
-    (rawPacks as any[]).forEach((p) => {
-      out[p.number] = {};
+    (rawPacks as any[]).forEach((p, i) => {
+      const key = `Pack ${i + 1}`;
+      out[key] = {};
       (tooltipRows as any[])
         .filter((t) => t.pack_id === p.id)
-        .forEach((t) => { out[p.number][t.feature_prefix] = t.tooltip_text; });
+        .forEach((t) => { out[key][t.feature_prefix] = t.tooltip_text; });
     });
     return out;
   }, [rawPacks, tooltipRows]);
