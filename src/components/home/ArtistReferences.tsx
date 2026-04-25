@@ -1,20 +1,32 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { ARTIST_REFERENCES, ARTIST_DETAILS } from "@/lib/constants";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useArtistDetails } from "@/hooks/useArtistePage";
+import { useArtists } from "@/hooks/useSupabaseData";
 import { X, Info } from "lucide-react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ArtistReferencesProps {
-  categories?: { name: string; slug: string; artists: { name: string; image: string }[] }[];
+  categories?: { name: string; slug: string; artists: { name: string; image: string; id?: string }[] }[];
 }
 
 const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
-  const cats = categories || ARTIST_REFERENCES.categories.map((c) => ({
-    name: c.name,
-    slug: c.slug,
-    artists: c.artists.map((a) => ({ name: a.name, image: a.image })),
-  }));
+  const { get } = useSiteSettings();
+  const { data: details = [] } = useArtistDetails();
+  const { data: rawArtists = [] } = useArtists();
+
+  // Map: name -> details from BDD (lookup via artist_id from rawArtists)
+  const detailsByName = useMemo(() => {
+    const m: Record<string, any> = {};
+    (details as any[]).forEach((d) => {
+      const a = (rawArtists as any[]).find((x) => x.id === d.artist_id);
+      if (a) m[a.name] = d;
+    });
+    return m;
+  }, [details, rawArtists]);
+
+  const cats = categories || [];
 
   const allArtists = cats.flatMap((cat) =>
     cat.artists.map((a) => ({ ...a, category: cat.name, slug: cat.slug }))
