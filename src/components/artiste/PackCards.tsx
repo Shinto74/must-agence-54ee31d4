@@ -181,7 +181,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
     return undefined;
   };
 
-  const isQuotePack = pack.number === "Pack 4";
+  const isQuotePack = pack.price === "Sur devis" || pack.number === "Pack 4";
 
   return (
     <div
