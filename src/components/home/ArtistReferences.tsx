@@ -158,7 +158,7 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
       >
         {[...allArtists, ...allArtists].map((artist, i) => {
           const normalizedIndex = i % allArtists.length;
-          const hasDetails = !!ARTIST_DETAILS[artist.name];
+          const hasDetails = !!detailsByName[artist.name];
           const uniqueKey = `${artist.name}-${i}`;
 
           return (
