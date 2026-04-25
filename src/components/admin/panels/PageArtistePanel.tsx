@@ -2,17 +2,29 @@ import SettingsBlock from "../SettingsBlock";
 import MarqueeEditor from "./editors/MarqueeEditor";
 import StatsEditor from "./editors/StatsEditor";
 import PacksEditor from "./editors/PacksEditor";
+import PackTooltipsEditor from "./editors/PackTooltipsEditor";
 import ServicesArtisteEditor from "./editors/ServicesArtisteEditor";
 import ExpertiseArtisteEditor from "./editors/ExpertiseArtisteEditor";
 import ProcessArtisteEditor from "./editors/ProcessArtisteEditor";
 import TheArtistFeaturesEditor from "./editors/TheArtistFeaturesEditor";
 import ClipPortugalEditor from "./editors/ClipPortugalEditor";
+import ArtistPillarsEditor from "./editors/ArtistPillarsEditor";
+import PillarItemsEditor from "./editors/PillarItemsEditor";
+import ArtistDetailsEditor from "./editors/ArtistDetailsEditor";
 
 /**
  * Page Artiste — sections SPÉCIFIQUES uniquement.
- * Ordre réel : Hero → Marquee (artiste) → ArtisteServicesV4B → ArtistRef* → Packs → TheArtist
- *              → ClipPortugal → Vision* → Team* → CtaBand → Contact
- *  *Sections partagées → onglet "Sections partagées".
+ * Ordre réel d'apparition sur la page :
+ *   1. Hero
+ *   2. Marquee (artiste)
+ *   3. ArtisteServicesV4B (piliers split-screen)
+ *   4. Références Artistes (titres + carrousel + popup détails)
+ *   5. Packs & Tarifs (+ infobulles)
+ *   6. TheArtist
+ *   7. Clip Portugal
+ *   8. CtaBand
+ *   9. Contact
+ *  Vision, Équipe et Références (cards) → onglet Sections partagées.
  */
 export default function PageArtistePanel() {
   return (
@@ -21,7 +33,7 @@ export default function PageArtistePanel() {
         <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Site / Pages</p>
         <h2 className="font-clash text-2xl font-bold text-slate-900">Page Artiste</h2>
         <p className="text-xs text-slate-500 mt-1">
-          Pôle Music & Entertainment. Vision, Équipe et Références artistes sont dans
+          Pôle Music & Entertainment. Vision, Équipe et catégories d'artistes sont dans
           <strong> Global › Sections partagées</strong>.
         </p>
       </div>
@@ -46,13 +58,40 @@ export default function PageArtistePanel() {
         description="Logos partenaires / mots-clés (Spotify, TikTok, YouTube…)"
       />
 
+      <SettingsBlock
+        title="3. Section Services Artiste — En-tête"
+        description="Titres affichés au-dessus du bloc split-screen des 5 piliers."
+        fields={[
+          { key: "artiste_services_kicker", label: "Sur-titre", placeholder: "Notre méthode" },
+          { key: "artiste_services_title_part1", label: "Titre — partie 1" },
+          { key: "artiste_services_title_accent", label: "Titre — partie en accent (vert)" },
+          { key: "artiste_services_subtitle", label: "Sous-titre", type: "textarea" },
+        ]}
+      />
+
+      <ArtistPillarsEditor />
+      <PillarItemsEditor />
+
       <ServicesArtisteEditor />
       <ExpertiseArtisteEditor />
       <ProcessArtisteEditor />
 
       <StatsEditor page="artiste" title="Statistiques affichées sur la page Artiste" />
 
+      <SettingsBlock
+        title="4. Références Artistes — Titres"
+        description="En-tête de la section 'Ils nous ont fait confiance pour leurs sorties'."
+        fields={[
+          { key: "artist_ref_label", label: "Sur-titre", placeholder: "Références Artistes" },
+          { key: "artist_ref_title_line1", label: "Titre — ligne 1", placeholder: "Ils nous ont fait confiance" },
+          { key: "artist_ref_title_line2", label: "Titre — ligne 2", placeholder: "pour leurs sorties" },
+        ]}
+      />
+
+      <ArtistDetailsEditor />
+
       <PacksEditor />
+      <PackTooltipsEditor />
 
       <SettingsBlock
         title="6. TheArtist — Bloc partenaire"
