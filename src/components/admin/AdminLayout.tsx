@@ -4,7 +4,7 @@ import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Menu, X, Search, Bell, ExternalLink,
   LayoutDashboard, BarChart3, CreditCard, MessageSquare,
-  Home, Music, Building2, Settings as SettingsIcon, Users,
+  Home, Music, Building2, Settings as SettingsIcon, Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminNotifications } from "./useAdminNotifications";
@@ -13,7 +13,7 @@ export type AdminTab =
   | "dashboard" | "stats"
   | "paiements" | "demandes"
   | "page_accueil" | "page_artiste" | "page_entreprise"
-  | "identite" | "equipe"
+  | "partage" | "identite"
   | "settings";
 
 type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" | "paiements" };
@@ -45,8 +45,8 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Global",
     items: [
+      { key: "partage", label: "Sections partagées", icon: Share2 },
       { key: "identite", label: "Identité & Logos", icon: SettingsIcon },
-      { key: "equipe", label: "Équipe", icon: Users },
     ],
   },
 ];

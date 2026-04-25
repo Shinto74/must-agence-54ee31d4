@@ -6,6 +6,11 @@ import ServicesEntrepriseEditor from "./editors/ServicesEntrepriseEditor";
 import ExpertiseEntrepriseEditor from "./editors/ExpertiseEntrepriseEditor";
 import ProcessEntrepriseEditor from "./editors/ProcessEntrepriseEditor";
 
+/**
+ * Page Entreprise — sections SPÉCIFIQUES.
+ * Ordre réel : Hero (+stats hero) → Marquee (entreprise) → Sectors (Orbit3D) →
+ *              Services3D → Expertise → Process → CtaBand → Contact
+ */
 export default function PageEntreprisePanel() {
   return (
     <div className="space-y-6 max-w-5xl">
@@ -16,12 +21,11 @@ export default function PageEntreprisePanel() {
       </div>
 
       <SettingsBlock
-        title="Hero — Bannière Entreprise"
+        title="1. Hero — Bannière Entreprise"
         fields={[
-          { key: "hero_entreprise_badge", label: "Badge / Tag" },
+          { key: "hero_entreprise_tag", label: "Tag / Badge", placeholder: "Pôle Entreprise" },
           { key: "hero_entreprise_title_line1", label: "Titre — ligne 1" },
-          { key: "hero_entreprise_title_line2", label: "Titre — ligne 2" },
-          { key: "hero_entreprise_subtitle", label: "Sous-titre", type: "textarea" },
+          { key: "hero_entreprise_title_line2", label: "Titre — ligne 2 (accent)" },
           { key: "hero_entreprise_description", label: "Description", type: "textarea" },
           { key: "hero_entreprise_cta_primary", label: "Bouton principal" },
           { key: "hero_entreprise_cta_secondary", label: "Bouton secondaire" },
@@ -30,8 +34,8 @@ export default function PageEntreprisePanel() {
       />
 
       <SettingsBlock
-        title="Hero — Statistiques affichées"
-        description="Trois chiffres-clés affichés sur le hero entreprise"
+        title="1bis. Hero — Statistiques affichées"
+        description="Trois chiffres-clés sous le hero entreprise"
         fields={[
           { key: "hero_entreprise_stat1_value", label: "Stat 1 — valeur" },
           { key: "hero_entreprise_stat1_suffix", label: "Stat 1 — suffixe" },
@@ -45,12 +49,14 @@ export default function PageEntreprisePanel() {
         ]}
       />
 
-      <MarqueeEditor page="entreprise" title="Bandeau défilant — Entreprise" />
-
-      <StatsEditor page="entreprise" title="Statistiques Entreprise" />
+      <MarqueeEditor
+        page="entreprise"
+        title="2. Bandeau défilant — Entreprise"
+        description="Mots-clés / logos qui défilent (TikTok, Instagram, YouTube…)"
+      />
 
       <SettingsBlock
-        title="Secteurs — Orbite 3D"
+        title="3. Secteurs — Titres de la section"
         fields={[
           { key: "entreprise_sectors_title", label: "Titre" },
           { key: "entreprise_sectors_subtitle", label: "Sous-titre", type: "textarea" },
@@ -60,10 +66,28 @@ export default function PageEntreprisePanel() {
       <SectorsEditor />
 
       <ServicesEntrepriseEditor />
-
       <ExpertiseEntrepriseEditor />
-
       <ProcessEntrepriseEditor />
+
+      <StatsEditor page="entreprise" title="Statistiques affichées sur la page Entreprise" />
+
+      <SettingsBlock
+        title="CTA Band — Bannière finale"
+        fields={[
+          { key: "ctaband_entreprise_title", label: "Titre" },
+          { key: "ctaband_entreprise_subtitle", label: "Sous-titre" },
+          { key: "ctaband_entreprise_button", label: "Texte du bouton" },
+        ]}
+      />
+
+      <SettingsBlock
+        title="Section Contact (page Entreprise)"
+        fields={[
+          { key: "contact_entreprise_heading", label: "Titre" },
+          { key: "contact_entreprise_text", label: "Phrase d'accroche" },
+          { key: "contact_entreprise_subtext", label: "Sous-texte", type: "textarea" },
+        ]}
+      />
     </div>
   );
 }
