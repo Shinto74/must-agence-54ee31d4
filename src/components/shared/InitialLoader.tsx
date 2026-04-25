@@ -1,21 +1,28 @@
 import { useState, useEffect } from "react";
 import { SITE } from "@/lib/constants";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 interface InitialLoaderProps {
   onComplete: () => void;
   theme?: "neon" | "gold";
 }
 
+const DEFAULT_LOGO_GREEN = "https://syibbaomaexmubbypjyg.supabase.co/storage/v1/object/public/site-assets/settings/logo_green-1777063585519.png";
+const DEFAULT_LOGO_WHITE = "https://syibbaomaexmubbypjyg.supabase.co/storage/v1/object/public/site-assets/settings/logo_white-1777063584906.png";
+
 const InitialLoader = ({ onComplete, theme = "neon" }: InitialLoaderProps) => {
   const [progress, setProgress] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
+  const { get } = useSiteSettings();
 
   const isGold = theme === "gold";
 
   // Color tokens based on theme
   const accent = isGold ? "43 55% 55%" : "var(--neon)";
   const bgColor = isGold ? "hsl(40 20% 97%)" : "hsl(var(--background))";
-  const logo = isGold ? SITE.logoWhite : SITE.logoGreen;
+  const logo = isGold
+    ? get("logo_white", DEFAULT_LOGO_WHITE)
+    : get("logo_green", DEFAULT_LOGO_GREEN);
   // For gold on light bg, use a tinted logo filter
   const logoFilter = isGold
     ? "brightness(0) saturate(100%) sepia(1) hue-rotate(10deg) saturate(3) brightness(0.55)"
