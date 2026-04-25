@@ -18,10 +18,14 @@ const GatewayPage = () => {
   const IMG_ENTREPRISE = get("gateway_image_entreprise", DEFAULT_IMG_ENTREPRISE);
   const logoGreen = get("logo_green", DEFAULT_LOGO_GREEN);
   const logoWhite = get("logo_white", DEFAULT_LOGO_WHITE);
+  const artisteTitle = get("gateway_artiste_title", "Pôle Artiste");
   const artisteSubtitle = get("gateway_artiste_subtitle", "Musique · Influence · Lancement");
   const artisteLabel = get("gateway_artiste_label", "Je suis un Artiste");
+  const entrepriseTitle = get("gateway_entreprise_title", "Pôle Entreprise");
   const entrepriseSubtitle = get("gateway_entreprise_subtitle", "Branding · Stratégie · Croissance");
   const entrepriseLabel = get("gateway_entreprise_label", "Je suis une Entreprise");
+  const brandLabel = get("gateway_brand_label", get("brand_name", "MUST AGENCE"));
+  const bottomCaption = get("gateway_bottom_caption", "Influence · Musique · Marques");
   const [hovered, setHovered] = useState<Side>(null);
   const [ready, setReady] = useState(false);
 
@@ -79,7 +83,7 @@ const GatewayPage = () => {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="font-clash font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-2 md:mb-3"
             >
-              Pôle Artiste
+              {artisteTitle}
             </motion.h2>
             <motion.p
               initial={{ opacity: 0 }}
@@ -170,7 +174,7 @@ const GatewayPage = () => {
                 transition: "color 0.5s ease, text-shadow 0.5s ease",
               }}
             >
-              MUST AGENCE
+              {brandLabel}
             </motion.span>
           </div>
         </div>
@@ -222,7 +226,7 @@ const GatewayPage = () => {
               transition={{ duration: 0.7, delay: 0.5 }}
               className="font-clash font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-foreground mb-2 md:mb-3"
             >
-              Pôle Entreprise
+              {entrepriseTitle}
             </motion.h2>
             <motion.p
               initial={{ opacity: 0 }}
@@ -265,7 +269,7 @@ const GatewayPage = () => {
         className="absolute bottom-4 md:bottom-6 left-0 right-0 z-50 flex items-center justify-center"
       >
         <span className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/20">
-          Influence · Musique · Marques
+          {bottomCaption}
         </span>
       </motion.div>
     </div>
