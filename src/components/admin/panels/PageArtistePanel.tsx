@@ -84,7 +84,6 @@ export default function PageArtistePanel() {
       <ArtistDetailsEditor />
 
       <PacksEditor />
-      <PackTooltipsEditor />
 
       <SettingsBlock
         title="6. TheArtist — Bloc partenaire"
