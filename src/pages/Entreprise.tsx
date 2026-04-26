@@ -296,9 +296,10 @@ const EntrepriseHero = () => {
 /* ═══ MARQUEE SEPARATOR ═══ */
 const MarqueeSep = () => {
   const { data: items } = useMarqueeItems("entreprise");
-  const words = (items && items.length > 0)
-    ? items.filter((i: any) => i.kind === "word").map((i: any) => i.text_value)
-    : ["STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING", "CONTENU", "SOCIAL MEDIA", "ADS", "SEO"];
+  const words = (items || [])
+    .filter((i: any) => i.kind === "word")
+    .map((i: any) => i.text_value);
+  if (words.length === 0) return null;
   return (
     <div className="overflow-hidden py-10" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.1)", borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
       <div className="flex gap-14 animate-mq whitespace-nowrap">
@@ -318,31 +319,20 @@ const MarqueeSep = () => {
 
 
 /* ═══ EXPERTISE TERRAIN — IMMERSIVE ═══ */
-const SECTORS = [
-  { name: "Gastronomie", img: sectorGastronomie, desc: "Restaurants & traiteurs haut de gamme" },
-  { name: "Hôtellerie", img: sectorHotellerie, desc: "Luxe, accueil & expérience client" },
-  { name: "Beauté & Bien-être", img: sectorBeaute, desc: "Cosmétiques, spa & wellness" },
-  { name: "Sport & Fitness", img: sectorSport, desc: "Clubs, marques & athlètes" },
-  { name: "Automobile", img: sectorAutomobile, desc: "Concessionnaires & moto" },
-  { name: "Grande Distribution", img: sectorDistribution, desc: "Retail & enseignes nationales" },
-];
-
 const ExpertiseSection = () => {
   const ref = useScrollReveal();
   const { get } = useSiteSettings();
-  const { data: dbSectors } = useEntrepriseSectors();
+  const { data: dbSectors = [] } = useEntrepriseSectors();
   const sectionTitle = get("entreprise_sectors_title", "Des secteurs que l'on maîtrise");
   const sectionSubtitle = get(
     "entreprise_sectors_subtitle",
     "Notre expertise nous permet de comprendre les enjeux spécifiques de chaque industrie et d'adapter notre stratégie en conséquence."
   );
-  const sectors = (dbSectors && dbSectors.length > 0)
-    ? dbSectors.map((s: any) => ({
-        name: s.name,
-        img: s.image_url || s.icon || SECTORS.find((fallback) => fallback.name === s.name)?.img || SECTORS[0]?.img,
-        desc: s.description,
-      }))
-    : SECTORS;
+  const sectors = (dbSectors as any[]).map((s: any) => ({
+    name: s.name,
+    img: s.image_url || s.icon || "",
+    desc: s.description || "",
+  }));
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.25), transparent)" }} />
