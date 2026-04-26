@@ -19,6 +19,7 @@ const ClipPortugal = () => {
   const cpKicker = get("clip_portugal_kicker", "Exclusivité Must Agence");
   const cpTitle1 = get("clip_portugal_title_line1", "Tournez votre clip");
   const cpTitle2 = get("clip_portugal_title_line2", "au Portugal");
+  const cpDescription = get("clip_portugal_description", "");
   const cpCta = get("clip_portugal_cta", "Commencer l'aventure");
   const cpPoster = get("clip_portugal_poster", "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1200&q=80");
 
@@ -149,24 +150,14 @@ const ClipPortugal = () => {
           {cpTitle2}
         </motion.h2>
         <motion.p
-          className="rv max-w-xl text-sm md:text-base leading-[1.8] mb-14"
+          className="rv max-w-xl text-sm md:text-base leading-[1.8] mb-14 whitespace-pre-line"
           style={{ color: "hsl(var(--mi))" }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          Des décors de rêve entre{" "}
-          <span className="text-foreground font-medium">Lisbonne</span>,{" "}
-          <span className="text-foreground font-medium">l'Algarve</span> et{" "}
-          <span className="text-foreground font-medium">Porto</span>.
-          <br className="hidden md:block" />{" "}
-          Une production clé en main :{" "}
-          <span style={{ color: "hsl(var(--neon) / 0.85)" }}>réalisation</span>,{" "}
-          <span style={{ color: "hsl(var(--neon) / 0.85)" }}>logistique</span>,{" "}
-          <span style={{ color: "hsl(var(--neon) / 0.85)" }}>hébergement</span>.
-          <br className="hidden md:block" />{" "}
-          Concentrez-vous sur votre art, <span className="text-foreground font-semibold">on gère le reste</span>.
+          {cpDescription}
         </motion.p>
 
         {/* Video + Info Grid */}
