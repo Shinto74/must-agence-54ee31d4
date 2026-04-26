@@ -102,6 +102,21 @@ export function useServicesEntreprise() {
   });
 }
 
+/* ─── Contact sectors (form select options) ─── */
+export function useContactSectors() {
+  return useQuery({
+    queryKey: ["contact_sectors"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("contact_sectors")
+        .select("*")
+        .order("display_order");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+}
+
 /* ─── Clients (with categories) for entreprise references ─── */
 export function useClientsWithCategories() {
   return useQuery({
