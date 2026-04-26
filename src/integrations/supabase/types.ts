@@ -265,6 +265,27 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_form_types: {
+        Row: {
+          display_order: number
+          id: string
+          label: string
+          page: string
+        }
+        Insert: {
+          display_order?: number
+          id?: string
+          label: string
+          page: string
+        }
+        Update: {
+          display_order?: number
+          id?: string
+          label?: string
+          page?: string
+        }
+        Relationships: []
+      }
       contact_sectors: {
         Row: {
           display_order: number

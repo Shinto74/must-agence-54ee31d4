@@ -7,19 +7,8 @@ import {
 import ContactSection from "@/components/home/ContactSection";
 import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
 import Services3DScroll from "@/components/entreprise/Services3DScroll";
-import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
 import { useEntrepriseSectors, useSiteSettings, useMarqueeItems, useClientsWithCategories } from "@/hooks/useSiteContent";
-import logoGrandsBuf from "@/assets/logos/les-grands-buffets.png";
-import logoLeclerc from "@/assets/logos/leclerc.png";
-import logoNovotel from "@/assets/logos/novotel.png";
-import logoBasicFit from "@/assets/logos/basic-fit.png";
-import logoYamaha from "@/assets/logos/yamaha.png";
-import sectorGastronomie from "@/assets/sector-gastronomie.jpg";
-import sectorHotellerie from "@/assets/sector-hotellerie.jpg";
-import sectorBeaute from "@/assets/sector-beaute.jpg";
-import sectorSport from "@/assets/sector-sport.jpg";
-import sectorAutomobile from "@/assets/sector-automobile.jpg";
-import sectorDistribution from "@/assets/sector-distribution.jpg";
 import sydneyHeroAsset from "@/assets/sydney-hero.mp4.asset.json";
 
 const HERO_VIDEO_URL = sydneyHeroAsset.url;
@@ -307,9 +296,10 @@ const EntrepriseHero = () => {
 /* ═══ MARQUEE SEPARATOR ═══ */
 const MarqueeSep = () => {
   const { data: items } = useMarqueeItems("entreprise");
-  const words = (items && items.length > 0)
-    ? items.filter((i: any) => i.kind === "word").map((i: any) => i.text_value)
-    : ["STRATÉGIE", "GROWTH", "INFLUENCE", "BRANDING", "CONTENU", "SOCIAL MEDIA", "ADS", "SEO"];
+  const words = (items || [])
+    .filter((i: any) => i.kind === "word")
+    .map((i: any) => i.text_value);
+  if (words.length === 0) return null;
   return (
     <div className="overflow-hidden py-10" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.1)", borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
       <div className="flex gap-14 animate-mq whitespace-nowrap">
@@ -329,31 +319,20 @@ const MarqueeSep = () => {
 
 
 /* ═══ EXPERTISE TERRAIN — IMMERSIVE ═══ */
-const SECTORS = [
-  { name: "Gastronomie", img: sectorGastronomie, desc: "Restaurants & traiteurs haut de gamme" },
-  { name: "Hôtellerie", img: sectorHotellerie, desc: "Luxe, accueil & expérience client" },
-  { name: "Beauté & Bien-être", img: sectorBeaute, desc: "Cosmétiques, spa & wellness" },
-  { name: "Sport & Fitness", img: sectorSport, desc: "Clubs, marques & athlètes" },
-  { name: "Automobile", img: sectorAutomobile, desc: "Concessionnaires & moto" },
-  { name: "Grande Distribution", img: sectorDistribution, desc: "Retail & enseignes nationales" },
-];
-
 const ExpertiseSection = () => {
   const ref = useScrollReveal();
   const { get } = useSiteSettings();
-  const { data: dbSectors } = useEntrepriseSectors();
+  const { data: dbSectors = [] } = useEntrepriseSectors();
   const sectionTitle = get("entreprise_sectors_title", "Des secteurs que l'on maîtrise");
   const sectionSubtitle = get(
     "entreprise_sectors_subtitle",
     "Notre expertise nous permet de comprendre les enjeux spécifiques de chaque industrie et d'adapter notre stratégie en conséquence."
   );
-  const sectors = (dbSectors && dbSectors.length > 0)
-    ? dbSectors.map((s: any) => ({
-        name: s.name,
-        img: s.image_url || s.icon || SECTORS.find((fallback) => fallback.name === s.name)?.img || SECTORS[0]?.img,
-        desc: s.description,
-      }))
-    : SECTORS;
+  const sectors = (dbSectors as any[]).map((s: any) => ({
+    name: s.name,
+    img: s.image_url || s.icon || "",
+    desc: s.description || "",
+  }));
   return (
     <section ref={ref} className="py-28 md:py-40 px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.25), transparent)" }} />
@@ -427,16 +406,10 @@ const ExpertiseSection = () => {
 };
 
 /* ═══ REFERENCES — PREMIUM SHOWCASE ═══ */
-const REFERENCES = [
-  { name: "Les Grands Buffets", subtitle: "Narbonne", initial: "GB", logo: logoGrandsBuf },
-  { name: "Leclerc", subtitle: "Grande distribution", initial: "LC", logo: logoLeclerc },
-  { name: "Novotel", subtitle: "Hôtellerie", initial: "NV", logo: logoNovotel },
-  { name: "Basic-Fit", subtitle: "Sport & Fitness", initial: "BF", logo: logoBasicFit },
-  { name: "Yamaha", subtitle: "Automobile & Moto", initial: "YM", logo: logoYamaha },
-];
+type ReferenceItem = { name: string; subtitle: string; initial: string; logo: string };
 
 const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
-  r: typeof REFERENCES[0]; index: number;
+  r: ReferenceItem; index: number;
   anyHovered: boolean; isHovered: boolean;
   onHover: () => void; onLeave: () => void;
 }) => {
@@ -666,15 +639,7 @@ const ReferencesSection = () => {
   const { data: dbCategories = [] } = useClientsWithCategories();
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
-  // Fallback statique
-  const fallbackCategories = [
-    {
-      id: "fallback",
-      name: "Références",
-      clients: REFERENCES.map((r) => ({ id: r.name, name: r.name, logo_url: r.logo, category_id: "fallback" })),
-    },
-  ];
-  const allCategories = (dbCategories.length > 0 ? dbCategories : fallbackCategories) as any[];
+  const allCategories = (dbCategories || []) as any[];
   // Garde uniquement les catégories non vides, max 4
   const categories = allCategories.filter((c: any) => c.clients && c.clients.length > 0).slice(0, 4);
 
@@ -950,14 +915,13 @@ const Entreprise = () => {
       <ReferencesSection />
       <FinalCta />
       <ContactSection
-        heading={get("contact_entreprise_heading", ENTREPRISE_PAGE.contact.heading)}
-        text={get("contact_entreprise_text", ENTREPRISE_PAGE.contact.text)}
-        subtext={get("contact_entreprise_subtext", ENTREPRISE_PAGE.contact.subtext)}
-        email={get("contact_email", ENTREPRISE_PAGE.contact.email)}
+        heading={get("contact_entreprise_heading", "Parlons de votre marque.")}
+        text={get("contact_entreprise_text", "Votre entreprise mérite une stratégie digitale puissante.")}
+        subtext={get("contact_entreprise_subtext", "Décrivez vos objectifs. On revient vers vous en 24h.")}
+        email={get("contact_email", SITE.contact.email)}
         phone={get("contact_phone", SITE.contact.phone)}
         location={get("contact_location", SITE.contact.location)}
         whatsappUrl={SITE.contact.whatsappUrl}
-        formOptions={ENTREPRISE_PAGE.contact.formOptions}
       />
     </div>
   );

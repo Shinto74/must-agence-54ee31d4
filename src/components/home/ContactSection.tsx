@@ -6,7 +6,7 @@ import { MessageSquare, Phone, MapPin, Send, ChevronDown, ArrowRight, Sparkles, 
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { useContactSectors } from "@/hooks/useSiteContent";
+import { useContactSectors, useContactFormTypes } from "@/hooks/useSiteContent";
 
 interface ContactSectionProps {
   heading: string;
@@ -16,7 +16,8 @@ interface ContactSectionProps {
   phone?: string;
   location?: string;
   whatsappUrl: string;
-  formOptions: string[];
+  /** Optional fallback. When omitted, types are loaded from DB based on the current page. */
+  formOptions?: string[];
 }
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -29,11 +30,23 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
   const accent = isEntreprise ? "43 55% 55%" : "var(--neon)";
   const accentDark = isEntreprise ? "43 52% 39%" : "var(--neon)";
 
+  // Types de demande chargés depuis la BDD selon la page (table contact_form_types)
+  const { data: typeRows = [] } = useContactFormTypes(isEntreprise ? "entreprise" : "artiste");
+  const dbFormOptions = (typeRows as any[]).map((t) => t.label);
+  const effectiveFormOptions = dbFormOptions.length > 0 ? dbFormOptions : (formOptions || []);
+
   const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState({ type: formOptions[0], nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
+  const [form, setForm] = useState({ type: "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
   const [sending, setSending] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
   const [secteurOpen, setSecteurOpen] = useState(false);
+
+  // Initialise le type quand les options DB arrivent
+  useEffect(() => {
+    if (!form.type && effectiveFormOptions.length > 0) {
+      setForm((f) => ({ ...f, type: effectiveFormOptions[0] }));
+    }
+  }, [effectiveFormOptions, form.type]);
 
   // Listen for global event from CTA buttons
   useEffect(() => {
@@ -67,7 +80,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       toast.error("Erreur lors de l'envoi. Réessayez.");
     } else {
       toast.success("Message envoyé ! On revient vers vous en 24h.");
-      setForm({ type: formOptions[0], nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
+      setForm({ type: effectiveFormOptions[0] || "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
       setModalOpen(false);
     }
   };
@@ -418,7 +431,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
                   transition={{ delay: 0.2, duration: 0.35, ease: EASE }}
                 >
                   <div className="flex flex-wrap gap-1.5">
-                    {formOptions.map(opt => (
+                    {effectiveFormOptions.map(opt => (
                       <motion.button
                         key={opt}
                         type="button"

@@ -39,7 +39,6 @@ const Artiste = () => {
         phone={get("contact_phone", SITE.contact.phone)}
         location={get("contact_location", SITE.contact.location)}
         whatsappUrl={SITE.contact.whatsappUrl}
-        formOptions={ARTISTE_PAGE.contact.formOptions}
       />
     </div>
   );
