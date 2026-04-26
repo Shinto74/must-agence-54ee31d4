@@ -80,7 +80,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       toast.error("Erreur lors de l'envoi. Réessayez.");
     } else {
       toast.success("Message envoyé ! On revient vers vous en 24h.");
-      setForm({ type: formOptions[0], nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
+      setForm({ type: effectiveFormOptions[0] || "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
       setModalOpen(false);
     }
   };
@@ -431,7 +431,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
                   transition={{ delay: 0.2, duration: 0.35, ease: EASE }}
                 >
                   <div className="flex flex-wrap gap-1.5">
-                    {formOptions.map(opt => (
+                    {effectiveFormOptions.map(opt => (
                       <motion.button
                         key={opt}
                         type="button"
