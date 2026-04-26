@@ -639,15 +639,7 @@ const ReferencesSection = () => {
   const { data: dbCategories = [] } = useClientsWithCategories();
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
-  // Fallback statique
-  const fallbackCategories = [
-    {
-      id: "fallback",
-      name: "Références",
-      clients: REFERENCES.map((r) => ({ id: r.name, name: r.name, logo_url: r.logo, category_id: "fallback" })),
-    },
-  ];
-  const allCategories = (dbCategories.length > 0 ? dbCategories : fallbackCategories) as any[];
+  const allCategories = (dbCategories || []) as any[];
   // Garde uniquement les catégories non vides, max 4
   const categories = allCategories.filter((c: any) => c.clients && c.clients.length > 0).slice(0, 4);
 
@@ -923,14 +915,13 @@ const Entreprise = () => {
       <ReferencesSection />
       <FinalCta />
       <ContactSection
-        heading={get("contact_entreprise_heading", ENTREPRISE_PAGE.contact.heading)}
-        text={get("contact_entreprise_text", ENTREPRISE_PAGE.contact.text)}
-        subtext={get("contact_entreprise_subtext", ENTREPRISE_PAGE.contact.subtext)}
-        email={get("contact_email", ENTREPRISE_PAGE.contact.email)}
+        heading={get("contact_entreprise_heading", "Parlons de votre marque.")}
+        text={get("contact_entreprise_text", "Votre entreprise mérite une stratégie digitale puissante.")}
+        subtext={get("contact_entreprise_subtext", "Décrivez vos objectifs. On revient vers vous en 24h.")}
+        email={get("contact_email", SITE.contact.email)}
         phone={get("contact_phone", SITE.contact.phone)}
         location={get("contact_location", SITE.contact.location)}
         whatsappUrl={SITE.contact.whatsappUrl}
-        formOptions={ENTREPRISE_PAGE.contact.formOptions}
       />
     </div>
   );
