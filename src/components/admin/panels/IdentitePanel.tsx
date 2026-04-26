@@ -1,5 +1,6 @@
 import SettingsBlock from "../SettingsBlock";
 import MediaGalleryEditor from "./editors/MediaGalleryEditor";
+import ContactSectorsEditor from "./editors/ContactSectorsEditor";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 
 export default function IdentitePanel() {
@@ -70,6 +71,7 @@ export default function IdentitePanel() {
           { key: "contact_location", label: "Adresse", placeholder: "Paris, France" },
         ]}
       />
+      <ContactSectorsEditor />
     </div>
   );
 }
