@@ -6,6 +6,7 @@ import { MessageSquare, Phone, MapPin, Send, ChevronDown, ArrowRight, Sparkles, 
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { useContactSectors } from "@/hooks/useSiteContent";
 
 interface ContactSectionProps {
   heading: string;
@@ -45,7 +46,9 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
   const budgetMax = 25000;
   const budgetStep = 500;
 
-  const secteurOptions = ["Gastronomie", "Hôtellerie", "Beauté & Bien-être", "Sport & Fitness", "Automobile", "Grande Distribution", "Mode & Luxe", "Immobilier", "Santé", "Tech & Startup", "Autre"];
+  // Secteurs chargés depuis la BDD (table contact_sectors), éditable depuis l'admin
+  const { data: sectorRows = [] } = useContactSectors();
+  const secteurOptions = (sectorRows as any[]).map((s) => s.name);
 
   const formatBudget = (v: number) => v >= budgetMax ? `${(v / 1000).toFixed(0)}k€ +` : `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k€`;
 
