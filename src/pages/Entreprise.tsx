@@ -7,19 +7,8 @@ import {
 import ContactSection from "@/components/home/ContactSection";
 import Orbit3DShowcase from "@/components/entreprise/Orbit3DShowcase";
 import Services3DScroll from "@/components/entreprise/Services3DScroll";
-import { SITE, ENTREPRISE_PAGE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
 import { useEntrepriseSectors, useSiteSettings, useMarqueeItems, useClientsWithCategories } from "@/hooks/useSiteContent";
-import logoGrandsBuf from "@/assets/logos/les-grands-buffets.png";
-import logoLeclerc from "@/assets/logos/leclerc.png";
-import logoNovotel from "@/assets/logos/novotel.png";
-import logoBasicFit from "@/assets/logos/basic-fit.png";
-import logoYamaha from "@/assets/logos/yamaha.png";
-import sectorGastronomie from "@/assets/sector-gastronomie.jpg";
-import sectorHotellerie from "@/assets/sector-hotellerie.jpg";
-import sectorBeaute from "@/assets/sector-beaute.jpg";
-import sectorSport from "@/assets/sector-sport.jpg";
-import sectorAutomobile from "@/assets/sector-automobile.jpg";
-import sectorDistribution from "@/assets/sector-distribution.jpg";
 import sydneyHeroAsset from "@/assets/sydney-hero.mp4.asset.json";
 
 const HERO_VIDEO_URL = sydneyHeroAsset.url;
