@@ -3,6 +3,7 @@ import MarqueeEditor from "./editors/MarqueeEditor";
 import SectorsEditor from "./editors/SectorsEditor";
 import ClientsEditor from "./editors/ClientsEditor";
 import ServicesEntrepriseEditor from "./editors/ServicesEntrepriseEditor";
+import ContactFormTypesEditor from "./editors/ContactFormTypesEditor";
 
 /**
  * Page Entreprise — sections dans l'ordre EXACT du rendu front (Entreprise.tsx) :
@@ -113,6 +114,8 @@ export default function PageEntreprisePanel() {
           { key: "contact_entreprise_subtext", label: "Sous-texte", type: "textarea" },
         ]}
       />
+
+      <ContactFormTypesEditor page="entreprise" />
     </div>
   );
 }
