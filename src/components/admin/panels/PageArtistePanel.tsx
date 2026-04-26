@@ -6,6 +6,7 @@ import ClipPortugalEditor from "./editors/ClipPortugalEditor";
 import PillarItemsEditor from "./editors/PillarItemsEditor";
 import ArtistesEditor from "./editors/ArtistesEditor";
 import TeamEditor from "./editors/TeamEditor";
+import ContactFormTypesEditor from "./editors/ContactFormTypesEditor";
 
 /**
  * Page Artiste — sections affichées sur /artiste, dans l'ordre EXACT du rendu :
@@ -148,6 +149,8 @@ export default function PageArtistePanel() {
           { key: "contact_artiste_subtext", label: "Sous-texte", type: "textarea" },
         ]}
       />
+
+      <ContactFormTypesEditor page="artiste" />
     </div>
   );
 }
