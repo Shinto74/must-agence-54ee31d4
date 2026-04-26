@@ -15,7 +15,7 @@ export default function ContactFormTypesEditor({ page }: Props) {
       title="Types de demande (formulaire de contact)"
       description={`Boutons de type de projet affichés dans le formulaire de contact de la page ${page === "artiste" ? "Artiste" : "Entreprise"}.`}
       label="type"
-      filter={{ column: "page", value: page }}
+      filter={(row: any) => row.page === page}
       initialRecord={{ page, label: "", display_order: 0 }}
       fields={[
         { key: "label", label: "Libellé" },
