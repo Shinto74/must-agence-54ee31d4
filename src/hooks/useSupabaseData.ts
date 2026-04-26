@@ -100,7 +100,7 @@ export function usePacks() {
 }
 
 // ── Services ──
-function useServices(table: "services_artiste" | "services_entreprise", chipsTable: "service_artiste_chips" | "service_entreprise_chips", fallback: typeof SERVICES_ARTISTE) {
+function useServices(table: "services_artiste" | "services_entreprise", chipsTable: "service_artiste_chips" | "service_entreprise_chips") {
   return useQuery({
     queryKey: [table],
     queryFn: async () => {
@@ -117,14 +117,13 @@ function useServices(table: "services_artiste" | "services_entreprise", chipsTab
         chips: (chips || []).filter((c) => c.service_id === s.id).map((c) => c.text),
       }));
     },
-    placeholderData: fallback,
   });
 }
-export const useServicesArtiste = () => useServices("services_artiste", "service_artiste_chips", SERVICES_ARTISTE);
-export const useServicesEntreprise = () => useServices("services_entreprise", "service_entreprise_chips", SERVICES_ENTREPRISE);
+export const useServicesArtiste = () => useServices("services_artiste", "service_artiste_chips");
+export const useServicesEntreprise = () => useServices("services_entreprise", "service_entreprise_chips");
 
 // ── Expertise ──
-function useExpertise(table: "expertise_artiste" | "expertise_entreprise", fallback: typeof EXPERTISE_ARTISTE) {
+function useExpertise(table: "expertise_artiste" | "expertise_entreprise") {
   return useQuery({
     queryKey: [table],
     queryFn: async () => {
@@ -136,14 +135,13 @@ function useExpertise(table: "expertise_artiste" | "expertise_entreprise", fallb
         title: e.title, text: e.text,
       }));
     },
-    placeholderData: fallback,
   });
 }
-export const useExpertiseArtiste = () => useExpertise("expertise_artiste", EXPERTISE_ARTISTE);
-export const useExpertiseEntreprise = () => useExpertise("expertise_entreprise", EXPERTISE_ENTREPRISE);
+export const useExpertiseArtiste = () => useExpertise("expertise_artiste");
+export const useExpertiseEntreprise = () => useExpertise("expertise_entreprise");
 
 // ── Process ──
-function useProcess(table: "process_artiste" | "process_entreprise", fallback: typeof PROCESS_ARTISTE) {
+function useProcess(table: "process_artiste" | "process_entreprise") {
   return useQuery({
     queryKey: [table],
     queryFn: async () => {
@@ -155,11 +153,10 @@ function useProcess(table: "process_artiste" | "process_entreprise", fallback: t
         title: p.title, text: p.text,
       }));
     },
-    placeholderData: fallback,
   });
 }
-export const useProcessArtiste = () => useProcess("process_artiste", PROCESS_ARTISTE);
-export const useProcessEntreprise = () => useProcess("process_entreprise", PROCESS_ENTREPRISE);
+export const useProcessArtiste = () => useProcess("process_artiste");
+export const useProcessEntreprise = () => useProcess("process_entreprise");
 
 
 // ── Portfolio ──
@@ -179,7 +176,6 @@ export function usePortfolio() {
           .map((m) => ({ value: m.value, label: m.label })),
       }));
     },
-    placeholderData: PORTFOLIO,
   });
 }
 
