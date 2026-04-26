@@ -9,13 +9,14 @@ import ClipPortugal from "@/components/artiste/ClipPortugal";
 import TheArtistShowcase from "@/components/artiste/TheArtistShowcase";
 import CtaBand from "@/components/home/CtaBand";
 import ContactSection from "@/components/home/ContactSection";
-import { SITE, ARTISTE_PAGE, PACKS, QUOTE_STEPS } from "@/lib/constants";
-import { useTeam, useArtists } from "@/hooks/useSupabaseData";
+import { SITE, ARTISTE_PAGE, QUOTE_STEPS } from "@/lib/constants";
+import { useTeam, useArtists, usePacks } from "@/hooks/useSupabaseData";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const Artiste = () => {
   const { data: team } = useTeam();
   const { data: artists } = useArtists();
+  const { data: packs = [] } = usePacks();
   const { get } = useSiteSettings();
 
   return (
@@ -24,7 +25,7 @@ const Artiste = () => {
       <MarqueeText logos={ARTISTE_PAGE.marqueeLogos} />
       <ArtisteServicesV4B />
       <ArtistReferences categories={artists || []} />
-      <PackCards packs={PACKS} quoteSteps={QUOTE_STEPS} />
+      <PackCards packs={packs as any} quoteSteps={QUOTE_STEPS} />
       <TheArtistShowcase />
       <ClipPortugal />
       <Vision />
