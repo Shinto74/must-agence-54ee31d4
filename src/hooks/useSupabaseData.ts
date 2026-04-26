@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  TEAM, STATS, ARTIST_REFERENCES, COMPANY_REFERENCES, PACKS,
-  SERVICES_ARTISTE, SERVICES_ENTREPRISE, EXPERTISE_ARTISTE,
-  EXPERTISE_ENTREPRISE, PROCESS_ARTISTE, PROCESS_ENTREPRISE,
-  PORTFOLIO, QUOTE_STEPS,
+  PACKS, QUOTE_STEPS,
 } from "@/lib/constants";
 
 // ── Team ──
@@ -17,17 +14,11 @@ export function useTeam() {
       if (error) throw error;
       return data;
     },
-    placeholderData: TEAM.map((t, i) => ({
-      id: `fallback-${i}`, name: t.name, initials: t.initials,
-      role: t.role, description: t.description, image_url: null,
-      display_order: i, created_at: "", updated_at: "",
-    })),
   });
 }
 
 // ── Stats ──
 export function useStats(page: string) {
-  const fallback = STATS[page as keyof typeof STATS] || STATS.home;
   return useQuery({
     queryKey: ["stats", page],
     queryFn: async () => {
@@ -36,7 +27,6 @@ export function useStats(page: string) {
       if (error) throw error;
       return data.map((s) => ({ value: s.value, label: s.label, suffix: s.suffix }));
     },
-    placeholderData: fallback,
   });
 }
 
@@ -57,10 +47,6 @@ export function useArtists() {
           .map((a) => ({ name: a.name, image: a.image_url })),
       }));
     },
-    placeholderData: ARTIST_REFERENCES.categories.map((c) => ({
-      name: c.name, slug: c.slug,
-      artists: c.artists.map((a) => ({ name: a.name, image: a.image })),
-    })),
   });
 }
 
@@ -76,6 +62,13 @@ export function useClients() {
         .from("clients").select("*").order("display_order");
       if (e2) throw e2;
       return (cats || []).map((cat) => ({
+        name: cat.name,
+        clients: (cls || []).filter((c) => c.category_id === cat.id)
+          .map((c) => ({ name: c.name, logo: c.logo_url })),
+      }));
+    },
+  });
+}
         name: cat.name,
         clients: (cls || []).filter((c) => c.category_id === cat.id)
           .map((c) => ({ name: c.name, logo: c.logo_url })),
