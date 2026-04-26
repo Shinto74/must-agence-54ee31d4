@@ -69,16 +69,6 @@ export function useClients() {
     },
   });
 }
-        name: cat.name,
-        clients: (cls || []).filter((c) => c.category_id === cat.id)
-          .map((c) => ({ name: c.name, logo: c.logo_url })),
-      }));
-    },
-    placeholderData: COMPANY_REFERENCES.categories.map((c) => ({
-      name: c.name, clients: c.clients,
-    })),
-  });
-}
 
 // Helper: pad a number to "01", "02"…
 const pad2 = (n: number) => String(n).padStart(2, "0");
