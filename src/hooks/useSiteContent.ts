@@ -117,6 +117,22 @@ export function useContactSectors() {
   });
 }
 
+/* ─── Contact form types (project type select per page) ─── */
+export function useContactFormTypes(page: "artiste" | "entreprise") {
+  return useQuery({
+    queryKey: ["contact_form_types", page],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("contact_form_types")
+        .select("*")
+        .eq("page", page)
+        .order("display_order");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+}
+
 /* ─── Clients (with categories) for entreprise references ─── */
 export function useClientsWithCategories() {
   return useQuery({
