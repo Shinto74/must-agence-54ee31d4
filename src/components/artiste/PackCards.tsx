@@ -303,7 +303,8 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
     return out;
   }, [rawPacks, tooltipRows]);
 
-  const theartistTexts = ["2 mois TheArtist offert", "5 mois TheArtist offert", "8 mois TheArtist offert", "1 an TheArtist offert"];
+  // Bonus TheArtist provient désormais du champ `bonus` de chaque pack en BDD (éditable depuis l'admin)
+  const getTheArtistText = (pack: Pack) => (pack as any).bonus || "TheArtist offert";
 
   return (
     <>
@@ -341,7 +342,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
                 }}
                 style={{ transformOrigin: "left center", transformStyle: "preserve-3d" }}
               >
-                <PackCard pack={pack} theartistText={theartistTexts[idx] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} tooltips={tooltipsByNumber[pack.number] || {}} />
+                <PackCard pack={pack} theartistText={getTheArtistText(pack)} onOpenQuote={() => setShowQuoteModal(true)} tooltips={tooltipsByNumber[pack.number] || {}} />
               </motion.div>
             ))}
           </div>
@@ -354,7 +355,7 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
           >
-            <PackCard pack={packs[activeTab]} theartistText={theartistTexts[activeTab] || "TheArtist offert"} onOpenQuote={() => setShowQuoteModal(true)} tooltips={tooltipsByNumber[packs[activeTab]?.number] || {}} />
+            <PackCard pack={packs[activeTab]} theartistText={getTheArtistText(packs[activeTab])} onOpenQuote={() => setShowQuoteModal(true)} tooltips={tooltipsByNumber[packs[activeTab]?.number] || {}} />
           </motion.div>
         </div>
       </section>
