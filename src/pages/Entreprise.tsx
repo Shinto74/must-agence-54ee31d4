@@ -406,16 +406,10 @@ const ExpertiseSection = () => {
 };
 
 /* ═══ REFERENCES — PREMIUM SHOWCASE ═══ */
-const REFERENCES = [
-  { name: "Les Grands Buffets", subtitle: "Narbonne", initial: "GB", logo: logoGrandsBuf },
-  { name: "Leclerc", subtitle: "Grande distribution", initial: "LC", logo: logoLeclerc },
-  { name: "Novotel", subtitle: "Hôtellerie", initial: "NV", logo: logoNovotel },
-  { name: "Basic-Fit", subtitle: "Sport & Fitness", initial: "BF", logo: logoBasicFit },
-  { name: "Yamaha", subtitle: "Automobile & Moto", initial: "YM", logo: logoYamaha },
-];
+type ReferenceItem = { name: string; subtitle: string; initial: string; logo: string };
 
 const ReferenceCard = ({ r, index, anyHovered, isHovered, onHover, onLeave }: {
-  r: typeof REFERENCES[0]; index: number;
+  r: ReferenceItem; index: number;
   anyHovered: boolean; isHovered: boolean;
   onHover: () => void; onLeave: () => void;
 }) => {
