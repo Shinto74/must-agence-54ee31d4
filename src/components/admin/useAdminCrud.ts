@@ -6,6 +6,8 @@ import { toast } from "sonner";
 interface CrudOptions {
   idField?: string;
   orderBy?: string;
+  /** Additional react-query keys to invalidate after a mutation. */
+  extraInvalidateKeys?: string[][];
 }
 
 export function useAdminCrud<T extends Record<string, any>>(table: string, options?: CrudOptions | string) {
