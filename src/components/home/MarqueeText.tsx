@@ -120,7 +120,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           will-change: transform;
         }
 
-        .mq-track:hover { animation-play-state: paused; }
+        /* pas de pause au survol — défilement continu */
 
         .mq-list { display: flex; align-items: center; flex-shrink: 0; }
 
