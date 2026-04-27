@@ -55,16 +55,17 @@ export default function AdminField({ label, type = "text", value, onChange, opti
 
   const Hint = () => (hint ? <p className="mt-1 text-[11px] text-slate-500">{hint}</p> : null);
 
-  if (type === "image") {
+  if (type === "image" || type === "video" || type === "media") {
+    const accept = type === "video" ? "video" : type === "media" ? "any" : "image";
     return (
       <div>
         <Label />
-        <ImageUpload value={value || ""} onChange={onChange} folder={imageFolder || "uploads"} />
+        <ImageUpload value={value || ""} onChange={onChange} folder={imageFolder || "uploads"} accept={accept} />
         <input
           type="text"
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Uploader ou coller une URL"
+          placeholder={accept === "video" ? "Uploader ou coller une URL vidéo (.mp4)" : "Uploader ou coller une URL"}
           className={`mt-2 ${inputBase} text-xs`}
         />
         <Hint />
