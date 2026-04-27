@@ -52,14 +52,18 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
             
             <div className="flex gap-3">
               {[
-                { label: "IG", href: "#" },
-                { label: "TK", href: "#" },
-                { label: "LI", href: "#" },
-                { label: "YT", href: "#" },
-              ].map((s) => (
+                { label: "IG", href: get("social_instagram", "") },
+                { label: "TK", href: get("social_tiktok", "") },
+                { label: "LI", href: get("social_linkedin", "") },
+                { label: "YT", href: get("social_youtube", "") },
+              ]
+                .filter((s) => s.href && s.href.trim().length > 0)
+                .map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full border flex items-center justify-center font-mono text-[10px] transition-all duration-300"
                   style={{
                     borderColor: isEntreprise ? "hsl(0 0% 22%)" : "hsl(var(--border))",
@@ -70,7 +74,7 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
                     (e.currentTarget as HTMLElement).style.borderColor = accentBorder;
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 78%)" : "";
+                    (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 78%)" : "hsl(var(--muted-foreground))";
                     (e.currentTarget as HTMLElement).style.borderColor = isEntreprise ? "hsl(45 50% 45%)" : "hsl(var(--border))";
                   }}
                 >
