@@ -33,20 +33,24 @@ type SettingMode = {
 type Props = {
   ownerTable: string;
   ownerId: string;
-  currentUrl: string;
+  /** Optionnel : valeur initiale de l'URL active. La vraie source de vérité est lue ci-dessous depuis la BDD. */
+  currentUrl?: string;
   folder?: string;
   title?: string;
   helper?: string;
-  aspect?: "portrait" | "square" | "landscape";
+  aspect?: "portrait" | "square" | "landscape" | "video";
+  /** Si true, accepte les vidéos (mp4) en plus des images. */
+  allowVideo?: boolean;
 } & (RowMode | SettingMode);
 
 export default function MediaGalleryEditor(props: Props) {
   const {
-    ownerTable, ownerId, currentUrl,
+    ownerTable, ownerId,
     folder = "uploads",
     title = "Galerie",
     helper = "Ajoute plusieurs versions sans perdre les anciennes. Clique sur une vignette pour la définir comme principale.",
     aspect = "portrait",
+    allowVideo = false,
   } = props;
 
   const qc = useQueryClient();
@@ -67,6 +71,33 @@ export default function MediaGalleryEditor(props: Props) {
     },
     enabled: Boolean(ownerId),
   });
+
+  // ─── Source de vérité pour "image active" : on lit depuis la BDD ─────
+  // Comme ça, peu importe ce qui se passe dans le state du parent,
+  // on affiche TOUJOURS la valeur actuellement persistée.
+  const { data: liveActiveUrl = "" } = useQuery({
+    queryKey: ["media_active_url", ownerTable, ownerId, props.mode === "row" ? props.targetTable : props.settingKey],
+    queryFn: async () => {
+      if (props.mode === "row") {
+        const { data } = await supabase
+          .from(props.targetTable as any)
+          .select(props.targetColumn)
+          .eq("id", ownerId)
+          .maybeSingle();
+        return ((data as any)?.[props.targetColumn] as string) || "";
+      } else {
+        const { data } = await supabase
+          .from("site_settings")
+          .select("value")
+          .eq("key", props.settingKey)
+          .maybeSingle();
+        return ((data as any)?.value as string) || "";
+      }
+    },
+    enabled: Boolean(ownerId),
+  });
+
+  const currentUrl = liveActiveUrl || props.currentUrl || "";
 
   const refetch = () => {
     qc.invalidateQueries({ queryKey: ["media_galleries", ownerTable, ownerId] });
