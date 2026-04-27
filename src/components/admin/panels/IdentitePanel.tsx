@@ -77,6 +77,18 @@ export default function IdentitePanel() {
           { key: "contact_location", label: "Adresse", placeholder: "Paris, France" },
         ]}
       />
+
+      <SettingsBlock
+        title="Réseaux sociaux"
+        description="Liens des icônes sociales du footer. Laisse vide pour masquer une icône."
+        fields={[
+          { key: "social_instagram", label: "Instagram", type: "url", placeholder: "https://instagram.com/..." },
+          { key: "social_tiktok", label: "TikTok", type: "url", placeholder: "https://tiktok.com/@..." },
+          { key: "social_linkedin", label: "LinkedIn", type: "url", placeholder: "https://linkedin.com/company/..." },
+          { key: "social_youtube", label: "YouTube", type: "url", placeholder: "https://youtube.com/@..." },
+        ]}
+      />
+
       <ContactSectorsEditor />
     </div>
   );
