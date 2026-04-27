@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Instagram, Linkedin, Youtube, Music2 } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 
@@ -52,35 +53,38 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
             
             <div className="flex gap-3">
               {[
-                { label: "IG", href: get("social_instagram", "") },
-                { label: "TK", href: get("social_tiktok", "") },
-                { label: "LI", href: get("social_linkedin", "") },
-                { label: "YT", href: get("social_youtube", "") },
+                { label: "Instagram", href: get("social_instagram", ""), Icon: Instagram },
+                { label: "TikTok", href: get("social_tiktok", ""), Icon: Music2 },
+                { label: "LinkedIn", href: get("social_linkedin", ""), Icon: Linkedin },
+                { label: "YouTube", href: get("social_youtube", ""), Icon: Youtube },
               ]
                 .filter((s) => s.href && s.href.trim().length > 0)
-                .map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full border flex items-center justify-center font-mono text-[10px] transition-all duration-300"
-                  style={{
-                    borderColor: isEntreprise ? "hsl(0 0% 22%)" : "hsl(var(--border))",
-                    color: isEntreprise ? "hsl(45 20% 78%)" : "hsl(var(--muted-foreground))",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = accentColor;
-                    (e.currentTarget as HTMLElement).style.borderColor = accentBorder;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 78%)" : "hsl(var(--muted-foreground))";
-                    (e.currentTarget as HTMLElement).style.borderColor = isEntreprise ? "hsl(45 50% 45%)" : "hsl(var(--border))";
-                  }}
-                >
-                  {s.label}
-                </a>
-              ))}
+                .map(({ label, href, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{
+                      borderColor: isEntreprise ? "hsl(45 50% 45%)" : "hsl(var(--border))",
+                      color: isEntreprise ? "hsl(45 20% 78%)" : "hsl(var(--muted-foreground))",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = accentColor;
+                      (e.currentTarget as HTMLElement).style.borderColor = accentBorder;
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 16px ${accentBg}`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 78%)" : "hsl(var(--muted-foreground))";
+                      (e.currentTarget as HTMLElement).style.borderColor = isEntreprise ? "hsl(45 50% 45%)" : "hsl(var(--border))";
+                      (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                    }}
+                  >
+                    <Icon size={16} strokeWidth={1.75} />
+                  </a>
+                ))}
             </div>
           </div>
 
