@@ -4,10 +4,10 @@ import { SITE } from "@/lib/constants";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { Menu, X } from "lucide-react";
 
-const NAV_ITEMS = [
-  { label: "Accueil", path: "/" },
-  { label: "Pôle Artiste", path: "/artiste" },
-  { label: "Pôle Entreprise", path: "/entreprise" },
+const DEFAULT_NAV_ITEMS = [
+  { key: "home", label: "Accueil", path: "/" },
+  { key: "artiste", label: "Pôle Artiste", path: "/artiste" },
+  { key: "entreprise", label: "Pôle Entreprise", path: "/entreprise" },
 ];
 
 const Header = () => {
@@ -20,6 +20,11 @@ const Header = () => {
   const logoWhite = get("logo_white", SITE.logoWhite);
   const logoGreen = get("logo_green", SITE.logoGreen);
   const brandName = get("brand_name", "MUST AGENCE");
+  const contactCtaLabel = get("header_contact_label", "Contact");
+  const NAV_ITEMS = DEFAULT_NAV_ITEMS.map((item) => ({
+    ...item,
+    label: get(`header_nav_${item.key}`, item.label),
+  }));
 
   useEffect(() => {
     const onScroll = () => {
@@ -202,7 +207,7 @@ const Header = () => {
               (e.currentTarget as HTMLElement).style.boxShadow = "none";
             }}
           >
-            Contact
+            {contactCtaLabel}
           </button>
         </div>
 
@@ -275,7 +280,7 @@ const Header = () => {
               color: "#fff",
             }}
           >
-            Contact
+            {contactCtaLabel}
           </button>
         </nav>
       )}

@@ -89,6 +89,17 @@ export default function IdentitePanel() {
         ]}
       />
 
+      <SettingsBlock
+        title="Header (navigation)"
+        description="Labels affichés dans la barre de navigation et bouton CTA Contact."
+        fields={[
+          { key: "header_nav_home", label: "Lien — Accueil", placeholder: "Accueil" },
+          { key: "header_nav_artiste", label: "Lien — Pôle Artiste", placeholder: "Pôle Artiste" },
+          { key: "header_nav_entreprise", label: "Lien — Pôle Entreprise", placeholder: "Pôle Entreprise" },
+          { key: "header_contact_label", label: "Bouton CTA Contact", placeholder: "Contact" },
+        ]}
+      />
+
       <ContactSectorsEditor />
     </div>
   );
