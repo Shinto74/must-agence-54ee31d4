@@ -34,6 +34,7 @@ export function useAdminCrud<T extends Record<string, any>>(table: string, optio
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: [`admin_${table}`] });
     qc.invalidateQueries({ queryKey: [table] });
+    (opts.extraInvalidateKeys || []).forEach((k) => qc.invalidateQueries({ queryKey: k }));
   };
 
   const save = async (record: T) => {
