@@ -7,6 +7,8 @@ import PillarItemsEditor from "./editors/PillarItemsEditor";
 import ArtistesEditor from "./editors/ArtistesEditor";
 import TeamEditor from "./editors/TeamEditor";
 import ContactFormTypesEditor from "./editors/ContactFormTypesEditor";
+import MediaGalleryEditor from "./editors/MediaGalleryEditor";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 /**
  * Page Artiste — sections affichées sur /artiste, dans l'ordre EXACT du rendu :
