@@ -202,6 +202,7 @@ export default function MediaGalleryEditor(props: Props) {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
           {images.map((img) => {
             const isActive = img.url === currentUrl;
+            const isVideo = /\.(mp4|webm|mov|m4v)(\?|$)/i.test(img.url);
             return (
               <div
                 key={img.id}
@@ -214,9 +215,13 @@ export default function MediaGalleryEditor(props: Props) {
                   onClick={() => !isActive && setActive(img.url)}
                   disabled={busy || isActive}
                   className={`block w-full ${aspectClass} bg-slate-100`}
-                  title={isActive ? "Image principale" : "Définir comme image principale"}
+                  title={isActive ? "Média principal" : "Définir comme média principal"}
                 >
-                  <img src={img.url} alt="" className="w-full h-full object-cover" />
+                  {isVideo ? (
+                    <video src={img.url} muted playsInline className="w-full h-full object-cover" />
+                  ) : (
+                    <img src={img.url} alt="" className="w-full h-full object-cover" />
+                  )}
                 </button>
 
                 {isActive && (
@@ -264,9 +269,9 @@ export default function MediaGalleryEditor(props: Props) {
       {ownerId && (
         <div>
           <p className="text-[11px] font-mono text-slate-600 uppercase tracking-wider mb-1.5 font-semibold">
-            + Ajouter une nouvelle image
+            + Ajouter {allowVideo ? "une image ou vidéo" : "une nouvelle image"}
           </p>
-          <ImageUpload value="" onChange={addImage} folder={folder} />
+          <ImageUpload value="" onChange={addImage} folder={folder} accept={allowVideo ? "any" : "image"} />
         </div>
       )}
     </section>
