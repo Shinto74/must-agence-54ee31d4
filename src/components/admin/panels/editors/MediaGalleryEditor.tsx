@@ -101,6 +101,8 @@ export default function MediaGalleryEditor(props: Props) {
 
   const refetch = () => {
     qc.invalidateQueries({ queryKey: ["media_galleries", ownerTable, ownerId] });
+    qc.invalidateQueries({ queryKey: ["media_active_url", ownerTable, ownerId] });
+    qc.invalidateQueries({ queryKey: ["site_settings"] });
     (props.invalidateKeys || []).forEach((k) => qc.invalidateQueries({ queryKey: k }));
   };
 
