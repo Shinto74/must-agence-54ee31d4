@@ -34,19 +34,19 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
 
   const items = useDb
     ? dbItems!.map((it: any, i: number) => {
-        if (it.kind === "logo" && it.image_url) {
-          const brandColor = BRAND_COLORS[it.text_value?.toUpperCase?.() || ""] || "255, 255, 255";
-          return (
-            <div key={i} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
-              <div className="mq-partner">
-                <img src={it.image_url} alt={it.text_value || ""} className="mq-logo" loading="lazy" draggable={false} />
-              </div>
-            </div>
-          );
-        }
+        const text = (it.text_value || "").trim();
+        const hasLogo = it.kind === "logo" && it.image_url;
+        const brandColor = BRAND_COLORS[text.toUpperCase()] || "204, 255, 0";
         return (
-          <div key={i} className="mq-item">
-            <span className="mq-word">{it.text_value}</span>
+          <div key={i} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
+            <div className="mq-partner">
+              {hasLogo && (
+                <img src={it.image_url} alt={text} className="mq-logo" loading="lazy" draggable={false} />
+              )}
+              {text && (!hasLogo || true) && (
+                <span className={hasLogo ? "mq-label" : "mq-word"}>{text}</span>
+              )}
+            </div>
           </div>
         );
       })
