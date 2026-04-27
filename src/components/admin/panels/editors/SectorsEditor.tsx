@@ -13,6 +13,13 @@ export default function SectorsEditor() {
         { key: "name", label: "Nom" },
         { key: "description", label: "Description", type: "textarea" },
         { key: "icon", label: "Icône (emoji)" },
+        {
+          key: "image_url",
+          label: "Image principale",
+          type: "image",
+          imageFolder: "sectors",
+          hint: "Upload direct de l'image affichée sur l'orbite. Tu pourras gérer plusieurs visuels via la galerie ci-dessous.",
+        },
         { key: "display_order", label: "Ordre", type: "number" },
       ]}
       renderItem={(item) => (
@@ -21,6 +28,7 @@ export default function SectorsEditor() {
           <p className="text-sm text-slate-900">{item.icon} <strong>{item.name}</strong></p>
         </div>
       )}
+      extraInvalidateKeys={[["entreprise_sectors"]]}
       renderExtra={(row) => (
         <MediaGalleryEditor
           ownerTable="entreprise_sectors"

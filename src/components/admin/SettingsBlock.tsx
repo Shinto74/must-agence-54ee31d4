@@ -3,7 +3,7 @@ import { useAdminCrud } from "./useAdminCrud";
 import ImageUpload from "./ImageUpload";
 import { Loader2, Check } from "lucide-react";
 
-export type SettingFieldType = "text" | "textarea" | "image" | "url";
+export type SettingFieldType = "text" | "textarea" | "image" | "video" | "media" | "url";
 
 export interface SettingField {
   key: string;
@@ -54,12 +54,15 @@ function SettingRow({ field, crud, imageFolder }: { field: SettingField; crud: R
     if (!touched) setValue(dbValue);
   }, [dbValue, touched]);
 
+  const isMediaField = field.type === "image" || field.type === "video" || field.type === "media";
+  const persistedType = field.type === "video" ? "video" : field.type === "media" ? "media" : field.type === "image" ? "image" : field.type === "textarea" ? "textarea" : "text";
+
   const save = async () => {
     if (value === dbValue) return;
     await crud.save({
       key: field.key,
       value,
-      type: field.type === "image" ? "image" : field.type === "textarea" ? "textarea" : "text",
+      type: persistedType,
     } as any);
     setTouched(false);
     setSavedFlash(true);
@@ -77,23 +80,37 @@ function SettingRow({ field, crud, imageFolder }: { field: SettingField; crud: R
         {field.hint && <p className="text-[10px] text-slate-400 mt-0.5">{field.hint}</p>}
       </div>
       <div className="relative">
-        {field.type === "image" ? (
-          <ImageUpload
-            value={value}
-            onChange={(v) => {
-              setValue(v);
-              setTouched(true);
-              // auto-save image immediately
-              setTimeout(() => {
-                crud.save({ key: field.key, value: v, type: "image" } as any).then(() => {
-                  setTouched(false);
-                  setSavedFlash(true);
-                  setTimeout(() => setSavedFlash(false), 1500);
-                });
-              }, 50);
-            }}
-            folder={imageFolder}
-          />
+        {isMediaField ? (
+          <>
+            <ImageUpload
+              value={value}
+              accept={field.type === "video" ? "video" : field.type === "media" ? "any" : "image"}
+              onChange={(v) => {
+                setValue(v);
+                setTouched(true);
+                // auto-save media immediately
+                setTimeout(() => {
+                  crud.save({ key: field.key, value: v, type: persistedType } as any).then(() => {
+                    setTouched(false);
+                    setSavedFlash(true);
+                    setTimeout(() => setSavedFlash(false), 1500);
+                  });
+                }, 50);
+              }}
+              folder={imageFolder}
+            />
+            <input
+              type="text"
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setTouched(true);
+              }}
+              onBlur={onBlur}
+              placeholder={field.type === "video" ? "Coller une URL .mp4" : "Coller une URL"}
+              className="mt-2 w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+            />
+          </>
         ) : field.type === "textarea" ? (
           <textarea
             value={value}

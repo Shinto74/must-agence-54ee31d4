@@ -33,7 +33,7 @@ export default function PageEntreprisePanel() {
           { key: "hero_entreprise_description", label: "Description", type: "textarea" },
           { key: "hero_entreprise_cta_primary", label: "Bouton principal" },
           { key: "hero_entreprise_cta_secondary", label: "Bouton secondaire" },
-          { key: "hero_entreprise_video_url", label: "Vidéo de fond", type: "image", hint: "URL d'une vidéo MP4" },
+          { key: "hero_entreprise_video_url", label: "Vidéo de fond", type: "video", hint: "MP4 — uploade ou colle une URL" },
         ]}
       />
 

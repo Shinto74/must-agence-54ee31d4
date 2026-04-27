@@ -42,9 +42,22 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const isLogo = it.kind === "logo" && it.image_url;
         const upper = text.toUpperCase();
         const brandColor = BRAND_COLORS[upper] || "255, 255, 255";
-        // Cas spécial : le logo TheArtist est une icône seule (sans wordmark intégré)
-        // → on affiche aussi le nom à côté pour qu'il soit identifiable.
-        const showLabelWithLogo = isLogo && (upper === "THE ARTIST" || upper === "THEARTIST");
+        // Logos avec wordmark intégré (pas besoin d'afficher le texte à côté)
+        const LOGOS_WITH_WORDMARK = new Set([
+          "SPOTIFY",
+          "TIKTOK",
+          "YOUTUBE",
+          "UNIVERSAL MUSIC",
+          "INSTAGRAM",
+          "APPLE MUSIC",
+          "SOUNDCLOUD",
+          "DEEZER",
+          "META",
+          "GOOGLE",
+          "SNAPCHAT",
+        ]);
+        // Pour tous les autres logos (icône seule, monogramme…), on affiche le label à côté
+        const showLabelWithLogo = isLogo && text && !LOGOS_WITH_WORDMARK.has(upper);
         const isLarge = upper === "UNIVERSAL MUSIC";
         return (
           <div key={i} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>

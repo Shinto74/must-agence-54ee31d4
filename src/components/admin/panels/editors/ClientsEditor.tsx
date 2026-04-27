@@ -19,6 +19,7 @@ export default function ClientsEditor() {
           { key: "display_order", label: "Ordre", type: "number" },
         ]}
         renderItem={(item) => <p className="text-sm text-slate-900"><strong>{item.name}</strong></p>}
+        extraInvalidateKeys={[["clients_with_categories"]]}
       />
 
       <TableEditor
@@ -30,6 +31,13 @@ export default function ClientsEditor() {
         fields={[
           { key: "name", label: "Nom" },
           { key: "category_id", label: "Catégorie", type: "select", options: catOptions },
+          {
+            key: "logo_url",
+            label: "Logo",
+            type: "image",
+            imageFolder: "clients",
+            hint: "Upload direct du logo principal. Une fois enregistré, tu pourras gérer plusieurs variantes via la galerie ci-dessous.",
+          },
           { key: "display_order", label: "Ordre", type: "number" },
         ]}
         renderItem={(item) => (
@@ -41,6 +49,7 @@ export default function ClientsEditor() {
             </p>
           </div>
         )}
+        extraInvalidateKeys={[["clients_with_categories"]]}
         renderExtra={(row) => (
           <MediaGalleryEditor
             ownerTable="clients"
@@ -53,7 +62,7 @@ export default function ClientsEditor() {
             title="Variantes de logo"
             helper="Garde plusieurs versions (couleur, N&B, monochrome…). Clique sur une vignette pour la définir comme logo affiché."
             aspect="square"
-            invalidateKeys={[["admin_clients"], ["clients_with_categories"]]}
+            invalidateKeys={[["admin_clients"], ["clients"], ["clients_with_categories"]]}
           />
         )}
       />

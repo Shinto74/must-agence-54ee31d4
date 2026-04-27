@@ -101,7 +101,7 @@ export default function ServiceChipsEditor({ serviceId }: Props) {
             }
           }}
           placeholder="Nouveau badge…"
-          className="flex-1 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs"
+          className="flex-1 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-900 placeholder:text-slate-400"
         />
         <button
           type="button"
