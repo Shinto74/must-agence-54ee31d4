@@ -209,7 +209,10 @@ const ClipPortugal = () => {
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 poster={cpPoster}
                 loop playsInline muted
-              />
+                preload="metadata"
+              >
+                {cpVideoUrl && <source src={cpVideoUrl} type="video/mp4" />}
+              </video>
 
               {/* Gradient overlay */}
               <div
