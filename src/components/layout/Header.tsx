@@ -20,6 +20,11 @@ const Header = () => {
   const logoWhite = get("logo_white", SITE.logoWhite);
   const logoGreen = get("logo_green", SITE.logoGreen);
   const brandName = get("brand_name", "MUST AGENCE");
+  const contactCtaLabel = get("header_contact_label", "Contact");
+  const NAV_ITEMS = DEFAULT_NAV_ITEMS.map((item) => ({
+    ...item,
+    label: get(`header_nav_${item.key}`, item.label),
+  }));
 
   useEffect(() => {
     const onScroll = () => {
