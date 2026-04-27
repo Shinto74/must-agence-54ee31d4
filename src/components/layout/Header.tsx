@@ -4,10 +4,10 @@ import { SITE } from "@/lib/constants";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { Menu, X } from "lucide-react";
 
-const NAV_ITEMS = [
-  { label: "Accueil", path: "/" },
-  { label: "Pôle Artiste", path: "/artiste" },
-  { label: "Pôle Entreprise", path: "/entreprise" },
+const DEFAULT_NAV_ITEMS = [
+  { key: "home", label: "Accueil", path: "/" },
+  { key: "artiste", label: "Pôle Artiste", path: "/artiste" },
+  { key: "entreprise", label: "Pôle Entreprise", path: "/entreprise" },
 ];
 
 const Header = () => {
