@@ -114,12 +114,13 @@ const FeatureItem = ({ feature, tooltip }: { feature: string; tooltip?: string }
 /* ─── THEARTIST BONUS ─── */
 
 const TheArtistBonus = ({ text }: { text: string }) => (
-  <div className="rounded-lg mb-4 relative group/ta border border-primary/20 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_20px_hsl(var(--neon)/0.08)]">
-    {/* Shimmer animation */}
-    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.06] to-transparent -translate-x-full animate-[ta-shimmer_3s_ease-in-out_infinite]" />
-    {/* Subtle gradient bg */}
-    <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.04] to-transparent" />
-    
+  <div className="rounded-lg mb-4 relative group/ta border border-primary/20 transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_20px_hsl(var(--neon)/0.08)]">
+    {/* Wrapper pour shimmer & gradient (clipped) */}
+    <div className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.06] to-transparent -translate-x-full animate-[ta-shimmer_3s_ease-in-out_infinite]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.04] to-transparent" />
+    </div>
+
     <div className="relative flex items-center gap-3 px-3 py-2.5">
       {/* Logo A with pulse glow */}
       <div className="w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center shrink-0 border border-primary/15 animate-[ta-glow_2.5s_ease-in-out_infinite]">
@@ -137,17 +138,8 @@ const TheArtistBonus = ({ text }: { text: string }) => (
         <p className="text-[13px] font-bold text-primary font-clash leading-tight">{text}</p>
       </div>
       
-      {/* Info */}
-      <div className="relative group/info shrink-0">
-        <button className="w-6 h-6 rounded-full border border-primary/20 flex items-center justify-center text-primary/40 hover:text-primary hover:border-primary/50 transition-all duration-300 cursor-help">
-          <Info size={10} />
-        </button>
-        <div className="absolute bottom-full right-0 mb-2 z-50 w-56 bg-surface border border-primary/30 rounded-lg p-3 text-[11px] text-foreground/70 shadow-[0_8px_24px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all duration-200 pointer-events-none leading-relaxed">
-          <p className="font-bold text-primary text-xs mb-1.5">TheArtist</p>
-          <p>Réseau pro-social pour artistes. Portfolio, booking et messagerie pour développer votre carrière.</p>
-          <div className="absolute -bottom-1 right-3 w-2 h-2 bg-surface border-r border-b border-primary/30 rotate-45" />
-        </div>
-      </div>
+      {/* Info — tooltip rendu via portal pour ne pas être clippé */}
+      <TheArtistInfoTooltip />
     </div>
     
     <style>{`
@@ -162,6 +154,48 @@ const TheArtistBonus = ({ text }: { text: string }) => (
     `}</style>
   </div>
 );
+
+/* Tooltip TheArtist — rendu via portal pour échapper aux overflow:hidden */
+const TheArtistInfoTooltip = () => {
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (!open || !btnRef.current) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    const tooltipWidth = 224; // w-56
+    let left = rect.right - tooltipWidth;
+    if (left < 8) left = 8;
+    setPos({ top: rect.top - 8, left });
+  }, [open]);
+
+  return (
+    <div className="relative shrink-0">
+      <button
+        ref={btnRef}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        className="w-6 h-6 rounded-full border border-primary/20 flex items-center justify-center text-primary/40 hover:text-primary hover:border-primary/50 transition-all duration-300 cursor-help"
+        aria-label="Plus d'infos sur TheArtist"
+      >
+        <Info size={10} />
+      </button>
+      {open && createPortal(
+        <div
+          className="fixed z-[9999] w-56 pointer-events-none"
+          style={{ top: pos.top, left: pos.left, transform: "translateY(-100%)" }}
+        >
+          <div className="bg-surface border border-primary/30 rounded-lg p-3 text-[11px] text-foreground/70 shadow-[0_8px_24px_rgba(0,0,0,0.5)] leading-relaxed">
+            <p className="font-bold text-primary text-xs mb-1.5">TheArtist</p>
+            <p>Réseau pro-social pour artistes. Portfolio, booking et messagerie pour développer votre carrière.</p>
+          </div>
+        </div>,
+        document.body
+      )}
+    </div>
+  );
+};
 
 /* ─── PACK CARD ─── */
 const PACK_PRICE_MAP: Record<string, string> = {
