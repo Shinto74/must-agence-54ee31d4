@@ -7,6 +7,8 @@ import PillarItemsEditor from "./editors/PillarItemsEditor";
 import ArtistesEditor from "./editors/ArtistesEditor";
 import TeamEditor from "./editors/TeamEditor";
 import ContactFormTypesEditor from "./editors/ContactFormTypesEditor";
+import MediaGalleryEditor from "./editors/MediaGalleryEditor";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 /**
  * Page Artiste — sections affichées sur /artiste, dans l'ordre EXACT du rendu :
@@ -26,6 +28,7 @@ import ContactFormTypesEditor from "./editors/ContactFormTypesEditor";
  * la page d'entrée Gateway, ni sur la page Entreprise).
  */
 export default function PageArtistePanel() {
+  const { get } = useSiteSettings();
   return (
     <div className="space-y-6 max-w-5xl">
       <div className="px-1">
@@ -38,6 +41,7 @@ export default function PageArtistePanel() {
 
       <SettingsBlock
         title="1. Hero — Bannière Artiste"
+        description="La vidéo de fond du Hero se gère dans Identité & Global → 'Vidéo Hero principale (Pôle Artiste)'."
         fields={[
           { key: "hero_artiste_badge", label: "Badge / Tag", placeholder: "Pôle Artiste" },
           { key: "hero_artiste_label", label: "Label", placeholder: "Influence Artistique" },
@@ -46,7 +50,6 @@ export default function PageArtistePanel() {
           { key: "hero_artiste_subtitle", label: "Sous-titre", type: "textarea" },
           { key: "hero_artiste_cta_primary", label: "Bouton principal" },
           { key: "hero_artiste_cta_secondary", label: "Bouton secondaire" },
-          { key: "hero_artiste_video_url", label: "Vidéo de fond", type: "image", hint: "URL d'une vidéo MP4 ou laisser vide" },
         ]}
       />
 
@@ -106,9 +109,34 @@ export default function PageArtistePanel() {
           { key: "clip_portugal_subtitle", label: "Sous-titre (legacy)", type: "textarea" },
           { key: "clip_portugal_cta", label: "Bouton — texte court" },
           { key: "clip_portugal_cta_label", label: "Bouton — texte long" },
-          { key: "clip_portugal_video_url", label: "URL vidéo MP4", type: "image", imageFolder: "videos" },
-          { key: "clip_portugal_poster", label: "Image poster (avant lecture)", type: "image", imageFolder: "videos" },
         ]}
+      />
+
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="clip_portugal_video_url"
+        currentUrl={get("clip_portugal_video_url")}
+        mode="setting"
+        settingKey="clip_portugal_video_url"
+        folder="videos"
+        title="Clip Portugal — Vidéo principale"
+        helper="Upload ta/tes vidéo(s) MP4. Clique sur une vignette pour la définir comme vidéo principale du player."
+        aspect="video"
+        allowVideo
+        invalidateKeys={[["site_settings"]]}
+      />
+
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="clip_portugal_poster"
+        currentUrl={get("clip_portugal_poster")}
+        mode="setting"
+        settingKey="clip_portugal_poster"
+        folder="videos"
+        title="Clip Portugal — Image poster (avant lecture)"
+        helper="Image affichée tant que la vidéo n'est pas lancée."
+        aspect="video"
+        invalidateKeys={[["site_settings"]]}
       />
       <ClipPortugalEditor />
 
