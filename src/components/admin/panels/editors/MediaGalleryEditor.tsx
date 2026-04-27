@@ -177,6 +177,7 @@ export default function MediaGalleryEditor(props: Props) {
   const aspectClass =
     aspect === "square" ? "aspect-square" :
     aspect === "landscape" ? "aspect-video" :
+    aspect === "video" ? "aspect-video" :
     "aspect-[3/4]";
 
   return (
