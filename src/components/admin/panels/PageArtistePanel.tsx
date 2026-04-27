@@ -41,6 +41,7 @@ export default function PageArtistePanel() {
 
       <SettingsBlock
         title="1. Hero — Bannière Artiste"
+        description="La vidéo de fond du Hero se gère dans Identité & Global → 'Vidéo Hero principale (Pôle Artiste)'."
         fields={[
           { key: "hero_artiste_badge", label: "Badge / Tag", placeholder: "Pôle Artiste" },
           { key: "hero_artiste_label", label: "Label", placeholder: "Influence Artistique" },
@@ -49,7 +50,6 @@ export default function PageArtistePanel() {
           { key: "hero_artiste_subtitle", label: "Sous-titre", type: "textarea" },
           { key: "hero_artiste_cta_primary", label: "Bouton principal" },
           { key: "hero_artiste_cta_secondary", label: "Bouton secondaire" },
-          { key: "hero_artiste_video_url", label: "Vidéo de fond", type: "image", hint: "URL d'une vidéo MP4 ou laisser vide" },
         ]}
       />
 
