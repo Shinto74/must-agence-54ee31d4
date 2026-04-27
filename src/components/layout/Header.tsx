@@ -207,7 +207,7 @@ const Header = () => {
               (e.currentTarget as HTMLElement).style.boxShadow = "none";
             }}
           >
-            Contact
+            {contactCtaLabel}
           </button>
         </div>
 
@@ -280,7 +280,7 @@ const Header = () => {
               color: "#fff",
             }}
           >
-            Contact
+            {contactCtaLabel}
           </button>
         </nav>
       )}
