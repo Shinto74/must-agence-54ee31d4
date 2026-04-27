@@ -42,24 +42,18 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const isLogo = it.kind === "logo" && it.image_url;
         const upper = text.toUpperCase();
         const brandColor = BRAND_COLORS[upper] || "255, 255, 255";
-        // Cas spécial : le logo TheArtist est une icône seule (sans wordmark intégré)
-        // → on affiche aussi le nom à côté pour qu'il soit identifiable.
-        const showLabelWithLogo = isLogo && (upper === "THE ARTIST" || upper === "THEARTIST");
         const isLarge = upper === "UNIVERSAL MUSIC";
         return (
           <div key={i} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
             <div className="mq-partner">
               {isLogo ? (
-                <>
-                  <img
-                    src={it.image_url}
-                    alt={text}
-                    className={`mq-logo ${isLarge ? "mq-logo--large" : ""}`}
-                    loading="lazy"
-                    draggable={false}
-                  />
-                  {showLabelWithLogo && <span className="mq-label">{text}</span>}
-                </>
+                <img
+                  src={it.image_url}
+                  alt={text}
+                  className={`mq-logo ${isLarge ? "mq-logo--large" : ""}`}
+                  loading="lazy"
+                  draggable={false}
+                />
               ) : (
                 text && <span className="mq-word">{text}</span>
               )}
