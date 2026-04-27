@@ -2,7 +2,7 @@ import ImageUpload from "./ImageUpload";
 
 interface Props {
   label: string;
-  type?: "text" | "textarea" | "checkbox" | "image" | "select" | "number";
+  type?: "text" | "textarea" | "checkbox" | "image" | "video" | "media" | "select" | "number";
   value: any;
   onChange: (val: any) => void;
   options?: { label: string; value: string }[];
