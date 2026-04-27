@@ -28,6 +28,7 @@ import { useSiteSettings } from "@/hooks/useSiteContent";
  * la page d'entrée Gateway, ni sur la page Entreprise).
  */
 export default function PageArtistePanel() {
+  const { get } = useSiteSettings();
   return (
     <div className="space-y-6 max-w-5xl">
       <div className="px-1">
