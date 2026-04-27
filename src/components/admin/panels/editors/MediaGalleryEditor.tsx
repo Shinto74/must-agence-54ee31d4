@@ -33,20 +33,24 @@ type SettingMode = {
 type Props = {
   ownerTable: string;
   ownerId: string;
-  currentUrl: string;
+  /** Optionnel : valeur initiale de l'URL active. La vraie source de vérité est lue ci-dessous depuis la BDD. */
+  currentUrl?: string;
   folder?: string;
   title?: string;
   helper?: string;
-  aspect?: "portrait" | "square" | "landscape";
+  aspect?: "portrait" | "square" | "landscape" | "video";
+  /** Si true, accepte les vidéos (mp4) en plus des images. */
+  allowVideo?: boolean;
 } & (RowMode | SettingMode);
 
 export default function MediaGalleryEditor(props: Props) {
   const {
-    ownerTable, ownerId, currentUrl,
+    ownerTable, ownerId,
     folder = "uploads",
     title = "Galerie",
     helper = "Ajoute plusieurs versions sans perdre les anciennes. Clique sur une vignette pour la définir comme principale.",
     aspect = "portrait",
+    allowVideo = false,
   } = props;
 
   const qc = useQueryClient();
@@ -68,8 +72,37 @@ export default function MediaGalleryEditor(props: Props) {
     enabled: Boolean(ownerId),
   });
 
+  // ─── Source de vérité pour "image active" : on lit depuis la BDD ─────
+  // Comme ça, peu importe ce qui se passe dans le state du parent,
+  // on affiche TOUJOURS la valeur actuellement persistée.
+  const { data: liveActiveUrl = "" } = useQuery({
+    queryKey: ["media_active_url", ownerTable, ownerId, props.mode === "row" ? props.targetTable : props.settingKey],
+    queryFn: async () => {
+      if (props.mode === "row") {
+        const { data } = await supabase
+          .from(props.targetTable as any)
+          .select(props.targetColumn)
+          .eq("id", ownerId)
+          .maybeSingle();
+        return ((data as any)?.[props.targetColumn] as string) || "";
+      } else {
+        const { data } = await supabase
+          .from("site_settings")
+          .select("value")
+          .eq("key", props.settingKey)
+          .maybeSingle();
+        return ((data as any)?.value as string) || "";
+      }
+    },
+    enabled: Boolean(ownerId),
+  });
+
+  const currentUrl = liveActiveUrl || props.currentUrl || "";
+
   const refetch = () => {
     qc.invalidateQueries({ queryKey: ["media_galleries", ownerTable, ownerId] });
+    qc.invalidateQueries({ queryKey: ["media_active_url", ownerTable, ownerId] });
+    qc.invalidateQueries({ queryKey: ["site_settings"] });
     (props.invalidateKeys || []).forEach((k) => qc.invalidateQueries({ queryKey: k }));
   };
 
@@ -144,6 +177,7 @@ export default function MediaGalleryEditor(props: Props) {
   const aspectClass =
     aspect === "square" ? "aspect-square" :
     aspect === "landscape" ? "aspect-video" :
+    aspect === "video" ? "aspect-video" :
     "aspect-[3/4]";
 
   return (
@@ -169,6 +203,7 @@ export default function MediaGalleryEditor(props: Props) {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
           {images.map((img) => {
             const isActive = img.url === currentUrl;
+            const isVideo = /\.(mp4|webm|mov|m4v)(\?|$)/i.test(img.url);
             return (
               <div
                 key={img.id}
@@ -181,9 +216,13 @@ export default function MediaGalleryEditor(props: Props) {
                   onClick={() => !isActive && setActive(img.url)}
                   disabled={busy || isActive}
                   className={`block w-full ${aspectClass} bg-slate-100`}
-                  title={isActive ? "Image principale" : "Définir comme image principale"}
+                  title={isActive ? "Média principal" : "Définir comme média principal"}
                 >
-                  <img src={img.url} alt="" className="w-full h-full object-cover" />
+                  {isVideo ? (
+                    <video src={img.url} muted playsInline className="w-full h-full object-cover" />
+                  ) : (
+                    <img src={img.url} alt="" className="w-full h-full object-cover" />
+                  )}
                 </button>
 
                 {isActive && (
@@ -231,9 +270,9 @@ export default function MediaGalleryEditor(props: Props) {
       {ownerId && (
         <div>
           <p className="text-[11px] font-mono text-slate-600 uppercase tracking-wider mb-1.5 font-semibold">
-            + Ajouter une nouvelle image
+            + Ajouter {allowVideo ? "une image ou vidéo" : "une nouvelle image"}
           </p>
-          <ImageUpload value="" onChange={addImage} folder={folder} />
+          <ImageUpload value="" onChange={addImage} folder={folder} accept={allowVideo ? "any" : "image"} />
         </div>
       )}
     </section>

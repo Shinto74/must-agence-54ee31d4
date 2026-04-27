@@ -9,9 +9,11 @@ interface Props {
   bucket?: string;
   folder?: string;
   className?: string;
+  /** "image" (default), "video" ou "any" pour accepter image+vidéo */
+  accept?: "image" | "video" | "any";
 }
 
-export default function ImageUpload({ value, onChange, bucket = "site-assets", folder = "uploads", className }: Props) {
+export default function ImageUpload({ value, onChange, bucket = "site-assets", folder = "uploads", className, accept = "image" }: Props) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,13 +49,19 @@ export default function ImageUpload({ value, onChange, bucket = "site-assets", f
   };
 
   const displayUrl = preview || value;
+  const isVideo = (url: string) => /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url);
+  const acceptAttr = accept === "video" ? "video/*" : accept === "any" ? "image/*,video/*" : "image/*";
 
   return (
     <div className={className}>
-      <input ref={inputRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
+      <input ref={inputRef} type="file" accept={acceptAttr} onChange={handleFile} className="hidden" />
       {displayUrl ? (
         <div className="relative group w-full aspect-video rounded-lg overflow-hidden border border-border bg-muted/20">
-          <img src={displayUrl} alt="" className="w-full h-full object-cover" />
+          {isVideo(displayUrl) ? (
+            <video src={displayUrl} muted playsInline className="w-full h-full object-cover" />
+          ) : (
+            <img src={displayUrl} alt="" className="w-full h-full object-cover" />
+          )}
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
             <button
               onClick={() => inputRef.current?.click()}

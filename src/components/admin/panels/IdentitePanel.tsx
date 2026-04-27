@@ -7,6 +7,7 @@ export default function IdentitePanel() {
   const { get } = useSiteSettings();
   const logoWhite = get("logo_white");
   const logoGreen = get("logo_green");
+  const heroVideo = get("hero_video_url");
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -53,13 +54,18 @@ export default function IdentitePanel() {
         invalidateKeys={[["site_settings"]]}
       />
 
-      <SettingsBlock
-        title="Vidéo Hero principale"
-        description="Vidéo de fond du hero du pôle Artiste"
-        imageFolder="videos"
-        fields={[
-          { key: "hero_video_url", label: "URL vidéo MP4", type: "image", hint: "Uploader un .mp4 ou coller une URL" },
-        ]}
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="hero_video_url"
+        currentUrl={heroVideo}
+        mode="setting"
+        settingKey="hero_video_url"
+        folder="videos"
+        title="Vidéo Hero principale (Pôle Artiste)"
+        helper="Vidéo de fond du hero du pôle Artiste. Tu peux uploader plusieurs vidéos et basculer entre elles. Format MP4 recommandé."
+        aspect="video"
+        allowVideo
+        invalidateKeys={[["site_settings"]]}
       />
 
       <SettingsBlock

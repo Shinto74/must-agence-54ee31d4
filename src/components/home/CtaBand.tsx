@@ -52,12 +52,13 @@ const CtaBand = ({ title, subtitle, button, settingsPrefix }: CtaBandProps) => {
         <div className="relative z-10">
           <h2 className="font-clash text-3xl md:text-5xl font-bold text-foreground mb-4 leading-tight">{title}</h2>
           <p className="text-muted-foreground mb-10 text-base md:text-lg max-w-lg mx-auto">{subtitle}</p>
-          <a
-            href="#contact"
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
             className="inline-block px-10 py-4 rounded-pill bg-primary text-primary-foreground font-mono text-sm uppercase tracking-wider hover:brightness-110 hover:shadow-[0_0_30px_hsl(var(--neon)/0.4)] transition-all duration-400"
           >
             {button}
-          </a>
+          </button>
         </div>
 
         {/* Decorative corner elements */}
