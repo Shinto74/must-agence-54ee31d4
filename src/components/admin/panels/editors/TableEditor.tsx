@@ -29,12 +29,14 @@ interface Props {
   idField?: string;
   /** extra content rendered inside the editing form (e.g. media gallery for the row) */
   renderExtra?: (row: any) => React.ReactNode;
+  /** extra react-query keys to invalidate after CRUD (so front-site queries refresh) */
+  extraInvalidateKeys?: string[][];
 }
 
 export default function TableEditor({
-  table, title, description, fields, initialRecord, filter, renderItem, label, orderBy, idField, renderExtra,
+  table, title, description, fields, initialRecord, filter, renderItem, label, orderBy, idField, renderExtra, extraInvalidateKeys,
 }: Props) {
-  const crud = useAdminCrud(table, { orderBy, idField });
+  const crud = useAdminCrud(table, { orderBy, idField, extraInvalidateKeys });
   const baseItems = filter ? (crud.data as any[]).filter(filter) : (crud.data as any[]);
   const items = baseItems.map((it: any, __index: number) => ({ ...it, __index }));
 
