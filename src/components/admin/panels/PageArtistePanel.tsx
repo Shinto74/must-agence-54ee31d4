@@ -109,9 +109,34 @@ export default function PageArtistePanel() {
           { key: "clip_portugal_subtitle", label: "Sous-titre (legacy)", type: "textarea" },
           { key: "clip_portugal_cta", label: "Bouton — texte court" },
           { key: "clip_portugal_cta_label", label: "Bouton — texte long" },
-          { key: "clip_portugal_video_url", label: "URL vidéo MP4", type: "image", imageFolder: "videos" },
-          { key: "clip_portugal_poster", label: "Image poster (avant lecture)", type: "image", imageFolder: "videos" },
         ]}
+      />
+
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="clip_portugal_video_url"
+        currentUrl={get("clip_portugal_video_url")}
+        mode="setting"
+        settingKey="clip_portugal_video_url"
+        folder="videos"
+        title="Clip Portugal — Vidéo principale"
+        helper="Upload ta/tes vidéo(s) MP4. Clique sur une vignette pour la définir comme vidéo principale du player."
+        aspect="video"
+        allowVideo
+        invalidateKeys={[["site_settings"]]}
+      />
+
+      <MediaGalleryEditor
+        ownerTable="site_settings"
+        ownerId="clip_portugal_poster"
+        currentUrl={get("clip_portugal_poster")}
+        mode="setting"
+        settingKey="clip_portugal_poster"
+        folder="videos"
+        title="Clip Portugal — Image poster (avant lecture)"
+        helper="Image affichée tant que la vidéo n'est pas lancée."
+        aspect="video"
+        invalidateKeys={[["site_settings"]]}
       />
       <ClipPortugalEditor />
 
