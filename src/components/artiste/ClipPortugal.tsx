@@ -22,11 +22,12 @@ const ClipPortugal = () => {
   const cpDescription = get("clip_portugal_description", "");
   const cpCta = get("clip_portugal_cta", "Commencer l'aventure");
   const cpPoster = get("clip_portugal_poster", "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1200&q=80");
+  const cpVideoUrl = get("clip_portugal_video_url", "");
 
   const handlePlay = () => {
     if (videoRef.current) {
       if (isPlaying) videoRef.current.pause();
-      else videoRef.current.play();
+      else videoRef.current.play().catch(() => {});
       setIsPlaying(!isPlaying);
     }
   };
