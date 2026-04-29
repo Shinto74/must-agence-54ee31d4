@@ -81,15 +81,12 @@ export function useAdminCrud<T extends Record<string, any>>(table: string, optio
   };
 
   const remove = async (pkValue: string) => {
-    console.log(`[Admin] Deleting from ${table} where ${idField} = ${pkValue}`);
     try {
       const { data: deleted, error } = await supabase
         .from(table as any)
         .delete()
         .eq(idField, pkValue as any)
         .select();
-
-      console.log(`[Admin] Delete result:`, { deleted, error });
 
       if (error) throw error;
 

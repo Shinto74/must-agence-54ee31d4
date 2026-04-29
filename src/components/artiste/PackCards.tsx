@@ -198,11 +198,24 @@ const TheArtistInfoTooltip = () => {
 };
 
 /* ─── PACK CARD ─── */
+// Mapping pack → Stripe price lookup_key.
+// On accepte plusieurs variantes (numéro, nom normalisé) pour rester tolérant
+// si l'admin renomme un pack en BDD.
 const PACK_PRICE_MAP: Record<string, string> = {
   "Pack 1": "essentiel_once",
   "Pack 2": "ascension_once",
   "Pack 3": "explosion_once",
+  "L'ESSENTIEL": "essentiel_once",
+  "L'ASCENSION": "ascension_once",
+  "L'EXPLOSION": "explosion_once",
+  "ESSENTIEL": "essentiel_once",
+  "ASCENSION": "ascension_once",
+  "EXPLOSION": "explosion_once",
 };
+
+const resolvePriceId = (pack: Pack): string | undefined =>
+  PACK_PRICE_MAP[pack.number] ||
+  PACK_PRICE_MAP[(pack.name || "").trim().toUpperCase()];
 
 const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; theartistText: string; onOpenQuote?: () => void; tooltips: Record<string, string> }) => {
   const navigate = useNavigate();
@@ -215,7 +228,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
     return undefined;
   };
 
-  const isQuotePack = pack.price === "Sur devis" || pack.number === "Pack 4";
+  const isQuotePack = pack.price === "Sur devis" || pack.number === "Pack 4" || !resolvePriceId(pack);
 
   return (
     <div
@@ -262,7 +275,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
       ) : (
         <button
           onClick={() => {
-            const priceId = PACK_PRICE_MAP[pack.number];
+            const priceId = resolvePriceId(pack);
             if (priceId) navigate(`/checkout?pack=${priceId}`);
           }}
           className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
