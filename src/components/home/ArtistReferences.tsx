@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { X, Info } from "lucide-react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { optimizeImage, optimizeImageSrcSet } from "@/lib/imageOptimizer";
 
 interface ArtistReferencesProps {
   categories?: { name: string; slug: string; artists: { name: string; image: string; id?: string }[] }[];
@@ -179,10 +180,14 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
             >
               <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-border transition-all duration-500 group-hover:border-primary/30 group-hover:shadow-[0_0_20px_hsl(var(--neon)/0.12)]">
                 <img
-                  src={artist.image}
+                  src={optimizeImage(artist.image, { width: 320, quality: 65 })}
+                  srcSet={optimizeImageSrcSet(artist.image, 320, { quality: 65 })}
+                  sizes="(max-width: 640px) 165px, (max-width: 768px) 200px, 240px"
                   alt={artist.name}
                   className="h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-[1.06] group-hover:grayscale-0"
-                  loading="lazy"
+                  loading={i < 6 ? "eager" : "lazy"}
+                  decoding="async"
+                  {...(i < 4 ? { fetchPriority: "high" as any } : {})}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
