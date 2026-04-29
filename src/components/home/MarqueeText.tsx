@@ -60,7 +60,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const showLabelWithLogo = isLogo && text && !LOGOS_WITH_WORDMARK.has(upper);
         const isLarge = upper === "UNIVERSAL MUSIC";
         return (
-          <div key={i} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
+          <div key={it.id ?? `${upper}-${i}`} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
             <div className="mq-partner">
               {isLogo ? (
                 <>
@@ -85,7 +85,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const brandColor = BRAND_COLORS[logo.name] || "255, 255, 255";
         return (
           <div
-            key={i}
+            key={`${logo.name}-${i}`}
             className="mq-item"
             style={{ "--brand-color": brandColor } as React.CSSProperties}
           >
@@ -104,7 +104,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         );
       })
     : words?.map((word, i) => (
-        <div key={i} className="mq-item">
+        <div key={`${word}-${i}`} className="mq-item">
           <span className="mq-word">{word}</span>
         </div>
       ));
