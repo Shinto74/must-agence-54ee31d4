@@ -27,23 +27,30 @@ const Header = () => {
   }));
 
   useEffect(() => {
-    const onScroll = () => {
+    let ticking = false;
+    const update = () => {
       const y = window.scrollY;
-      setScrolled(y > 40);
-
+      setScrolled((prev) => {
+        const next = y > 40;
+        return prev === next ? prev : next;
+      });
       if (y > 100) {
         if (y > lastScrollY.current + 5) {
-          // Scrolling DOWN → hide
-          setHidden(true);
+          setHidden((prev) => (prev ? prev : true));
         } else if (y < lastScrollY.current - 3) {
-          // Scrolling UP → show and stay visible
-          setHidden(false);
+          setHidden((prev) => (prev ? false : prev));
         }
-        // If difference is tiny (stopped scrolling), keep current state
       } else {
-        setHidden(false);
+        setHidden((prev) => (prev ? false : prev));
       }
       lastScrollY.current = y;
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
