@@ -66,10 +66,11 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
               {isLogo ? (
                 <>
                   <img
-                    src={it.image_url}
+                    src={optimizeImage(it.image_url, { width: isLarge ? 320 : 200, quality: 75, resize: "contain" })}
                     alt={text}
                     className={`mq-logo ${isLarge ? "mq-logo--large" : ""}`}
-                    loading="lazy"
+                    loading="eager"
+                    decoding="async"
                     draggable={false}
                   />
                   {showLabelWithLogo && <span className="mq-label">{text}</span>}
@@ -93,10 +94,11 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
             <div className="mq-partner">
               {logo.logoUrl && (
                 <img
-                  src={logo.logoUrl}
+                  src={optimizeImage(logo.logoUrl, { width: logo.name === "UNIVERSAL MUSIC" ? 320 : 200, quality: 75, resize: "contain" })}
                   alt={logo.name}
                   className={`mq-logo ${logo.name === "UNIVERSAL MUSIC" ? "mq-logo--large" : ""}`}
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
                   draggable={false}
                 />
               )}
