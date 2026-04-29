@@ -180,11 +180,12 @@ const ArtistReferences = ({ categories }: ArtistReferencesProps) => {
             >
               <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-border transition-all duration-500 group-hover:border-primary/30 group-hover:shadow-[0_0_20px_hsl(var(--neon)/0.12)]">
                 <img
-                  src={optimizeImage(artist.image, { width: 320, quality: 65 })}
-                  srcSet={optimizeImageSrcSet(artist.image, 320, { quality: 65 })}
+                  src={optimizeImage(artist.image, { width: 480, quality: 70 })}
+                  srcSet={optimizeImageSrcSet(artist.image, 480, { quality: 70 })}
                   sizes="(max-width: 640px) 165px, (max-width: 768px) 200px, 240px"
                   alt={artist.name}
                   className="h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-[1.06] group-hover:grayscale-0"
+                  style={{ objectPosition: "center 25%" }}
                   loading={i < 6 ? "eager" : "lazy"}
                   decoding="async"
                   {...(i < 4 ? { fetchPriority: "high" as any } : {})}

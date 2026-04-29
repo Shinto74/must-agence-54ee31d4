@@ -12,13 +12,16 @@ export function optimizeImage(
   if (!url) return "";
   // Only Supabase storage public URLs benefit from /render/image transformations
   if (!url.includes("/storage/v1/object/public/")) return url;
-  const { width, height, quality = 70, resize = "cover" } = opts;
+  const { width, height, quality = 70, resize } = opts;
   const transformed = url.replace("/storage/v1/object/public/", "/storage/v1/render/image/public/");
   const params = new URLSearchParams();
   if (width) params.set("width", String(width));
   if (height) params.set("height", String(height));
   params.set("quality", String(quality));
-  params.set("resize", resize);
+  // Par défaut "contain" : on garde l'image entière, le cadrage final est géré
+  // côté CSS (object-cover / object-position) pour éviter un double-rognage
+  // qui zoome trop sur le sujet (visages coupés).
+  params.set("resize", resize ?? "contain");
   return `${transformed}?${params.toString()}`;
 }
 
