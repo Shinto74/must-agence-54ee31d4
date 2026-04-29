@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { optimizeImage } from "@/lib/imageOptimizer";
 
 interface TeamMember {
   name: string;
@@ -60,9 +61,11 @@ const Team = ({ members }: TeamProps) => {
             className="absolute inset-0 z-0"
           >
             <img
-              src={img}
+              src={optimizeImage(img, { width: 1600, quality: 70 })}
               alt={m.name}
               className="w-full h-full object-cover object-top"
+              decoding="async"
+              loading="eager"
               style={{ filter: "grayscale(1) contrast(1.1) brightness(0.35)" }}
             />
           </motion.div>
