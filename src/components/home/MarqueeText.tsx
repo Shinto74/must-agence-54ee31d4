@@ -1,4 +1,5 @@
 import { useMarqueeItems } from "@/hooks/useSiteContent";
+import { optimizeImage } from "@/lib/imageOptimizer";
 
 interface LogoItem {
   name: string;
