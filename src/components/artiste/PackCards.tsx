@@ -261,7 +261,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
       </div>
       <ul className="space-y-2.5 mb-6 flex-1">
         {pack.features.map((f, i) => (
-          <FeatureItem key={i} feature={f} tooltip={getTooltip(f)} />
+          <FeatureItem key={`${pack.id ?? pack.name}-${i}-${f.slice(0, 20)}`} feature={f} tooltip={getTooltip(f)} />
         ))}
       </ul>
       <TheArtistBonus text={theartistText} />
