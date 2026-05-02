@@ -29,21 +29,37 @@ const colorsFromHue = (h: number) => ({
   bg: `radial-gradient(ellipse 70% 60% at 50% 50%, hsla(${h},70%,8%,0.6) 0%, transparent 70%)`,
 });
 
-// ── Hook scroll index ────────────────────────────────────────────────────────
+// ── Hook scroll index (basé sur la progression du wrapper, robuste) ─────────
 function useScrollIndex(ref: React.RefObject<HTMLDivElement>, count: number) {
   const [index, setIndex] = useState(0);
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    const compute = () => {
       const el = ref.current;
       if (!el) return;
-      const { top } = el.getBoundingClientRect();
-      const scrolledIn = -top;
-      const idx = Math.max(0, Math.min(count - 1, Math.floor(scrolledIn / window.innerHeight)));
+      const rect = el.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      if (total <= 0) {
+        setIndex(0);
+        return;
+      }
+      const scrolled = Math.min(Math.max(-rect.top, 0), total);
+      const ratio = scrolled / total;
+      const idx = Math.min(count - 1, Math.floor(ratio * count));
       setIndex(idx);
     };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(compute);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    compute();
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [ref, count]);
   return index;
 }
