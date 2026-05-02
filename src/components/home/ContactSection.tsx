@@ -287,7 +287,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
 
           {/* Contact info row */}
           <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-6 md:gap-10"
+            className="flex flex-col items-stretch sm:items-center sm:flex-row sm:justify-center gap-4 sm:gap-10 max-w-sm mx-auto sm:max-w-none"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3, ease: EASE }}

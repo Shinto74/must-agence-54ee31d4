@@ -285,6 +285,24 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           .mq-item::after { right: -24px; }
           .mq-track { animation-duration: 38s; }
         }
+
+        /* Sur appareils tactiles : on ne peut pas hover, donc on ajoute un glow coloré subtil
+           en permanence pour que les logos paraissent vivants. Les logos figés restent blancs. */
+        @media (hover: none) {
+          .mq-logo:not(.mq-logo--white) {
+            filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(var(--brand-color), 0.55));
+            opacity: 1;
+          }
+          .mq-label {
+            color: rgb(var(--brand-color));
+            opacity: 0.95;
+            text-shadow: 0 0 14px rgba(var(--brand-color), 0.35);
+          }
+          .mq-word {
+            color: rgb(var(--brand-color));
+            opacity: 0.85;
+          }
+        }
       `}</style>
     </div>
   );
