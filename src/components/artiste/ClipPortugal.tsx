@@ -393,9 +393,9 @@ const ClipPortugal = () => {
                   border: "1px solid hsl(var(--border))",
                   boxShadow: "0 40px 100px hsla(0,0%,0%,0.6), 0 0 80px hsl(var(--neon) / 0.08)",
                 }}
-                initial={{ opacity: 0, scale: 0.9, y: 40, rotateX: 6 }}
-                animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 40 }}
+                initial={{ opacity: 0, scale: 0.92, y: 40 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.92, y: 40 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
                 {/* Neon top accent */}
