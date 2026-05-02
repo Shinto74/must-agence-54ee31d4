@@ -480,6 +480,7 @@ export type Database = {
       marquee_items: {
         Row: {
           display_order: number
+          freeze_on_hover: boolean
           id: string
           image_url: string
           kind: string
@@ -488,6 +489,7 @@ export type Database = {
         }
         Insert: {
           display_order?: number
+          freeze_on_hover?: boolean
           id?: string
           image_url?: string
           kind?: string
@@ -496,6 +498,7 @@ export type Database = {
         }
         Update: {
           display_order?: number
+          freeze_on_hover?: boolean
           id?: string
           image_url?: string
           kind?: string

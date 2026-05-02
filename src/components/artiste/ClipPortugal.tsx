@@ -39,8 +39,10 @@ const ClipPortugal = () => {
       await supabase.from("contact_submissions").insert({
         name: `${form.prenom} ${form.nom}`,
         email: form.email,
+        phone: form.telephone,
+        service: "Clip au Portugal",
         type: "clip-portugal",
-        message: `Téléphone: ${form.telephone}\nÂge: ${form.age}\nBudget: ${form.budget}\nIdées: ${form.idees}`,
+        message: `Âge : ${form.age || "—"}\nBudget : ${form.budget || "—"}\n\nIdées / vision :\n${form.idees || "—"}`,
       });
     } catch (e) { /* silent */ }
     setLoading(false);
