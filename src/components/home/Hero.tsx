@@ -5,25 +5,14 @@ import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const DEFAULT_VIDEO_URL = "https://syibbaomaexmubbypjyg.supabase.co/storage/v1/object/public/site-assets/videos/hero-1777063623246.mp4";
 
-const BRAND_LETTERS = [
-  { char: "M", color: "hsl(0 0% 100%)" },
-  { char: "U", color: "hsl(0 0% 100%)" },
-  { char: "S", color: "hsl(0 0% 100%)" },
-  { char: "T", color: "hsl(0 0% 100%)" },
-  { char: "\u00A0", color: "transparent" },
-  { char: "A", color: "hsl(73 100% 50%)" },
-  { char: "G", color: "hsl(0 0% 100%)" },
-  { char: "E", color: "hsl(0 0% 100%)" },
-  { char: "N", color: "hsl(0 0% 100%)" },
-  { char: "C", color: "hsl(0 0% 100%)" },
-  { char: "E", color: "hsl(0 0% 100%)" },
-];
+const DEFAULT_BRAND = "MUST AGENCE";
+const DEFAULT_ACCENT_INDEX = 5; // "A" de AGENCE
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [videoReady, setVideoReady] = useState(false);
-  const { get } = useSiteSettings();
+  const { get, getBool } = useSiteSettings();
   const VIDEO_URL = get("hero_video_url", get("hero_artiste_video_url", DEFAULT_VIDEO_URL));
   const heroLabel = get("hero_artiste_label", "Influence Artistique");
   const heroTitleLine1 = get("hero_artiste_title_line1", SITE.hero.titleLine1);
@@ -32,6 +21,15 @@ const Hero = () => {
   const heroCtaPrimary = get("hero_artiste_cta_primary", SITE.hero.ctaPrimary);
   const heroCtaSecondary = get("hero_artiste_cta_secondary", SITE.hero.ctaSecondary);
   const logoWhite = get("logo_white", "");
+  const showLogoWhite = getBool("show_logo_white", true);
+
+  // Brand letters: dynamique depuis l'admin
+  const brandText = get("hero_artiste_brand_text", DEFAULT_BRAND);
+  const accentIndex = parseInt(get("hero_artiste_brand_accent_index", String(DEFAULT_ACCENT_INDEX)), 10);
+  const BRAND_LETTERS = brandText.split("").map((char, i) => ({
+    char: char === " " ? "\u00A0" : char,
+    color: i === accentIndex ? "hsl(73 100% 50%)" : (char === " " ? "transparent" : "hsl(0 0% 100%)"),
+  }));
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
