@@ -37,6 +37,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
   const useDb = !!page && Array.isArray(dbItems) && dbItems.length > 0;
 
   const KEEP_COLOR = new Set<string>();
+  const KEEP_WHITE = new Set<string>(["UNIVERSAL MUSIC"]);
 
   const items = useDb
     ? dbItems!.map((it: any, i: number) => {
