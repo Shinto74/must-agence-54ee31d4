@@ -198,7 +198,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           flex-shrink: 0;
         }
 
-        .mq-logo--large { height: 50px; max-width: 180px; }
+        .mq-logo--large { height: 35px; max-width: 180px; }
 
         .mq-logo--color {
           filter: none;
