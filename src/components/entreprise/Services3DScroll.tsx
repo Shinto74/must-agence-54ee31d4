@@ -140,11 +140,11 @@ const Services3DScroll = () => {
       id="services"
       ref={containerRef}
       className="relative z-[1]"
-      style={{ height: `${(services.length + 1) * 100}vh` }}
+      style={{ height: isMobile ? "auto" : `${(services.length + 1) * 100}vh` }}
     >
       <div
         data-sticky
-        className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
+        className={`${isMobile ? "relative" : "sticky top-0"} h-screen flex items-center justify-center overflow-hidden`}
         style={{ perspective: "1200px" }}
       >
         {/* Dark background */}
