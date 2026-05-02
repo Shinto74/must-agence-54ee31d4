@@ -55,8 +55,9 @@ const Services3DScroll = () => {
     }
   }, [services.length, active]);
 
-  // Scroll-driven: each scroll event inside sticky section changes card
+  // Scroll-driven: each scroll event inside sticky section changes card (DESKTOP only)
   useEffect(() => {
+    if (isMobile) return;
     const container = containerRef.current;
     if (!container || services.length === 0) return;
 
@@ -94,7 +95,7 @@ const Services3DScroll = () => {
 
     window.addEventListener("wheel", handleWheel, { passive: false });
     return () => window.removeEventListener("wheel", handleWheel);
-  }, [active, services.length]);
+  }, [active, services.length, isMobile]);
 
   const goTo = useCallback((idx: number) => {
     setDirection(idx > active ? 1 : -1);
