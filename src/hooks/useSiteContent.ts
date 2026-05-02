@@ -17,7 +17,14 @@ export function useSiteSettings() {
     return (found?.value as string) || fallback;
   };
 
-  return { settings: data, get };
+  /** Lit un flag booléen (stocké comme 'true'/'false' en string). Défaut = true. */
+  const getBool = (key: string, fallback = true): boolean => {
+    const found = data.find((s: any) => s.key === key);
+    if (!found) return fallback;
+    return String(found.value).toLowerCase() !== "false";
+  };
+
+  return { settings: data, get, getBool };
 }
 
 /* ─── Marquee items per page ─── */
