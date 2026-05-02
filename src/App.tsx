@@ -89,6 +89,7 @@ const AppShell = () => {
         <AnimatedRoutes />
       </main>
       {!hideChrome && <Footer />}
+      {!isAdmin && !isCheckout && <CookieBanner />}
     </>
   );
 };
