@@ -6,7 +6,7 @@ import { MessageSquare, Phone, MapPin, Send, ChevronDown, ArrowRight, Sparkles, 
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { useContactSectors, useContactFormTypes } from "@/hooks/useSiteContent";
+import { useContactSectors, useContactFormTypes, useSiteSettings } from "@/hooks/useSiteContent";
 
 interface ContactSectionProps {
   heading: string;
@@ -170,10 +170,11 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
     </div>
   );
 
+  const { getBool } = useSiteSettings();
   const contactItems = [
-    { icon: <Send size={16} />, label: email, href: `mailto:${email}`, show: true },
-    { icon: <Phone size={16} />, label: phone, href: `tel:${phone}`, show: !!phone },
-    { icon: <MapPin size={16} />, label: location, href: undefined, show: !!location },
+    { icon: <Send size={16} />, label: email, href: `mailto:${email}`, show: getBool("show_contact_email", true) && !!email },
+    { icon: <Phone size={16} />, label: phone, href: `tel:${phone}`, show: getBool("show_contact_phone", true) && !!phone },
+    { icon: <MapPin size={16} />, label: location, href: undefined, show: getBool("show_contact_location", true) && !!location },
   ].filter(i => i.show);
 
    return (
