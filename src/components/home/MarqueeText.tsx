@@ -47,6 +47,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const brandColor = BRAND_COLORS[upper] || "204, 255, 0";
         const isLarge = upper === "UNIVERSAL MUSIC";
         const keepColor = KEEP_COLOR.has(upper);
+        const keepWhite = KEEP_WHITE.has(upper);
         // Règle simplifiée : dès qu'un texte est saisi dans l'admin, il s'affiche à côté du logo.
         const showLabel = isLogo && !!text;
         return (
