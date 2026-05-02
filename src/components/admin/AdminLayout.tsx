@@ -4,7 +4,7 @@ import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Menu, X, Search, Bell, ExternalLink,
   LayoutDashboard, CreditCard, MessageSquare,
-  Home, Music, Building2, Settings as SettingsIcon, Share2,
+  Home, Music, Building2, Settings as SettingsIcon, Share2, Scale,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminNotifications } from "./useAdminNotifications";
