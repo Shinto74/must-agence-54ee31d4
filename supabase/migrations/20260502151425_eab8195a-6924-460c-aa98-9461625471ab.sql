@@ -1,0 +1,1 @@
+ALTER TABLE public.marquee_items ADD COLUMN IF NOT EXISTS freeze_on_hover boolean NOT NULL DEFAULT false;
