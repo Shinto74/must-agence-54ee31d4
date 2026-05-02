@@ -39,6 +39,7 @@ const LABELS: Record<string, string> = {
   type: "Type",
   category_id: "Catégorie",
   display_order: "Position",
+  freeze_on_hover: "Figer au survol",
 };
 
 const inputBase =
