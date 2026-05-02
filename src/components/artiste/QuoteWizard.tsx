@@ -154,7 +154,7 @@ const DatePickerCalendar = ({ value, onChange }: { value: string; onChange: (dat
   );
 };
 
-const QuoteWizard = ({ steps, onSubmitComplete }: QuoteWizardProps) => {
+const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizardProps) => {
   const ref = useScrollReveal();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, any>>({});
@@ -236,12 +236,16 @@ const QuoteWizard = ({ steps, onSubmitComplete }: QuoteWizardProps) => {
   }
 
   return (
-    <section ref={ref} id="devis" className="py-20 px-6">
-      <div className="max-w-[600px] mx-auto">
-        <p className="rv font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">Devis personnalisé</p>
-        <h2 className="rv font-clash text-3xl font-bold text-foreground mb-8">
-          Construisons votre <span className="text-primary">stratégie</span> ensemble.
-        </h2>
+    <section ref={ref} id="devis" className={hideHeader ? "" : "py-20 px-6"}>
+      <div className={hideHeader ? "" : "max-w-[600px] mx-auto"}>
+        {!hideHeader && (
+          <>
+            <p className="rv font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">Devis personnalisé</p>
+            <h2 className="rv font-clash text-3xl font-bold text-foreground mb-8">
+              Construisons votre <span className="text-primary">stratégie</span> ensemble.
+            </h2>
+          </>
+        )}
         <div className="rv flex gap-1 mb-8">
           {steps.map((_, i) => (
             <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= current ? "bg-primary" : "bg-border"}`} />
