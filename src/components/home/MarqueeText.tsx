@@ -197,6 +197,16 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
 
         .mq-logo--large { height: 50px; max-width: 180px; }
 
+        .mq-logo--color {
+          filter: none;
+          opacity: 0.95;
+        }
+        .mq-item:hover .mq-logo--color {
+          filter: drop-shadow(0 0 18px rgba(var(--brand-color), 0.5));
+          opacity: 1;
+          transform: scale(1.06);
+        }
+
         .mq-item:hover .mq-logo {
           filter: brightness(1) drop-shadow(0 0 18px rgba(var(--brand-color), 0.6));
           opacity: 1;
