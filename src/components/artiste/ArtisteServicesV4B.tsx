@@ -234,17 +234,14 @@ const ArtisteServicesV4B = () => {
     <div ref={wrapperRef} style={{ height: `${pillars.length * 100}vh` }}>
       <div className="sticky top-0 overflow-hidden bg-background" style={{ height: "100vh" }}>
         {/* Header — placé au-dessus de la carte gauche, sans absolute pour éviter la superposition */}
-        <div ref={headerRef} className="absolute top-0 left-0 w-1/2 z-20 px-14 pt-24 pb-6 hidden lg:block" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 65%, transparent)" }}>
-          <motion.p initial={{ opacity: 0, y: 10 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-3">
+        <div ref={headerRef} className="absolute top-0 left-0 w-1/2 z-20 px-14 pt-20 pb-10 hidden lg:block pointer-events-none" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(var(--background)) 70%, transparent 100%)" }}>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">
             {get("artiste_services_kicker", "Services")}
           </motion.p>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }} className="font-clash font-black text-foreground" style={{ fontSize: "clamp(1.8rem, 3vw, 3.5rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }} className="font-clash font-black text-foreground" style={{ fontSize: "clamp(1.5rem, 2.4vw, 2.6rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
             {get("artiste_services_title_part1", "Notre expertise")}{" "}
             <span className="text-primary">{get("artiste_services_title_accent", "à votre service")}</span>
           </motion.h2>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.2 }} className="font-outfit text-muted-foreground mt-3 leading-relaxed" style={{ fontSize: 14, maxWidth: 360 }}>
-            {get("artiste_services_subtitle", "")}
-          </motion.p>
         </div>
 
         <div className="flex h-full">
