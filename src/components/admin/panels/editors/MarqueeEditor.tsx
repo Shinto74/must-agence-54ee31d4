@@ -16,10 +16,7 @@ export default function MarqueeEditor({ page, title, description }: { page: "hom
         ]},
         { key: "text_value", label: "Texte / Nom de la marque", hint: "Si rempli, le nom s'affiche à côté du logo dans le bandeau (utile quand le logo est une icône seule sans wordmark). Laissez vide si le logo contient déjà le nom." },
         { key: "image_url", label: "Image / logo", type: "image", imageFolder: "marquee", hint: "Uniquement si Type = Logo." },
-        { key: "freeze_on_hover", label: "Figer au survol", type: "select", options: [
-          { label: "Non — animation au survol", value: false as any },
-          { label: "Oui — aucun changement au survol", value: true as any },
-        ], hint: "Active si le logo rend mal au survol (ex : Universal Music). Le logo reste blanc et figé." },
+        { key: "freeze_on_hover", label: "Figer au survol (logo blanc, aucune animation)", type: "checkbox", hint: "Active si le logo rend mal au survol (ex : Universal Music). Le logo reste blanc et figé, sans changement de couleur ni de taille." },
         { key: "display_order", label: "Ordre", type: "number" },
       ]}
       extraInvalidateKeys={[["marquee_items", page]]}
