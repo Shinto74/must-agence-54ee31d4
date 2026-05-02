@@ -367,11 +367,13 @@ const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
           </h2>
 
           {/* Mobile tabs */}
-          <div className="rv flex gap-0 mt-6 mb-8 md:hidden bg-surface rounded-xl overflow-hidden border border-border flex-wrap">
+          <div className="rv grid grid-cols-2 gap-2 mt-6 mb-8 md:hidden">
             {packs.map((pack, i) => (
               <button key={pack.number} onClick={() => setActiveTab(i)}
-                className={`flex-1 py-3 font-mono text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 ${
-                  activeTab === i ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:text-foreground"
+                className={`py-3 px-2 rounded-lg font-mono text-[10px] uppercase tracking-wider transition-all duration-300 border ${
+                  activeTab === i
+                    ? "bg-primary text-primary-foreground border-primary font-medium"
+                    : "bg-surface text-muted-foreground border-border hover:text-foreground"
                 }`}>
                 {pack.name}
               </button>
