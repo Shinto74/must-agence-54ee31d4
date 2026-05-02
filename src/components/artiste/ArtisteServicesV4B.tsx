@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import * as Icons from "lucide-react";
 import { useArtistPillars } from "@/hooks/useArtistePage";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const pad2 = (n: number) => String(n + 1).padStart(2, "0");
