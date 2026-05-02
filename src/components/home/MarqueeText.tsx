@@ -57,7 +57,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
                 <img
                   src={optimizeImage(it.image_url, { width: isLarge ? 240 : 160, quality: 80, resize: "contain" })}
                   alt={text}
-                  className={`mq-logo ${isLarge ? "mq-logo--large" : ""} ${keepColor ? "mq-logo--color" : ""}`}
+                  className={`mq-logo ${isLarge ? "mq-logo--large" : ""} ${keepColor ? "mq-logo--color" : ""} ${keepWhite ? "mq-logo--white" : ""}`}
                   loading="eager"
                   decoding="async"
                   draggable={false}
