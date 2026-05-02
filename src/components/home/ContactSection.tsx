@@ -73,7 +73,9 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       type: form.type,
       name: `${form.prenom.trim()} ${form.nom.trim()}`.trim(),
       email: form.email.trim(),
-      message: `Entreprise: ${form.entreprise}\nSecteur: ${form.secteur}\nTéléphone: ${form.phone}\nBudget: ${formatBudget(form.budget)}\n\n${form.message.trim()}`,
+      phone: form.phone.trim(),
+      service: form.secteur || form.entreprise || "",
+      message: `Entreprise : ${form.entreprise || "—"}\nSecteur : ${form.secteur || "—"}\nBudget estimé : ${formatBudget(form.budget)}\n\nMessage :\n${form.message.trim()}`,
     });
     setSending(false);
     if (error) {
