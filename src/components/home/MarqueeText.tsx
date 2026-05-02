@@ -113,7 +113,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
       <style>{`
         .mq-root {
           width: 100%;
-          padding: 64px 0 72px;
+          padding: 44px 0 50px;
           background:
             radial-gradient(ellipse 60% 50% at 50% 50%, hsl(var(--neon) / 0.03), transparent 70%),
             linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--foreground) / 0.015) 50%, hsl(var(--background)) 100%);
@@ -167,7 +167,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           gap: 18px;
           flex-shrink: 0;
           position: relative;
-          padding: 14px 4px;
+          padding: 8px 4px;
           transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
           cursor: default;
         }
@@ -187,7 +187,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         .mq-item:hover { transform: translateY(-2px); }
 
         .mq-logo {
-          height: 44px;
+          height: 30px;
           max-width: 150px;
           width: auto;
           object-fit: contain;
@@ -198,7 +198,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           flex-shrink: 0;
         }
 
-        .mq-logo--large { height: 50px; max-width: 180px; }
+        .mq-logo--large { height: 35px; max-width: 180px; }
 
         .mq-logo--color {
           filter: none;
@@ -230,7 +230,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
 
         .mq-label {
           font-family: 'Clash Display', 'Inter', sans-serif;
-          font-size: 28px;
+          font-size: 20px;
           font-weight: 700;
           letter-spacing: -0.02em;
           color: hsl(var(--foreground));

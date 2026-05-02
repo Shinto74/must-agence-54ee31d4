@@ -294,29 +294,33 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
 /* ─── (DevisPersonnaliseCard supprimé : le pack "Devis sur mesure" est désormais 100% piloté par la BDD via le 4ème pack) ─── */
 
 /* ─── MODALE ─── */
-const QuoteModal = ({ steps, onClose }: { steps: any[]; onClose: () => void }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6">
-    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} style={{ animation: "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)" }} />
-    <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-surface border border-border rounded-3xl shadow-2xl" style={{ animation: "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
-      <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 hover:bg-primary/10 rounded-lg transition-colors text-muted-foreground hover:text-primary">
-        <X size={24} />
-      </button>
-      <div className="p-6 md:p-8">
-        <div className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">Devis sur mesure</p>
-          <h2 className="font-clash text-3xl font-bold text-foreground">
-            Construisons votre <span className="text-primary">stratégie</span> ensemble.
-          </h2>
+const QuoteModal = ({ steps, onClose }: { steps: any[]; onClose: () => void }) => {
+  if (typeof document === "undefined") return null;
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-6">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} style={{ animation: "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)" }} />
+      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-surface border border-border rounded-3xl shadow-2xl" style={{ animation: "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+        <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 hover:bg-primary/10 rounded-lg transition-colors text-muted-foreground hover:text-primary">
+          <X size={24} />
+        </button>
+        <div className="p-6 md:p-8">
+          <div className="mb-8">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">Devis sur mesure</p>
+            <h2 className="font-clash text-3xl font-bold text-foreground">
+              Construisons votre <span className="text-primary">stratégie</span> ensemble.
+            </h2>
+          </div>
+          <QuoteWizard steps={steps} onSubmitComplete={onClose} />
         </div>
-        <QuoteWizard steps={steps} onSubmitComplete={onClose} />
       </div>
-    </div>
-    <style>{`
-      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-      @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    `}</style>
-  </div>
-);
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
+    </div>,
+    document.body
+  );
+};
 
 /* ─── COMPOSANT PRINCIPAL ─── */
 const PackCards = ({ packs = [], quoteSteps = [] }: PackCardsProps) => {
