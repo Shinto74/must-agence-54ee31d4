@@ -31,6 +31,14 @@ const Services3DScroll = () => {
   // Fallback minimal — only used while loading or if DB is empty
   const services = dbServices.length > 0 ? dbServices : [];
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const sectionKicker = get("entreprise_services_kicker", "Services");
   const sectionTitleLine1 = get("entreprise_services_title_line1", "Ce qu'on fait");
   const sectionTitleLine2 = get("entreprise_services_title_line2", "pour vous");
