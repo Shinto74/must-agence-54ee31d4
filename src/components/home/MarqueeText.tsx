@@ -76,6 +76,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const brandColor = BRAND_COLORS[upperName] || "204, 255, 0";
         const isLarge = upperName === "UNIVERSAL MUSIC";
         const keepColor = KEEP_COLOR.has(upperName);
+        const keepWhite = KEEP_WHITE.has(upperName);
         const showLabel = !!logo.label;
         return (
           <div key={`${logo.name}-${i}`} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
