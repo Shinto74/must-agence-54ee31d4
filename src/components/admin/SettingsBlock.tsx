@@ -3,7 +3,7 @@ import { useAdminCrud } from "./useAdminCrud";
 import ImageUpload from "./ImageUpload";
 import { Loader2, Check } from "lucide-react";
 
-export type SettingFieldType = "text" | "textarea" | "image" | "video" | "media" | "url";
+export type SettingFieldType = "text" | "textarea" | "image" | "video" | "media" | "url" | "boolean" | "number";
 
 export interface SettingField {
   key: string;
