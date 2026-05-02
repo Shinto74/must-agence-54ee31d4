@@ -187,7 +187,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         .mq-item:hover { transform: translateY(-2px); }
 
         .mq-logo {
-          height: 44px;
+          height: 30px;
           max-width: 150px;
           width: auto;
           object-fit: contain;
