@@ -36,6 +36,8 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
   const { data: dbItems } = useMarqueeItems(page ?? "home");
   const useDb = !!page && Array.isArray(dbItems) && dbItems.length > 0;
 
+  const KEEP_COLOR = new Set(["UNIVERSAL MUSIC"]);
+
   const items = useDb
     ? dbItems!.map((it: any, i: number) => {
         const text = (it.text_value || "").trim();
@@ -43,6 +45,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const upper = text.toUpperCase();
         const brandColor = BRAND_COLORS[upper] || "204, 255, 0";
         const isLarge = upper === "UNIVERSAL MUSIC";
+        const keepColor = KEEP_COLOR.has(upper);
         // Règle simplifiée : dès qu'un texte est saisi dans l'admin, il s'affiche à côté du logo.
         const showLabel = isLogo && !!text;
         return (
@@ -52,7 +55,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
                 <img
                   src={optimizeImage(it.image_url, { width: isLarge ? 240 : 160, quality: 80, resize: "contain" })}
                   alt={text}
-                  className={`mq-logo ${isLarge ? "mq-logo--large" : ""}`}
+                  className={`mq-logo ${isLarge ? "mq-logo--large" : ""} ${keepColor ? "mq-logo--color" : ""}`}
                   loading="eager"
                   decoding="async"
                   draggable={false}
@@ -67,8 +70,10 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
       })
     : logos
     ? logos.map((logo, i) => {
-        const brandColor = BRAND_COLORS[logo.name.toUpperCase()] || "204, 255, 0";
-        const isLarge = logo.name.toUpperCase() === "UNIVERSAL MUSIC";
+        const upperName = logo.name.toUpperCase();
+        const brandColor = BRAND_COLORS[upperName] || "204, 255, 0";
+        const isLarge = upperName === "UNIVERSAL MUSIC";
+        const keepColor = KEEP_COLOR.has(upperName);
         const showLabel = !!logo.label;
         return (
           <div key={`${logo.name}-${i}`} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
@@ -76,7 +81,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
               <img
                 src={optimizeImage(logo.logoUrl, { width: isLarge ? 240 : 160, quality: 80, resize: "contain" })}
                 alt={logo.name}
-                className={`mq-logo ${isLarge ? "mq-logo--large" : ""}`}
+                className={`mq-logo ${isLarge ? "mq-logo--large" : ""} ${keepColor ? "mq-logo--color" : ""}`}
                 loading="eager"
                 decoding="async"
                 draggable={false}
@@ -94,13 +99,6 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
 
   return (
     <div className="mq-root">
-      {/* Mini-titre "Exclusive Syndicate" */}
-      <div className="mq-eyebrow">
-        <div className="mq-eyebrow-line" />
-        <span className="mq-eyebrow-text">Exclusive Syndicate</span>
-        <div className="mq-eyebrow-line" />
-      </div>
-
       <div className="mq-stage">
         <div className="mq-track">
           <div className="mq-list">{items}</div>
@@ -198,6 +196,16 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         }
 
         .mq-logo--large { height: 50px; max-width: 180px; }
+
+        .mq-logo--color {
+          filter: none;
+          opacity: 0.95;
+        }
+        .mq-item:hover .mq-logo--color {
+          filter: drop-shadow(0 0 18px rgba(var(--brand-color), 0.5));
+          opacity: 1;
+          transform: scale(1.06);
+        }
 
         .mq-item:hover .mq-logo {
           filter: brightness(1) drop-shadow(0 0 18px rgba(var(--brand-color), 0.6));
