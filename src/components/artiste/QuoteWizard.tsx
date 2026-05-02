@@ -20,6 +20,8 @@ interface QuoteStep {
 interface QuoteWizardProps {
   steps: QuoteStep[];
   onSubmitComplete?: () => void;
+  /** Cache le titre interne (utile quand le wizard est rendu dans une modale qui a déjà son titre) */
+  hideHeader?: boolean;
 }
 
 /* ─── MAPPING ICONES PAR OPTION ─── */
