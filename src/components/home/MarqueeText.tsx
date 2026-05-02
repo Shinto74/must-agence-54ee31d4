@@ -94,13 +94,6 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
 
   return (
     <div className="mq-root">
-      {/* Mini-titre "Exclusive Syndicate" */}
-      <div className="mq-eyebrow">
-        <div className="mq-eyebrow-line" />
-        <span className="mq-eyebrow-text">Exclusive Syndicate</span>
-        <div className="mq-eyebrow-line" />
-      </div>
-
       <div className="mq-stage">
         <div className="mq-track">
           <div className="mq-list">{items}</div>
