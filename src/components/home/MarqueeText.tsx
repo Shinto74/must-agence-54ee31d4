@@ -285,33 +285,42 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           .mq-item::after { right: -24px; }
           .mq-track { animation-duration: 38s; }
 
-          /* Mobile : pas de hover possible → on affiche les logos colorés en permanence,
-             en alternant via animation pour donner du dynamisme. Les logos "figés" restent blancs. */
-          .mq-logo:not(.mq-logo--white) {
-            filter: none !important;
+          /* Mobile : pas de hover possible → état final = état "hover" en permanence.
+             Les logos avec freeze_on_hover (.mq-logo--white) restent blancs et figés. */
+          .mq-logo:not(.mq-logo--white):not(.mq-logo--color) {
+            filter: brightness(1) drop-shadow(0 0 14px rgba(var(--brand-color), 0.55)) !important;
+            opacity: 1 !important;
+          }
+          .mq-logo--color {
+            filter: drop-shadow(0 0 14px rgba(var(--brand-color), 0.5)) !important;
             opacity: 1 !important;
           }
           .mq-item:not(:has(.mq-logo--white)) .mq-label {
             color: rgb(var(--brand-color)) !important;
             opacity: 1 !important;
-            text-shadow: 0 0 14px rgba(var(--brand-color), 0.4) !important;
+            text-shadow: 0 0 18px rgba(var(--brand-color), 0.45) !important;
           }
           .mq-word {
             color: rgb(var(--brand-color)) !important;
-            opacity: 0.95 !important;
-            text-shadow: 0 0 12px rgba(var(--brand-color), 0.35) !important;
+            opacity: 1 !important;
+            text-shadow: 0 0 18px rgba(var(--brand-color), 0.5) !important;
           }
         }
 
-        /* Fallback supplémentaire pour les appareils strictement tactiles */
+        /* Fallback supplémentaire pour les appareils strictement tactiles (tablettes) */
         @media (hover: none) and (min-width: 769px) {
-          .mq-logo:not(.mq-logo--white) {
-            filter: none !important;
+          .mq-logo:not(.mq-logo--white):not(.mq-logo--color) {
+            filter: brightness(1) drop-shadow(0 0 18px rgba(var(--brand-color), 0.6)) !important;
+            opacity: 1 !important;
+          }
+          .mq-logo--color {
+            filter: drop-shadow(0 0 18px rgba(var(--brand-color), 0.5)) !important;
             opacity: 1 !important;
           }
           .mq-item:not(:has(.mq-logo--white)) .mq-label {
             color: rgb(var(--brand-color)) !important;
             opacity: 1 !important;
+            text-shadow: 0 0 24px rgba(var(--brand-color), 0.45) !important;
           }
         }
       `}</style>
