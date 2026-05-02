@@ -37,6 +37,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
   const useDb = !!page && Array.isArray(dbItems) && dbItems.length > 0;
 
   const KEEP_COLOR = new Set<string>();
+  const KEEP_WHITE = new Set<string>(["UNIVERSAL MUSIC"]);
 
   const items = useDb
     ? dbItems!.map((it: any, i: number) => {
@@ -46,6 +47,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const brandColor = BRAND_COLORS[upper] || "204, 255, 0";
         const isLarge = upper === "UNIVERSAL MUSIC";
         const keepColor = KEEP_COLOR.has(upper);
+        const keepWhite = KEEP_WHITE.has(upper);
         // Règle simplifiée : dès qu'un texte est saisi dans l'admin, il s'affiche à côté du logo.
         const showLabel = isLogo && !!text;
         return (
@@ -55,7 +57,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
                 <img
                   src={optimizeImage(it.image_url, { width: isLarge ? 240 : 160, quality: 80, resize: "contain" })}
                   alt={text}
-                  className={`mq-logo ${isLarge ? "mq-logo--large" : ""} ${keepColor ? "mq-logo--color" : ""}`}
+                  className={`mq-logo ${isLarge ? "mq-logo--large" : ""} ${keepColor ? "mq-logo--color" : ""} ${keepWhite ? "mq-logo--white" : ""}`}
                   loading="eager"
                   decoding="async"
                   draggable={false}
@@ -74,6 +76,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const brandColor = BRAND_COLORS[upperName] || "204, 255, 0";
         const isLarge = upperName === "UNIVERSAL MUSIC";
         const keepColor = KEEP_COLOR.has(upperName);
+        const keepWhite = KEEP_WHITE.has(upperName);
         const showLabel = !!logo.label;
         return (
           <div key={`${logo.name}-${i}`} className="mq-item" style={{ "--brand-color": brandColor } as React.CSSProperties}>
@@ -81,7 +84,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
               <img
                 src={optimizeImage(logo.logoUrl, { width: isLarge ? 240 : 160, quality: 80, resize: "contain" })}
                 alt={logo.name}
-                className={`mq-logo ${isLarge ? "mq-logo--large" : ""} ${keepColor ? "mq-logo--color" : ""}`}
+                className={`mq-logo ${isLarge ? "mq-logo--large" : ""} ${keepColor ? "mq-logo--color" : ""} ${keepWhite ? "mq-logo--white" : ""}`}
                 loading="eager"
                 decoding="async"
                 draggable={false}
@@ -203,6 +206,13 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         }
         .mq-item:hover .mq-logo--color {
           filter: drop-shadow(0 0 18px rgba(var(--brand-color), 0.5));
+          opacity: 1;
+          transform: scale(1.06);
+        }
+
+        /* Logos qui doivent rester blancs même au hover (ex: Universal) */
+        .mq-item:hover .mq-logo--white {
+          filter: brightness(0) invert(1) drop-shadow(0 0 18px rgba(var(--brand-color), 0.6));
           opacity: 1;
           transform: scale(1.06);
         }
