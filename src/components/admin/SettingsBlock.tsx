@@ -123,6 +123,33 @@ function SettingRow({ field, crud, imageFolder }: { field: SettingField; crud: R
             rows={3}
             className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 resize-none"
           />
+        ) : field.type === "boolean" ? (
+          <label className="inline-flex items-center gap-3 cursor-pointer select-none py-2">
+            <span className="relative inline-block w-11 h-6">
+              <input
+                type="checkbox"
+                checked={String(value).toLowerCase() !== "false" && value !== ""}
+                onChange={(e) => {
+                  const v = e.target.checked ? "true" : "false";
+                  setValue(v);
+                  setTouched(true);
+                  setTimeout(() => {
+                    crud.save({ key: field.key, value: v, type: "text" } as any).then(() => {
+                      setTouched(false);
+                      setSavedFlash(true);
+                      setTimeout(() => setSavedFlash(false), 1500);
+                    });
+                  }, 30);
+                }}
+                className="peer sr-only"
+              />
+              <span className="absolute inset-0 rounded-full bg-slate-300 peer-checked:bg-emerald-500 transition-colors" />
+              <span className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
+            </span>
+            <span className="text-xs text-slate-600">
+              {String(value).toLowerCase() !== "false" && value !== "" ? "Affiché" : "Masqué"}
+            </span>
+          </label>
         ) : (
           <input
             type={field.type === "url" ? "url" : "text"}
