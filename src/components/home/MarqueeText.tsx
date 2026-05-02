@@ -20,7 +20,7 @@ const BRAND_COLORS: Record<string, string> = {
   "SPOTIFY": "30, 215, 96",
   "TIKTOK": "255, 0, 80",
   "YOUTUBE": "255, 0, 0",
-  "UNIVERSAL MUSIC": "0, 51, 160",
+  "UNIVERSAL MUSIC": "204, 255, 0",
   "THE ARTIST": "204, 255, 0",
   "THEARTIST": "204, 255, 0",
   "INSTAGRAM": "225, 48, 108",
