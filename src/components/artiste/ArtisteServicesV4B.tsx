@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import * as Icons from "lucide-react";
 import { useArtistPillars } from "@/hooks/useArtistePage";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const pad2 = (n: number) => String(n + 1).padStart(2, "0");
@@ -28,21 +29,37 @@ const colorsFromHue = (h: number) => ({
   bg: `radial-gradient(ellipse 70% 60% at 50% 50%, hsla(${h},70%,8%,0.6) 0%, transparent 70%)`,
 });
 
-// ── Hook scroll index ────────────────────────────────────────────────────────
+// ── Hook scroll index (basé sur la progression du wrapper, robuste) ─────────
 function useScrollIndex(ref: React.RefObject<HTMLDivElement>, count: number) {
   const [index, setIndex] = useState(0);
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    const compute = () => {
       const el = ref.current;
       if (!el) return;
-      const { top } = el.getBoundingClientRect();
-      const scrolledIn = -top;
-      const idx = Math.max(0, Math.min(count - 1, Math.floor(scrolledIn / window.innerHeight)));
+      const rect = el.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      if (total <= 0) {
+        setIndex(0);
+        return;
+      }
+      const scrolled = Math.min(Math.max(-rect.top, 0), total);
+      const ratio = scrolled / total;
+      const idx = Math.min(count - 1, Math.floor(ratio * count));
       setIndex(idx);
     };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(compute);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    compute();
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [ref, count]);
   return index;
 }
@@ -133,6 +150,7 @@ const ArtisteServicesV4B = () => {
   const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
   const { data: pillars = [] } = useArtistPillars() as { data: PillarRow[] };
   const { get } = useSiteSettings();
+  const isMobile = useIsMobile();
 
   const count = Math.max(pillars.length, 1);
   const activeIndex = useScrollIndex(wrapperRef, count);
@@ -143,21 +161,87 @@ const ArtisteServicesV4B = () => {
   const ActiveIcon = getIcon(activePillar.icon);
   const { haloColor, accentGlow } = colorsFromHue(activePillar.accent_hue);
 
+  // ── Mobile : empilement vertical simple, pas de scroll-jack ───────────────
+  if (isMobile) {
+    return (
+      <section className="py-16 px-4 bg-background">
+        <div className="max-w-md mx-auto mb-10 text-center">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-3">
+            {get("artiste_services_kicker", "Services")}
+          </p>
+          <h2 className="font-clash font-black text-foreground text-3xl leading-tight mb-3">
+            {get("artiste_services_title_part1", "Notre expertise")}{" "}
+            <span className="text-primary">{get("artiste_services_title_accent", "à votre service")}</span>
+          </h2>
+          <p className="font-outfit text-muted-foreground text-sm leading-relaxed">
+            {get("artiste_services_subtitle", "")}
+          </p>
+        </div>
+        <div className="space-y-6 max-w-md mx-auto">
+          {pillars.map((pillar, i) => {
+            const Icon = getIcon(pillar.icon);
+            return (
+              <motion.div
+                key={pillar.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5 }}
+                className="rounded-2xl p-6"
+                style={{
+                  background: "hsla(0,0%,100%,0.04)",
+                  border: "1px solid hsla(73,100%,50%,0.18)",
+                  boxShadow: "0 10px 40px -20px hsla(0,0%,0%,0.5)",
+                }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: "hsla(73,100%,50%,0.12)", border: "1px solid hsla(73,100%,50%,0.3)" }}>
+                    <Icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-primary">{pad2(i)}</span>
+                </div>
+                <h3 className="font-clash font-bold text-foreground text-xl mb-2">{pillar.left_title}</h3>
+                <p className="font-outfit text-sm italic text-foreground/60 mb-4">{pillar.statement}</p>
+                <p className="font-outfit text-sm text-foreground/55 mb-4 leading-relaxed">{pillar.description}</p>
+                {pillar.leftItems.length > 0 && (
+                  <ul className="space-y-2 mb-4">
+                    {pillar.leftItems.map((it, j) => (
+                      <li key={j} className="flex items-center gap-2 text-sm text-foreground/70">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                        <span className="font-mono text-[12px]">{it}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {pillar.rightItems.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
+                    {pillar.rightItems.map((it, j) => (
+                      <span key={j} className="px-2.5 py-1 rounded-full text-[10px] font-mono text-foreground/70" style={{ border: "1px solid hsla(73,100%,50%,0.2)", background: "hsla(73,100%,50%,0.06)" }}>
+                        {it}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <div ref={wrapperRef} style={{ height: `${pillars.length * 100}vh` }}>
       <div className="sticky top-0 overflow-hidden bg-background" style={{ height: "100vh" }}>
-        {/* Header */}
-        <div ref={headerRef} className="absolute top-0 left-0 w-1/2 z-20 px-14 pt-24 pb-6 hidden lg:block" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 65%, transparent)" }}>
-          <motion.p initial={{ opacity: 0, y: 10 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-3">
+        {/* Header — placé au-dessus de la carte gauche, sans absolute pour éviter la superposition */}
+        <div ref={headerRef} className="absolute top-0 left-0 w-1/2 z-20 px-14 pt-20 pb-10 hidden lg:block pointer-events-none" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(var(--background)) 70%, transparent 100%)" }}>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">
             {get("artiste_services_kicker", "Services")}
           </motion.p>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }} className="font-clash font-black text-foreground" style={{ fontSize: "clamp(1.8rem, 3vw, 3.5rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }} className="font-clash font-black text-foreground" style={{ fontSize: "clamp(1.5rem, 2.4vw, 2.6rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
             {get("artiste_services_title_part1", "Notre expertise")}{" "}
             <span className="text-primary">{get("artiste_services_title_accent", "à votre service")}</span>
           </motion.h2>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.2 }} className="font-outfit text-muted-foreground mt-3 leading-relaxed" style={{ fontSize: 14, maxWidth: 360 }}>
-            {get("artiste_services_subtitle", "")}
-          </motion.p>
         </div>
 
         <div className="flex h-full">

@@ -1,113 +1,87 @@
-## Objectif
+## 1. Section Piliers (split-screen) — fix d'affichage & scroll
 
-Réparer en profondeur la page **Entreprise** (admin + front) et corriger plusieurs incohérences sur les pages **Artiste**, **Gateway** et **Identité**.
+**Problème** : la section disparaît parfois, les éléments se superposent, le scroll-jack 3D est lourd.
 
----
+- `ArtisteServicesV4B.tsx` : remplacer le `useScrollIndex` basé sur `getBoundingClientRect / window.innerHeight` (peu fiable selon le contexte) par `IntersectionObserver` ou `useScroll` de Framer Motion mappé sur la progression du wrapper.
+- Stabiliser le header (qui chevauche la carte gauche) : le placer **dans** le panneau gauche, en flux normal (pas en `absolute`), avec un padding supérieur clair — ça empêche la superposition avec le titre actif.
+- Ajouter un fallback **mobile/tablette** propre : empilement vertical (déjà partiellement présent mais le wrapper garde `height: pillars.length * 100vh` même sur mobile → bug). Conditionner cette hauteur à `lg:`.
+- Ajouter une transition d'entrée/sortie sur le wrapper sticky pour éviter les flashs vides quand la query React est en revalidation.
 
-## 1. Page Entreprise — Admin (PageEntreprisePanel)
+## 2. Admin — fix du `<select>` vert/illisible
 
-**A. Réorganiser dans l'ordre EXACT du rendu front :**
-```
-1. Hero (+ stats hero)
-2. Marquee
-3. Services 3D — "Ce qu'on fait pour vous" ← MANQUANT
-4. Secteurs (titres + Orbit3D)
-5. Références (titres + catégories + clients)
-6. CTA Final ("Prêt à grandir") ← MANQUANT (réécrit)
-7. Contact (page Entreprise)
-```
+Le composant `AdminField` rend un `<select>` natif sans classes texte explicites. Sur certains OS, le bandeau de design dark de la page admin colore le texte en vert néon par héritage.
 
-**B. Ajouter la section "Services — Ce qu'on fait pour vous"** (composant `Services3DScroll`) : éditeur de settings pour kicker, titre, sous-titre + table `services_entreprise` (gestion des services 3D).
+- Ajouter explicitement `text-slate-900 bg-white` au `<select>` et forcer `color-scheme: light` pour qu'il s'affiche en couleurs neutres normales (texte noir, fond blanc), avec une bordure indigo au focus comme les autres inputs.
 
-**C. Ajouter la section "Références — En-têtes"** :
-- `entreprise_ref_kicker` ("Références")
-- `entreprise_ref_title_part1` ("Ils nous font")
-- `entreprise_ref_title_accent` ("confiance")
-- `entreprise_ref_subtitle` ("Des marques ambitieuses qui ont choisi l'excellence.")
-- `entreprise_ref_footer_note` ("+ de 150 projets réalisés avec succès")
+## 3. Bandeau logos marquee — remplacement sans suppression
 
-**D. Remplacer la section "CTA Band" (qui n'existe pas dans le design)** par un éditeur **"6. Section finale — Prêt à grandir"** alignée avec le composant `FinalCta` réel :
-- `final_cta_kicker` ("Prêt à grandir ?")
-- `final_cta_title_line1` ("Faites passer votre entreprise")
-- `final_cta_title_line2` ("au niveau supérieur")
-- `final_cta_subtitle` (textarea, ex : "Stratégie sur-mesure...")
-- `final_cta_button` ("Contactez-nous")
+Actuellement on doit supprimer un logo pour le remplacer.
 
-→ Suppression définitive du bloc obsolète `ctaband_entreprise_*`.
+- Dans `MarqueeEditor`, transformer le champ `image_url` en éditeur de **galerie multi-images** (réutiliser `MediaGalleryEditor` en mode `row` ciblant `marquee_items.image_url`). On pourra empiler plusieurs versions d'un logo et basculer en un clic sur celui qui s'affiche.
 
-**E. Câbler ces nouveaux settings dans `Entreprise.tsx`** (Hero ✅ déjà OK, Sections + Refs + FinalCta).
+## 4. Hero artiste — tout rendre éditable
 
----
+Le bloc « Influence Artistique / MUST AGENCE / On ne suit pas les tendances » a son label et sous-titre éditables, mais les **lettres MUST AGENCE** sont en dur.
 
-## 2. Page Entreprise — Front (corrections visuelles)
+- Ajouter dans `Page Artiste → 1. Hero` les nouveaux champs :
+  - `hero_artiste_brand_text` (texte affiché, ex. « MUST AGENCE »)
+  - `hero_artiste_brand_accent_index` (index de la lettre en vert, ex. 5 pour le « A »)
+  - `hero_artiste_signature` (signature animée sous le titre — déjà mappée à `hero_artiste_subtitle`, juste renommer le label admin pour clarifier).
+- `Hero.tsx` : générer dynamiquement `BRAND_LETTERS` depuis ces settings, avec fallback sur les valeurs actuelles.
 
-**A. Logo MUST AGENCE manquant dans "Expertise terrain / Secteurs d'expertise"** : ajouter dans `ExpertiseSection` un petit lock-up logo (utilise `logo_green` depuis settings) au-dessus du kicker, comme sur les autres sections.
+## 5. Pages légales et obligatoires (RGPD français)
 
-**B. Section Références — fix complet :**
-1. **Brancher sur la BDD** au lieu du tableau hardcodé `REFERENCES` : utiliser les tables `client_categories` (4 catégories) + `clients` (15 logos) avec galerie multi-versions.
-2. **Affichage par catégories (4 catégories)** : ajouter au-dessus du carrousel des onglets ou sous-titres pour chacune des 4 catégories existantes en BDD.
-3. **Tous les logos doivent défiler** (15 actuellement, pas seulement 5) : remplacer la grille fixe `lg:grid-cols-5` par un **carrousel défilant** identique à `ArtistReferences` (auto-scroll horizontal infini, drag possible, cards qui s'enchaînent).
-4. Texte du footer (`+ de 150 projets…`) issu du setting `entreprise_ref_footer_note`.
+Création de toutes les pages obligatoires pour un site commercial français qui collecte des données + vend en ligne :
 
----
+- `/mentions-legales` — éditeur, hébergeur, directeur de publication, SIRET
+- `/politique-confidentialite` — données collectées, finalités, base légale, durée, droits RGPD, DPO
+- `/cgv` — CGV pour les packs (fournisseur, prix, paiement Stripe, rétractation 14j ou exclusion B2B, garanties, litiges)
+- `/cgu` — règles d'utilisation du site
+- `/politique-cookies` — liste des cookies, consentement, durée
+- **Bannière de consentement cookies** (composant global `CookieBanner`) : Accepter / Refuser / Personnaliser, stockage du choix dans `localStorage`, blocage des scripts non essentiels tant que pas de consentement.
 
-## 3. Page Artiste — Corrections demandées
+Côté admin : nouveau panneau **« Pages légales »** avec un éditeur riche (textarea long) par page, alimenté depuis `site_settings` (clés `legal_mentions_*`, `legal_privacy_*`, `legal_cgv_*`, `legal_cgu_*`, `legal_cookies_*`) + champs structurés société (nom, SIRET, adresse, hébergeur).
 
-**A. KPI auto-créés à supprimer** : la migration précédente a inséré 9 fiches `artist_details` vides. Il faut **supprimer toutes les fiches `artist_details` dont tous les champs sont vides** (`strategie='' AND description='' AND chiffre='' AND plateformes='{}'`).
+Ajout des liens dans le **footer** (colonne dédiée « Légal »).
 
-→ Dans `ArtistDetailsInline.tsx`, NE PAS pré-créer la ligne. Garder le comportement upsert actuel (insert seulement à la 1ère sauvegarde quand l'utilisateur remplit), avec le badge "À créer" déjà présent.
+## 6. Identité — toggles afficher/masquer
 
-**B. Section Contact (page Artiste) — pas synchro BDD** : le composant `ContactSection` reçoit ses props depuis `ARTISTE_PAGE.contact` (constants.ts) et `SITE.contact`. Refactoriser `Artiste.tsx` pour lire ces valeurs depuis `useSiteSettings` :
-- `contact_artiste_heading` / `contact_artiste_text` / `contact_artiste_subtext` (déjà dans l'admin)
-- `contact_email` / `contact_phone` / `contact_location` (déjà dans Identité)
+Dans `IdentitePanel`, ajouter pour chaque coordonnée et bloc social un **switch** (composant `checkbox` déjà existant dans `AdminField`) :
 
-Appliquer la même correction sur `Entreprise.tsx` (Contact entreprise).
+- `show_contact_email`, `show_contact_phone`, `show_contact_location`
+- `show_social_instagram`, `show_social_tiktok`, `show_social_linkedin`, `show_social_youtube`
+- `show_logo_white`, `show_logo_green` (masque le logo respectif là où il apparaît)
+
+Côté rendu : `Footer.tsx`, `ContactSection.tsx` lisent ces flags via `useSiteSettings.getBool()` (à ajouter au hook) et masquent l'élément correspondant. Valeurs par défaut = `true` pour ne rien casser.
+
+## 7. Migration BDD
+
+Une seule migration ajoute toutes les nouvelles clés `site_settings` avec leurs valeurs par défaut (textes légaux génériques pré-remplis, flags = `'true'`).
 
 ---
 
-## 4. Galeries d'images — uniformiser
+### Détails techniques
 
-Sur **toutes les sections où on utilise déjà `MediaGalleryEditor`** (clients, identité/logos, gateway, sectors, team, artistes), retirer le champ "image active" (input `Logo actif` / `Image active`) du `SettingsBlock` ou `TableEditor` qui le précède : la galerie suffit (on clique sur une vignette pour activer).
+**Fichiers modifiés**
+- `src/components/artiste/ArtisteServicesV4B.tsx` (scroll/header)
+- `src/components/admin/AdminField.tsx` (select)
+- `src/components/admin/panels/editors/MarqueeEditor.tsx` (galerie multi-logos)
+- `src/components/home/Hero.tsx` (lettres dynamiques)
+- `src/components/admin/panels/PageArtistePanel.tsx` (champs hero brand)
+- `src/components/admin/panels/IdentitePanel.tsx` (toggles + champs société)
+- `src/components/layout/Footer.tsx` (liens légaux + toggles)
+- `src/components/home/ContactSection.tsx` (toggles)
+- `src/hooks/useSiteContent.ts` (helper `getBool`)
+- `src/App.tsx` (routes /mentions-legales etc. + `<CookieBanner />` global)
 
-Concrètement :
-- `IdentitePanel` : retirer les champs `logo_white` et `logo_green` du `SettingsBlock` (garder uniquement le titre + la galerie en dessous).
-- `PageAccueilPanel` (Gateway) : retirer les `SettingsBlock` "Image active" pour `gateway_image_artiste` et `gateway_image_entreprise`.
-- `ClientsEditor` : retirer le champ `logo_url` (type image) du `TableEditor.fields` — la galerie en dessous gère tout.
-- `SectorsEditor` / `TeamEditor` / `ArtistesEditor` : pareil pour les champs image principale du formulaire d'identité.
+**Fichiers créés**
+- `src/pages/legal/MentionsLegales.tsx`
+- `src/pages/legal/PolitiqueConfidentialite.tsx`
+- `src/pages/legal/CGV.tsx`
+- `src/pages/legal/CGU.tsx`
+- `src/pages/legal/PolitiqueCookies.tsx`
+- `src/components/legal/CookieBanner.tsx`
+- `src/components/legal/LegalLayout.tsx` (mise en page commune sobre)
+- `src/components/admin/panels/PagesLegalesPanel.tsx`
 
----
-
-## 5. Page d'entrée (Gateway) — admin
-
-Ajouter dans `PageAccueilPanel` les champs textuels qui sont actuellement codés en dur dans `GatewayPage.tsx` :
-- Sous-titre "Pôle Artiste" et "Pôle Entreprise"
-- Libellés des labels secondaires (ex : "Musique · Influence · Lancement")
-- CTA boutons
-
-Settings : `gateway_artiste_label`, `gateway_artiste_subtitle`, `gateway_artiste_cta`, `gateway_entreprise_label`, `gateway_entreprise_subtitle`, `gateway_entreprise_cta`.
-
----
-
-## Détails techniques
-
-**Migrations / data ops (via insert tool) :**
-- `DELETE FROM artist_details WHERE strategie='' AND description='' AND chiffre='' AND coalesce(array_length(plateformes,1),0)=0;`
-- Seed des nouveaux site_settings (entreprise_ref_*, final_cta_*, gateway_*) avec valeurs courantes.
-
-**Pas de changement de schéma de table** (toutes les tables nécessaires existent déjà : `services_entreprise`, `clients`, `client_categories`, `site_settings`, `media_galleries`).
-
-**Composants à modifier :**
-- `src/components/admin/panels/PageEntreprisePanel.tsx` (réorg + nouvelles sections)
-- `src/components/admin/panels/PageAccueilPanel.tsx` (gateway labels)
-- `src/components/admin/panels/IdentitePanel.tsx` (retirer doublons image)
-- `src/components/admin/panels/editors/ClientsEditor.tsx` (retirer logo_url du form)
-- `src/components/admin/panels/editors/SectorsEditor.tsx`, `TeamEditor.tsx`, `ArtistesEditor.tsx` (idem)
-- `src/pages/Entreprise.tsx` (logo dans Expertise, References branchées BDD avec carrousel, FinalCta câblé settings, Contact câblé)
-- `src/pages/Artiste.tsx` (Contact câblé settings)
-- `src/pages/GatewayPage.tsx` (lire les nouveaux settings)
-
----
-
-## Questions
-
-Avant d'attaquer, deux confirmations rapides :
+**Migration Supabase** : INSERT de ~30 nouvelles `site_settings` (textes légaux + flags `show_*`).

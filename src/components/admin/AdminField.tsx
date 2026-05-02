@@ -114,14 +114,12 @@ export default function AdminField({ label, type = "text", value, onChange, opti
         <select
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
-          // Forçage explicite des couleurs (bg-white + texte slate-900) car certains
-          // OS rendent les <select> natifs blancs sur blancs.
           className={`${inputBase} appearance-none cursor-pointer pr-8 bg-[url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2212%22%20height=%2212%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%23475569%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><polyline%20points=%226%209%2012%2015%2018%209%22></polyline></svg>')] bg-no-repeat`}
-          style={{ backgroundPosition: "right 10px center" }}
+          style={{ backgroundPosition: "right 10px center", colorScheme: "light", color: "#0f172a", backgroundColor: "#ffffff" }}
         >
-          <option value="" className="text-slate-400">— Choisir —</option>
+          <option value="" style={{ color: "#94a3b8", background: "#ffffff" }}>— Choisir —</option>
           {options.map((o) => (
-            <option key={o.value} value={o.value} className="text-slate-900 bg-white">{o.label}</option>
+            <option key={o.value} value={o.value} style={{ color: "#0f172a", background: "#ffffff" }}>{o.label}</option>
           ))}
         </select>
         <Hint />

@@ -17,6 +17,12 @@ import AdminLogin from "./pages/AdminLogin";
 import CheckoutPage from "./pages/CheckoutPage";
 import CheckoutReturn from "./pages/CheckoutReturn";
 import NotFound from "./pages/NotFound";
+import MentionsLegales from "./pages/legal/MentionsLegales";
+import PolitiqueConfidentialite from "./pages/legal/PolitiqueConfidentialite";
+import CGV from "./pages/legal/CGV";
+import CGU from "./pages/legal/CGU";
+import PolitiqueCookies from "./pages/legal/PolitiqueCookies";
+import CookieBanner from "./components/legal/CookieBanner";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +63,11 @@ const AnimatedRoutes = () => {
       <Routes location={location}>
         <Route path="/artiste" element={<Artiste />} />
         <Route path="/entreprise" element={<Entreprise />} />
+        <Route path="/mentions-legales" element={<MentionsLegales />} />
+        <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+        <Route path="/cgv" element={<CGV />} />
+        <Route path="/cgu" element={<CGU />} />
+        <Route path="/politique-cookies" element={<PolitiqueCookies />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </PageTransition>
@@ -78,6 +89,7 @@ const AppShell = () => {
         <AnimatedRoutes />
       </main>
       {!hideChrome && <Footer />}
+      {!isAdmin && !isCheckout && <CookieBanner />}
     </>
   );
 };

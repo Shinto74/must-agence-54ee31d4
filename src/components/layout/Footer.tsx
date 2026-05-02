@@ -6,7 +6,7 @@ import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const Footer = forwardRef<HTMLElement>((_props, ref) => {
   const location = useLocation();
-  const { get } = useSiteSettings();
+  const { get, getBool } = useSiteSettings();
   const logoWhite = get("logo_white", SITE.logoWhite);
   const brandName = get("brand_name", SITE.name?.toUpperCase() || "MUST AGENCE");
   const contactEmail = get("contact_email", SITE.contact.email);
@@ -41,24 +41,24 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: isEntreprise ? "linear-gradient(to right, transparent, hsl(45 80% 60% / 0.5), transparent)" : `linear-gradient(to right, transparent, ${accentBg}, transparent)` }} />
 
       <div className="max-w-[1400px] mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src={logoWhite} alt={SITE.name} className="h-9 w-auto" />
+              {getBool("show_logo_white", true) && <img src={logoWhite} alt={SITE.name} className="h-9 w-auto" />}
               <span className="font-clash font-bold text-xl" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : "hsl(var(--foreground))" }}>{brandName}</span>
             </div>
             <p className="text-sm leading-relaxed mb-6" style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}>
               {footerTagline}
             </p>
-            
+
             <div className="flex gap-3">
               {[
-                { label: "Instagram", href: get("social_instagram", ""), Icon: Instagram },
-                { label: "TikTok", href: get("social_tiktok", ""), Icon: Music2 },
-                { label: "LinkedIn", href: get("social_linkedin", ""), Icon: Linkedin },
-                { label: "YouTube", href: get("social_youtube", ""), Icon: Youtube },
+                { label: "Instagram", href: get("social_instagram", ""), Icon: Instagram, show: getBool("show_social_instagram", true) },
+                { label: "TikTok", href: get("social_tiktok", ""), Icon: Music2, show: getBool("show_social_tiktok", true) },
+                { label: "LinkedIn", href: get("social_linkedin", ""), Icon: Linkedin, show: getBool("show_social_linkedin", true) },
+                { label: "YouTube", href: get("social_youtube", ""), Icon: Youtube, show: getBool("show_social_youtube", true) },
               ]
-                .filter((s) => s.href && s.href.trim().length > 0)
+                .filter((s) => s.show && s.href && s.href.trim().length > 0)
                 .map(({ label, href, Icon }) => (
                   <a
                     key={label}
@@ -111,25 +111,53 @@ const Footer = forwardRef<HTMLElement>((_props, ref) => {
           </div>
 
           <div>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : accentColor }}>Légal</p>
+            <nav className="flex flex-col gap-2.5">
+              {[
+                { label: "Mentions légales", to: "/mentions-legales" },
+                { label: "Confidentialité", to: "/politique-confidentialite" },
+                { label: "CGV", to: "/cgv" },
+                { label: "CGU", to: "/cgu" },
+                { label: "Cookies", to: "/politique-cookies" },
+              ].map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="text-sm transition-colors duration-300 w-fit"
+                  style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 30% 97%)" : "hsl(var(--foreground))"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: isEntreprise ? "hsl(45 30% 97%)" : accentColor }}>Contact</p>
             <div className="flex flex-col gap-2.5 text-sm" style={{ color: isEntreprise ? "hsl(45 20% 82%)" : "hsl(var(--muted-foreground))" }}>
-              <a
-                href={`mailto:${contactEmail}`}
-                className="transition-colors duration-300"
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
-              >
-                {contactEmail}
-              </a>
-              <a
-                href={`tel:${contactPhone}`}
-                className="transition-colors duration-300"
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
-              >
-                {contactPhone}
-              </a>
-              <span>{contactLocation}</span>
+              {getBool("show_contact_email", true) && (
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="transition-colors duration-300"
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
+                >
+                  {contactEmail}
+                </a>
+              )}
+              {getBool("show_contact_phone", true) && (
+                <a
+                  href={`tel:${contactPhone}`}
+                  className="transition-colors duration-300"
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = accentColor; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isEntreprise ? "hsl(45 20% 82%)" : ""; }}
+                >
+                  {contactPhone}
+                </a>
+              )}
+              {getBool("show_contact_location", true) && <span>{contactLocation}</span>}
             </div>
           </div>
         </div>
