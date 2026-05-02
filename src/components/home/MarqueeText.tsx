@@ -210,6 +210,13 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           transform: scale(1.06);
         }
 
+        /* Logos qui doivent rester blancs même au hover (ex: Universal) */
+        .mq-item:hover .mq-logo--white {
+          filter: brightness(0) invert(1) drop-shadow(0 0 18px rgba(var(--brand-color), 0.6));
+          opacity: 1;
+          transform: scale(1.06);
+        }
+
         .mq-item:hover .mq-logo {
           filter: brightness(1) drop-shadow(0 0 18px rgba(var(--brand-color), 0.6));
           opacity: 1;
