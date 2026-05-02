@@ -14,7 +14,7 @@ export default function MarqueeEditor({ page, title, description }: { page: "hom
           { label: "Logo (image)", value: "logo" },
           { label: "Mot / texte", value: "word" },
         ]},
-        { key: "text_value", label: "Texte / Nom de la marque", hint: "Pour un logo : sert d'alt + s'affiche à côté de l'icône si le logo n'a pas de nom intégré (ex: THEARTIST)." },
+        { key: "text_value", label: "Texte / Nom de la marque", hint: "Si rempli, le nom s'affiche à côté du logo dans le bandeau (utile quand le logo est une icône seule sans wordmark). Laissez vide si le logo contient déjà le nom." },
         { key: "image_url", label: "Image / logo", type: "image", imageFolder: "marquee", hint: "Uniquement si Type = Logo." },
         { key: "display_order", label: "Ordre", type: "number" },
       ]}
