@@ -230,7 +230,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
 
         .mq-label {
           font-family: 'Clash Display', 'Inter', sans-serif;
-          font-size: 28px;
+          font-size: 20px;
           font-weight: 700;
           letter-spacing: -0.02em;
           color: hsl(var(--foreground));
