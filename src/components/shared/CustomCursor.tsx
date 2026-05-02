@@ -82,7 +82,7 @@ const CustomCursor = () => {
     <>
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 z-[9999] pointer-events-none"
+        className="fixed top-0 left-0 pointer-events-none"
         style={{
           width: 5,
           height: 5,
@@ -90,11 +90,12 @@ const CustomCursor = () => {
           background: dotColor,
           boxShadow: dotGlow,
           willChange: "transform",
+          zIndex: 2147483647,
         }}
       />
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 z-[9998] pointer-events-none"
+        className="fixed top-0 left-0 pointer-events-none"
         style={{
           width: isHover ? 52 : 32,
           height: isHover ? 52 : 32,
@@ -103,6 +104,7 @@ const CustomCursor = () => {
           background: ringBg,
           willChange: "transform",
           transition: "width 250ms cubic-bezier(0.16,1,0.3,1), height 250ms cubic-bezier(0.16,1,0.3,1), border-color 300ms, background 300ms",
+          zIndex: 2147483646,
         }}
       />
     </>
