@@ -8,6 +8,7 @@ import PageArtistePanel from "@/components/admin/panels/PageArtistePanel";
 import PageEntreprisePanel from "@/components/admin/panels/PageEntreprisePanel";
 import PartagePanel from "@/components/admin/panels/PartagePanel";
 import IdentitePanel from "@/components/admin/panels/IdentitePanel";
+import PagesLegalesPanel from "@/components/admin/panels/PagesLegalesPanel";
 
 const Admin = () => (
   <AdminLayout>
@@ -21,6 +22,7 @@ const Admin = () => (
         {tab === "page_entreprise" && <PageEntreprisePanel />}
         {tab === "partage" && <PartagePanel />}
         {tab === "identite" && <IdentitePanel />}
+        {tab === "legal" && <PagesLegalesPanel />}
         {tab === "settings" && <SettingsPanel />}
       </>
     )}

@@ -45,9 +45,11 @@ export default function PageArtistePanel() {
         fields={[
           { key: "hero_artiste_badge", label: "Badge / Tag", placeholder: "Pôle Artiste" },
           { key: "hero_artiste_label", label: "Label", placeholder: "Influence Artistique" },
+          { key: "hero_artiste_brand_text", label: "Mot principal géant (lettres)", placeholder: "MUST AGENCE", hint: "Texte affiché en lettres animées géantes (ex. MUST AGENCE)." },
+          { key: "hero_artiste_brand_accent_index", label: "Index de la lettre en accent vert", placeholder: "5", hint: "Position (0 = première lettre). Ex : 5 = le « A » de MUST AGENCE." },
           { key: "hero_artiste_title_line1", label: "Titre — ligne 1" },
           { key: "hero_artiste_title_accent", label: "Titre — accent" },
-          { key: "hero_artiste_subtitle", label: "Sous-titre", type: "textarea" },
+          { key: "hero_artiste_subtitle", label: "Signature animée / sous-titre", type: "textarea" },
           { key: "hero_artiste_cta_primary", label: "Bouton principal" },
           { key: "hero_artiste_cta_secondary", label: "Bouton secondaire" },
         ]}

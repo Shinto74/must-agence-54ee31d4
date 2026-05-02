@@ -70,22 +70,29 @@ export default function IdentitePanel() {
 
       <SettingsBlock
         title="Coordonnées"
-        description="Affichées dans le footer, dans la section contact des pages Artiste & Entreprise"
+        description="Affichées dans le footer, dans la section contact des pages Artiste & Entreprise. Utilise les switches pour masquer une info partout sur le site."
         fields={[
           { key: "contact_email", label: "Email", placeholder: "contact@mustagence.com" },
+          { key: "show_contact_email", label: "↳ Afficher l'email", type: "boolean", hint: "Masque l'email dans le footer + section contact." },
           { key: "contact_phone", label: "Téléphone", placeholder: "+33 6 00 00 00 00" },
+          { key: "show_contact_phone", label: "↳ Afficher le téléphone", type: "boolean" },
           { key: "contact_location", label: "Adresse", placeholder: "Paris, France" },
+          { key: "show_contact_location", label: "↳ Afficher l'adresse", type: "boolean" },
         ]}
       />
 
       <SettingsBlock
         title="Réseaux sociaux"
-        description="Liens des icônes sociales du footer. Laisse vide pour masquer une icône."
+        description="Liens des icônes sociales du footer. Laisse vide ou désactive le switch pour masquer une icône."
         fields={[
           { key: "social_instagram", label: "Instagram", type: "url", placeholder: "https://instagram.com/..." },
+          { key: "show_social_instagram", label: "↳ Afficher Instagram", type: "boolean" },
           { key: "social_tiktok", label: "TikTok", type: "url", placeholder: "https://tiktok.com/@..." },
+          { key: "show_social_tiktok", label: "↳ Afficher TikTok", type: "boolean" },
           { key: "social_linkedin", label: "LinkedIn", type: "url", placeholder: "https://linkedin.com/company/..." },
+          { key: "show_social_linkedin", label: "↳ Afficher LinkedIn", type: "boolean" },
           { key: "social_youtube", label: "YouTube", type: "url", placeholder: "https://youtube.com/@..." },
+          { key: "show_social_youtube", label: "↳ Afficher YouTube", type: "boolean" },
         ]}
       />
 
