@@ -95,7 +95,7 @@ const Hero = () => {
         <div className="relative z-10 text-center w-full max-w-6xl mx-auto px-6">
 
           {/* Logo MUST AGENCE en haut */}
-          {logoWhite && (
+          {logoWhite && showLogoWhite && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
