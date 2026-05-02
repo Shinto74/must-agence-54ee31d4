@@ -167,7 +167,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           gap: 18px;
           flex-shrink: 0;
           position: relative;
-          padding: 14px 4px;
+          padding: 8px 4px;
           transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
           cursor: default;
         }
