@@ -37,7 +37,8 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
   const useDb = !!page && Array.isArray(dbItems) && dbItems.length > 0;
 
   const KEEP_COLOR = new Set<string>();
-  const KEEP_WHITE = new Set<string>(["UNIVERSAL MUSIC"]);
+  // Fallback : noms à figer au hover quand on n'utilise pas la BDD (mode logos prop)
+  const KEEP_WHITE_FALLBACK = new Set<string>(["UNIVERSAL MUSIC"]);
 
   const items = useDb
     ? dbItems!.map((it: any, i: number) => {
@@ -47,7 +48,8 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
         const brandColor = BRAND_COLORS[upper] || "204, 255, 0";
         const isLarge = upper === "UNIVERSAL MUSIC";
         const keepColor = KEEP_COLOR.has(upper);
-        const keepWhite = KEEP_WHITE.has(upper);
+        // ✅ Pilotable depuis l'admin via la colonne freeze_on_hover
+        const keepWhite = !!it.freeze_on_hover;
         // Règle simplifiée : dès qu'un texte est saisi dans l'admin, il s'affiche à côté du logo.
         const showLabel = isLogo && !!text;
         return (
