@@ -13,7 +13,7 @@ export type AdminTab =
   | "dashboard"
   | "paiements" | "demandes"
   | "page_accueil" | "page_artiste" | "page_entreprise"
-  | "partage" | "identite"
+  | "partage" | "identite" | "legal"
   | "settings";
 
 type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" | "paiements" };
