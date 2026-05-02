@@ -189,7 +189,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
           width: auto;
           object-fit: contain;
           filter: brightness(0) invert(1);
-          opacity: 0.7;
+          opacity: 0.9;
           transition: filter 0.5s ease, opacity 0.5s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
           display: block;
           flex-shrink: 0;
