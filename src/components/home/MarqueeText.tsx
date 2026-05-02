@@ -113,7 +113,7 @@ const MarqueeText = ({ words, logos, page }: MarqueeTextProps) => {
       <style>{`
         .mq-root {
           width: 100%;
-          padding: 64px 0 72px;
+          padding: 44px 0 50px;
           background:
             radial-gradient(ellipse 60% 50% at 50% 50%, hsl(var(--neon) / 0.03), transparent 70%),
             linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--foreground) / 0.015) 50%, hsl(var(--background)) 100%);
