@@ -22,7 +22,7 @@ const Artiste = () => {
   return (
     <div className="page-bg page-bg--artiste">
       <Hero />
-      <MarqueeText logos={ARTISTE_PAGE.marqueeLogos} />
+      <MarqueeText page="artiste" logos={ARTISTE_PAGE.marqueeLogos} />
       <ArtisteServicesV4B />
       <ArtistReferences categories={artists || []} />
       <PackCards packs={packs as any} quoteSteps={QUOTE_STEPS} />
