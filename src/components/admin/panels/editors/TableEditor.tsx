@@ -2,6 +2,7 @@ import { useAdminCrud } from "../../useAdminCrud";
 import AdminField from "../../AdminField";
 import AdminForm from "../../AdminForm";
 import AdminList from "../../AdminList";
+import { isTranslatableKey, isTranslatableType, setEnField } from "@/lib/i18n/adminTranslate";
 
 export interface FieldDef {
   key: string;
