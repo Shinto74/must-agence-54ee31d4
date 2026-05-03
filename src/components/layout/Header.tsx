@@ -291,6 +291,10 @@ const Header = () => {
           >
             {contactCtaLabel}
           </button>
+
+          <div className="mt-4 flex justify-center">
+            <MobileLangSwitcher />
+          </div>
         </nav>
       )}
 
