@@ -60,7 +60,7 @@ const LABELS: Record<string, string> = {
 const inputBase =
   "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all";
 
-export default function AdminField({ label, type = "text", value, onChange, options, placeholder, imageFolder, hint }: Props) {
+export default function AdminField({ label, type = "text", value, onChange, options, placeholder, imageFolder, hint, translation }: Props) {
   const displayLabel = LABELS[label] || label;
 
   const Label = () => (
