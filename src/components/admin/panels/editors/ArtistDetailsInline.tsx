@@ -27,11 +27,11 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
     },
   });
 
-  const [draft, setDraft] = useState({
-    strategie: "",
-    description: "",
-    chiffre: "",
-    plateformes: "",
+  const [draft, setDraft] = useState<{
+    strategie: string; description: string; chiffre: string; plateformes: string;
+    translations: any;
+  }>({
+    strategie: "", description: "", chiffre: "", plateformes: "", translations: {},
   });
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
@@ -41,9 +41,8 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
       strategie: data?.strategie ?? "",
       description: data?.description ?? "",
       chiffre: data?.chiffre ?? "",
-      plateformes: Array.isArray(data?.plateformes)
-        ? data!.plateformes.join(", ")
-        : "",
+      plateformes: Array.isArray(data?.plateformes) ? data!.plateformes.join(", ") : "",
+      translations: (data as any)?.translations ?? {},
     });
   }, [data, artistId]);
 
@@ -54,7 +53,8 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
     draft.strategie !== (data?.strategie ?? "") ||
     draft.description !== (data?.description ?? "") ||
     draft.chiffre !== (data?.chiffre ?? "") ||
-    draft.plateformes !== initialPlateformes;
+    draft.plateformes !== initialPlateformes ||
+    JSON.stringify(draft.translations || {}) !== JSON.stringify((data as any)?.translations || {});
 
   const handleSave = async () => {
     setSaving(true);
@@ -63,12 +63,13 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const payload = {
+    const payload: any = {
       artist_id: artistId,
       strategie: draft.strategie,
       description: draft.description,
       chiffre: draft.chiffre,
       plateformes,
+      translations: draft.translations || {},
     };
 
     let error;
@@ -86,9 +87,13 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
       setSavedAt(Date.now());
       qc.invalidateQueries({ queryKey: ["artist_details", artistId] });
       qc.invalidateQueries({ queryKey: ["artist_details_all"] });
+      qc.invalidateQueries({ queryKey: ["artist_details"] });
       setTimeout(() => setSavedAt(null), 2200);
     }
   };
+
+  const enFor = (k: string) => draft.translations?.en?.[k] ?? "";
+  const setEn = (k: string, v: string) => setDraft({ ...draft, translations: setEnField(draft.translations, k, v) });
 
   return (
     <section className="rounded-xl border border-amber-200/60 bg-gradient-to-br from-amber-50/40 to-white p-5">
