@@ -35,7 +35,13 @@ export function usePackTooltips() {
     queryFn: async () => {
       const { data, error } = await supabase.from("pack_tooltips").select("*");
       if (error) throw error;
-      return translateRows(data || [], lang);
+      const raw = (data || []) as any[];
+      const translated = translateRows(raw, lang);
+      // Always keep the FR feature_prefix for stable matching against pack features
+      return translated.map((t: any) => {
+        const orig = raw.find((r) => r.id === t.id);
+        return { ...t, feature_prefix: orig?.feature_prefix || t.feature_prefix };
+      });
     },
   });
 }

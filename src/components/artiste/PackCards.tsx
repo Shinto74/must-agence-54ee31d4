@@ -20,6 +20,7 @@ interface Pack {
   featured: boolean;
   badge: string;
   features: string[];
+  featuresFr?: string[];
   bonus: string;
   reassurance: string;
 }
@@ -84,8 +85,8 @@ const FeatureTooltip = ({ text, triggerRef }: { text: string; triggerRef: React.
 };
 
 /* ─── FEATURE ITEM ─── */
-const FeatureItem = ({ feature, tooltip }: { feature: string; tooltip?: string }) => {
-  const Icon = getFeatureIcon(feature);
+const FeatureItem = ({ feature, matchKey, tooltip }: { feature: string; matchKey: string; tooltip?: string }) => {
+  const Icon = getFeatureIcon(matchKey);
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -260,9 +261,12 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
         <span className="text-sm text-muted-foreground ml-1">{pack.priceSuffix}</span>
       </div>
       <ul className="space-y-2.5 mb-6 flex-1">
-        {pack.features.map((f, i) => (
-          <FeatureItem key={`${pack.name}-${i}-${f.slice(0, 20)}`} feature={f} tooltip={getTooltip(f)} />
-        ))}
+        {pack.features.map((f, i) => {
+          const fr = pack.featuresFr?.[i] || f;
+          return (
+            <FeatureItem key={`${pack.name}-${i}-${f.slice(0, 20)}`} feature={f} matchKey={fr} tooltip={getTooltip(fr)} />
+          );
+        })}
       </ul>
       <TheArtistBonus text={theartistText} />
       <p className="text-[11px] text-muted-foreground italic mb-6">{pack.reassurance}</p>
