@@ -39,14 +39,16 @@ const AnimatedCounter = ({ value, suffix = "" }: { value: string; suffix?: strin
 
   useEffect(() => {
     if (!inView || isNaN(num)) return;
-    const startDelay = 600;
-    const duration = 2800;
+    const startDelay = 400;
+    // Long, near-linear ramp so the climb is clearly visible
+    const duration = Math.max(2600, Math.min(4500, 1800 + num * 18));
     let raf = 0;
     let start = 0;
     const step = (ts: number) => {
       if (!start) start = ts;
       const p = Math.min((ts - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
+      // gentle ease-out (very close to linear) so numbers visibly climb
+      const eased = 1 - Math.pow(1 - p, 1.4);
       setDisplay(Math.round(eased * num).toString());
       if (p < 1) raf = requestAnimationFrame(step);
     };
