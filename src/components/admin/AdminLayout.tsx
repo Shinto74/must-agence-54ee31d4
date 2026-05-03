@@ -4,7 +4,7 @@ import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Menu, X, Search, Bell, ExternalLink,
   LayoutDashboard, CreditCard, MessageSquare,
-  Home, Music, Building2, Settings as SettingsIcon, Scale, Languages,
+  Home, Music, Building2, Settings as SettingsIcon, Scale,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminNotifications } from "./useAdminNotifications";
@@ -13,7 +13,7 @@ export type AdminTab =
   | "dashboard"
   | "paiements" | "demandes"
   | "page_accueil" | "page_artiste" | "page_entreprise"
-  | "identite" | "legal" | "traductions"
+  | "identite" | "legal"
   | "settings";
 
 type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" | "paiements" };
