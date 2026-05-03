@@ -4,6 +4,7 @@ import * as LucideIcons from "lucide-react";
 import { Sparkles } from "lucide-react";
 import svcSectionBg from "@/assets/svc-section-bg.jpg";
 import { useServicesEntreprise, useSiteSettings } from "@/hooks/useSiteContent";
+import { useStickyStep } from "@/hooks/useStickyStep";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
