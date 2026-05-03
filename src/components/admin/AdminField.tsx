@@ -154,6 +154,7 @@ export default function AdminField({ label, type = "text", value, onChange, opti
           rows={3}
           className={`${inputBase} resize-none`}
         />
+        {translation && <EnInput value={translation.value} onChange={translation.onChange} multiline />}
         <Hint />
       </div>
     );
@@ -185,6 +186,7 @@ export default function AdminField({ label, type = "text", value, onChange, opti
         placeholder={placeholder}
         className={inputBase}
       />
+      {translation && <EnInput value={translation.value} onChange={translation.onChange} />}
       <Hint />
     </div>
   );
