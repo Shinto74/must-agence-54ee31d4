@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import AdminField from "../../AdminField";
+import { setEnField } from "@/lib/i18n/adminTranslate";
 
 /**
  * Fiche détaillée d'un artiste (1-1 avec artists).
@@ -26,11 +27,11 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
     },
   });
 
-  const [draft, setDraft] = useState({
-    strategie: "",
-    description: "",
-    chiffre: "",
-    plateformes: "",
+  const [draft, setDraft] = useState<{
+    strategie: string; description: string; chiffre: string; plateformes: string;
+    translations: any;
+  }>({
+    strategie: "", description: "", chiffre: "", plateformes: "", translations: {},
   });
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
@@ -40,9 +41,8 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
       strategie: data?.strategie ?? "",
       description: data?.description ?? "",
       chiffre: data?.chiffre ?? "",
-      plateformes: Array.isArray(data?.plateformes)
-        ? data!.plateformes.join(", ")
-        : "",
+      plateformes: Array.isArray(data?.plateformes) ? data!.plateformes.join(", ") : "",
+      translations: (data as any)?.translations ?? {},
     });
   }, [data, artistId]);
 
@@ -53,7 +53,8 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
     draft.strategie !== (data?.strategie ?? "") ||
     draft.description !== (data?.description ?? "") ||
     draft.chiffre !== (data?.chiffre ?? "") ||
-    draft.plateformes !== initialPlateformes;
+    draft.plateformes !== initialPlateformes ||
+    JSON.stringify(draft.translations || {}) !== JSON.stringify((data as any)?.translations || {});
 
   const handleSave = async () => {
     setSaving(true);
@@ -62,12 +63,13 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const payload = {
+    const payload: any = {
       artist_id: artistId,
       strategie: draft.strategie,
       description: draft.description,
       chiffre: draft.chiffre,
       plateformes,
+      translations: draft.translations || {},
     };
 
     let error;
@@ -85,9 +87,13 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
       setSavedAt(Date.now());
       qc.invalidateQueries({ queryKey: ["artist_details", artistId] });
       qc.invalidateQueries({ queryKey: ["artist_details_all"] });
+      qc.invalidateQueries({ queryKey: ["artist_details"] });
       setTimeout(() => setSavedAt(null), 2200);
     }
   };
+
+  const enFor = (k: string) => draft.translations?.en?.[k] ?? "";
+  const setEn = (k: string, v: string) => setDraft({ ...draft, translations: setEnField(draft.translations, k, v) });
 
   return (
     <section className="rounded-xl border border-amber-200/60 bg-gradient-to-br from-amber-50/40 to-white p-5">
@@ -123,6 +129,7 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
               value={draft.strategie}
               onChange={(v) => setDraft({ ...draft, strategie: v })}
               placeholder="Direction Artistique & Lancement Album"
+              translation={{ value: enFor("strategie"), onChange: (v) => setEn("strategie", v) }}
             />
             <AdminField
               label="Description"
@@ -130,6 +137,7 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
               value={draft.description}
               onChange={(v) => setDraft({ ...draft, description: v })}
               placeholder="Quelques phrases sur la collaboration, le contexte, les leviers utilisés."
+              translation={{ value: enFor("description"), onChange: (v) => setEn("description", v) }}
             />
             <AdminField
               label="Chiffre clé (KPI affiché en gros)"
@@ -137,13 +145,14 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
               onChange={(v) => setDraft({ ...draft, chiffre: v })}
               placeholder="+20M streams"
               hint="Visible en grand dans la popup. Laissez vide pour ne rien afficher."
+              translation={{ value: enFor("chiffre"), onChange: (v) => setEn("chiffre", v) }}
             />
             <AdminField
               label="Plateformes (séparées par virgules)"
               value={draft.plateformes}
               onChange={(v) => setDraft({ ...draft, plateformes: v })}
               placeholder="Spotify, YouTube, TikTok, Instagram"
-              hint="Étiquettes affichées en bas de la popup."
+              hint="Étiquettes affichées en bas de la popup. Les noms de plateformes ne se traduisent pas."
             />
           </div>
 

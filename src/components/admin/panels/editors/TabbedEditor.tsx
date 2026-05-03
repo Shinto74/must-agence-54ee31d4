@@ -3,6 +3,7 @@ import { Plus, Trash2, Loader2, Check, X } from "lucide-react";
 import { useAdminCrud } from "../../useAdminCrud";
 import AdminField from "../../AdminField";
 import type { FieldDef } from "./TableEditor";
+import { isTranslatableKey, isTranslatableType, setEnField } from "@/lib/i18n/adminTranslate";
 
 interface Props {
   table: string;
@@ -190,22 +191,33 @@ export default function TabbedEditor({
               </div>
 
               <div className="grid gap-4">
-                {fields.map((f) => (
-                  <AdminField
-                    key={f.key}
-                    label={f.label || f.key}
-                    type={f.type as any}
-                    options={f.options}
-                    placeholder={f.placeholder}
-                    imageFolder={f.imageFolder}
-                    hint={f.hint}
-                    value={draft[f.key]}
-                    onChange={(v) => {
-                      const val = f.type === "number" ? (parseInt(v) || 0) : v;
-                      setDraft({ ...draft, [f.key]: val });
-                    }}
-                  />
-                ))}
+                {fields.map((f) => {
+                  const translatable = isTranslatableKey(f.key) && isTranslatableType(f.type);
+                  const enValue = translatable ? (draft?.translations?.en?.[f.key] ?? "") : "";
+                  return (
+                    <AdminField
+                      key={f.key}
+                      label={f.label || f.key}
+                      type={f.type as any}
+                      options={f.options}
+                      placeholder={f.placeholder}
+                      imageFolder={f.imageFolder}
+                      hint={f.hint}
+                      value={draft[f.key]}
+                      onChange={(v) => {
+                        const val = f.type === "number" ? (parseInt(v) || 0) : v;
+                        setDraft({ ...draft, [f.key]: val });
+                      }}
+                      translation={translatable ? {
+                        value: enValue,
+                        onChange: (v) => {
+                          const nextT = setEnField(draft?.translations, f.key, v);
+                          setDraft({ ...draft, translations: nextT });
+                        },
+                      } : undefined}
+                    />
+                  );
+                })}
               </div>
 
               <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-200">
