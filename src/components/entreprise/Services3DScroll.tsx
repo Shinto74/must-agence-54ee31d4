@@ -95,7 +95,7 @@ const Services3DScroll = () => {
       style={{ height: `${(services.length + 1) * 100}vh` }}
     >
       <div
-        data-sticky
+        data-sticky-step
         className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
         style={{ perspective: "1200px" }}
       >
