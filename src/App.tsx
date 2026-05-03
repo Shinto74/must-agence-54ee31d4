@@ -23,6 +23,8 @@ import CGV from "./pages/legal/CGV";
 import CGU from "./pages/legal/CGU";
 import PolitiqueCookies from "./pages/legal/PolitiqueCookies";
 import CookieBanner from "./components/legal/CookieBanner";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import { useAutoTranslate } from "./hooks/useAutoTranslate";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +82,7 @@ const AppShell = () => {
   const isCheckout = location.pathname.startsWith("/checkout");
   const isGateway = location.pathname === "/";
   const hideChrome = isAdmin || isCheckout || isGateway;
+  useAutoTranslate();
 
   return (
     <>
