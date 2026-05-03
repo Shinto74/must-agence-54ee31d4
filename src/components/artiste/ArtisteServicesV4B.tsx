@@ -117,10 +117,9 @@ const ArtisteServicesV4B = () => {
   const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
   const { data: pillars = [] } = useArtistPillars() as { data: PillarRow[] };
   const { get } = useSiteSettings();
-  const isMobile = useIsMobile();
 
   const count = Math.max(pillars.length, 1);
-  const activeIndex = useScrollIndex(wrapperRef, count);
+  const activeIndex = useStickyStep(wrapperRef, count);
 
   if (!pillars.length) return null;
 
