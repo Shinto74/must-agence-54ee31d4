@@ -68,6 +68,7 @@ export function useAutoTranslate() {
 
   useEffect(() => {
     const apply = (root: Node) => {
+      // 1) Text nodes
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
         acceptNode: (node) => {
           if (shouldSkip(node)) return NodeFilter.FILTER_REJECT;
@@ -95,20 +96,73 @@ export function useAutoTranslate() {
           const translated = lookup(trimmed);
           if (translated && translated !== trimmed) {
             if (el && !el.getAttribute(ORIGINAL_ATTR)) el.setAttribute(ORIGINAL_ATTR, original);
-            // preserve leading/trailing whitespace
             const leading = original.match(/^\s*/)?.[0] || "";
             const trailing = original.match(/\s*$/)?.[0] || "";
             const next = leading + translated + trailing;
             if (tn.nodeValue !== next) tn.nodeValue = next;
           }
         } else {
-          // Restore FR
           if (el && el.hasAttribute(ORIGINAL_ATTR)) {
             const orig = el.getAttribute(ORIGINAL_ATTR)!;
             if (tn.nodeValue !== orig) tn.nodeValue = orig;
           }
         }
       }
+
+      // 2) Placeholders & aria-labels on inputs/textareas/selects
+      const rootEl = (root as Element).querySelectorAll
+        ? (root as Element)
+        : document.body;
+      const fields = rootEl.querySelectorAll
+        ? rootEl.querySelectorAll("input[placeholder], textarea[placeholder], [aria-label]")
+        : [];
+      fields.forEach((el) => {
+        const node = el as HTMLElement;
+        if (node.hasAttribute(SKIP_ATTR)) return;
+        // placeholder
+        const ph = node.getAttribute("placeholder");
+        if (ph !== null) {
+          if (lang === "en") {
+            const original = node.getAttribute(PLACEHOLDER_ORIGINAL_ATTR) || ph;
+            if (isTranslatableText(original)) {
+              const translated = lookup(original.trim());
+              if (translated && translated !== original.trim()) {
+                if (!node.getAttribute(PLACEHOLDER_ORIGINAL_ATTR)) {
+                  node.setAttribute(PLACEHOLDER_ORIGINAL_ATTR, original);
+                }
+                if (node.getAttribute("placeholder") !== translated) {
+                  node.setAttribute("placeholder", translated);
+                }
+              }
+            }
+          } else {
+            const orig = node.getAttribute(PLACEHOLDER_ORIGINAL_ATTR);
+            if (orig && node.getAttribute("placeholder") !== orig) {
+              node.setAttribute("placeholder", orig);
+            }
+          }
+        }
+        // aria-label
+        const al = node.getAttribute("aria-label");
+        if (al !== null && isTranslatableText(al)) {
+          const ATTR = "data-i18n-aria-original";
+          if (lang === "en") {
+            const original = node.getAttribute(ATTR) || al;
+            const translated = lookup(original.trim());
+            if (translated && translated !== original.trim()) {
+              if (!node.getAttribute(ATTR)) node.setAttribute(ATTR, original);
+              if (node.getAttribute("aria-label") !== translated) {
+                node.setAttribute("aria-label", translated);
+              }
+            }
+          } else {
+            const orig = node.getAttribute(ATTR);
+            if (orig && node.getAttribute("aria-label") !== orig) {
+              node.setAttribute("aria-label", orig);
+            }
+          }
+        }
+      });
     };
 
     // Disconnect existing
