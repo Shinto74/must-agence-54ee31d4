@@ -131,7 +131,7 @@ const ArtisteServicesV4B = () => {
 
   return (
     <div ref={wrapperRef} style={{ height: `${pillars.length * 100}vh` }}>
-      <div className="sticky top-0 overflow-hidden bg-background" style={{ height: "100vh" }}>
+      <div data-sticky-step className="sticky top-0 overflow-hidden bg-background" style={{ height: "100vh" }}>
         {/* Header — placé au-dessus de la carte gauche, sans absolute pour éviter la superposition */}
         <div ref={headerRef} className="absolute top-0 left-0 w-1/2 z-20 px-14 pt-20 pb-10 hidden lg:block pointer-events-none" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(var(--background)) 70%, transparent 100%)" }}>
           <motion.p initial={{ opacity: 0, y: 10 }} animate={headerInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">
