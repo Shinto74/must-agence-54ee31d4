@@ -6,7 +6,6 @@ import SettingsPanel from "@/components/admin/panels/SettingsPanel";
 import PageAccueilPanel from "@/components/admin/panels/PageAccueilPanel";
 import PageArtistePanel from "@/components/admin/panels/PageArtistePanel";
 import PageEntreprisePanel from "@/components/admin/panels/PageEntreprisePanel";
-import PartagePanel from "@/components/admin/panels/PartagePanel";
 import IdentitePanel from "@/components/admin/panels/IdentitePanel";
 import PagesLegalesPanel from "@/components/admin/panels/PagesLegalesPanel";
 
@@ -20,7 +19,6 @@ const Admin = () => (
         {tab === "page_accueil" && <PageAccueilPanel />}
         {tab === "page_artiste" && <PageArtistePanel />}
         {tab === "page_entreprise" && <PageEntreprisePanel />}
-        {tab === "partage" && <PartagePanel />}
         {tab === "identite" && <IdentitePanel />}
         {tab === "legal" && <PagesLegalesPanel />}
         {tab === "settings" && <SettingsPanel />}
