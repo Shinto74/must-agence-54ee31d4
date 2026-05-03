@@ -20,6 +20,7 @@ interface Pack {
   featured: boolean;
   badge: string;
   features: string[];
+  featuresFr?: string[];
   bonus: string;
   reassurance: string;
 }
