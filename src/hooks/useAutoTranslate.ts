@@ -5,7 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 const ORIGINAL_ATTR = "data-i18n-original";
 const SKIP_ATTR = "data-i18n-skip";
-const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "CODE", "PRE", "TEXTAREA", "INPUT"]);
+const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "CODE", "PRE"]);
+const PLACEHOLDER_ORIGINAL_ATTR = "data-i18n-ph-original";
 const PROTECTED = ["MUST AGENCE", "MUST", "TheArtist", "Lovable"];
 const PROTECT_RE = /^(\s|[\d.,:%€$+\-/x×|·•]|[A-Z]{2,}|MUST\s*AGENCE)+$/;
 
