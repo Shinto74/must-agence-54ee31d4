@@ -50,8 +50,12 @@ export default function PageArtistePanel() {
           { key: "hero_artiste_title_line1", label: "Titre — ligne 1" },
           { key: "hero_artiste_title_accent", label: "Titre — accent" },
           { key: "hero_artiste_subtitle", label: "Signature animée / sous-titre", type: "textarea" },
-          { key: "hero_artiste_cta_primary", label: "Bouton principal" },
-          { key: "hero_artiste_cta_secondary", label: "Bouton secondaire" },
+          { key: "hero_artiste_cta_primary_show", label: "Afficher CTA principal", type: "boolean" },
+          { key: "hero_artiste_cta_primary", label: "CTA principal — texte" },
+          { key: "hero_artiste_cta_primary_url", label: "CTA principal — lien", placeholder: "#contact", hint: "Ancre (#contact) ou URL." },
+          { key: "hero_artiste_cta_secondary_show", label: "Afficher CTA secondaire", type: "boolean" },
+          { key: "hero_artiste_cta_secondary", label: "CTA secondaire — texte", placeholder: "Découvrir nos pôles" },
+          { key: "hero_artiste_cta_secondary_url", label: "CTA secondaire — lien", placeholder: "/", hint: "Par défaut /" },
         ]}
       />
 
