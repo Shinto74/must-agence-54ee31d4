@@ -130,7 +130,7 @@ const ArtisteServicesV4B = () => {
   // Mobile : on garde la même mécanique de scroll-jack (sticky + cartes)
 
   return (
-    <div ref={wrapperRef} style={{ height: `${pillars.length * 100}vh` }}>
+    <div ref={wrapperRef} style={{ height: `200vh` }}>
       <div data-sticky-step className="sticky top-0 overflow-hidden bg-background" style={{ height: "100vh" }}>
         {/* Header — placé au-dessus de la carte gauche, sans absolute pour éviter la superposition */}
         <div ref={headerRef} className="absolute top-0 left-0 w-1/2 z-20 px-14 pt-20 pb-10 hidden lg:block pointer-events-none" style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(var(--background)) 70%, transparent 100%)" }}>
