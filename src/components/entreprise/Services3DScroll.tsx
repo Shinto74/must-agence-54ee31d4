@@ -4,6 +4,7 @@ import * as LucideIcons from "lucide-react";
 import { Sparkles } from "lucide-react";
 import svcSectionBg from "@/assets/svc-section-bg.jpg";
 import { useServicesEntreprise, useSiteSettings } from "@/hooks/useSiteContent";
+import { useStickyStep } from "@/hooks/useStickyStep";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -31,76 +32,25 @@ const Services3DScroll = () => {
   // Fallback minimal — only used while loading or if DB is empty
   const services = dbServices.length > 0 ? dbServices : [];
 
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
   const sectionKicker = get("entreprise_services_kicker", "Services");
   const sectionTitleLine1 = get("entreprise_services_title_line1", "Ce qu'on fait");
   const sectionTitleLine2 = get("entreprise_services_title_line2", "pour vous");
 
-  const [active, setActive] = useState(0);
-  const [direction, setDirection] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollCooldown = useRef(false);
-
-  // Reset active index if services change and active is out of range
-  useEffect(() => {
-    if (active >= services.length && services.length > 0) {
-      setActive(0);
-    }
-  }, [services.length, active]);
-
-  // Scroll-driven: each scroll event inside sticky section changes card (DESKTOP only)
-  useEffect(() => {
-    if (isMobile) return;
-    const container = containerRef.current;
-    if (!container || services.length === 0) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      const rect = container.getBoundingClientRect();
-      const stickyEl = container.querySelector("[data-sticky]") as HTMLElement;
-      if (!stickyEl) return;
-
-      const stickyRect = stickyEl.getBoundingClientRect();
-      const isStuck = stickyRect.top <= 5 && rect.bottom > window.innerHeight;
-
-      if (!isStuck) return;
-      if (scrollCooldown.current) {
-        e.preventDefault();
-        return;
-      }
-
-      const delta = e.deltaY;
-      if (Math.abs(delta) < 15) return;
-
-      if (delta > 0 && active < services.length - 1) {
-        e.preventDefault();
-        scrollCooldown.current = true;
-        setDirection(1);
-        setActive((prev) => Math.min(prev + 1, services.length - 1));
-        setTimeout(() => { scrollCooldown.current = false; }, 800);
-      } else if (delta < 0 && active > 0) {
-        e.preventDefault();
-        scrollCooldown.current = true;
-        setDirection(-1);
-        setActive((prev) => Math.max(prev - 1, 0));
-        setTimeout(() => { scrollCooldown.current = false; }, 800);
-      }
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, [active, services.length, isMobile]);
+  const count = Math.max(services.length, 1);
+  const active = useStickyStep(containerRef, count);
+  const prevActive = useRef(0);
+  const direction = active >= prevActive.current ? 1 : -1;
+  useEffect(() => { prevActive.current = active; }, [active]);
 
   const goTo = useCallback((idx: number) => {
-    setDirection(idx > active ? 1 : -1);
-    setActive(idx);
-  }, [active]);
+    // Scroll to position that matches the step (approx)
+    const c = containerRef.current;
+    if (!c) return;
+    const step = window.innerHeight;
+    const targetTop = c.offsetTop + idx * step;
+    window.scrollTo({ top: targetTop, behavior: "smooth" });
+  }, []);
 
   // If no services, render nothing (or a small notice during dev)
   if (services.length === 0) {
@@ -135,60 +85,7 @@ const Services3DScroll = () => {
     }),
   };
 
-  // ─── MOBILE : stack vertical scrollable ───────────────────────────────
-  if (isMobile) {
-    return (
-      <section id="services" className="relative z-[1] py-16 px-5" style={{
-        background: "linear-gradient(180deg, #0e0e0e 0%, #131210 50%, #0e0e0e 100%)",
-      }}>
-        <div className="mb-10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>{sectionKicker}</span>
-          </div>
-          <h2 className="font-clash text-3xl font-black leading-[0.95] text-white">
-            {sectionTitleLine1}<br />
-            <span style={{ color: "hsl(43 55% 55%)" }}>{sectionTitleLine2}</span>
-          </h2>
-        </div>
-        <div className="space-y-5">
-          {services.map((s: any, i: number) => (
-            <motion.div
-              key={s.id || i}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, ease: EASE }}
-              className="relative overflow-hidden rounded-2xl p-6"
-              style={{
-                background: "linear-gradient(155deg, hsl(0 0% 100%) 0%, hsl(40 20% 97%) 100%)",
-                border: "1.5px solid hsl(43 55% 55% / 0.35)",
-                boxShadow: "0 20px 50px -20px rgba(0,0,0,0.4)",
-              }}
-            >
-              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{
-                background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.6), transparent)",
-              }} />
-              <span className="font-mono text-xs font-medium tracking-[0.15em]" style={{ color: "hsl(43 55% 45%)" }}>
-                {s.number || String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-2 mb-2 font-clash text-xl font-black" style={{ color: "hsl(0 0% 10%)" }}>{s.title}</h3>
-              <p className="mb-4 text-sm leading-relaxed" style={{ color: "hsl(0 0% 30%)" }}>{s.description}</p>
-              <div className="flex flex-wrap gap-2">
-                {(s.chips || []).map((c: string, ci: number) => (
-                  <span key={ci} className="rounded-xl px-3 py-1.5 text-[11px] font-mono font-medium" style={{
-                    background: "hsl(43 55% 55% / 0.1)",
-                    border: "1px solid hsl(43 55% 55% / 0.2)",
-                    color: "hsl(0 0% 25%)",
-                  }}>{c}</span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    );
-  }
+  // Same scroll-jack mechanic on mobile and desktop (one card per scroll)
 
   return (
     <section
@@ -198,7 +95,7 @@ const Services3DScroll = () => {
       style={{ height: `${(services.length + 1) * 100}vh` }}
     >
       <div
-        data-sticky
+        data-sticky-step
         className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
         style={{ perspective: "1200px" }}
       >

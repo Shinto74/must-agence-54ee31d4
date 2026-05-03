@@ -1,5 +1,6 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useStickyStep } from "@/hooks/useStickyStep";
 import { optimizeImage } from "@/lib/imageOptimizer";
 
 interface TeamMember {
@@ -27,28 +28,14 @@ const FALLBACK: TeamMember[] = [
 const Team = ({ members }: TeamProps) => {
   const data = members && members.length > 0 ? members : FALLBACK;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const el = containerRef.current;
-      if (!el) return;
-      const { top } = el.getBoundingClientRect();
-      const scrolled = -top;
-      const idx = Math.max(0, Math.min(data.length - 1, Math.floor(scrolled / window.innerHeight)));
-      setActiveIndex(idx);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [data.length]);
+  const activeIndex = useStickyStep(containerRef, data.length);
 
   const m = data[activeIndex];
   const img = m.image_url || PLACEHOLDER;
 
   return (
     <div ref={containerRef} style={{ height: `${data.length * 100}vh` }}>
-      <div className="sticky top-0 h-screen overflow-hidden bg-background">
+      <div data-sticky-step className="sticky top-0 h-screen overflow-hidden bg-background">
 
         {/* Background image — full screen */}
         <AnimatePresence mode="wait">
