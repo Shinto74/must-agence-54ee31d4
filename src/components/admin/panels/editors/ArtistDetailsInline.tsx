@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import AdminField from "../../AdminField";
+import { setEnField } from "@/lib/i18n/adminTranslate";
 
 /**
  * Fiche détaillée d'un artiste (1-1 avec artists).
