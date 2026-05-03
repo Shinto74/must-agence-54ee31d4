@@ -63,14 +63,18 @@ const AnimatedCounter = ({ value, suffix = "" }: { value: string; suffix?: strin
 const EntrepriseHero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { get } = useSiteSettings();
+  const { get, getBool } = useSiteSettings();
   const heroVideo = get("hero_entreprise_video_url", HERO_VIDEO_URL);
   const heroTag = get("hero_entreprise_tag", "Pôle Entreprise");
   const heroLine1 = get("hero_entreprise_title_line1", "Une stratégie digitale");
   const heroLine2 = get("hero_entreprise_title_line2", "pensée pour performer");
   const heroDesc = get("hero_entreprise_description", "Nous accompagnons les marques ambitieuses dans leur croissance grâce à une approche complète : contenu, visibilité et performance mesurable.");
   const heroCta1 = get("hero_entreprise_cta_primary", "Demander un audit gratuit");
-  const heroCta2 = get("hero_entreprise_cta_secondary", "Découvrir nos services");
+  const heroCta1Url = get("hero_entreprise_cta_primary_url", "");
+  const showCta1 = getBool("hero_entreprise_cta_primary_show", true);
+  const heroCta2 = get("hero_entreprise_cta_secondary", "Découvrir nos pôles");
+  const heroCta2Url = get("hero_entreprise_cta_secondary_url", "/");
+  const showCta2 = getBool("hero_entreprise_cta_secondary_show", true);
   const stat1Value = get("hero_entreprise_stat1_value", "150");
   const stat1Suffix = get("hero_entreprise_stat1_suffix", "+");
   const stat1Label = get("hero_entreprise_stat1_label", "Projets livrés");
@@ -243,23 +247,48 @@ const EntrepriseHero = () => {
           animate={phase >= 2 ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, delay: 0.2, ease: EASE }}
         >
-          <motion.button
-            onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
-            className="group inline-flex items-center gap-3 px-10 py-[1.125rem] rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 cursor-pointer"
-            style={{
-              background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
-              color: "#fff",
-              boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.3), 0 8px 30px hsl(43 52% 39% / 0.25)",
-            }}
-            whileHover={{
-              y: -2,
-              boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.5), 0 12px 50px hsl(43 52% 39% / 0.4), 0 0 80px hsl(43 55% 55% / 0.15)",
-            }}
-            whileTap={{ scale: 0.97 }}
-          >
-            {heroCta1}
-            <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-          </motion.button>
+          {showCta1 && (
+            <motion.a
+              href={heroCta1Url || undefined}
+              onClick={(e) => {
+                if (!heroCta1Url) {
+                  e.preventDefault();
+                  window.dispatchEvent(new CustomEvent("open-contact-modal"));
+                }
+              }}
+              className="group inline-flex items-center gap-3 px-10 py-[1.125rem] rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 cursor-pointer"
+              style={{
+                background: "linear-gradient(135deg, hsl(43 52% 39%), hsl(43 55% 55%))",
+                color: "#fff",
+                boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.3), 0 8px 30px hsl(43 52% 39% / 0.25)",
+              }}
+              whileHover={{
+                y: -2,
+                boxShadow: "0 0 0 1px hsl(43 55% 55% / 0.5), 0 12px 50px hsl(43 52% 39% / 0.4), 0 0 80px hsl(43 55% 55% / 0.15)",
+              }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {heroCta1}
+              <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+            </motion.a>
+          )}
+          {showCta2 && (
+            <motion.a
+              href={heroCta2Url || "/"}
+              className="group inline-flex items-center gap-3 px-10 py-[1.125rem] rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 cursor-pointer"
+              style={{
+                background: "rgba(255,255,255,0.06)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                color: "rgba(255,255,255,0.9)",
+              }}
+              whileHover={{ y: -2, borderColor: "hsl(43 55% 55% / 0.5)", color: "#fff" }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {heroCta2}
+              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
+            </motion.a>
+          )}
         </motion.div>
 
         {/* Stats bar */}

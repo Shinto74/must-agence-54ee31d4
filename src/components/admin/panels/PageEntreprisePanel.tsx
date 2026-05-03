@@ -31,8 +31,12 @@ export default function PageEntreprisePanel() {
           { key: "hero_entreprise_title_line1", label: "Titre — ligne 1" },
           { key: "hero_entreprise_title_line2", label: "Titre — ligne 2 (accent)" },
           { key: "hero_entreprise_description", label: "Description", type: "textarea" },
-          { key: "hero_entreprise_cta_primary", label: "Bouton principal" },
-          { key: "hero_entreprise_cta_secondary", label: "Bouton secondaire" },
+          { key: "hero_entreprise_cta_primary_show", label: "Afficher CTA principal", type: "boolean" },
+          { key: "hero_entreprise_cta_primary", label: "CTA principal — texte", placeholder: "Demander un audit gratuit" },
+          { key: "hero_entreprise_cta_primary_url", label: "CTA principal — lien", placeholder: "Laisser vide = ouvre le formulaire de contact", hint: "URL ou /chemin. Vide = ouvre la modal de contact." },
+          { key: "hero_entreprise_cta_secondary_show", label: "Afficher CTA secondaire", type: "boolean" },
+          { key: "hero_entreprise_cta_secondary", label: "CTA secondaire — texte", placeholder: "Découvrir nos pôles" },
+          { key: "hero_entreprise_cta_secondary_url", label: "CTA secondaire — lien", placeholder: "/", hint: "Par défaut /" },
           { key: "hero_entreprise_video_url", label: "Vidéo de fond", type: "video", hint: "MP4 — uploade ou colle une URL" },
         ]}
       />

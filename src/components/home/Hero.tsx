@@ -19,7 +19,11 @@ const Hero = () => {
   const heroTitleAccent = get("hero_artiste_title_accent", SITE.hero.titleAccent);
   const heroSubtitle = get("hero_artiste_subtitle", "Agence d'influence spécialisée musique et marques.");
   const heroCtaPrimary = get("hero_artiste_cta_primary", SITE.hero.ctaPrimary);
-  const heroCtaSecondary = get("hero_artiste_cta_secondary", SITE.hero.ctaSecondary);
+  const heroCtaPrimaryUrl = get("hero_artiste_cta_primary_url", "#contact");
+  const showCtaPrimary = getBool("hero_artiste_cta_primary_show", true);
+  const heroCtaSecondary = get("hero_artiste_cta_secondary", "Découvrir nos pôles");
+  const heroCtaSecondaryUrl = get("hero_artiste_cta_secondary_url", "/");
+  const showCtaSecondary = getBool("hero_artiste_cta_secondary_show", true);
   const logoWhite = get("logo_white", "");
   const showLogoWhite = getBool("show_logo_white", true);
 
@@ -255,33 +259,37 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 1.1 }}
             className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.03, boxShadow: "0 0 30px hsl(73 100% 50% / 0.25)" }}
-              whileTap={{ scale: 0.97 }}
-              className="px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.15em] transition-all duration-300"
-              style={{
-                background: "hsl(73 100% 50%)",
-                color: "hsl(var(--primary-foreground))",
-                boxShadow: "0 0 20px hsl(73 100% 50% / 0.15), inset 0 1px 0 hsl(73 100% 70% / 0.3)",
-              }}
-            >
-              {heroCtaPrimary}
-            </motion.a>
-            <motion.a
-              href="#poles"
-              whileHover={{ scale: 1.03, borderColor: "hsl(73 100% 50% / 0.5)" }}
-              whileTap={{ scale: 0.97 }}
-              className="px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.15em] transition-all duration-300"
-              style={{
-                background: "hsla(0,0%,100%,0.04)",
-                backdropFilter: "blur(12px)",
-                border: "1px solid hsla(0,0%,100%,0.12)",
-                color: "hsla(0,0%,100%,0.7)",
-              }}
-            >
-              {heroCtaSecondary}
-            </motion.a>
+            {showCtaPrimary && (
+              <motion.a
+                href={heroCtaPrimaryUrl}
+                whileHover={{ scale: 1.03, boxShadow: "0 0 30px hsl(73 100% 50% / 0.25)" }}
+                whileTap={{ scale: 0.97 }}
+                className="px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.15em] transition-all duration-300"
+                style={{
+                  background: "hsl(73 100% 50%)",
+                  color: "hsl(var(--primary-foreground))",
+                  boxShadow: "0 0 20px hsl(73 100% 50% / 0.15), inset 0 1px 0 hsl(73 100% 70% / 0.3)",
+                }}
+              >
+                {heroCtaPrimary}
+              </motion.a>
+            )}
+            {showCtaSecondary && (
+              <motion.a
+                href={heroCtaSecondaryUrl}
+                whileHover={{ scale: 1.03, borderColor: "hsl(73 100% 50% / 0.5)" }}
+                whileTap={{ scale: 0.97 }}
+                className="px-8 py-3.5 rounded-full font-mono text-sm uppercase tracking-[0.15em] transition-all duration-300"
+                style={{
+                  background: "hsla(0,0%,100%,0.04)",
+                  backdropFilter: "blur(12px)",
+                  border: "1px solid hsla(0,0%,100%,0.12)",
+                  color: "hsla(0,0%,100%,0.7)",
+                }}
+              >
+                {heroCtaSecondary}
+              </motion.a>
+            )}
           </motion.div>
         </div>
 
