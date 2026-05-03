@@ -4,7 +4,6 @@ import { SITE } from "@/lib/constants";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { Menu, X } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const DEFAULT_NAV_ITEMS = [
   { key: "home", label: "Accueil", path: "/" },
