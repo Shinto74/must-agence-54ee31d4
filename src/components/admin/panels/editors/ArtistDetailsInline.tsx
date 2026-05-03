@@ -129,6 +129,7 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
               value={draft.strategie}
               onChange={(v) => setDraft({ ...draft, strategie: v })}
               placeholder="Direction Artistique & Lancement Album"
+              translation={{ value: enFor("strategie"), onChange: (v) => setEn("strategie", v) }}
             />
             <AdminField
               label="Description"
@@ -136,6 +137,7 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
               value={draft.description}
               onChange={(v) => setDraft({ ...draft, description: v })}
               placeholder="Quelques phrases sur la collaboration, le contexte, les leviers utilisés."
+              translation={{ value: enFor("description"), onChange: (v) => setEn("description", v) }}
             />
             <AdminField
               label="Chiffre clé (KPI affiché en gros)"
@@ -143,13 +145,14 @@ export default function ArtistDetailsInline({ artistId }: { artistId: string }) 
               onChange={(v) => setDraft({ ...draft, chiffre: v })}
               placeholder="+20M streams"
               hint="Visible en grand dans la popup. Laissez vide pour ne rien afficher."
+              translation={{ value: enFor("chiffre"), onChange: (v) => setEn("chiffre", v) }}
             />
             <AdminField
               label="Plateformes (séparées par virgules)"
               value={draft.plateformes}
               onChange={(v) => setDraft({ ...draft, plateformes: v })}
               placeholder="Spotify, YouTube, TikTok, Instagram"
-              hint="Étiquettes affichées en bas de la popup."
+              hint="Étiquettes affichées en bas de la popup. Les noms de plateformes ne se traduisent pas."
             />
           </div>
 
