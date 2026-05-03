@@ -1,50 +1,50 @@
-## Plan
+Plan de correction
 
-### 1. Suppression du panneau « Sections partagées »
-- Retirer l'entrée `partage` de la sidebar admin (`src/components/admin/AdminLayout.tsx`).
-- Retirer le case `partage` et l'import dans `src/pages/Admin.tsx`.
-- Supprimer les fichiers :
-  - `src/components/admin/panels/PartagePanel.tsx`
-  - `src/components/admin/panels/editors/PortfolioEditor.tsx`
-- Aucun changement de base de données (les tables Portfolio restent, juste plus éditables — sans risque).
+1. Remplacer le mécanisme fragile de traduction DOM
+- Garder le dictionnaire manuel pour les textes statiques simples, mais arrêter de compter uniquement sur le MutationObserver exact-text.
+- Ajouter une vraie fonction de traduction utilisable dans React, capable de traduire les chaînes, les fragments, les textes avec ponctuation, et les valeurs dynamiques.
+- Ajouter les traductions manquantes immédiates relevées visuellement : hero Artiste, services/piliers, catégories artistes, packs, tooltips, Portugal, vision, équipe, formulaires, page Entreprise, accueil/gateway, footer, cookies et pages légales.
 
-### 2. Sélecteur de langue FR/EN dans la navbar (traduction auto temps réel)
+2. Traduire les données dynamiques via les colonnes JSONB déjà créées
+- Mettre à jour les hooks publics pour appliquer `row.translations.en` quand la langue active est EN :
+  - `site_settings`
+  - `artist_pillars`, `pillar_left_items`, `pillar_right_items`
+  - `artist_categories`, `artists`, `artist_details`
+  - `packs`, `pack_features`, `pack_tooltips`
+  - `clip_portugal_advantages`
+  - `team_members`
+  - `theartist_features`
+  - `contact_form_types`, `contact_sectors`
+  - `services_entreprise`, `service_entreprise_chips`, `entreprise_sectors`, `clients/client_categories`
+  - `form_steps`, `form_options`, stats, process/expertise si affichés
+- Laisser les noms propres/projets protégés non traduits quand c’est normal : Must Agence, TheArtist, noms d’artistes, noms de marques.
 
-**Composant `LanguageSwitcher`** ajouté dans le header (desktop + mobile) :
-- Pill « FR | EN » au style cohérent avec la navbar (vert néon sur Artiste, doré sur Entreprise).
-- État stocké dans `localStorage` (`site_lang`) + contexte React (`LanguageContext`).
+3. Remplir les traductions anglaises en base
+- Créer une migration qui renseigne les JSONB `translations.en` pour les contenus existants déjà visibles sur le site.
+- Couvrir explicitement les exemples que tu as listés :
+  - `Influence Artistique` → `Artistic Influence`
+  - `On ne suit pas les tendances on les crée` → `We don’t follow trends, we create them`
+  - `Influence & TikTok Activation` et toutes ses descriptions/items
+  - `Urbain`, `Pop / Variété`, `Électro / International`
+  - Tous les packs, features, bonus, rassurances, badges, prix suffixes et boutons
+  - Section Portugal complète
+  - Vision complète
+  - Équipe complète
+  - Tous les formulaires et états d’envoi
+- Corriger aussi les mélanges actuels comme `Choisissez la formule tailored to your ambition.` en traduisant la phrase entière, pas seulement un fragment.
 
-**Mécanisme de traduction** :
-- Edge function `translate-page` qui reçoit un tableau de chaînes FR et renvoie les traductions EN via Lovable AI (`google/gemini-3-flash-preview`).
-- Hook `useTranslate()` qui :
-  1. Si `lang === 'fr'` → retourne le texte tel quel.
-  2. Si `lang === 'en'` → collecte tous les nœuds texte visibles du `<main>`, les envoie en batch à l'edge function, puis remplace les `textContent` dans le DOM.
-  3. Met en cache les traductions dans `localStorage` (clé = hash du texte FR) pour éviter de re-traduire à chaque navigation.
-- Re-déclenché à chaque changement de route et à chaque rechargement des données React Query (via `MutationObserver` léger sur `<main>`).
+4. Ajouter la gestion EN dans l’admin pour chaque section, pas seulement un dictionnaire global
+- Étendre les éditeurs admin existants pour afficher, dans chaque formulaire public, un champ “Version anglaise” pour les champs textuels visibles.
+- Sauvegarder ces champs dans `translations.en.<champ>` de la ligne concernée.
+- Pour `site_settings`, stocker la version anglaise dans la colonne JSONB de la ligne setting plutôt que seulement dans `i18n.en.*`.
+- Garder le panneau “Traductions EN” comme secours global/recherche, mais le rendre utile pour auditer les chaînes non rattachées à une table.
 
-**Zones traduites** :
-- Tout le contenu de `<main>` (textes hardcodés + contenus issus de Supabase).
-- Header (labels nav, CTA contact).
-- Footer.
-- Exclusions : noms propres (MUST AGENCE), code, emails, URLs.
+5. Audit visuel page par page
+- Tester en EN sur : `/`, `/artiste`, `/entreprise`, `/checkout`, `/mentions-legales`, `/politique-confidentialite`, `/cgv`, `/cgu`, `/politique-cookies`.
+- Extraire le texte visible section par section et corriger tout résidu français non voulu.
+- Vérifier aussi les modales, tooltips, boutons, carrousels, formulaires, toast/messages, menus mobile et footer.
 
-**Indicateur visuel** : petit spinner discret pendant la traduction initiale d'une page.
-
-### 3. Détails techniques
-
-```
-src/contexts/LanguageContext.tsx        (nouveau)
-src/hooks/useAutoTranslate.ts           (nouveau)
-src/components/layout/LanguageSwitcher.tsx (nouveau)
-supabase/functions/translate/index.ts   (nouvelle edge function, verify_jwt = false)
-```
-
-Modifications :
-- `src/App.tsx` : wrap dans `<LanguageProvider>` + monter `useAutoTranslate()`.
-- `src/components/layout/Header.tsx` : insérer `<LanguageSwitcher />` avant le bouton Contact.
-- `src/pages/Admin.tsx` + `src/components/admin/AdminLayout.tsx` : nettoyage panneau Partage.
-
-### 4. Limitations à signaler
-- La traduction auto est rapide mais peut produire de petites imperfections (idiomes, jeux de mots).
-- Premier chargement EN d'une page = ~1-2 s de latence ; ensuite cache local instantané.
-- Coût Lovable AI : minime grâce au cache (chaque chaîne traduite une seule fois).
+Résultat attendu
+- En mode EN, le site ne doit plus afficher de sections “moitié français / moitié anglais”.
+- Tous les textes visibles par le visiteur sont traduits manuellement.
+- L’admin permet de gérer la version anglaise des contenus éditables, section par section.
