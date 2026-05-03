@@ -29,40 +29,7 @@ const colorsFromHue = (h: number) => ({
   bg: `radial-gradient(ellipse 70% 60% at 50% 50%, hsla(${h},70%,8%,0.6) 0%, transparent 70%)`,
 });
 
-// ── Hook scroll index (basé sur la progression du wrapper, robuste) ─────────
-function useScrollIndex(ref: React.RefObject<HTMLDivElement>, count: number) {
-  const [index, setIndex] = useState(0);
-  useEffect(() => {
-    let raf = 0;
-    const compute = () => {
-      const el = ref.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const total = rect.height - window.innerHeight;
-      if (total <= 0) {
-        setIndex(0);
-        return;
-      }
-      const scrolled = Math.min(Math.max(-rect.top, 0), total);
-      const ratio = scrolled / total;
-      const idx = Math.min(count - 1, Math.floor(ratio * count));
-      setIndex(idx);
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(compute);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    compute();
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, [ref, count]);
-  return index;
-}
+// Scroll-jacking handled by useStickyStep (one card per scroll, with cooldown)
 
 const panelVariants = {
   enter: { opacity: 0, y: 32, scale: 0.96, filter: "blur(6px)" },
