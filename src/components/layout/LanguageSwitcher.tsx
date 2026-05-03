@@ -3,9 +3,10 @@ import { useLanguage, Lang } from "@/contexts/LanguageContext";
 interface Props {
   needsDarkText: boolean;
   accentColor: string;
+  mobile?: boolean;
 }
 
-export default function LanguageSwitcher({ needsDarkText, accentColor }: Props) {
+export default function LanguageSwitcher({ needsDarkText, accentColor, mobile = false }: Props) {
   const { lang, setLang } = useLanguage();
 
   const baseColor = needsDarkText ? "hsla(43, 30%, 25%, 0.65)" : "hsla(0,0%,100%,0.6)";
@@ -35,7 +36,7 @@ export default function LanguageSwitcher({ needsDarkText, accentColor }: Props) 
   return (
     <div
       data-i18n-skip
-      className="hidden md:flex items-center gap-0.5 rounded-full p-0.5"
+      className={`${mobile ? "flex" : "hidden md:flex"} items-center gap-0.5 rounded-full p-0.5`}
       style={{ border: `1px solid ${borderColor}`, background: bgColor }}
     >
       <Btn value="fr" label="FR" />

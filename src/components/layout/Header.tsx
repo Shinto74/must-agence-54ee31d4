@@ -293,8 +293,8 @@ const Header = () => {
             {contactCtaLabel}
           </button>
 
-          <div className="mt-4 flex justify-center gap-2">
-            <MobileLang isEntreprise={isEntreprise} accentColor={accentColor} />
+          <div className="mt-4 flex justify-center">
+            <LanguageSwitcher needsDarkText={needsDarkText} accentColor={accentColor} mobile />
           </div>
         </nav>
       )}
