@@ -8,7 +8,7 @@ import PageArtistePanel from "@/components/admin/panels/PageArtistePanel";
 import PageEntreprisePanel from "@/components/admin/panels/PageEntreprisePanel";
 import IdentitePanel from "@/components/admin/panels/IdentitePanel";
 import PagesLegalesPanel from "@/components/admin/panels/PagesLegalesPanel";
-import TraductionsPanel from "@/components/admin/panels/TraductionsPanel";
+
 
 const Admin = () => (
   <AdminLayout>
