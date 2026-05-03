@@ -92,7 +92,7 @@ const Services3DScroll = () => {
       id="services"
       ref={containerRef}
       className="relative z-[1]"
-      style={{ height: `${(services.length + 1) * 100}vh` }}
+      style={{ height: `${services.length * 100}vh` }}
     >
       <div
         data-sticky-step
