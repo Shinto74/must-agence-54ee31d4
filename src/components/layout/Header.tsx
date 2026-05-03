@@ -4,6 +4,7 @@ import { SITE } from "@/lib/constants";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { Menu, X } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const DEFAULT_NAV_ITEMS = [
   { key: "home", label: "Accueil", path: "/" },
@@ -292,8 +293,8 @@ const Header = () => {
             {contactCtaLabel}
           </button>
 
-          <div className="mt-4 flex justify-center">
-            <MobileLangSwitcher />
+          <div className="mt-4 flex justify-center gap-2">
+            <MobileLang isEntreprise={isEntreprise} accentColor={accentColor} />
           </div>
         </nav>
       )}
