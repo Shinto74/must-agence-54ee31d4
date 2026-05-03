@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useLegalT } from "@/lib/i18n/legalStrings";
 
 interface Props {
   title: string;
@@ -9,11 +11,14 @@ interface Props {
 }
 
 export default function LegalLayout({ title, intro, children }: Props) {
+  const { lang } = useLanguage();
+  const t = useLegalT();
+  const locale = lang === "en" ? "en-US" : "fr-FR";
   return (
     <div className="min-h-screen bg-background pt-32 pb-20 px-6">
       <div className="max-w-3xl mx-auto">
         <Link to="/" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-foreground/50 hover:text-primary transition-colors mb-10">
-          <ArrowLeft size={14} /> Retour à l'accueil
+          <ArrowLeft size={14} /> {t("back_home", "Retour à l'accueil")}
         </Link>
         <h1 className="font-clash font-black text-foreground text-4xl md:text-5xl mb-6 leading-tight">
           {title}
@@ -27,7 +32,7 @@ export default function LegalLayout({ title, intro, children }: Props) {
           {children}
         </div>
         <p className="mt-16 text-xs font-mono text-foreground/40 uppercase tracking-wider">
-          Dernière mise à jour : {new Date().toLocaleDateString("fr-FR", { year: "numeric", month: "long" })}
+          {t("last_updated", "Dernière mise à jour")} : {new Date().toLocaleDateString(locale, { year: "numeric", month: "long" })}
         </p>
       </div>
     </div>
