@@ -135,16 +135,71 @@ const Services3DScroll = () => {
     }),
   };
 
+  // ─── MOBILE : stack vertical scrollable ───────────────────────────────
+  if (isMobile) {
+    return (
+      <section id="services" className="relative z-[1] py-16 px-5" style={{
+        background: "linear-gradient(180deg, #0e0e0e 0%, #131210 50%, #0e0e0e 100%)",
+      }}>
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-[1.5px]" style={{ background: "linear-gradient(to right, hsl(43 55% 55%), transparent)" }} />
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "hsl(43 55% 55%)" }}>{sectionKicker}</span>
+          </div>
+          <h2 className="font-clash text-3xl font-black leading-[0.95] text-white">
+            {sectionTitleLine1}<br />
+            <span style={{ color: "hsl(43 55% 55%)" }}>{sectionTitleLine2}</span>
+          </h2>
+        </div>
+        <div className="space-y-5">
+          {services.map((s: any, i: number) => (
+            <motion.div
+              key={s.id || i}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, ease: EASE }}
+              className="relative overflow-hidden rounded-2xl p-6"
+              style={{
+                background: "linear-gradient(155deg, hsl(0 0% 100%) 0%, hsl(40 20% 97%) 100%)",
+                border: "1.5px solid hsl(43 55% 55% / 0.35)",
+                boxShadow: "0 20px 50px -20px rgba(0,0,0,0.4)",
+              }}
+            >
+              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{
+                background: "linear-gradient(90deg, transparent, hsl(43 55% 55% / 0.6), transparent)",
+              }} />
+              <span className="font-mono text-xs font-medium tracking-[0.15em]" style={{ color: "hsl(43 55% 45%)" }}>
+                {s.number || String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-2 mb-2 font-clash text-xl font-black" style={{ color: "hsl(0 0% 10%)" }}>{s.title}</h3>
+              <p className="mb-4 text-sm leading-relaxed" style={{ color: "hsl(0 0% 30%)" }}>{s.description}</p>
+              <div className="flex flex-wrap gap-2">
+                {(s.chips || []).map((c: string, ci: number) => (
+                  <span key={ci} className="rounded-xl px-3 py-1.5 text-[11px] font-mono font-medium" style={{
+                    background: "hsl(43 55% 55% / 0.1)",
+                    border: "1px solid hsl(43 55% 55% / 0.2)",
+                    color: "hsl(0 0% 25%)",
+                  }}>{c}</span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="services"
       ref={containerRef}
       className="relative z-[1]"
-      style={{ height: isMobile ? "auto" : `${(services.length + 1) * 100}vh` }}
+      style={{ height: `${(services.length + 1) * 100}vh` }}
     >
       <div
         data-sticky
-        className={`${isMobile ? "relative" : "sticky top-0"} h-screen flex items-center justify-center overflow-hidden`}
+        className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
         style={{ perspective: "1200px" }}
       >
         {/* Dark background */}
