@@ -150,12 +150,7 @@ export const BASE_DICTIONARY: Record<string, string> = {
   "Artiste": "Artist",
   "Artiste Indépendant": "Independent Artist",
   "Entreprise": "Brand",
-  "Pôle Artiste": "Artist Pole",
-  "Pôle Entreprise": "Business Pole",
-  "Découvrir nos pôles": "Discover our poles",
   "Découvrir TheArtist": "Discover TheArtist",
-  "Découvrez nos services": "Discover our services",
-  "Notre expertise": "Our expertise",
   "Nos offres": "Our pricing",
   "Services": "Services",
   "Références": "References",
@@ -167,27 +162,18 @@ export const BASE_DICTIONARY: Record<string, string> = {
   "Cookies & confidentialité": "Cookies & privacy",
   "Légal": "Legal",
   "Confidentialité": "Privacy",
-  "Mentions légales": "Legal notice",
-  "Politique de confidentialité": "Privacy policy",
-  "Politique cookies": "Cookie policy",
   "Conditions Générales d'Utilisation": "Terms of use",
   "Conditions Générales de Vente": "Terms of sale",
 
   // CTA / actions
-  "Continuer": "Continue",
-  "Fermer": "Close",
   "Demander un audit gratuit": "Request a free audit",
   "Envoyer ma demande": "Send my request",
-  "Choisir ce pack": "Choose this pack",
   "Sélectionner une date": "Select a date",
   "Sélectionnez un budget": "Select a budget",
 
   // Forms
-  "Prénom": "First name",
   "Prénom *": "First name *",
-  "Téléphone": "Phone",
   "Téléphone *": "Phone *",
-  "Votre nom": "Your name",
   "Votre prénom": "Your first name",
   "Votre âge": "Your age",
   "Budget estimé": "Estimated budget",
@@ -199,7 +185,6 @@ export const BASE_DICTIONARY: Record<string, string> = {
   "Décrivez vos objectifs. On revient vers vous en 24h.": "Describe your goals. We'll get back within 24h.",
 
   // Statuses
-  "Chargement...": "Loading...",
   "Demande envoyée !": "Request sent!",
   "Message envoyé ! On revient vers vous en 24h.": "Message sent! We'll get back within 24h.",
   "Erreur lors de l'envoi. Réessayez.": "Sending failed. Please try again.",
