@@ -1,39 +1,42 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  PACKS, QUOTE_STEPS,
-} from "@/lib/constants";
+import { PACKS, QUOTE_STEPS } from "@/lib/constants";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translateRows } from "@/lib/i18n/translateRow";
 
 // ── Team ──
 export function useTeam() {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: ["team_members"],
+    queryKey: ["team_members", lang],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("team_members").select("*").order("display_order");
       if (error) throw error;
-      return data;
+      return translateRows(data || [], lang);
     },
   });
 }
 
 // ── Stats ──
 export function useStats(page: string) {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: ["stats", page],
+    queryKey: ["stats", page, lang],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stats").select("*").eq("page", page).order("display_order");
       if (error) throw error;
-      return data.map((s) => ({ value: s.value, label: s.label, suffix: s.suffix }));
+      return translateRows(data || [], lang).map((s: any) => ({ value: s.value, label: s.label, suffix: s.suffix }));
     },
   });
 }
 
 // ── Artists ──
 export function useArtists() {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: ["artists_with_categories"],
+    queryKey: ["artists_with_categories", lang],
     queryFn: async () => {
       const { data: cats, error: e1 } = await supabase
         .from("artist_categories").select("*").order("display_order");
@@ -41,10 +44,12 @@ export function useArtists() {
       const { data: arts, error: e2 } = await supabase
         .from("artists").select("*").order("display_order");
       if (e2) throw e2;
-      return (cats || []).map((cat) => ({
+      const tCats = translateRows(cats || [], lang);
+      const tArts = translateRows(arts || [], lang);
+      return tCats.map((cat: any) => ({
         name: cat.name, slug: cat.slug,
-        artists: (arts || []).filter((a) => a.category_id === cat.id)
-          .map((a) => ({ name: a.name, image: a.image_url })),
+        artists: tArts.filter((a: any) => a.category_id === cat.id)
+          .map((a: any) => ({ name: a.name, image: a.image_url })),
       }));
     },
   });
@@ -52,8 +57,9 @@ export function useArtists() {
 
 // ── Clients ──
 export function useClients() {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: ["clients_with_categories"],
+    queryKey: ["clients_with_categories", lang],
     queryFn: async () => {
       const { data: cats, error: e1 } = await supabase
         .from("client_categories").select("*").order("display_order");
@@ -61,22 +67,24 @@ export function useClients() {
       const { data: cls, error: e2 } = await supabase
         .from("clients").select("*").order("display_order");
       if (e2) throw e2;
-      return (cats || []).map((cat) => ({
+      const tCats = translateRows(cats || [], lang);
+      const tCls = translateRows(cls || [], lang);
+      return tCats.map((cat: any) => ({
         name: cat.name,
-        clients: (cls || []).filter((c) => c.category_id === cat.id)
-          .map((c) => ({ name: c.name, logo: c.logo_url })),
+        clients: tCls.filter((c: any) => c.category_id === cat.id)
+          .map((c: any) => ({ name: c.name, logo: c.logo_url })),
       }));
     },
   });
 }
 
-// Helper: pad a number to "01", "02"…
 const pad2 = (n: number) => String(n).padStart(2, "0");
 
 // ── Packs ──
 export function usePacks() {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: ["packs_with_features"],
+    queryKey: ["packs_with_features", lang],
     queryFn: async () => {
       const { data: packs, error: e1 } = await supabase
         .from("packs").select("*").order("display_order");
@@ -84,14 +92,15 @@ export function usePacks() {
       const { data: features, error: e2 } = await supabase
         .from("pack_features").select("*").order("display_order");
       if (e2) throw e2;
-      return (packs || []).map((p, i) => ({
-        // Numéro auto-généré : Pack 1, Pack 2…
+      const tPacks = translateRows(packs || [], lang);
+      const tFeats = translateRows(features || [], lang);
+      return tPacks.map((p: any, i: number) => ({
         number: `Pack ${i + 1}`,
         id: p.id,
         name: p.name, subtitle: p.subtitle,
         price: p.price, priceSuffix: p.price_suffix,
         featured: p.featured, badge: p.badge,
-        features: (features || []).filter((f) => f.pack_id === p.id).map((f) => f.text),
+        features: tFeats.filter((f: any) => f.pack_id === p.id).map((f: any) => f.text),
         bonus: p.bonus, reassurance: p.reassurance,
       }));
     },
@@ -101,8 +110,9 @@ export function usePacks() {
 
 // ── Services ──
 function useServices(table: "services_artiste" | "services_entreprise", chipsTable: "service_artiste_chips" | "service_entreprise_chips") {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: [table],
+    queryKey: [table, lang],
     queryFn: async () => {
       const { data: svcs, error: e1 } = await supabase
         .from(table).select("*").order("display_order");
@@ -110,11 +120,13 @@ function useServices(table: "services_artiste" | "services_entreprise", chipsTab
       const { data: chips, error: e2 } = await supabase
         .from(chipsTable).select("*").order("display_order");
       if (e2) throw e2;
-      return (svcs || []).map((s, i) => ({
+      const tSvcs = translateRows(svcs || [], lang);
+      const tChips = translateRows(chips || [], lang);
+      return tSvcs.map((s: any, i: number) => ({
         id: s.id,
         number: pad2(i + 1),
         title: s.title, description: s.description,
-        chips: (chips || []).filter((c) => c.service_id === s.id).map((c) => c.text),
+        chips: tChips.filter((c: any) => c.service_id === s.id).map((c: any) => c.text),
       }));
     },
   });
@@ -124,12 +136,13 @@ export const useServicesEntreprise = () => useServices("services_entreprise", "s
 
 // ── Expertise ──
 function useExpertise(table: "expertise_artiste" | "expertise_entreprise") {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: [table],
+    queryKey: [table, lang],
     queryFn: async () => {
       const { data, error } = await supabase.from(table).select("*").order("display_order");
       if (error) throw error;
-      return (data || []).map((e, i) => ({
+      return translateRows(data || [], lang).map((e: any, i: number) => ({
         id: e.id,
         number: pad2(i + 1),
         title: e.title, text: e.text,
@@ -142,12 +155,13 @@ export const useExpertiseEntreprise = () => useExpertise("expertise_entreprise")
 
 // ── Process ──
 function useProcess(table: "process_artiste" | "process_entreprise") {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: [table],
+    queryKey: [table, lang],
     queryFn: async () => {
       const { data, error } = await supabase.from(table).select("*").order("display_order");
       if (error) throw error;
-      return (data || []).map((p, i) => ({
+      return translateRows(data || [], lang).map((p: any, i: number) => ({
         id: p.id,
         number: pad2(i + 1),
         title: p.title, text: p.text,
@@ -158,11 +172,11 @@ function useProcess(table: "process_artiste" | "process_entreprise") {
 export const useProcessArtiste = () => useProcess("process_artiste");
 export const useProcessEntreprise = () => useProcess("process_entreprise");
 
-
 // ── Portfolio ──
 export function usePortfolio() {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: ["portfolio"],
+    queryKey: ["portfolio", lang],
     queryFn: async () => {
       const { data: cases, error: e1 } = await supabase
         .from("portfolio_cases").select("*").order("display_order");
@@ -170,10 +184,12 @@ export function usePortfolio() {
       const { data: metrics, error: e2 } = await supabase
         .from("case_metrics").select("*").order("display_order");
       if (e2) throw e2;
-      return (cases || []).map((c) => ({
+      const tCases = translateRows(cases || [], lang);
+      const tMetrics = translateRows(metrics || [], lang);
+      return tCases.map((c: any) => ({
         icon: c.icon, tag: c.tag, title: c.title, description: c.description,
-        metrics: (metrics || []).filter((m) => m.case_id === c.id)
-          .map((m) => ({ value: m.value, label: m.label })),
+        metrics: tMetrics.filter((m: any) => m.case_id === c.id)
+          .map((m: any) => ({ value: m.value, label: m.label })),
       }));
     },
   });
@@ -181,8 +197,9 @@ export function usePortfolio() {
 
 // ── Quote Steps ──
 export function useQuoteSteps() {
+  const { lang } = useLanguage();
   return useQuery({
-    queryKey: ["quote_steps"],
+    queryKey: ["quote_steps", lang],
     queryFn: async () => {
       const { data: steps, error: e1 } = await supabase
         .from("form_steps").select("*").order("display_order");
@@ -190,12 +207,14 @@ export function useQuoteSteps() {
       const { data: opts, error: e2 } = await supabase
         .from("form_options").select("*").order("display_order");
       if (e2) throw e2;
-      return (steps || []).map((s) => ({
+      const tSteps = translateRows(steps || [], lang);
+      const tOpts = translateRows(opts || [], lang);
+      return tSteps.map((s: any) => ({
         title: s.title, question: s.question,
         type: s.type as "radio" | "textarea" | "date" | "checkbox",
         placeholder: s.placeholder || undefined,
-        options: (opts || []).filter((o) => o.step_id === s.id)
-          .map((o) => ({ label: o.label, icon: o.icon })),
+        options: tOpts.filter((o: any) => o.step_id === s.id)
+          .map((o: any) => ({ label: o.label, icon: o.icon })),
       }));
     },
     placeholderData: QUOTE_STEPS.map((s) => ({
