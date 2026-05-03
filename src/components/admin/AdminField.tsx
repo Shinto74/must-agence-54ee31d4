@@ -9,6 +9,22 @@ interface Props {
   placeholder?: string;
   imageFolder?: string;
   hint?: string;
+  /** Optional English translation editor — renders an EN field below the FR one */
+  translation?: { value: string; onChange: (v: string) => void };
+}
+
+function EnInput({ value, onChange, multiline }: { value: string; onChange: (v: string) => void; multiline?: boolean }) {
+  const cls = "w-full rounded-lg border border-dashed border-indigo-200 bg-indigo-50/30 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all";
+  return (
+    <div className="mt-2 flex gap-2 items-start">
+      <span className="mt-2 inline-block w-7 shrink-0 text-[9px] font-mono font-bold text-indigo-500 uppercase">EN</span>
+      {multiline ? (
+        <textarea value={value || ""} onChange={(e) => onChange(e.target.value)} rows={3} placeholder="English translation…" className={`${cls} resize-none`} />
+      ) : (
+        <input type="text" value={value || ""} onChange={(e) => onChange(e.target.value)} placeholder="English translation…" className={cls} />
+      )}
+    </div>
+  );
 }
 
 const LABELS: Record<string, string> = {
@@ -44,7 +60,7 @@ const LABELS: Record<string, string> = {
 const inputBase =
   "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all";
 
-export default function AdminField({ label, type = "text", value, onChange, options, placeholder, imageFolder, hint }: Props) {
+export default function AdminField({ label, type = "text", value, onChange, options, placeholder, imageFolder, hint, translation }: Props) {
   const displayLabel = LABELS[label] || label;
 
   const Label = () => (
@@ -138,6 +154,7 @@ export default function AdminField({ label, type = "text", value, onChange, opti
           rows={3}
           className={`${inputBase} resize-none`}
         />
+        {translation && <EnInput value={translation.value} onChange={translation.onChange} multiline />}
         <Hint />
       </div>
     );
@@ -169,6 +186,7 @@ export default function AdminField({ label, type = "text", value, onChange, opti
         placeholder={placeholder}
         className={inputBase}
       />
+      {translation && <EnInput value={translation.value} onChange={translation.onChange} />}
       <Hint />
     </div>
   );
