@@ -94,15 +94,24 @@ export function usePacks() {
       if (e2) throw e2;
       const tPacks = translateRows(packs || [], lang);
       const tFeats = translateRows(features || [], lang);
-      return tPacks.map((p: any, i: number) => ({
-        number: `Pack ${i + 1}`,
-        id: p.id,
-        name: p.name, subtitle: p.subtitle,
-        price: p.price, priceSuffix: p.price_suffix,
-        featured: p.featured, badge: p.badge,
-        features: tFeats.filter((f: any) => f.pack_id === p.id).map((f: any) => f.text),
-        bonus: p.bonus, reassurance: p.reassurance,
-      }));
+      const rawFeats = (features || []) as any[];
+      return tPacks.map((p: any, i: number) => {
+        const packFeats = tFeats.filter((f: any) => f.pack_id === p.id);
+        return {
+          number: `Pack ${i + 1}`,
+          id: p.id,
+          name: p.name, subtitle: p.subtitle,
+          price: p.price, priceSuffix: p.price_suffix,
+          featured: p.featured, badge: p.badge,
+          features: packFeats.map((f: any) => f.text),
+          // FR-original texts in same order, used for stable icon/tooltip matching
+          featuresFr: packFeats.map((f: any) => {
+            const orig = rawFeats.find((rf) => rf.id === f.id);
+            return orig?.text || f.text;
+          }),
+          bonus: p.bonus, reassurance: p.reassurance,
+        };
+      });
     },
     placeholderData: PACKS.map((p) => ({ ...p, id: "" })),
   });
