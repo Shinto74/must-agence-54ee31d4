@@ -161,74 +161,7 @@ const ArtisteServicesV4B = () => {
   const ActiveIcon = getIcon(activePillar.icon);
   const { haloColor, accentGlow } = colorsFromHue(activePillar.accent_hue);
 
-  // ── Mobile : empilement vertical simple, pas de scroll-jack ───────────────
-  if (isMobile) {
-    return (
-      <section className="py-16 px-4 bg-background">
-        <div className="max-w-md mx-auto mb-10 text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-3">
-            {get("artiste_services_kicker", "Services")}
-          </p>
-          <h2 className="font-clash font-black text-foreground text-3xl leading-tight mb-3">
-            {get("artiste_services_title_part1", "Notre expertise")}{" "}
-            <span className="text-primary">{get("artiste_services_title_accent", "à votre service")}</span>
-          </h2>
-          <p className="font-outfit text-muted-foreground text-sm leading-relaxed">
-            {get("artiste_services_subtitle", "")}
-          </p>
-        </div>
-        <div className="space-y-6 max-w-md mx-auto">
-          {pillars.map((pillar, i) => {
-            const Icon = getIcon(pillar.icon);
-            return (
-              <motion.div
-                key={pillar.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5 }}
-                className="rounded-2xl p-6"
-                style={{
-                  background: "hsla(0,0%,100%,0.04)",
-                  border: "1px solid hsla(73,100%,50%,0.18)",
-                  boxShadow: "0 10px 40px -20px hsla(0,0%,0%,0.5)",
-                }}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: "hsla(73,100%,50%,0.12)", border: "1px solid hsla(73,100%,50%,0.3)" }}>
-                    <Icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-primary">{pad2(i)}</span>
-                </div>
-                <h3 className="font-clash font-bold text-foreground text-xl mb-2">{pillar.left_title}</h3>
-                <p className="font-outfit text-sm italic text-foreground/60 mb-4">{pillar.statement}</p>
-                <p className="font-outfit text-sm text-foreground/55 mb-4 leading-relaxed">{pillar.description}</p>
-                {pillar.leftItems.length > 0 && (
-                  <ul className="space-y-2 mb-4">
-                    {pillar.leftItems.map((it, j) => (
-                      <li key={j} className="flex items-center gap-2 text-sm text-foreground/70">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                        <span className="font-mono text-[12px]">{it}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {pillar.rightItems.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-                    {pillar.rightItems.map((it, j) => (
-                      <span key={j} className="px-2.5 py-1 rounded-full text-[10px] font-mono text-foreground/70" style={{ border: "1px solid hsla(73,100%,50%,0.2)", background: "hsla(73,100%,50%,0.06)" }}>
-                        {it}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-    );
-  }
+  // Mobile : on garde la même mécanique de scroll-jack (sticky + cartes)
 
   return (
     <div ref={wrapperRef} style={{ height: `${pillars.length * 100}vh` }}>
