@@ -73,22 +73,33 @@ export default function TableEditor({
           onCancel={() => crud.setEditing(null)}
           saving={crud.saving}
         >
-          {fields.map((f) => (
-            <AdminField
-              key={f.key}
-              label={f.label || f.key}
-              type={f.type as any}
-              options={f.options}
-              placeholder={f.placeholder}
-              imageFolder={f.imageFolder}
-              hint={f.hint}
-              value={(crud.editing as any)[f.key]}
-              onChange={(v) => {
-                const val = f.type === "number" ? (parseInt(v) || 0) : v;
-                crud.setEditing({ ...(crud.editing as any), [f.key]: val });
-              }}
-            />
-          ))}
+          {fields.map((f) => {
+            const translatable = isTranslatableKey(f.key) && isTranslatableType(f.type);
+            const enValue = translatable ? ((crud.editing as any)?.translations?.en?.[f.key] ?? "") : "";
+            return (
+              <AdminField
+                key={f.key}
+                label={f.label || f.key}
+                type={f.type as any}
+                options={f.options}
+                placeholder={f.placeholder}
+                imageFolder={f.imageFolder}
+                hint={f.hint}
+                value={(crud.editing as any)[f.key]}
+                onChange={(v) => {
+                  const val = f.type === "number" ? (parseInt(v) || 0) : v;
+                  crud.setEditing({ ...(crud.editing as any), [f.key]: val });
+                }}
+                translation={translatable ? {
+                  value: enValue,
+                  onChange: (v) => {
+                    const nextT = setEnField((crud.editing as any)?.translations, f.key, v);
+                    crud.setEditing({ ...(crud.editing as any), translations: nextT });
+                  },
+                } : undefined}
+              />
+            );
+          })}
           {renderExtra && crud.editing && (crud.editing as any).id && (
             <div className="mt-4 -mx-2">{renderExtra(crud.editing)}</div>
           )}
