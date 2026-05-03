@@ -113,7 +113,7 @@ export function usePacks() {
         };
       });
     },
-    placeholderData: PACKS.map((p) => ({ ...p, id: "" })),
+    placeholderData: PACKS.map((p) => ({ ...p, id: "", featuresFr: p.features })),
   });
 }
 
