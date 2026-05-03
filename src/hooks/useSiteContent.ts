@@ -7,7 +7,7 @@ import { translateRows } from "@/lib/i18n/translateRow";
 export function useSiteSettings() {
   const { lang } = useLanguage();
   const { data = [] } = useQuery({
-    queryKey: ["site_settings"],
+    queryKey: ["site_settings", lang],
     queryFn: async () => {
       const { data, error } = await supabase.from("site_settings").select("*");
       if (error) throw error;
