@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAdminCrud } from "./useAdminCrud";
 import ImageUpload from "./ImageUpload";
 import { Loader2, Check } from "lucide-react";
+import { setEnField } from "@/lib/i18n/adminTranslate";
 
 export type SettingFieldType = "text" | "textarea" | "image" | "video" | "media" | "url" | "boolean" | "number";
 
@@ -21,10 +22,6 @@ interface Props {
   imageFolder?: string;
 }
 
-/**
- * Bloc d'édition de paramètres groupés.
- * Gère les site_settings par clé avec sauvegarde individuelle et auto-save.
- */
 export default function SettingsBlock({ title, description, fields, imageFolder = "settings" }: Props) {
   const crud = useAdminCrud("site_settings", { idField: "key", orderBy: "key" });
 
@@ -46,16 +43,26 @@ export default function SettingsBlock({ title, description, fields, imageFolder 
 function SettingRow({ field, crud, imageFolder }: { field: SettingField; crud: ReturnType<typeof useAdminCrud>; imageFolder: string }) {
   const dbRow = (crud.data as any[]).find((s) => s.key === field.key);
   const dbValue = dbRow?.value || "";
+  const dbEn = dbRow?.translations?.en?.value || "";
   const [value, setValue] = useState(dbValue);
+  const [enValue, setEnValue] = useState(dbEn);
   const [touched, setTouched] = useState(false);
+  const [enTouched, setEnTouched] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
 
-  useEffect(() => {
-    if (!touched) setValue(dbValue);
-  }, [dbValue, touched]);
+  useEffect(() => { if (!touched) setValue(dbValue); }, [dbValue, touched]);
+  useEffect(() => { if (!enTouched) setEnValue(dbEn); }, [dbEn, enTouched]);
 
   const isMediaField = field.type === "image" || field.type === "video" || field.type === "media";
+  const isBoolean = field.type === "boolean";
+  const isNumber = field.type === "number";
+  const showEn = !isMediaField && !isBoolean && !isNumber;
   const persistedType = field.type === "video" ? "video" : field.type === "media" ? "media" : field.type === "image" ? "image" : field.type === "textarea" ? "textarea" : "text";
+
+  const flash = () => {
+    setSavedFlash(true);
+    setTimeout(() => setSavedFlash(false), 1500);
+  };
 
   const save = async () => {
     if (value === dbValue) return;
@@ -63,14 +70,23 @@ function SettingRow({ field, crud, imageFolder }: { field: SettingField; crud: R
       key: field.key,
       value,
       type: persistedType,
+      translations: dbRow?.translations || {},
     } as any);
     setTouched(false);
-    setSavedFlash(true);
-    setTimeout(() => setSavedFlash(false), 1500);
+    flash();
   };
 
-  const onBlur = () => {
-    if (touched) save();
+  const saveEn = async () => {
+    if (enValue === dbEn) return;
+    const nextTranslations = setEnField(dbRow?.translations, "value", enValue);
+    await crud.save({
+      key: field.key,
+      value: dbValue,
+      type: persistedType,
+      translations: nextTranslations,
+    } as any);
+    setEnTouched(false);
+    flash();
   };
 
   return (
@@ -79,92 +95,109 @@ function SettingRow({ field, crud, imageFolder }: { field: SettingField; crud: R
         <label className="text-xs font-medium text-slate-700 block">{field.label}</label>
         {field.hint && <p className="text-[10px] text-slate-400 mt-0.5">{field.hint}</p>}
       </div>
-      <div className="relative">
-        {isMediaField ? (
-          <>
-            <ImageUpload
-              value={value}
-              accept={field.type === "video" ? "video" : field.type === "media" ? "any" : "image"}
-              onChange={(v) => {
-                setValue(v);
-                setTouched(true);
-                // auto-save media immediately
-                setTimeout(() => {
-                  crud.save({ key: field.key, value: v, type: persistedType } as any).then(() => {
-                    setTouched(false);
-                    setSavedFlash(true);
-                    setTimeout(() => setSavedFlash(false), 1500);
-                  });
-                }, 50);
-              }}
-              folder={imageFolder}
-            />
-            <input
-              type="text"
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-                setTouched(true);
-              }}
-              onBlur={onBlur}
-              placeholder={field.type === "video" ? "Coller une URL .mp4" : "Coller une URL"}
-              className="mt-2 w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-            />
-          </>
-        ) : field.type === "textarea" ? (
-          <textarea
-            value={value}
-            onChange={(e) => {
-              setValue(e.target.value);
-              setTouched(true);
-            }}
-            onBlur={onBlur}
-            placeholder={field.placeholder}
-            rows={3}
-            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 resize-none"
-          />
-        ) : field.type === "boolean" ? (
-          <label className="inline-flex items-center gap-3 cursor-pointer select-none py-2">
-            <span className="relative inline-block w-11 h-6">
-              <input
-                type="checkbox"
-                checked={String(value).toLowerCase() !== "false" && value !== ""}
-                onChange={(e) => {
-                  const v = e.target.checked ? "true" : "false";
-                  setValue(v);
-                  setTouched(true);
-                  setTimeout(() => {
-                    crud.save({ key: field.key, value: v, type: "text" } as any).then(() => {
-                      setTouched(false);
-                      setSavedFlash(true);
-                      setTimeout(() => setSavedFlash(false), 1500);
-                    });
-                  }, 30);
-                }}
-                className="peer sr-only"
+      <div className="relative space-y-2">
+        {/* FR */}
+        <div className="flex gap-2 items-start">
+          <span className="mt-2 inline-block w-7 shrink-0 text-[9px] font-mono font-bold text-slate-500 uppercase">FR</span>
+          <div className="flex-1">
+            {isMediaField ? (
+              <>
+                <ImageUpload
+                  value={value}
+                  accept={field.type === "video" ? "video" : field.type === "media" ? "any" : "image"}
+                  onChange={(v) => {
+                    setValue(v);
+                    setTouched(true);
+                    setTimeout(() => {
+                      crud.save({ key: field.key, value: v, type: persistedType, translations: dbRow?.translations || {} } as any).then(() => {
+                        setTouched(false); flash();
+                      });
+                    }, 50);
+                  }}
+                  folder={imageFolder}
+                />
+                <input
+                  type="text" value={value}
+                  onChange={(e) => { setValue(e.target.value); setTouched(true); }}
+                  onBlur={save}
+                  placeholder={field.type === "video" ? "Coller une URL .mp4" : "Coller une URL"}
+                  className="mt-2 w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                />
+              </>
+            ) : field.type === "textarea" ? (
+              <textarea
+                value={value}
+                onChange={(e) => { setValue(e.target.value); setTouched(true); }}
+                onBlur={save}
+                placeholder={field.placeholder} rows={3}
+                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 resize-none"
               />
-              <span className="absolute inset-0 rounded-full bg-slate-300 peer-checked:bg-emerald-500 transition-colors" />
-              <span className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
-            </span>
-            <span className="text-xs text-slate-600">
-              {String(value).toLowerCase() !== "false" && value !== "" ? "Affiché" : "Masqué"}
-            </span>
-          </label>
-        ) : (
-          <input
-            type={field.type === "url" ? "url" : "text"}
-            value={value}
-            onChange={(e) => {
-              setValue(e.target.value);
-              setTouched(true);
-            }}
-            onBlur={onBlur}
-            placeholder={field.placeholder}
-            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-          />
+            ) : isBoolean ? (
+              <label className="inline-flex items-center gap-3 cursor-pointer select-none py-2">
+                <span className="relative inline-block w-11 h-6">
+                  <input
+                    type="checkbox"
+                    checked={String(value).toLowerCase() !== "false" && value !== ""}
+                    onChange={(e) => {
+                      const v = e.target.checked ? "true" : "false";
+                      setValue(v); setTouched(true);
+                      setTimeout(() => {
+                        crud.save({ key: field.key, value: v, type: "text", translations: dbRow?.translations || {} } as any).then(() => {
+                          setTouched(false); flash();
+                        });
+                      }, 30);
+                    }}
+                    className="peer sr-only"
+                  />
+                  <span className="absolute inset-0 rounded-full bg-slate-300 peer-checked:bg-emerald-500 transition-colors" />
+                  <span className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
+                </span>
+                <span className="text-xs text-slate-600">
+                  {String(value).toLowerCase() !== "false" && value !== "" ? "Affiché" : "Masqué"}
+                </span>
+              </label>
+            ) : (
+              <input
+                type={field.type === "url" ? "url" : "text"}
+                value={value}
+                onChange={(e) => { setValue(e.target.value); setTouched(true); }}
+                onBlur={save}
+                placeholder={field.placeholder}
+                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              />
+            )}
+          </div>
+        </div>
+
+        {/* EN */}
+        {showEn && (
+          <div className="flex gap-2 items-start">
+            <span className="mt-2 inline-block w-7 shrink-0 text-[9px] font-mono font-bold text-indigo-500 uppercase">EN</span>
+            <div className="flex-1">
+              {field.type === "textarea" ? (
+                <textarea
+                  value={enValue}
+                  onChange={(e) => { setEnValue(e.target.value); setEnTouched(true); }}
+                  onBlur={saveEn}
+                  placeholder="English translation…" rows={3}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-dashed border-indigo-200 bg-indigo-50/30 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 resize-none"
+                />
+              ) : (
+                <input
+                  type="text"
+                  value={enValue}
+                  onChange={(e) => { setEnValue(e.target.value); setEnTouched(true); }}
+                  onBlur={saveEn}
+                  placeholder="English translation…"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-dashed border-indigo-200 bg-indigo-50/30 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                />
+              )}
+            </div>
+          </div>
         )}
+
         <div className="absolute -right-1 -top-1 flex items-center gap-1">
-          {crud.saving && touched && <Loader2 size={12} className="text-indigo-500 animate-spin" />}
+          {crud.saving && (touched || enTouched) && <Loader2 size={12} className="text-indigo-500 animate-spin" />}
           {savedFlash && <Check size={12} className="text-emerald-500" />}
         </div>
       </div>
