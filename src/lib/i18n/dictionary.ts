@@ -145,6 +145,123 @@ export const BASE_DICTIONARY: Record<string, string> = {
   "Champ obligatoire": "Required field",
   "Email invalide": "Invalid email",
   "Téléphone invalide": "Invalid phone",
+
+  // ============ Extended (page scan) ============
+  "Artiste": "Artist",
+  "Artiste Indépendant": "Independent Artist",
+  "Entreprise": "Brand",
+  "Pôle Artiste": "Artist Pole",
+  "Pôle Entreprise": "Business Pole",
+  "Découvrir nos pôles": "Discover our poles",
+  "Découvrir TheArtist": "Discover TheArtist",
+  "Découvrez nos services": "Discover our services",
+  "Notre expertise": "Our expertise",
+  "Nos offres": "Our pricing",
+  "Services": "Services",
+  "Références": "References",
+  "Références Artistes": "Artist references",
+  "Réseau Partenaires": "Partner network",
+  "Réseau local": "Local network",
+  "Le réseau pro-social": "The pro-social network",
+  "Notoriété": "Awareness",
+  "Cookies & confidentialité": "Cookies & privacy",
+  "Légal": "Legal",
+  "Confidentialité": "Privacy",
+  "Mentions légales": "Legal notice",
+  "Politique de confidentialité": "Privacy policy",
+  "Politique cookies": "Cookie policy",
+  "Conditions Générales d'Utilisation": "Terms of use",
+  "Conditions Générales de Vente": "Terms of sale",
+
+  // CTA / actions
+  "Continuer": "Continue",
+  "Fermer": "Close",
+  "Demander un audit gratuit": "Request a free audit",
+  "Envoyer ma demande": "Send my request",
+  "Choisir ce pack": "Choose this pack",
+  "Sélectionner une date": "Select a date",
+  "Sélectionnez un budget": "Select a budget",
+
+  // Forms
+  "Prénom": "First name",
+  "Prénom *": "First name *",
+  "Téléphone": "Phone",
+  "Téléphone *": "Phone *",
+  "Votre nom": "Your name",
+  "Votre prénom": "Your first name",
+  "Votre âge": "Your age",
+  "Budget estimé": "Estimated budget",
+  "Devis personnalisé": "Custom quote",
+  "Date sélectionnée": "Selected date",
+  "Vos idées / vision du clip": "Your ideas / video vision",
+  "Décrivez votre projet, ambiance souhaitée, références...": "Describe your project, desired vibe, references...",
+  "Décrivez votre projet, vos ambitions...": "Describe your project, your ambitions...",
+  "Décrivez vos objectifs. On revient vers vous en 24h.": "Describe your goals. We'll get back within 24h.",
+
+  // Statuses
+  "Chargement...": "Loading...",
+  "Demande envoyée !": "Request sent!",
+  "Message envoyé ! On revient vers vous en 24h.": "Message sent! We'll get back within 24h.",
+  "Erreur lors de l'envoi. Réessayez.": "Sending failed. Please try again.",
+  "Quelque chose s'est mal passé. Réessayez.": "Something went wrong. Please try again.",
+  "Échec de la création de la session de paiement": "Failed to create payment session",
+
+  // Hero / taglines
+  "Agence d'influence spécialisée musique et marques.": "Influence agency specialized in music and brands.",
+  "Agence d'influence spécialisée musique et marques. Paris, France.": "Influence agency specialized in music and brands. Paris, France.",
+  "Réseau pro-social pour artistes. Portfolio, booking et messagerie pour développer votre carrière.": "Pro-social network for artists. Portfolio, booking and messaging to grow your career.",
+  "Une stratégie digitale": "A digital strategy",
+  "Votre entreprise mérite une stratégie digitale puissante.": "Your brand deserves a powerful digital strategy.",
+  "Stratégie sur-mesure, exécution premium et résultats mesurables.\nChaque projet est une mission.": "Tailor-made strategy, premium execution and measurable results.\nEvery project is a mission.",
+  "Préparez-vous à vivre une expérience unique.": "Get ready for a unique experience.",
+  "Prêt à grandir ?": "Ready to grow?",
+  "Contactez-nous": "Contact us",
+  "Échange en direct": "Live chat",
+
+  // Stats / metrics labels
+  "Clients satisfaits": "Happy clients",
+  "Clients actifs": "Active clients",
+  "Projets livrés": "Projects delivered",
+  "Vues générées": "Views generated",
+
+  // Sections
+  "Des secteurs que l'on maîtrise": "Industries we master",
+  "Exclusivité Must Agence": "Must Agence exclusive",
+  "Must Agence × Portugal": "Must Agence × Portugal",
+  "Partage & découvre": "Share & discover",
+  "Réserve facilement": "Easy booking",
+  "Expertise terrain": "Field expertise",
+  "Exécution Full-Stack": "Full-stack execution",
+  "Stratégie Propriétaire": "Proprietary strategy",
+  "Production complète": "Full production",
+  "Direction Artistique & Lancement Album": "Art Direction & Album Launch",
+  "Creative Direction Personnalisée": "Tailored Creative Direction",
+  "DA & Stratégie Social Media": "Art Direction & Social Media Strategy",
+  "Diagnostic Complet": "Full Diagnosis",
+  "Diagnostic Complet (Deep Dive)": "Full Diagnosis (Deep Dive)",
+  "Accès VIP War Room": "VIP War Room access",
+  "Branding · Stratégie · Croissance": "Branding · Strategy · Growth",
+
+  // Team / about
+  "Architecte de la vision, gardien de l'âme créative de chaque projet.": "Architect of the vision, guardian of every project's creative soul.",
+  "Le maestro derrière chaque contenu qui performe et qui émeut.": "The maestro behind every content that performs and moves.",
+  "Elle habille les marques d'identités visuelles inoubliables.": "She dresses brands with unforgettable visual identities.",
+  "Elle transforme les données brutes en stratégies qui marquent durablement.": "She turns raw data into strategies that leave a lasting mark.",
+  "Stratège Digital": "Digital Strategist",
+
+  // Portugal advantages
+  "Vols, hébergement, transport — on organise tout pour vous": "Flights, lodging, transport — we organize everything for you",
+  "Lisbonne, Algarve, Porto — des lieux uniques pour un visuel inédit": "Lisbon, Algarve, Porto — unique locations for original visuals",
+  "Figurants, lieux privés, autorisations — notre réseau à votre service": "Extras, private venues, permits — our network at your service",
+  "Réalisation, montage, color grading et post-production inclus": "Directing, editing, color grading and post-production included",
+  "Décors exclusifs": "Exclusive locations",
+  "Offert avec nos packs — jusqu'à 8 mois d'accès": "Free with our packs — up to 8 months of access",
+
+  // Months
+  "Janvier": "January", "Février": "February", "Mars": "March", "Avril": "April",
+  "Mai": "May", "Juin": "June", "Juillet": "July", "Août": "August",
+  "Septembre": "September", "Octobre": "October", "Novembre": "November", "Décembre": "December",
+
 };
 
 let RUNTIME_OVERRIDES: Record<string, string> = {};
