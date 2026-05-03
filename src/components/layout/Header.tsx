@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { SITE } from "@/lib/constants";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { Menu, X } from "lucide-react";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const DEFAULT_NAV_ITEMS = [
   { key: "home", label: "Accueil", path: "/" },
@@ -195,6 +196,7 @@ const Header = () => {
 
         {/* CTA right */}
         <div className="hidden md:flex items-center gap-3 ml-auto">
+          <LanguageSwitcher needsDarkText={needsDarkText} accentColor={accentColor} />
           <button
             onClick={() => window.dispatchEvent(new CustomEvent("open-contact-modal"))}
             className="px-5 py-2 rounded-full font-mono text-[10px] uppercase tracking-[0.15em] transition-all duration-300 cursor-pointer"
