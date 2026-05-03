@@ -18,19 +18,15 @@ export default function CGV() {
         {t(
           "cgv_p1",
           "Les présentes CGV régissent l'ensemble des prestations vendues par {company} via son site internet. Toute commande implique l'acceptation pleine et entière des présentes CGV.",
-          { company }
+          { company: "§§§" }
         )
-          .split("{company}")
-          .map((part, i, arr) =>
-            i < arr.length - 1 ? (
-              <span key={i}>
-                {part}
-                <strong>{company}</strong>
-              </span>
-            ) : (
-              <span key={i}>{part}</span>
-            )
-          )}
+          .split("§§§")
+          .map((part, i, arr) => (
+            <span key={i}>
+              {part}
+              {i < arr.length - 1 && <strong>{company}</strong>}
+            </span>
+          ))}
       </p>
 
       <h2>{t("cgv_h2", "2. Prix et paiement")}</h2>
