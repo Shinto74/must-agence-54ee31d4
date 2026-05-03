@@ -46,7 +46,6 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { key: "identite", label: "Identité & Logos", icon: SettingsIcon },
       { key: "legal", label: "Pages légales & RGPD", icon: Scale },
-      { key: "traductions", label: "Traductions EN", icon: Languages },
     ],
   },
 ];
