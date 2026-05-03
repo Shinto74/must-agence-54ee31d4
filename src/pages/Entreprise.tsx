@@ -39,16 +39,19 @@ const AnimatedCounter = ({ value, suffix = "" }: { value: string; suffix?: strin
 
   useEffect(() => {
     if (!inView || isNaN(num)) return;
+    const startDelay = 600;
+    const duration = 2800;
+    let raf = 0;
     let start = 0;
-    const duration = 2000;
     const step = (ts: number) => {
       if (!start) start = ts;
       const p = Math.min((ts - start) / duration, 1);
       const eased = 1 - Math.pow(1 - p, 3);
       setDisplay(Math.round(eased * num).toString());
-      if (p < 1) requestAnimationFrame(step);
+      if (p < 1) raf = requestAnimationFrame(step);
     };
-    requestAnimationFrame(step);
+    const t = setTimeout(() => { raf = requestAnimationFrame(step); }, startDelay);
+    return () => { clearTimeout(t); cancelAnimationFrame(raf); };
   }, [inView, num]);
 
   return <span ref={ref}>{isNaN(num) ? value : display}{suffix}</span>;
@@ -255,16 +258,6 @@ const EntrepriseHero = () => {
             {heroCta1}
             <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
           </motion.button>
-          <motion.a href="#services"
-            className="group px-10 py-[1.125rem] rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-500 text-white/80 hover:text-white text-center"
-            style={{ border: "1.5px solid rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
-            whileHover={{
-              borderColor: "rgba(255,255,255,0.55)",
-              background: "rgba(255,255,255,0.12)",
-            }}
-          >
-            {heroCta2}
-          </motion.a>
         </motion.div>
 
         {/* Stats bar */}
