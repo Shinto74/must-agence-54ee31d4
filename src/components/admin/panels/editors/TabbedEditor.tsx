@@ -3,6 +3,7 @@ import { Plus, Trash2, Loader2, Check, X } from "lucide-react";
 import { useAdminCrud } from "../../useAdminCrud";
 import AdminField from "../../AdminField";
 import type { FieldDef } from "./TableEditor";
+import { isTranslatableKey, isTranslatableType, setEnField } from "@/lib/i18n/adminTranslate";
 
 interface Props {
   table: string;
