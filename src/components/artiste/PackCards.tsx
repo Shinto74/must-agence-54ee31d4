@@ -85,8 +85,8 @@ const FeatureTooltip = ({ text, triggerRef }: { text: string; triggerRef: React.
 };
 
 /* ─── FEATURE ITEM ─── */
-const FeatureItem = ({ feature, tooltip }: { feature: string; tooltip?: string }) => {
-  const Icon = getFeatureIcon(feature);
+const FeatureItem = ({ feature, matchKey, tooltip }: { feature: string; matchKey: string; tooltip?: string }) => {
+  const Icon = getFeatureIcon(matchKey);
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
 
