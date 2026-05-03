@@ -261,9 +261,12 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
         <span className="text-sm text-muted-foreground ml-1">{pack.priceSuffix}</span>
       </div>
       <ul className="space-y-2.5 mb-6 flex-1">
-        {pack.features.map((f, i) => (
-          <FeatureItem key={`${pack.name}-${i}-${f.slice(0, 20)}`} feature={f} tooltip={getTooltip(f)} />
-        ))}
+        {pack.features.map((f, i) => {
+          const fr = pack.featuresFr?.[i] || f;
+          return (
+            <FeatureItem key={`${pack.name}-${i}-${f.slice(0, 20)}`} feature={f} matchKey={fr} tooltip={getTooltip(fr)} />
+          );
+        })}
       </ul>
       <TheArtistBonus text={theartistText} />
       <p className="text-[11px] text-muted-foreground italic mb-6">{pack.reassurance}</p>
