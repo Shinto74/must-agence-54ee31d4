@@ -22,7 +22,7 @@ const Admin = () => (
         {tab === "page_entreprise" && <PageEntreprisePanel />}
         {tab === "identite" && <IdentitePanel />}
         {tab === "legal" && <PagesLegalesPanel />}
-        {tab === "traductions" && <TraductionsPanel />}
+        
         {tab === "settings" && <SettingsPanel />}
       </>
     )}
