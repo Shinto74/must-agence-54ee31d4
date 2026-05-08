@@ -340,17 +340,22 @@ export type Database = {
           assigned_to: string | null
           budget_estimate: string | null
           company: string | null
+          company_size: string | null
           created_at: string
           email: string
           id: string
           last_activity_at: string
+          lead_score: number
           message: string
           name: string
+          objective: string | null
           phone: string | null
           sector: string | null
           service: string | null
           source: string | null
           status: string
+          style: string | null
+          timeline: string | null
           type: string
         }
         Insert: {
@@ -358,17 +363,22 @@ export type Database = {
           assigned_to?: string | null
           budget_estimate?: string | null
           company?: string | null
+          company_size?: string | null
           created_at?: string
           email: string
           id?: string
           last_activity_at?: string
+          lead_score?: number
           message?: string
           name: string
+          objective?: string | null
           phone?: string | null
           sector?: string | null
           service?: string | null
           source?: string | null
           status?: string
+          style?: string | null
+          timeline?: string | null
           type: string
         }
         Update: {
@@ -376,17 +386,22 @@ export type Database = {
           assigned_to?: string | null
           budget_estimate?: string | null
           company?: string | null
+          company_size?: string | null
           created_at?: string
           email?: string
           id?: string
           last_activity_at?: string
+          lead_score?: number
           message?: string
           name?: string
+          objective?: string | null
           phone?: string | null
           sector?: string | null
           service?: string | null
           source?: string | null
           status?: string
+          style?: string | null
+          timeline?: string | null
           type?: string
         }
         Relationships: []
@@ -953,54 +968,69 @@ export type Database = {
           assigned_to: string | null
           budget: string
           company: string | null
+          company_size: string | null
           created_at: string
           deadline: string | null
           email: string | null
           expectations: string[] | null
           id: string
           last_activity_at: string
+          lead_score: number
           name: string | null
+          objective: string | null
           phone: string | null
           profile: string
           project_desc: string
           source: string | null
           status: string
+          style: string | null
+          timeline: string | null
         }
         Insert: {
           archived_at?: string | null
           assigned_to?: string | null
           budget?: string
           company?: string | null
+          company_size?: string | null
           created_at?: string
           deadline?: string | null
           email?: string | null
           expectations?: string[] | null
           id?: string
           last_activity_at?: string
+          lead_score?: number
           name?: string | null
+          objective?: string | null
           phone?: string | null
           profile?: string
           project_desc?: string
           source?: string | null
           status?: string
+          style?: string | null
+          timeline?: string | null
         }
         Update: {
           archived_at?: string | null
           assigned_to?: string | null
           budget?: string
           company?: string | null
+          company_size?: string | null
           created_at?: string
           deadline?: string | null
           email?: string | null
           expectations?: string[] | null
           id?: string
           last_activity_at?: string
+          lead_score?: number
           name?: string | null
+          objective?: string | null
           phone?: string | null
           profile?: string
           project_desc?: string
           source?: string | null
           status?: string
+          style?: string | null
+          timeline?: string | null
         }
         Relationships: []
       }
@@ -1293,6 +1323,15 @@ export type Database = {
     }
     Functions: {
       auto_archive_old_requests: { Args: never; Returns: undefined }
+      calc_lead_score: {
+        Args: {
+          _budget: string
+          _desc: string
+          _objective: string
+          _timeline: string
+        }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
