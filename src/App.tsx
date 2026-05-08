@@ -14,8 +14,6 @@ import Artiste from "./pages/Artiste";
 import Entreprise from "./pages/Entreprise";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
-import CheckoutPage from "./pages/CheckoutPage";
-import CheckoutReturn from "./pages/CheckoutReturn";
 import NotFound from "./pages/NotFound";
 import MentionsLegales from "./pages/legal/MentionsLegales";
 import PolitiqueConfidentialite from "./pages/legal/PolitiqueConfidentialite";
