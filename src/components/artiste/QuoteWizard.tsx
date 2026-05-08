@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { supabase } from "@/integrations/supabase/client";
-import { SITE } from "@/lib/constants";
-import { ChevronLeft, ChevronRight, Mic, Building2, Briefcase, DollarSign, TrendingUp, Gem, Rocket, Volume2, BarChart3, Palette, Handshake, User, Mail, Phone } from "lucide-react";
+import { ChevronLeft, ChevronRight, Mic, Building2, Briefcase, DollarSign, TrendingUp, Gem, Rocket, Volume2, BarChart3, Palette, Handshake, User, Mail, Phone, Flame, Zap, Calendar, Search, Crown, Headphones, Users, Music2, Music3, Music4, Sparkles } from "lucide-react";
 import { z } from "zod";
 
 interface QuoteOption {
@@ -11,23 +10,21 @@ interface QuoteOption {
 }
 
 interface QuoteStep {
+  key?: string;
   title: string;
   question: string;
   type: "radio" | "textarea" | "date" | "checkbox";
   options?: QuoteOption[];
   placeholder?: string;
+  showIf?: (answers: Record<string, any>) => boolean;
 }
 
 interface QuoteWizardProps {
   steps: QuoteStep[];
   onSubmitComplete?: () => void;
-  /** Cache le titre interne (utile quand le wizard est rendu dans une modale qui a déjà son titre) */
   hideHeader?: boolean;
-  /** Source de la demande pour le suivi admin (ex: "pack-essentiel", "artiste") */
   source?: string;
 }
-
-const COORDS_STEP_INDEX = -1; // marqueur pour l'étape coordonnées finale
 
 const coordsSchema = z.object({
   name: z.string().trim().min(2, "Nom requis"),
@@ -36,131 +33,66 @@ const coordsSchema = z.object({
   company: z.string().trim().max(120).optional().or(z.literal("")),
 });
 
-/* ─── MAPPING ICONES PAR OPTION ─── */
 const getIconForOption = (label: string) => {
   const iconMap: Record<string, any> = {
-    // Étape 1: Profil
-    "Artiste Indépendant": Mic,
-    "Label": Building2,
-    "Entreprise": Briefcase,
-    // Étape 3: Budget
-    "Moins de 1k€": DollarSign,
-    "1k€ – 3k€": TrendingUp,
-    "3k€ – 5k€": Gem,
-    "+5k€": Rocket,
-    // Étape 5: Attentes
-    "Notoriété": Volume2,
-    "Ventes": BarChart3,
-    "Image de marque": Palette,
-    "Accompagnement humain": Handshake,
+    "Artiste Indépendant": Mic, "Label": Building2, "Entreprise": Briefcase,
+    "<1k€": DollarSign, "1k€ – 3k€": TrendingUp, "3k€ – 5k€": Gem, "5k€ – 10k€": Rocket, "10k€+": Crown,
+    "Gagner en visibilité": Volume2, "Développer mon image": Palette, "Obtenir plus d'écoutes": Headphones,
+    "Lancer un projet": Rocket, "Stratégie long terme": TrendingUp, "Générer des ventes": BarChart3, "Développer une communauté": Handshake,
+    "Dès que possible": Flame, "Ce mois-ci": Zap, "Dans 1 à 3 mois": Calendar, "Je me renseigne": Search,
+    "Solo / Indépendant": User, "Startup": Rocket, "PME": Building2, "Marque établie": Crown,
+    "Rap": Mic, "Pop": Music2, "Afro": Music3, "Électro": Music4, "Variété": Headphones, "Autre": Sparkles,
   };
   return iconMap[label] || Briefcase;
 };
 
-/* ─── DATE PICKER CALENDAR ─── */
 const DatePickerCalendar = ({ value, onChange }: { value: string; onChange: (date: string) => void }) => {
   const [currentDate, setCurrentDate] = useState(new Date(value || new Date()));
-  
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  
   const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
   const dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-  
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const daysInMonth = lastDay.getDate();
   const startingDayOfWeek = (firstDay.getDay() + 6) % 7;
-  
-  const days = [];
-  for (let i = 0; i < startingDayOfWeek; i++) {
-    days.push(null);
-  }
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push(i);
-  }
-
+  const days: (number | null)[] = [];
+  for (let i = 0; i < startingDayOfWeek; i++) days.push(null);
+  for (let i = 1; i <= daysInMonth; i++) days.push(i);
   const selectedDate = new Date(value || new Date());
   const isSelectedMonth = selectedDate.getMonth() === month && selectedDate.getFullYear() === year;
   const selectedDay = isSelectedMonth ? selectedDate.getDate() : null;
-
   const handleDayClick = (day: number) => {
     const newDate = new Date(year, month, day);
     setCurrentDate(newDate);
-    const formatted = newDate.toISOString().split("T")[0];
-    onChange(formatted);
+    onChange(newDate.toISOString().split("T")[0]);
   };
-
-  const prevMonth = () => {
-    setCurrentDate(new Date(year, month - 1, 1));
-  };
-
-  const nextMonth = () => {
-    setCurrentDate(new Date(year, month + 1, 1));
-  };
-
   const today = new Date();
-  const isToday = (day: number) => {
-    return day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-  };
-
+  const isToday = (day: number) => day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
   return (
     <div className="w-full rounded-xl border border-border bg-surface p-6">
       <div className="flex items-center justify-between mb-6">
-        <button
-          onClick={prevMonth}
-          className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
-        >
-          <ChevronLeft size={20} className="text-primary" />
-        </button>
+        <button onClick={() => setCurrentDate(new Date(year, month - 1, 1))} className="p-2 hover:bg-primary/10 rounded-lg"><ChevronLeft size={20} className="text-primary" /></button>
         <div className="text-center">
           <p className="font-mono text-xs text-muted-foreground uppercase mb-1">Sélectionner une date</p>
-          <h3 className="font-clash text-xl font-bold text-primary">
-            {monthNames[month]} {year}
-          </h3>
+          <h3 className="font-clash text-xl font-bold text-primary">{monthNames[month]} {year}</h3>
         </div>
-        <button
-          onClick={nextMonth}
-          className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
-        >
-          <ChevronRight size={20} className="text-primary" />
-        </button>
+        <button onClick={() => setCurrentDate(new Date(year, month + 1, 1))} className="p-2 hover:bg-primary/10 rounded-lg"><ChevronRight size={20} className="text-primary" /></button>
       </div>
-
       <div className="grid grid-cols-7 gap-2 mb-3">
-        {dayNames.map((day) => (
-          <div key={day} className="h-8 flex items-center justify-center text-xs font-mono text-muted-foreground">
-            {day}
-          </div>
-        ))}
+        {dayNames.map((d) => <div key={d} className="h-8 flex items-center justify-center text-xs font-mono text-muted-foreground">{d}</div>)}
       </div>
-
       <div className="grid grid-cols-7 gap-2">
         {days.map((day, idx) => (
-          <button
-            key={idx}
-            onClick={() => day && handleDayClick(day)}
-            disabled={!day}
-            className={`h-10 rounded-lg font-medium text-sm transition-all duration-200 ${
-              !day
-                ? "invisible"
-                : selectedDay === day
-                ? "bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/30"
-                : isToday(day)
-                ? "border border-primary/40 text-primary hover:bg-primary/10"
-                : "border border-border/50 text-foreground hover:border-primary/50 hover:bg-primary/5"
+          <button key={idx} onClick={() => day && handleDayClick(day)} disabled={!day}
+            className={`h-10 rounded-lg font-medium text-sm transition-all ${
+              !day ? "invisible"
+              : selectedDay === day ? "bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/30"
+              : isToday(day) ? "border border-primary/40 text-primary hover:bg-primary/10"
+              : "border border-border/50 text-foreground hover:border-primary/50 hover:bg-primary/5"
             }`}
-          >
-            {day}
-          </button>
+          >{day}</button>
         ))}
-      </div>
-
-      <div className="mt-6 pt-4 border-t border-border/50">
-        <p className="text-xs text-muted-foreground mb-2">Date sélectionnée</p>
-        <p className="font-clash text-lg font-bold text-primary">
-          {selectedDay ? `${selectedDay} ${monthNames[month]} ${year}` : "Aucune date"}
-        </p>
       </div>
     </div>
   );
@@ -168,86 +100,75 @@ const DatePickerCalendar = ({ value, onChange }: { value: string; onChange: (dat
 
 const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" }: QuoteWizardProps) => {
   const ref = useScrollReveal();
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, any>>({});
+  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [coords, setCoords] = useState({ name: "", email: "", phone: "", company: "" });
+  const [coordsErrors, setCoordsErrors] = useState<Record<string, string>>({});
   const [shake, setShake] = useState(false);
   const [done, setDone] = useState(false);
   const [sending, setSending] = useState(false);
-  const [coords, setCoords] = useState({ name: "", email: "", phone: "", company: "" });
-  const [coordsErrors, setCoordsErrors] = useState<Record<string, string>>({});
+  const [stepIndex, setStepIndex] = useState(0);
+
+  // Steps active selon réponses (showIf)
+  const activeSteps = useMemo(
+    () => steps.map((s, i) => ({ ...s, originalIndex: i })).filter((s) => !s.showIf || s.showIf(answers)),
+    [steps, answers]
+  );
 
   if (!steps.length) return null;
-  const totalSteps = steps.length + 1; // +1 pour l'étape coordonnées
-  const isCoordsStep = current === steps.length;
-  const step = isCoordsStep ? null : steps[current];
+  const totalSteps = activeSteps.length + 1; // + coords
+  const isCoordsStep = stepIndex >= activeSteps.length;
+  const step = isCoordsStep ? null : activeSteps[stepIndex];
+  const stepKey = step?.key || `step_${step?.originalIndex}`;
 
   const validate = () => {
     if (isCoordsStep) {
-      const result = coordsSchema.safeParse(coords);
-      if (!result.success) {
+      const r = coordsSchema.safeParse(coords);
+      if (!r.success) {
         const errs: Record<string, string> = {};
-        result.error.issues.forEach((i) => { errs[i.path[0] as string] = i.message; });
+        r.error.issues.forEach((i) => { errs[i.path[0] as string] = i.message; });
         setCoordsErrors(errs);
         return false;
       }
       setCoordsErrors({});
       return true;
     }
-    const val = answers[current];
-    if (!val || (Array.isArray(val) && val.length === 0) || val === "") return false;
+    const v = answers[stepKey];
+    if (!v || (Array.isArray(v) && v.length === 0) || v === "") return false;
     return true;
   };
 
   const submit = async () => {
     setSending(true);
-    const profile = answers[0] || "";
-    const project_desc = answers[1] || "";
-    const budget = answers[2] || "";
-    const deadline = answers[3] || null;
-    const expectations = answers[4] || [];
+    const expectations = answers.objective || [];
+    const objective = Array.isArray(expectations) ? expectations.join(", ") : String(expectations || "");
 
     await supabase.from("quote_requests").insert({
-      profile, project_desc, budget, deadline, expectations,
+      profile: answers.profile || "",
+      project_desc: answers.project_desc || "",
+      budget: answers.budget || "",
+      deadline: answers.deadline || null,
+      expectations: Array.isArray(expectations) ? expectations : [],
+      style: answers.style || "",
+      company_size: answers.company_size || "",
+      objective,
+      timeline: answers.timeline || "",
       name: coords.name.trim(),
       email: coords.email.trim(),
       phone: coords.phone.trim(),
       company: coords.company.trim(),
       source: source || "artiste",
     });
-
     setSending(false);
     setDone(true);
   };
 
   const next = () => {
-    if (!validate()) {
-      setShake(true);
-      setTimeout(() => setShake(false), 400);
-      return;
-    }
-    if (current < totalSteps - 1) {
-      setCurrent(current + 1);
-    } else {
-      submit();
-    }
+    if (!validate()) { setShake(true); setTimeout(() => setShake(false), 400); return; }
+    if (stepIndex < totalSteps - 1) setStepIndex(stepIndex + 1);
+    else submit();
   };
-
-  const prev = () => { if (current > 0) setCurrent(current - 1); };
-  const setAnswer = (val: any) => { setAnswers({ ...answers, [current]: val }); };
-
-  const buildWhatsAppUrl = () => {
-    const lines = [
-      `Profil: ${answers[0] || ""}`,
-      `Projet: ${answers[1] || ""}`,
-      `Budget: ${answers[2] || ""}`,
-      answers[3] ? `Échéance: ${answers[3]}` : "",
-      answers[4]?.length ? `Attentes: ${(answers[4] as string[]).join(", ")}` : "",
-      coords.name ? `Nom: ${coords.name}` : "",
-      coords.email ? `Email: ${coords.email}` : "",
-      coords.phone ? `Téléphone: ${coords.phone}` : "",
-    ].filter(Boolean).join("\n");
-    return `${SITE.contact.whatsappUrl}?text=${encodeURIComponent(`Demande de devis Must Agence\n\n${lines}`)}`;
-  };
+  const prev = () => { if (stepIndex > 0) setStepIndex(stepIndex - 1); };
+  const setAnswer = (val: any) => setAnswers({ ...answers, [stepKey]: val });
 
   if (done) {
     return (
@@ -257,10 +178,8 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
           <h3 className="font-clash text-2xl font-bold text-foreground mb-2">Demande envoyée !</h3>
           <p className="text-muted-foreground mb-6">On revient vers vous en 48h maximum.</p>
           {onSubmitComplete && (
-            <button
-              onClick={onSubmitComplete}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-primary/40 hover:text-primary transition-all duration-300"
-            >
+            <button onClick={onSubmitComplete}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-primary/40 hover:text-primary transition-all">
               Fermer
             </button>
           )}
@@ -282,10 +201,10 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
         )}
         <div className="rv flex gap-1 mb-8">
           {Array.from({ length: totalSteps }).map((_, i) => (
-            <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= current ? "bg-primary" : "bg-border"}`} />
+            <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= stepIndex ? "bg-primary" : "bg-border"}`} />
           ))}
         </div>
-        <div className={`animate-fadeSlide ${shake ? "animate-shake" : ""}`} key={current}>
+        <div className={`animate-fadeSlide ${shake ? "animate-shake" : ""}`} key={stepIndex}>
           {isCoordsStep ? (
             <>
               <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">Étape finale</p>
@@ -295,43 +214,35 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
                 <div>
                   <div className="relative">
                     <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                    <input
-                      type="text" placeholder="Nom complet *" value={coords.name}
+                    <input type="text" placeholder="Nom complet *" value={coords.name}
                       onChange={(e) => setCoords({ ...coords, name: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
-                    />
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40" />
                   </div>
                   {coordsErrors.name && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.name}</p>}
                 </div>
                 <div>
                   <div className="relative">
                     <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                    <input
-                      type="email" placeholder="Email *" value={coords.email}
+                    <input type="email" placeholder="Email *" value={coords.email}
                       onChange={(e) => setCoords({ ...coords, email: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
-                    />
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40" />
                   </div>
                   {coordsErrors.email && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.email}</p>}
                 </div>
                 <div>
                   <div className="relative">
                     <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                    <input
-                      type="tel" placeholder="Téléphone *" value={coords.phone}
+                    <input type="tel" placeholder="Téléphone *" value={coords.phone}
                       onChange={(e) => setCoords({ ...coords, phone: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
-                    />
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40" />
                   </div>
                   {coordsErrors.phone && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.phone}</p>}
                 </div>
                 <div className="relative">
                   <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    type="text" placeholder="Entreprise / Label (facultatif)" value={coords.company}
+                  <input type="text" placeholder="Entreprise / Label (facultatif)" value={coords.company}
                     onChange={(e) => setCoords({ ...coords, company: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
-                  />
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40" />
                 </div>
               </div>
             </>
@@ -343,15 +254,15 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
               {step!.type === "radio" && step!.options && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
                   {step!.options.map((opt) => {
-                    const IconComponent = getIconForOption(opt.label);
+                    const Icon = getIconForOption(opt.label);
+                    const sel = answers[stepKey] === opt.label;
                     return (
                       <button key={opt.label} onClick={() => setAnswer(opt.label)}
-                        className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
-                          answers[current] === opt.label 
-                            ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
-                            : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+                        className={`p-4 rounded-xl border-2 text-center transition-all flex flex-col items-center justify-center ${
+                          sel ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground"
+                          : "border-border bg-surface text-muted-foreground hover:border-primary/40"
                         }`}>
-                        <IconComponent size={24} className={`mb-2 ${answers[current] === opt.label ? "text-primary" : "text-muted-foreground"}`} />
+                        <Icon size={24} className={`mb-2 ${sel ? "text-primary" : "text-muted-foreground"}`} />
                         <span className="text-sm font-medium">{opt.label}</span>
                       </button>
                     );
@@ -360,28 +271,27 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
               )}
 
               {step!.type === "textarea" && (
-                <textarea value={answers[current] || ""} onChange={(e) => setAnswer(e.target.value)} placeholder={step!.placeholder} rows={4}
+                <textarea value={answers[stepKey] || ""} onChange={(e) => setAnswer(e.target.value)} placeholder={step!.placeholder} rows={4}
                   className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40 resize-none" />
               )}
 
               {step!.type === "date" && (
-                <DatePickerCalendar value={answers[current] || ""} onChange={(date) => setAnswer(date)} />
+                <DatePickerCalendar value={answers[stepKey] || ""} onChange={(d) => setAnswer(d)} />
               )}
 
               {step!.type === "checkbox" && step!.options && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   {step!.options.map((opt) => {
-                    const IconComponent = getIconForOption(opt.label);
-                    const selected = (answers[current] || []) as string[];
-                    const isSelected = selected.includes(opt.label);
+                    const Icon = getIconForOption(opt.label);
+                    const sel = (answers[stepKey] || []) as string[];
+                    const isSel = sel.includes(opt.label);
                     return (
-                      <button key={opt.label} onClick={() => setAnswer(isSelected ? selected.filter((s) => s !== opt.label) : [...selected, opt.label])}
-                        className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
-                          isSelected 
-                            ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
-                            : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+                      <button key={opt.label} onClick={() => setAnswer(isSel ? sel.filter((s) => s !== opt.label) : [...sel, opt.label])}
+                        className={`p-4 rounded-xl border-2 text-center transition-all flex flex-col items-center justify-center ${
+                          isSel ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground"
+                          : "border-border bg-surface text-muted-foreground hover:border-primary/40"
                         }`}>
-                        <IconComponent size={24} className={`mb-2 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
+                        <Icon size={24} className={`mb-2 ${isSel ? "text-primary" : "text-muted-foreground"}`} />
                         <span className="text-sm font-medium">{opt.label}</span>
                       </button>
                     );
@@ -393,14 +303,14 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
         </div>
 
         <div className="flex gap-3 mt-8">
-          {current > 0 && (
-            <button onClick={prev} className="px-6 py-3 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-border-light transition-all duration-300">
+          {stepIndex > 0 && (
+            <button onClick={prev} className="px-6 py-3 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-border-light transition-all">
               Retour
             </button>
           )}
           <button onClick={next} disabled={sending}
-            className="flex-1 py-3 rounded-pill bg-primary text-primary-foreground font-mono text-sm uppercase tracking-wider hover:brightness-110 transition-all duration-300 disabled:opacity-50">
-            {sending ? "Envoi..." : current === totalSteps - 1 ? "Envoyer ma demande" : "Continuer"}
+            className="flex-1 py-3 rounded-pill bg-primary text-primary-foreground font-mono text-sm uppercase tracking-wider hover:brightness-110 transition-all disabled:opacity-50">
+            {sending ? "Envoi..." : stepIndex === totalSteps - 1 ? "Envoyer ma demande" : "Continuer"}
           </button>
         </div>
       </div>

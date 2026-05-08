@@ -253,8 +253,10 @@ export const PACKS = [
   },
 ];
 
+// Profils → branchent sur des étapes différentes
 export const QUOTE_STEPS = [
   {
+    key: "profile",
     title: "Votre profil", question: "Qui êtes-vous ?", type: "radio" as const,
     options: [
       { label: "Artiste Indépendant", icon: "🎤" },
@@ -263,29 +265,72 @@ export const QUOTE_STEPS = [
     ],
   },
   {
+    key: "style",
+    title: "Style musical", question: "Votre univers musical ?", type: "radio" as const,
+    showIf: (a: Record<string, any>) => a.profile === "Artiste Indépendant" || a.profile === "Label",
+    options: [
+      { label: "Rap", icon: "🎤" },
+      { label: "Pop", icon: "🎧" },
+      { label: "Afro", icon: "🥁" },
+      { label: "Électro", icon: "🎛️" },
+      { label: "Variété", icon: "🎼" },
+      { label: "Autre", icon: "✨" },
+    ],
+  },
+  {
+    key: "company_size",
+    title: "Taille entreprise", question: "Votre structure ?", type: "radio" as const,
+    showIf: (a: Record<string, any>) => a.profile === "Entreprise",
+    options: [
+      { label: "Solo / Indépendant", icon: "👤" },
+      { label: "Startup", icon: "🚀" },
+      { label: "PME", icon: "🏢" },
+      { label: "Marque établie", icon: "🏛️" },
+    ],
+  },
+  {
+    key: "objective",
+    title: "Objectif principal", question: "Quel est votre objectif principal ?", type: "checkbox" as const,
+    options: [
+      { label: "Gagner en visibilité", icon: "📢" },
+      { label: "Développer mon image", icon: "🎨" },
+      { label: "Obtenir plus d'écoutes", icon: "🎧" },
+      { label: "Lancer un projet", icon: "🚀" },
+      { label: "Stratégie long terme", icon: "📈" },
+      { label: "Générer des ventes", icon: "💰" },
+      { label: "Développer une communauté", icon: "🤝" },
+    ],
+  },
+  {
+    key: "project_desc",
     title: "Votre projet", question: "Décrivez votre vision", type: "textarea" as const,
     placeholder: "Décrivez votre projet, vos objectifs, votre univers...",
   },
   {
+    key: "budget",
     title: "Votre budget", question: "Votre budget indicatif", type: "radio" as const,
     options: [
-      { label: "Moins de 1k€", icon: "💰" },
+      { label: "<1k€", icon: "💰" },
       { label: "1k€ – 3k€", icon: "💰" },
       { label: "3k€ – 5k€", icon: "💎" },
-      { label: "+5k€", icon: "🚀" },
+      { label: "5k€ – 10k€", icon: "🚀" },
+      { label: "10k€+", icon: "👑" },
     ],
   },
   {
-    title: "Votre échéance", question: "Votre échéance", type: "date" as const,
-  },
-  {
-    title: "Vos attentes", question: "Qu'attendez-vous de nous ?", type: "checkbox" as const,
+    key: "timeline",
+    title: "Votre délai", question: "Quand souhaitez-vous démarrer ?", type: "radio" as const,
     options: [
-      { label: "Notoriété", icon: "📢" },
-      { label: "Ventes", icon: "📈" },
-      { label: "Image de marque", icon: "🎨" },
-      { label: "Accompagnement humain", icon: "🤝" },
+      { label: "Dès que possible", icon: "🔥" },
+      { label: "Ce mois-ci", icon: "⚡" },
+      { label: "Dans 1 à 3 mois", icon: "📅" },
+      { label: "Je me renseigne", icon: "🔍" },
     ],
+  },
+  {
+    key: "deadline",
+    title: "Date précise", question: "Date de démarrage souhaitée", type: "date" as const,
+    showIf: (a: Record<string, any>) => a.timeline === "Dès que possible" || a.timeline === "Ce mois-ci",
   },
 ];
 
