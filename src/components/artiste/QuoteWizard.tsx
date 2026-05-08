@@ -290,7 +290,7 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
             <>
               <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">Étape finale</p>
               <h3 className="font-clash text-xl font-semibold text-foreground mb-2">Vos coordonnées</h3>
-              <p className="text-sm text-muted-foreground mb-6">Pour vous recontacter sous 24h.</p>
+              <p className="text-sm text-muted-foreground mb-6">Pour vous recontacter sous 48h.</p>
               <div className="space-y-3">
                 <div>
                   <div className="relative">
