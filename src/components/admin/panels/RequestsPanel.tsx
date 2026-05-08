@@ -799,19 +799,6 @@ export default function RequestsPanel() {
         )}
       </div>
 
-      {/* Compact stats */}
-      <div className="flex flex-wrap items-center gap-3 text-xs">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 text-rose-700 ring-1 ring-rose-200 font-mono">
-          <Flame size={12} /> {stats.hot} hot {stats.hot > 1 ? "leads" : "lead"}
-        </span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 text-red-700 ring-1 ring-red-200 font-mono">
-          <Clock size={12} /> {stats.overdue} à relancer (&gt;24h)
-        </span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-mono">
-          <Target size={12} /> {stats.total} demande{stats.total > 1 ? "s" : ""} visible{stats.total > 1 ? "s" : ""}
-        </span>
-      </div>
-
       {/* Body */}
       {isLoading ? (
         <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
