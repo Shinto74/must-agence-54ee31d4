@@ -258,11 +258,10 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
           Obtenir un devis
         </button>
       ) : (
-        <button
-          onClick={() => {
-            const priceId = resolvePriceId(pack);
-            if (priceId) navigate(`/checkout?pack=${priceId}`);
-          }}
+        <a
+          href={paymentUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
             pack.featured
               ? "bg-primary text-primary-foreground hover:brightness-110"
@@ -270,7 +269,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
           }`}
         >
           Choisir ce pack
-        </button>
+        </a>
       )}
     </div>
   );
