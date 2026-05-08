@@ -23,7 +23,18 @@ interface QuoteWizardProps {
   onSubmitComplete?: () => void;
   /** Cache le titre interne (utile quand le wizard est rendu dans une modale qui a déjà son titre) */
   hideHeader?: boolean;
+  /** Source de la demande pour le suivi admin (ex: "pack-essentiel", "artiste") */
+  source?: string;
 }
+
+const COORDS_STEP_INDEX = -1; // marqueur pour l'étape coordonnées finale
+
+const coordsSchema = z.object({
+  name: z.string().trim().min(2, "Nom requis"),
+  email: z.string().trim().email("Email invalide"),
+  phone: z.string().trim().min(6, "Téléphone requis"),
+  company: z.string().trim().max(120).optional().or(z.literal("")),
+});
 
 /* ─── MAPPING ICONES PAR OPTION ─── */
 const getIconForOption = (label: string) => {
