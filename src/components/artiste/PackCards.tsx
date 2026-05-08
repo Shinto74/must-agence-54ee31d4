@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, useInView } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Music, Megaphone, Palette, ListMusic, Zap, Users, PenTool, Newspaper, Search, Target, MessageCircle, Youtube, Info, X, BarChart3, Lightbulb, Rocket, TrendingUp, Network } from "lucide-react";
 import QuoteWizard from "@/components/artiste/QuoteWizard";
@@ -23,6 +23,7 @@ interface Pack {
   featuresFr?: string[];
   bonus: string;
   reassurance: string;
+  paymentLinkUrl?: string;
 }
 
 interface PackCardsProps {
@@ -199,28 +200,7 @@ const TheArtistInfoTooltip = () => {
 };
 
 /* ─── PACK CARD ─── */
-// Mapping pack → Stripe price lookup_key.
-// On accepte plusieurs variantes (numéro, nom normalisé) pour rester tolérant
-// si l'admin renomme un pack en BDD.
-const PACK_PRICE_MAP: Record<string, string> = {
-  "Pack 1": "essentiel_once",
-  "Pack 2": "ascension_once",
-  "Pack 3": "explosion_once",
-  "L'ESSENTIEL": "essentiel_once",
-  "L'ASCENSION": "ascension_once",
-  "L'EXPLOSION": "explosion_once",
-  "ESSENTIEL": "essentiel_once",
-  "ASCENSION": "ascension_once",
-  "EXPLOSION": "explosion_once",
-};
-
-const resolvePriceId = (pack: Pack): string | undefined =>
-  PACK_PRICE_MAP[pack.number] ||
-  PACK_PRICE_MAP[(pack.name || "").trim().toUpperCase()];
-
 const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; theartistText: string; onOpenQuote?: () => void; tooltips: Record<string, string> }) => {
-  const navigate = useNavigate();
-
   // Matching: trouve le tooltip dont la feature commence par la clé
   const getTooltip = (feature: string) => {
     for (const key of Object.keys(tooltips)) {
@@ -229,7 +209,8 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
     return undefined;
   };
 
-  const isQuotePack = pack.price === "Sur devis" || pack.number === "Pack 4" || !resolvePriceId(pack);
+  const paymentUrl = pack.paymentLinkUrl?.trim();
+  const isQuotePack = !paymentUrl;
 
   return (
     <div
@@ -277,11 +258,10 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
           Obtenir un devis
         </button>
       ) : (
-        <button
-          onClick={() => {
-            const priceId = resolvePriceId(pack);
-            if (priceId) navigate(`/checkout?pack=${priceId}`);
-          }}
+        <a
+          href={paymentUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
             pack.featured
               ? "bg-primary text-primary-foreground hover:brightness-110"
@@ -289,7 +269,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
           }`}
         >
           Choisir ce pack
-        </button>
+        </a>
       )}
     </div>
   );
