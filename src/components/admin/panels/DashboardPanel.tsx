@@ -129,6 +129,8 @@ export default function DashboardPanel() {
       const { count } = await supabase.from("clients").select("id", { count: "exact", head: true });
       return count || 0;
     },
+    refetchInterval: 10_000,
+    refetchOnWindowFocus: true,
   });
 
   const { data: packClicks = [] } = useQuery({
