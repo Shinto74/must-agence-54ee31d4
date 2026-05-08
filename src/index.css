@@ -295,10 +295,15 @@
 .animate-orbFloat2 { animation: orbFloat2 15s ease-in-out infinite; }
 .animate-orbFloat3 { animation: orbFloat3 18s ease-in-out infinite; }
 
-/* Selection */
+/* Selection — neutre lisible sur fonds sombres ET clairs */
 ::selection {
-  background: hsl(var(--neon) / 0.3);
-  color: hsl(var(--wh));
+  background: hsl(var(--foreground) / 0.18);
+  color: hsl(var(--foreground));
+}
+.page-bg--entreprise ::selection,
+.admin-light ::selection {
+  background: hsl(43 52% 39% / 0.25);
+  color: hsl(0 0% 10%);
 }
 
 /* Range slider styling */
