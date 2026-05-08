@@ -201,7 +201,6 @@ const TheArtistInfoTooltip = () => {
 
 /* ─── PACK CARD ─── */
 const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; theartistText: string; onOpenQuote?: () => void; tooltips: Record<string, string> }) => {
-  // Matching: trouve le tooltip dont la feature commence par la clé
   const getTooltip = (feature: string) => {
     for (const key of Object.keys(tooltips)) {
       if (feature.startsWith(key)) return tooltips[key];
@@ -211,6 +210,16 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
 
   const paymentUrl = pack.paymentLinkUrl?.trim();
   const isQuotePack = !paymentUrl;
+
+  const trackClick = (action: "stripe" | "quote") => {
+    const packId = (pack as any).id || null;
+    supabase.from("pack_clicks").insert({
+      pack_id: packId && packId.length === 36 ? packId : null,
+      pack_name: pack.name,
+      pack_price: `${pack.price}${pack.priceSuffix ? " " + pack.priceSuffix : ""}`.trim(),
+      action,
+    }).then(() => {});
+  };
 
   return (
     <div
