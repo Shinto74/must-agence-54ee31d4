@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
   MessageSquare, FileText, Mail, Users, Clock, CheckCircle2,
-  Download, ChevronDown, ChevronUp, ExternalLink, CreditCard, TrendingUp,
+  Download, ChevronDown, ChevronUp, ExternalLink, CreditCard, TrendingUp, MousePointerClick,
 } from "lucide-react";
 
 /* ---------- helpers ---------- */
