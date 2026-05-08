@@ -261,7 +261,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
       <TheArtistBonus text={theartistText} />
       <p className="text-[11px] text-muted-foreground italic mb-6">{pack.reassurance}</p>
       {isQuotePack && onOpenQuote ? (
-        <button onClick={onOpenQuote}
+        <button onClick={() => { trackClick("quote"); onOpenQuote(); }}
           className="block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 border border-border text-foreground hover:border-primary/40 hover:text-primary"
         >
           Obtenir un devis
@@ -271,6 +271,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
           href={paymentUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackClick("stripe")}
           className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
             pack.featured
               ? "bg-primary text-primary-foreground hover:brightness-110"
