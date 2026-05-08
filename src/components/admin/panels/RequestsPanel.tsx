@@ -432,10 +432,171 @@ function KanbanCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick:
   );
 }
 
+/* ============== KPI Strip ============== */
+function KpiTile({ label, value, sub, icon: Icon, accent, onClick, active }: {
+  label: string; value: number | string; sub?: string; icon: any;
+  accent: "blue" | "rose" | "emerald" | "slate"; onClick?: () => void; active?: boolean;
+}) {
+  const accents = {
+    blue: "from-blue-500/10 to-blue-500/0 text-blue-700 ring-blue-200",
+    rose: "from-rose-500/10 to-rose-500/0 text-rose-700 ring-rose-200",
+    emerald: "from-emerald-500/10 to-emerald-500/0 text-emerald-700 ring-emerald-200",
+    slate: "from-slate-500/10 to-slate-500/0 text-slate-700 ring-slate-200",
+  }[accent];
+  return (
+    <button
+      type="button" onClick={onClick}
+      className={`group relative overflow-hidden text-left rounded-2xl border bg-white p-4 transition-all w-full ${
+        active ? "border-slate-900 shadow-md" : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
+      }`}
+    >
+      <div className={`absolute inset-0 bg-gradient-to-br ${accents.split(" ").slice(0, 2).join(" ")} opacity-60 pointer-events-none`} />
+      <div className="relative flex items-center justify-between mb-3">
+        <div className={`p-2 rounded-lg bg-white ring-1 ${accents.split(" ").slice(2).join(" ")}`}><Icon size={15} /></div>
+        {sub && <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">{sub}</span>}
+      </div>
+      <p className="relative text-[10px] font-mono text-slate-500 uppercase tracking-wider mb-0.5">{label}</p>
+      <p className="relative font-clash text-3xl font-bold text-slate-900 tabular-nums leading-none">{value}</p>
+    </button>
+  );
+}
+
+/* ============== Priority widget ============== */
+function priorityScore(r: UnifiedRequest): number {
+  // Higher = more urgent. Combines age + budget + status.
+  const ageHours = (Date.now() - new Date(r.created_at).getTime()) / 3600000;
+  const ageScore = Math.min(48, ageHours) * 2; // up to 96 pts
+  const budgetTxt = r.budget || r.budget_estimate || "";
+  const num = parseInt(String(budgetTxt).replace(/[^\d]/g, "")) || 0;
+  const budgetScore = Math.min(100, num / 100); // 10k → 100 pts
+  const statusBoost = r.status === "nouveau" ? 50 : r.status === "en_cours" ? 20 : 0;
+  return ageScore + budgetScore + statusBoost;
+}
+
+function PriorityList({ requests, onSelect }: { requests: UnifiedRequest[]; onSelect: (r: UnifiedRequest) => void }) {
+  const top = useMemo(() => {
+    return [...requests]
+      .filter((r) => !r.archived_at && r.status !== "termine" && r.status !== "traite")
+      .sort((a, b) => priorityScore(b) - priorityScore(a))
+      .slice(0, 6);
+  }, [requests]);
+
+  if (top.length === 0) {
+    return <p className="text-xs text-slate-400 text-center py-8">Tout est sous contrôle ✨</p>;
+  }
+  return (
+    <ul className="space-y-1.5">
+      {top.map((r, i) => {
+        const ageH = (Date.now() - new Date(r.created_at).getTime()) / 3600000;
+        const isHot = ageH > 24 && r.status === "nouveau";
+        return (
+          <li key={`${r.kind}-${r.id}`}>
+            <button
+              onClick={() => onSelect(r)}
+              className="w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 transition-colors group"
+            >
+              <span className={`shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-mono font-bold ${
+                i === 0 ? "bg-rose-100 text-rose-700" : i < 3 ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"
+              }`}>
+                {i + 1}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm font-medium text-slate-900 truncate">{r.name || r.profile || "—"}</p>
+                  {isHot && <Flame size={11} className="text-rose-500 shrink-0" />}
+                </div>
+                <p className="text-[11px] text-slate-500 truncate">
+                  {r.kind === "quote" ? (r.budget || "Devis") : (r.type || "Contact")} · {fmtRelative(r.created_at)}
+                </p>
+              </div>
+              <ChevronRight size={13} className="text-slate-300 group-hover:text-slate-500" />
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/* ============== Activity feed ============== */
+function ActivityFeed({ requests, onSelect }: { requests: UnifiedRequest[]; onSelect: (r: UnifiedRequest) => void }) {
+  const items = useMemo(() => {
+    return [...requests]
+      .sort((a, b) => new Date(b.last_activity_at).getTime() - new Date(a.last_activity_at).getTime())
+      .slice(0, 12);
+  }, [requests]);
+  if (items.length === 0) return <p className="text-xs text-slate-400 text-center py-6">Aucune activité.</p>;
+  return (
+    <ul className="space-y-1">
+      {items.map((r) => (
+        <li key={`${r.kind}-${r.id}`}>
+          <button onClick={() => onSelect(r)}
+            className="w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-slate-50 transition-colors">
+            <TypeBadge kind={r.kind} />
+            <span className="text-xs text-slate-700 truncate flex-1">{r.name || r.profile || "—"}</span>
+            <StatusPill value={r.status} />
+            <span className="text-[10px] font-mono text-slate-400 shrink-0 tabular-nums">{fmtRelative(r.last_activity_at)}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/* ============== Table view ============== */
+function TableView({ rows, onSelect, onStatus, onArchive }: {
+  rows: UnifiedRequest[]; onSelect: (r: UnifiedRequest) => void;
+  onStatus: (r: UnifiedRequest, s: string) => void; onArchive: (r: UnifiedRequest) => void;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 text-[10px] font-mono uppercase tracking-wider text-slate-500">
+            <tr>
+              <th className="px-3 py-2.5 text-left">Type</th>
+              <th className="px-3 py-2.5 text-left">Nom</th>
+              <th className="px-3 py-2.5 text-left">Email</th>
+              <th className="px-3 py-2.5 text-left">Source</th>
+              <th className="px-3 py-2.5 text-left">Budget</th>
+              <th className="px-3 py-2.5 text-left">Statut</th>
+              <th className="px-3 py-2.5 text-left">Activité</th>
+              <th className="px-3 py-2.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={`${r.kind}-${r.id}`} className="border-t border-slate-100 hover:bg-slate-50/60 cursor-pointer" onClick={() => onSelect(r)}>
+                <td className="px-3 py-2.5"><TypeBadge kind={r.kind} /></td>
+                <td className="px-3 py-2.5 font-medium text-slate-900 truncate max-w-[180px]">{r.name || r.profile || "—"}</td>
+                <td className="px-3 py-2.5 text-slate-600 truncate max-w-[200px]">{r.email || "—"}</td>
+                <td className="px-3 py-2.5 text-[11px] font-mono text-slate-500 uppercase">{r.source || "—"}</td>
+                <td className="px-3 py-2.5 text-slate-700 tabular-nums">{r.budget || r.budget_estimate || "—"}</td>
+                <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
+                  <StatusPill value={r.status} onChange={(s) => onStatus(r, s)} compact />
+                </td>
+                <td className="px-3 py-2.5 text-[11px] text-slate-500 tabular-nums">{fmtRelative(r.last_activity_at)}</td>
+                <td className="px-3 py-2.5 text-right" onClick={(e) => e.stopPropagation()}>
+                  <button onClick={() => onArchive(r)}
+                    className="p-1.5 rounded-md text-slate-400 hover:text-amber-700 hover:bg-amber-50">
+                    {r.archived_at ? <ArchiveRestore size={13} /> : <Archive size={13} />}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 /* ============== Main ============== */
+type ViewMode = "bento" | "kanban" | "list" | "table";
+
 export default function RequestsPanel() {
   const queryClient = useQueryClient();
-  const [view, setView] = useState<"kanban" | "list">("kanban");
+  const [view, setView] = useState<ViewMode>("bento");
   const [search, setSearch] = useState("");
   const [types, setTypes] = useState<RequestType[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
@@ -475,14 +636,19 @@ export default function RequestsPanel() {
     },
   });
 
+  const kpis = useMemo(() => {
+    const now = Date.now();
+    const open = requests.filter((r) => !r.archived_at);
+    const nouveau = open.filter((r) => r.status === "nouveau").length;
+    const enRetard = open.filter((r) => r.status === "nouveau" && (now - new Date(r.created_at).getTime()) > 24 * 3600000).length;
+    const cetteSemaine = requests.filter((r) => (now - new Date(r.created_at).getTime()) < 7 * 86400000).length;
+    return { nouveau, enRetard, cetteSemaine, total: requests.length };
+  }, [requests]);
+
   const counts = useMemo(() => {
     const byStatus: Record<string, number> = {};
-    let archived = 0;
-    requests.forEach((r) => {
-      byStatus[r.status] = (byStatus[r.status] || 0) + 1;
-      if (r.archived_at) archived++;
-    });
-    return { byStatus, archived, total: requests.length };
+    requests.forEach((r) => { byStatus[r.status] = (byStatus[r.status] || 0) + 1; });
+    return byStatus;
   }, [requests]);
 
   const paginated = useMemo(() => requests.slice(0, page * PAGE_SIZE), [requests, page]);
@@ -510,6 +676,44 @@ export default function RequestsPanel() {
 
   const toggle = <T,>(arr: T[], v: T): T[] => arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
 
+  const renderKanban = (compact = false) => (
+    <div className={`grid grid-cols-1 md:grid-cols-2 ${compact ? "lg:grid-cols-4 gap-2.5" : "lg:grid-cols-4 gap-3"}`}>
+      {KANBAN_COLUMNS.map((col) => {
+        const items = requests.filter((r) => r.status === col.value && !r.archived_at);
+        return (
+          <div key={col.value}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              const data = JSON.parse(e.dataTransfer.getData("text/plain"));
+              const req = requests.find((r) => r.id === data.id && r.kind === data.kind);
+              if (req && req.status !== col.value) updateStatus.mutate({ req, status: col.value });
+            }}
+            className={`rounded-xl bg-slate-50 border border-slate-200 ${compact ? "p-2.5" : "p-3"} min-h-[180px]`}
+          >
+            <div className="flex items-center justify-between mb-2.5">
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ring-1 ${col.color}`}>{col.label}</span>
+              <span className="text-[10px] font-mono text-slate-400 tabular-nums">{items.length}</span>
+            </div>
+            <div className="space-y-1.5 max-h-[420px] overflow-y-auto pr-0.5">
+              {items.slice(0, compact ? 4 : 100).map((r) => (
+                <KanbanCard key={`${r.kind}-${r.id}`} req={r}
+                  onClick={() => setSelected(r)}
+                  onArchive={() => archiveRequest.mutate(r)} />
+              ))}
+              {items.length === 0 && <p className="text-[11px] text-slate-400 text-center py-3">Vide</p>}
+              {compact && items.length > 4 && (
+                <button onClick={() => setView("kanban")}
+                  className="w-full text-[10px] font-mono text-slate-500 hover:text-slate-900 py-1">
+                  +{items.length - 4} de plus
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div className="space-y-4">
       {/* Top bar */}
@@ -530,14 +734,17 @@ export default function RequestsPanel() {
           </div>
 
           <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100">
-            <button onClick={() => setView("kanban")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === "kanban" ? "bg-white shadow-sm text-slate-900" : "text-slate-600"}`}>
-              <Kanban size={13} /> Kanban
-            </button>
-            <button onClick={() => setView("list")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === "list" ? "bg-white shadow-sm text-slate-900" : "text-slate-600"}`}>
-              <ListChecks size={13} /> Liste action
-            </button>
+            {([
+              { v: "bento", l: "Bento", I: LayoutGrid },
+              { v: "kanban", l: "Kanban", I: Kanban },
+              { v: "list", l: "Liste", I: ListChecks },
+              { v: "table", l: "Tableau", I: Table2 },
+            ] as const).map(({ v, l, I }) => (
+              <button key={v} onClick={() => setView(v as ViewMode)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === v ? "bg-white shadow-sm text-slate-900" : "text-slate-600 hover:text-slate-900"}`}>
+                <I size={13} /> {l}
+              </button>
+            ))}
           </div>
 
           <button onClick={() => setShowFilters(!showFilters)}
@@ -601,14 +808,15 @@ export default function RequestsPanel() {
             )}
           </div>
         )}
+      </div>
 
-        {/* counters */}
-        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-          <span className="font-mono">{counts.total} résultat{counts.total > 1 ? "s" : ""}</span>
-          {STATUS_OPTIONS.slice(0, 4).map((s) => counts.byStatus[s.value] ? (
-            <span key={s.value} className={`px-2 py-0.5 rounded-full ring-1 ${s.color}`}>{s.label} · {counts.byStatus[s.value]}</span>
-          ) : null)}
-        </div>
+      {/* KPI strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KpiTile label="Nouveau" value={kpis.nouveau} sub="à traiter" icon={Inbox} accent="blue"
+          onClick={() => { setStatuses(["nouveau"]); setPage(1); }} active={statuses.length === 1 && statuses[0] === "nouveau"} />
+        <KpiTile label="En retard" value={kpis.enRetard} sub=">24h" icon={Flame} accent="rose" />
+        <KpiTile label="Cette semaine" value={kpis.cetteSemaine} sub="reçues" icon={TrendingUp} accent="emerald" />
+        <KpiTile label="Total visible" value={kpis.total} sub="filtré" icon={Sparkles} accent="slate" />
       </div>
 
       {/* Body */}
@@ -620,6 +828,50 @@ export default function RequestsPanel() {
         <div className="rounded-xl border border-dashed border-slate-200 bg-white p-12 text-center">
           <AlertCircle size={32} className="mx-auto text-slate-300 mb-2" />
           <p className="text-sm text-slate-500">Aucune demande ne correspond.</p>
+        </div>
+      ) : view === "bento" ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Big Kanban tile */}
+          <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-md bg-slate-900 text-white"><Kanban size={13} /></div>
+                <h3 className="font-clash text-sm font-bold text-slate-900">Pipeline</h3>
+              </div>
+              <button onClick={() => setView("kanban")} className="text-[10px] font-mono text-slate-500 hover:text-slate-900 uppercase tracking-wider">
+                Voir tout →
+              </button>
+            </div>
+            {renderKanban(true)}
+          </div>
+
+          {/* Priority widget */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="p-1.5 rounded-md bg-rose-100 text-rose-700"><Zap size={13} /></div>
+              <h3 className="font-clash text-sm font-bold text-slate-900">Priorités du jour</h3>
+            </div>
+            <PriorityList requests={requests} onSelect={setSelected} />
+          </div>
+
+          {/* Activity feed full width */}
+          <div className="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-md bg-emerald-100 text-emerald-700"><Activity size={13} /></div>
+                <h3 className="font-clash text-sm font-bold text-slate-900">Activité récente</h3>
+              </div>
+              <div className="flex gap-3 text-[10px] font-mono text-slate-500">
+                {STATUS_OPTIONS.slice(0, 4).map((s) => counts[s.value] ? (
+                  <span key={s.value} className="flex items-center gap-1">
+                    <span className={`w-1.5 h-1.5 rounded-full ${s.color.split(" ")[0]}`} />
+                    {s.label} · <span className="tabular-nums">{counts[s.value]}</span>
+                  </span>
+                ) : null)}
+              </div>
+            </div>
+            <ActivityFeed requests={requests} onSelect={setSelected} />
+          </div>
         </div>
       ) : view === "list" ? (
         <div className="rounded-xl border border-slate-200 bg-white">
@@ -640,37 +892,22 @@ export default function RequestsPanel() {
             </div>
           )}
         </div>
+      ) : view === "table" ? (
+        <>
+          <TableView rows={paginated} onSelect={setSelected}
+            onStatus={(r, s) => updateStatus.mutate({ req: r, status: s })}
+            onArchive={(r) => archiveRequest.mutate(r)} />
+          {hasMore && (
+            <div className="text-center">
+              <button onClick={() => setPage(page + 1)}
+                className="text-xs font-mono text-slate-600 hover:text-slate-900">
+                Charger plus ({requests.length - paginated.length} restant)
+              </button>
+            </div>
+          )}
+        </>
       ) : (
-        // Kanban
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {KANBAN_COLUMNS.map((col) => {
-            const items = requests.filter((r) => r.status === col.value && !r.archived_at);
-            return (
-              <div key={col.value}
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => {
-                  const data = JSON.parse(e.dataTransfer.getData("text/plain"));
-                  const req = requests.find((r) => r.id === data.id && r.kind === data.kind);
-                  if (req && req.status !== col.value) updateStatus.mutate({ req, status: col.value });
-                }}
-                className="rounded-xl bg-slate-50 border border-slate-200 p-3 min-h-[200px]"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ring-1 ${col.color}`}>{col.label}</span>
-                  <span className="text-[10px] font-mono text-slate-400">{items.length}</span>
-                </div>
-                <div className="space-y-2">
-                  {items.map((r) => (
-                    <KanbanCard key={`${r.kind}-${r.id}`} req={r}
-                      onClick={() => setSelected(r)}
-                      onArchive={() => archiveRequest.mutate(r)} />
-                  ))}
-                  {items.length === 0 && <p className="text-[11px] text-slate-400 text-center py-4">Vide</p>}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        renderKanban(false)
       )}
 
       {selected && <RequestDrawer req={selected} onClose={() => setSelected(null)} onUpdate={() => {}} />}
