@@ -337,7 +337,7 @@ export default function DashboardPanel() {
             <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-5">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-fuchsia-50 text-fuchsia-600 ring-1 ring-fuchsia-100">
+                  <div className="p-2 rounded-lg bg-slate-900 text-white ring-1 ring-slate-900/10">
                     <MousePointerClick size={16} />
                   </div>
                   <div>
@@ -351,15 +351,16 @@ export default function DashboardPanel() {
               ) : (
                 <div className="space-y-3">
                   {ranked.map(([name, v]) => (
-                    <div key={name}>
-                      <div className="flex items-center justify-between text-xs mb-1">
-                        <span className="font-medium text-slate-900 truncate">{name} <span className="text-slate-400 font-mono">{v.price}</span></span>
-                        <span className="font-mono text-slate-600">
-                          {v.count} <span className="text-slate-400">({v.stripe} Stripe / {v.quote} devis)</span>
+                    <div key={name} className="group">
+                      <div className="flex items-center justify-between text-xs mb-1.5">
+                        <span className="font-medium text-slate-900 truncate">{name} <span className="text-slate-400 font-mono ml-1">{v.price}</span></span>
+                        <span className="font-mono text-slate-700 tabular-nums">
+                          <span className="font-semibold">{v.count}</span>
+                          <span className="text-slate-400 ml-2">{v.stripe} Stripe · {v.quote} devis</span>
                         </span>
                       </div>
-                      <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-fuchsia-500 to-fuchsia-400 rounded-full" style={{ width: `${(v.count / max) * 100}%` }} />
+                      <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                        <div className="h-full bg-slate-900 rounded-full transition-all" style={{ width: `${(v.count / max) * 100}%` }} />
                       </div>
                     </div>
                   ))}
