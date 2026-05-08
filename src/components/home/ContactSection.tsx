@@ -86,9 +86,9 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
     if (error) {
       toast.error("Erreur lors de l'envoi. Réessayez.");
     } else {
-      toast.success("Message envoyé ! On revient vers vous en 24h.");
       setForm({ type: effectiveFormOptions[0] || "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
       setModalOpen(false);
+      setSuccessOpen(true);
     }
   };
 
