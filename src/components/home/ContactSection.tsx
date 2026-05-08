@@ -36,6 +36,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
   const effectiveFormOptions = dbFormOptions.length > 0 ? dbFormOptions : (formOptions || []);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
   const [form, setForm] = useState({ type: "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
   const [sending, setSending] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
