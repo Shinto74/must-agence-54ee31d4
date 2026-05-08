@@ -434,7 +434,7 @@ function KanbanCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick:
 /* ============== Main ============== */
 export default function RequestsPanel() {
   const queryClient = useQueryClient();
-  const [view, setView] = useState<"inbox" | "kanban">("inbox");
+  const [view, setView] = useState<"kanban" | "list">("kanban");
   const [search, setSearch] = useState("");
   const [types, setTypes] = useState<RequestType[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
@@ -455,6 +455,23 @@ export default function RequestsPanel() {
       if (error) throw error;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] }),
+  });
+
+  const archiveRequest = useMutation({
+    mutationFn: async (req: UnifiedRequest) => {
+      const table = req.kind === "quote" ? "quote_requests" : "contact_submissions";
+      const { error } = await supabase
+        .from(table)
+        .update({ archived_at: req.archived_at ? null : new Date().toISOString() })
+        .eq("id", req.id);
+      if (error) throw error;
+      return req;
+    },
+    onSuccess: (req) => {
+      toast.success(req.archived_at ? "Demande désarchivée" : "Demande archivée");
+      queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] });
+      queryClient.invalidateQueries({ queryKey: ["admin_notifications_counts"] });
+    },
   });
 
   const counts = useMemo(() => {
@@ -512,13 +529,13 @@ export default function RequestsPanel() {
           </div>
 
           <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100">
-            <button onClick={() => setView("inbox")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === "inbox" ? "bg-white shadow-sm text-slate-900" : "text-slate-600"}`}>
-              <Inbox size={13} /> Inbox
-            </button>
             <button onClick={() => setView("kanban")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === "kanban" ? "bg-white shadow-sm text-slate-900" : "text-slate-600"}`}>
               <Kanban size={13} /> Kanban
+            </button>
+            <button onClick={() => setView("list")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === "list" ? "bg-white shadow-sm text-slate-900" : "text-slate-600"}`}>
+              <ListChecks size={13} /> Liste action
             </button>
           </div>
 
