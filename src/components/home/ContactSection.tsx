@@ -74,8 +74,12 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       name: `${form.prenom.trim()} ${form.nom.trim()}`.trim(),
       email: form.email.trim(),
       phone: form.phone.trim(),
+      company: form.entreprise.trim(),
+      sector: form.secteur || "",
+      budget_estimate: formatBudget(form.budget),
       service: form.secteur || form.entreprise || "",
-      message: `Entreprise : ${form.entreprise || "—"}\nSecteur : ${form.secteur || "—"}\nBudget estimé : ${formatBudget(form.budget)}\n\nMessage :\n${form.message.trim()}`,
+      source: isEntreprise ? "entreprise" : (loc.pathname === "/artiste" ? "artiste" : "home"),
+      message: form.message.trim(),
     });
     setSending(false);
     if (error) {

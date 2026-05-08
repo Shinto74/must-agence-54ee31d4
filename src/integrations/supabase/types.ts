@@ -336,35 +336,56 @@ export type Database = {
       }
       contact_submissions: {
         Row: {
+          archived_at: string | null
+          assigned_to: string | null
+          budget_estimate: string | null
+          company: string | null
           created_at: string
           email: string
           id: string
+          last_activity_at: string
           message: string
           name: string
           phone: string | null
+          sector: string | null
           service: string | null
+          source: string | null
           status: string
           type: string
         }
         Insert: {
+          archived_at?: string | null
+          assigned_to?: string | null
+          budget_estimate?: string | null
+          company?: string | null
           created_at?: string
           email: string
           id?: string
+          last_activity_at?: string
           message?: string
           name: string
           phone?: string | null
+          sector?: string | null
           service?: string | null
+          source?: string | null
           status?: string
           type: string
         }
         Update: {
+          archived_at?: string | null
+          assigned_to?: string | null
+          budget_estimate?: string | null
+          company?: string | null
           created_at?: string
           email?: string
           id?: string
+          last_activity_at?: string
           message?: string
           name?: string
           phone?: string | null
+          sector?: string | null
           service?: string | null
+          source?: string | null
           status?: string
           type?: string
         }
@@ -901,34 +922,88 @@ export type Database = {
       }
       quote_requests: {
         Row: {
+          archived_at: string | null
+          assigned_to: string | null
           budget: string
+          company: string | null
           created_at: string
           deadline: string | null
+          email: string | null
           expectations: string[] | null
           id: string
+          last_activity_at: string
+          name: string | null
+          phone: string | null
           profile: string
           project_desc: string
+          source: string | null
           status: string
         }
         Insert: {
+          archived_at?: string | null
+          assigned_to?: string | null
           budget?: string
+          company?: string | null
           created_at?: string
           deadline?: string | null
+          email?: string | null
           expectations?: string[] | null
           id?: string
+          last_activity_at?: string
+          name?: string | null
+          phone?: string | null
           profile?: string
           project_desc?: string
+          source?: string | null
           status?: string
         }
         Update: {
+          archived_at?: string | null
+          assigned_to?: string | null
           budget?: string
+          company?: string | null
           created_at?: string
           deadline?: string | null
+          email?: string | null
           expectations?: string[] | null
           id?: string
+          last_activity_at?: string
+          name?: string | null
+          phone?: string | null
           profile?: string
           project_desc?: string
+          source?: string | null
           status?: string
+        }
+        Relationships: []
+      }
+      request_notes: {
+        Row: {
+          author_email: string | null
+          author_id: string | null
+          body: string
+          created_at: string
+          id: string
+          request_id: string
+          request_type: string
+        }
+        Insert: {
+          author_email?: string | null
+          author_id?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          request_id: string
+          request_type: string
+        }
+        Update: {
+          author_email?: string | null
+          author_id?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          request_id?: string
+          request_type?: string
         }
         Relationships: []
       }
@@ -1190,6 +1265,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auto_archive_old_requests: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

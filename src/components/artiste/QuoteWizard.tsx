@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { supabase } from "@/integrations/supabase/client";
 import { SITE } from "@/lib/constants";
-import { ChevronLeft, ChevronRight, Mic, Building2, Briefcase, DollarSign, TrendingUp, Gem, Rocket, Volume2, BarChart3, Palette, Handshake } from "lucide-react";
+import { ChevronLeft, ChevronRight, Mic, Building2, Briefcase, DollarSign, TrendingUp, Gem, Rocket, Volume2, BarChart3, Palette, Handshake, User, Mail, Phone } from "lucide-react";
+import { z } from "zod";
 
 interface QuoteOption {
   label: string;
@@ -22,7 +23,18 @@ interface QuoteWizardProps {
   onSubmitComplete?: () => void;
   /** Cache le titre interne (utile quand le wizard est rendu dans une modale qui a déjà son titre) */
   hideHeader?: boolean;
+  /** Source de la demande pour le suivi admin (ex: "pack-essentiel", "artiste") */
+  source?: string;
 }
+
+const COORDS_STEP_INDEX = -1; // marqueur pour l'étape coordonnées finale
+
+const coordsSchema = z.object({
+  name: z.string().trim().min(2, "Nom requis"),
+  email: z.string().trim().email("Email invalide"),
+  phone: z.string().trim().min(6, "Téléphone requis"),
+  company: z.string().trim().max(120).optional().or(z.literal("")),
+});
 
 /* ─── MAPPING ICONES PAR OPTION ─── */
 const getIconForOption = (label: string) => {
@@ -154,18 +166,33 @@ const DatePickerCalendar = ({ value, onChange }: { value: string; onChange: (dat
   );
 };
 
-const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizardProps) => {
+const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" }: QuoteWizardProps) => {
   const ref = useScrollReveal();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, any>>({});
   const [shake, setShake] = useState(false);
   const [done, setDone] = useState(false);
   const [sending, setSending] = useState(false);
+  const [coords, setCoords] = useState({ name: "", email: "", phone: "", company: "" });
+  const [coordsErrors, setCoordsErrors] = useState<Record<string, string>>({});
 
   if (!steps.length) return null;
-  const step = steps[current];
+  const totalSteps = steps.length + 1; // +1 pour l'étape coordonnées
+  const isCoordsStep = current === steps.length;
+  const step = isCoordsStep ? null : steps[current];
 
   const validate = () => {
+    if (isCoordsStep) {
+      const result = coordsSchema.safeParse(coords);
+      if (!result.success) {
+        const errs: Record<string, string> = {};
+        result.error.issues.forEach((i) => { errs[i.path[0] as string] = i.message; });
+        setCoordsErrors(errs);
+        return false;
+      }
+      setCoordsErrors({});
+      return true;
+    }
     const val = answers[current];
     if (!val || (Array.isArray(val) && val.length === 0) || val === "") return false;
     return true;
@@ -181,6 +208,11 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizar
 
     await supabase.from("quote_requests").insert({
       profile, project_desc, budget, deadline, expectations,
+      name: coords.name.trim(),
+      email: coords.email.trim(),
+      phone: coords.phone.trim(),
+      company: coords.company.trim(),
+      source: source || "artiste",
     });
 
     setSending(false);
@@ -196,7 +228,7 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizar
       setTimeout(() => setShake(false), 400);
       return;
     }
-    if (current < steps.length - 1) {
+    if (current < totalSteps - 1) {
       setCurrent(current + 1);
     } else {
       submit();
@@ -213,6 +245,9 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizar
       `Budget: ${answers[2] || ""}`,
       answers[3] ? `Échéance: ${answers[3]}` : "",
       answers[4]?.length ? `Attentes: ${(answers[4] as string[]).join(", ")}` : "",
+      coords.name ? `Nom: ${coords.name}` : "",
+      coords.email ? `Email: ${coords.email}` : "",
+      coords.phone ? `Téléphone: ${coords.phone}` : "",
     ].filter(Boolean).join("\n");
     return `${SITE.contact.whatsappUrl}?text=${encodeURIComponent(`Demande de devis Must Agence\n\n${lines}`)}`;
   };
@@ -247,61 +282,114 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizar
           </>
         )}
         <div className="rv flex gap-1 mb-8">
-          {steps.map((_, i) => (
+          {Array.from({ length: totalSteps }).map((_, i) => (
             <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= current ? "bg-primary" : "bg-border"}`} />
           ))}
         </div>
         <div className={`animate-fadeSlide ${shake ? "animate-shake" : ""}`} key={current}>
-          <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">{step.title}</p>
-          <h3 className="font-clash text-xl font-semibold text-foreground mb-6">{step.question}</h3>
+          {isCoordsStep ? (
+            <>
+              <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">Étape finale</p>
+              <h3 className="font-clash text-xl font-semibold text-foreground mb-2">Vos coordonnées</h3>
+              <p className="text-sm text-muted-foreground mb-6">Pour vous recontacter sous 24h.</p>
+              <div className="space-y-3">
+                <div>
+                  <div className="relative">
+                    <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="text" placeholder="Nom complet *" value={coords.name}
+                      onChange={(e) => setCoords({ ...coords, name: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                    />
+                  </div>
+                  {coordsErrors.name && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.name}</p>}
+                </div>
+                <div>
+                  <div className="relative">
+                    <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="email" placeholder="Email *" value={coords.email}
+                      onChange={(e) => setCoords({ ...coords, email: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                    />
+                  </div>
+                  {coordsErrors.email && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.email}</p>}
+                </div>
+                <div>
+                  <div className="relative">
+                    <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="tel" placeholder="Téléphone *" value={coords.phone}
+                      onChange={(e) => setCoords({ ...coords, phone: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                    />
+                  </div>
+                  {coordsErrors.phone && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.phone}</p>}
+                </div>
+                <div className="relative">
+                  <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text" placeholder="Entreprise / Label (facultatif)" value={coords.company}
+                    onChange={(e) => setCoords({ ...coords, company: e.target.value })}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">{step!.title}</p>
+              <h3 className="font-clash text-xl font-semibold text-foreground mb-6">{step!.question}</h3>
 
-          {step.type === "radio" && step.options && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
-              {step.options.map((opt) => {
-                const IconComponent = getIconForOption(opt.label);
-                return (
-                  <button key={opt.label} onClick={() => setAnswer(opt.label)}
-                    className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
-                      answers[current] === opt.label 
-                        ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
-                        : "border-border bg-surface text-muted-foreground hover:border-primary/40"
-                    }`}>
-                    <IconComponent size={24} className={`mb-2 ${answers[current] === opt.label ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className="text-sm font-medium">{opt.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+              {step!.type === "radio" && step!.options && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+                  {step!.options.map((opt) => {
+                    const IconComponent = getIconForOption(opt.label);
+                    return (
+                      <button key={opt.label} onClick={() => setAnswer(opt.label)}
+                        className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
+                          answers[current] === opt.label 
+                            ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
+                            : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+                        }`}>
+                        <IconComponent size={24} className={`mb-2 ${answers[current] === opt.label ? "text-primary" : "text-muted-foreground"}`} />
+                        <span className="text-sm font-medium">{opt.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
-          {step.type === "textarea" && (
-            <textarea value={answers[current] || ""} onChange={(e) => setAnswer(e.target.value)} placeholder={step.placeholder} rows={4}
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40 resize-none" />
-          )}
+              {step!.type === "textarea" && (
+                <textarea value={answers[current] || ""} onChange={(e) => setAnswer(e.target.value)} placeholder={step!.placeholder} rows={4}
+                  className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40 resize-none" />
+              )}
 
-          {step.type === "date" && (
-            <DatePickerCalendar value={answers[current] || ""} onChange={(date) => setAnswer(date)} />
-          )}
+              {step!.type === "date" && (
+                <DatePickerCalendar value={answers[current] || ""} onChange={(date) => setAnswer(date)} />
+              )}
 
-          {step.type === "checkbox" && step.options && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-              {step.options.map((opt) => {
-                const IconComponent = getIconForOption(opt.label);
-                const selected = (answers[current] || []) as string[];
-                const isSelected = selected.includes(opt.label);
-                return (
-                  <button key={opt.label} onClick={() => setAnswer(isSelected ? selected.filter((s) => s !== opt.label) : [...selected, opt.label])}
-                    className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
-                      isSelected 
-                        ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
-                        : "border-border bg-surface text-muted-foreground hover:border-primary/40"
-                    }`}>
-                    <IconComponent size={24} className={`mb-2 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className="text-sm font-medium">{opt.label}</span>
-                  </button>
-                );
-              })}
-            </div>
+              {step!.type === "checkbox" && step!.options && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                  {step!.options.map((opt) => {
+                    const IconComponent = getIconForOption(opt.label);
+                    const selected = (answers[current] || []) as string[];
+                    const isSelected = selected.includes(opt.label);
+                    return (
+                      <button key={opt.label} onClick={() => setAnswer(isSelected ? selected.filter((s) => s !== opt.label) : [...selected, opt.label])}
+                        className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
+                          isSelected 
+                            ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
+                            : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+                        }`}>
+                        <IconComponent size={24} className={`mb-2 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
+                        <span className="text-sm font-medium">{opt.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -313,7 +401,7 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizar
           )}
           <button onClick={next} disabled={sending}
             className="flex-1 py-3 rounded-pill bg-primary text-primary-foreground font-mono text-sm uppercase tracking-wider hover:brightness-110 transition-all duration-300 disabled:opacity-50">
-            {sending ? "Envoi..." : current === steps.length - 1 ? "Envoyer ma demande" : "Continuer"}
+            {sending ? "Envoi..." : current === totalSteps - 1 ? "Envoyer ma demande" : "Continuer"}
           </button>
         </div>
       </div>

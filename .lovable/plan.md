@@ -1,58 +1,164 @@
-## Objectif
+## Refonte du module Demandes — scalable jusqu'à 1000+ leads
 
-Le client a fourni 3 liens Stripe Payment Link directement (hosted by Stripe). On ne crée plus de session Checkout côté serveur — on redirige simplement vers son lien. Les liens doivent être **modifiables depuis l'admin** pour chaque pack (au cas où il en change un).
+### Objectif
+Transformer l'onglet "Tableau de bord" en véritable CRM léger : recherche, filtres, archivage, fiche détaillée complète, notes internes, suivi de réponse — pensé pour 500 packs vendus + 400 contacts/an.
 
-## Liens fournis
+---
 
-- Pack Essentiel → `https://buy.stripe.com/00w4gz28S9gXcZp4qOcbC11`
-- Pack Ascension → `https://buy.stripe.com/00w9AT3cW0Kr3oP7D0cbC12`
-- Pack Explosion → `https://buy.stripe.com/fZubJ16p8eBh1gHbTgcbC13`
-- Pack 4 (sur devis) → reste sur le wizard (pas de lien)
+### 1. Base de données (migration)
 
-## Changements
+**Champs ajoutés à `quote_requests`** (le wizard ne capture aucun moyen de recontact aujourd'hui — bloquant) :
+- `name`, `email`, `phone`, `company` (étape "Coordonnées" obligatoire dans le wizard)
+- `source` (`artiste` / `entreprise` / `pack-X`) — d'où vient la demande
+- `archived_at` (timestamp, null = active)
+- `assigned_to` (texte libre, ex. "Baptiste")
+- `last_activity_at` (mis à jour à chaque note/changement de statut)
 
-### 1. Base de données
-Ajouter une colonne `payment_link_url text` (nullable) à la table `packs`. Backfill avec les 3 URLs ci-dessus pour les packs 1-2-3 selon `display_order`.
+**Champs ajoutés à `contact_submissions`** :
+- `company`, `sector`, `budget_estimate` (aujourd'hui crammés dans `message`, on les sépare)
+- `source` (`artiste` / `entreprise` / `home`)
+- `archived_at`, `assigned_to`, `last_activity_at`
 
-### 2. Admin (`PacksEditor.tsx`)
-Ajouter un champ éditable « Lien de paiement Stripe » (placeholder `https://buy.stripe.com/...`, hint « Laisser vide = bouton Devis »). Position dans le formulaire : juste après `price_suffix`.
+**Nouvelle table `request_notes`** (fil de notes internes, partagé devis + contacts) :
+- `request_type` (`quote` | `contact`), `request_id`, `author` (auth.uid), `body`, `created_at`
+- RLS : lecture/écriture admin uniquement
 
-### 3. Front pack (`PackCards.tsx`)
-- Supprimer le `PACK_PRICE_MAP` codé en dur et `resolvePriceId`.
-- Lire `pack.paymentLinkUrl` (mappé depuis `payment_link_url`).
-- Logique du bouton :
-  - Si `paymentLinkUrl` présent → `<a href={url} target="_blank" rel="noopener noreferrer">Choisir ce pack</a>` (redirige vers Stripe hosted).
-  - Sinon → bouton « Obtenir un devis » (wizard actuel).
-- Ajouter `paymentLinkUrl` dans l'interface `Pack` et la projection du hook `useSupabaseData` / `usePacks`.
+**Statuts unifiés** (enum textuel) : `nouveau` → `en_cours` → `attente_client` → `traite` → `termine` → (archivé via `archived_at`)
 
-### 4. Nettoyage
-- Routes `/checkout` et `/checkout/confirmation` (`CheckoutPage.tsx`, `CheckoutReturn.tsx`, `StripeEmbeddedCheckout.tsx`) deviennent inutiles pour les packs. **Question** : on les **supprime entièrement** (plus simple, le client ne les utilise pas) ou on les **garde dormantes** au cas où il voudrait revenir à un checkout intégré plus tard ? → recommandation : **supprimer** + retirer la route dans `App.tsx` et l'edge function `create-checkout` / `get-stripe-price` qui ne servent plus.
-- `PaymentTestModeBanner` peut rester (sans effet en prod) ou être retiré.
+**Auto-archivage** : trigger ou cron quotidien qui passe `archived_at = now()` quand `status = 'termine'` depuis 30 jours.
 
-### 5. Admin — paiements
-Le panel `PaiementsPanel.tsx` lit la table `payments` qui était alimentée par le webhook Stripe Checkout. Avec des Payment Links externes, **les paiements ne reviennent plus dans notre BDD** sauf à brancher un webhook sur le compte Stripe du client (ce qui demande ses clés API). 
-**Question** : on cache l'onglet « Paiements » de l'admin ou on le garde avec un message « Voir directement sur le dashboard Stripe » ?
+---
 
-## Détails techniques
+### 2. Wizard Devis — étape "Coordonnées"
 
-```sql
-ALTER TABLE public.packs ADD COLUMN payment_link_url text;
+Nouvelle étape finale obligatoire dans `QuoteWizard.tsx` :
+- Prénom + Nom, Email (validé), Téléphone, Entreprise (optionnel)
+- Validation Zod, message d'erreur clair, bouton "Envoyer ma demande" remplace l'actuel
+- Mise à jour de l'insert Supabase pour stocker ces champs séparément
+
+Côté `ContactSection.tsx` : on découpe l'objet `message` actuel en colonnes propres (`company`, `sector`, `budget_estimate`) au lieu d'une string concaténée.
+
+---
+
+### 3. Nouvel onglet "Demandes" (séparé du Dashboard)
+
+Le Dashboard reste pour les KPIs + graphique 14j + bloc Stripe. **Tout le bloc liste de demandes part dans un onglet dédié** `RequestsPanel`.
+
+**Structure de la page** :
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ [Recherche full-text]  [Vue: Inbox | Kanban]  [+ Filtres]   │
+├──────────┬──────────────────────────────────┬───────────────┤
+│ Sidebar  │  Liste (Inbox) ou Colonnes (KB) │ Fiche détail  │
+│          │                                  │   (panneau    │
+│ Tous (X) │  ☐ Marie L. — Pack Essentiel    │    droit)     │
+│ Devis    │     "Notoriété + Image"          │               │
+│ Contacts │     Il y a 2h • nouveau          │  Toutes les   │
+│ ─────    │  ☐ Acme SAS — Contact           │  infos +      │
+│ Nouveau  │     Budget 5k€ • secteur Tech    │  notes +      │
+│ En cours │     Hier • en_cours              │  bouton       │
+│ Attente  │  ...                             │  mailto       │
+│ Traité   │                                  │               │
+│ ─────    │                                  │               │
+│ Archives │                                  │               │
+└──────────┴──────────────────────────────────┴───────────────┘
 ```
-Puis insertions/updates des 3 URLs sur les packs `display_order` 1, 2, 3.
 
-```ts
-// PackCards.tsx
-const url = (pack as any).paymentLinkUrl;
-const isQuotePack = !url;
-// ...
-{isQuotePack ? <button onClick={onOpenQuote}>…</button>
-            : <a href={url} target="_blank" rel="noopener noreferrer">Choisir ce pack</a>}
-```
+**Filtres combinables** (en barre haute, chips multi-select) :
+- Type : Devis / Contact
+- Statut : nouveau / en_cours / attente_client / traité / terminé
+- Source : page Artiste / page Entreprise / Home / Pack X
+- Période : 7j / 30j / 90j / tout
+- Assigné à : (liste membres)
+- Inclure les archives (off par défaut)
 
-Fichiers touchés : `supabase/migrations/*` (nouvelle), data insert, `PacksEditor.tsx`, `PackCards.tsx`, `useSupabaseData.ts` (mapper `payment_link_url`→`paymentLinkUrl`), éventuellement `App.tsx` + suppression de `CheckoutPage.tsx`, `CheckoutReturn.tsx`, `StripeEmbeddedCheckout.tsx`, edge functions `create-checkout` & `get-stripe-price`.
+**Recherche** : input full-text en haut, scanne nom + email + téléphone + entreprise + message + notes (debounced 300ms).
 
-## Questions avant implémentation
+**Pagination** : 25 résultats / page, scroll infini ou bouton "Charger plus" — JAMAIS tout charger d'un coup.
 
-1. **Routes /checkout et edge functions Stripe** : je supprime tout (recommandé) ou je garde dormant ?
-2. **Onglet « Paiements » admin** : je le masque, ou je garde avec un message renvoyant vers Stripe ?
-3. Le bouton ouvre le lien Stripe en **nouvel onglet** (recommandé, pour ne pas perdre la nav du site) ou dans le **même onglet** ?
+---
+
+### 4. Fiche détail (panneau latéral droit, drawer)
+
+Quand on clique une demande, panneau slide-in avec :
+
+**En-tête** : nom + email + téléphone (cliquable `tel:` / `mailto:`), badge type + source + statut éditable, date de création.
+
+**Bloc "Demande"** : TOUS les champs du formulaire affichés en clair, bien hiérarchisés :
+- Devis : profil, description projet (long), budget, deadline, attentes (chips)
+- Contact : type de demande, entreprise, secteur, budget estimé, message complet
+
+**Bloc "Notes internes"** : timeline chronologique, textarea pour ajouter une note, auteur + date affichés.
+
+**Actions** :
+- Bouton primaire **"Répondre par email"** → ouvre `mailto:` avec sujet pré-rempli (`Re: votre demande [pack/sujet]`) et corps incluant un rappel de la demande
+- Bouton "Appeler" → `tel:`
+- Bouton "Copier les infos" → presse-papier
+- Bouton "Marquer comme traité" / "Archiver"
+- Menu kebab : Assigner à…, Supprimer (avec confirmation double)
+
+**Tracking** : chaque changement de statut ou note ajoutée met à jour `last_activity_at` → utile pour trier par "demandes oubliées".
+
+---
+
+### 5. Vue Kanban (bascule)
+
+Toggle `Inbox ⇄ Kanban` dans la barre haute.
+4 colonnes : **Nouveau · En cours · Attente client · Traité**. Drag & drop change le statut. Carte compacte : nom + 1 ligne + badge type + temps écoulé. Click ouvre la même fiche détail. Les "terminé" + archives ne s'affichent pas en Kanban (visibles en Inbox uniquement).
+
+---
+
+### 6. Archivage — "auto + manuel"
+
+- **Bouton "Archiver"** sur chaque fiche (toujours dispo, met `archived_at = now()`)
+- **Auto** : pg_cron quotidien archive tout `status = 'termine'` depuis 30 jours
+- **Filtre "Inclure archives"** off par défaut → l'inbox reste légère même à 1000+ demandes
+- **Onglet "Archives"** dans la sidebar avec compteur, mêmes filtres, possibilité de désarchiver
+
+---
+
+### 7. Export CSV intelligent
+
+Le bouton "Exporter" exporte **les résultats filtrés courants** (pas tout). Colonnes propres et nommées en français, séparateur `;` pour Excel FR, BOM UTF-8 pour les accents.
+
+---
+
+### 8. Notifications
+
+Le hook `useAdminNotifications` reste inchangé : badge sur l'onglet "Demandes" = nombre de `nouveau` + `en_cours` non archivés.
+
+---
+
+### Détails techniques
+
+- **React Query** : clé `['admin_requests', filters, page]`, `keepPreviousData: true`, invalidation ciblée après mutation
+- **Supabase** : queries paginées avec `.range(start, end)`, `.or()` pour la recherche full-text sur plusieurs colonnes, comptage séparé via `count: 'exact', head: true` pour la pagination
+- **UI** : `Drawer` shadcn pour la fiche, `@hello-pangea/dnd` ou simple HTML5 DnD pour le Kanban (déjà léger), `Command` shadcn pour la recherche/filtres avancés
+- **Validation wizard** : `zod` (déjà présent dans le projet)
+
+### Fichiers touchés
+
+**Nouveaux** :
+- `src/components/admin/panels/RequestsPanel.tsx` (page principale)
+- `src/components/admin/requests/RequestsList.tsx` (vue Inbox)
+- `src/components/admin/requests/RequestsKanban.tsx` (vue Kanban)
+- `src/components/admin/requests/RequestDetail.tsx` (drawer fiche)
+- `src/components/admin/requests/RequestFilters.tsx` (barre filtres)
+- `src/components/admin/requests/RequestNotes.tsx` (fil de notes)
+- `src/hooks/useRequests.ts` (queries + mutations paginées)
+- Migration Supabase (colonnes + table `request_notes` + cron archivage)
+
+**Modifiés** :
+- `src/components/artiste/QuoteWizard.tsx` (+ étape Coordonnées)
+- `src/components/home/ContactSection.tsx` (insert champs séparés)
+- `src/components/admin/panels/DashboardPanel.tsx` (retirer la liste, garder KPIs + graphique + Stripe + activité récente)
+- `src/components/admin/AdminLayout.tsx` (réintroduire onglet "Demandes")
+- `src/pages/Admin.tsx` (route)
+
+---
+
+### Hors scope (à confirmer si besoin plus tard)
+- Envoi d'emails depuis le site (Resend) — choix actuel : `mailto:` natif
+- Intégration calendrier / rappels automatiques
+- Tags personnalisés par lead
