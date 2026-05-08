@@ -3,9 +3,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
-  Search, Filter, X, Inbox, Kanban, FileText, Mail, Phone, Copy,
+  Search, Filter, X, Kanban, FileText, Mail, Phone, Copy,
   Archive, ArchiveRestore, Send, Download, Clock, ChevronRight,
-  MessageSquare, AlertCircle, Building2, CheckCircle2,
+  MessageSquare, AlertCircle, Building2, CheckCircle2, ListChecks, Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -137,7 +137,8 @@ function useRequestsData(filters: {
 
       return all;
     },
-    refetchInterval: 60_000,
+    refetchInterval: 10_000,
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -169,6 +170,7 @@ function StatusPill({ value, onChange, compact = false }: { value: string; onCha
       onChange={(e) => onChange(e.target.value)}
       onClick={(e) => e.stopPropagation()}
       className={`px-2 py-0.5 rounded-full text-[10px] font-mono cursor-pointer focus:outline-none ring-1 border-0 ${meta.color} ${compact ? "" : "min-w-[110px]"}`}
+      style={{ colorScheme: "light" }}
     >
       {STATUS_OPTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
     </select>
