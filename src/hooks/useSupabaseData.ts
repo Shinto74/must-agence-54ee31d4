@@ -110,6 +110,7 @@ export function usePacks() {
             return orig?.text || f.text;
           }),
           bonus: p.bonus, reassurance: p.reassurance,
+          paymentLinkUrl: p.payment_link_url || "",
         };
       });
     },
