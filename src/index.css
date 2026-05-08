@@ -306,6 +306,23 @@
   color: hsl(0 0% 10%);
 }
 
+/* Admin + formulaires clairs : force une saisie toujours lisible */
+.admin-light input,
+.admin-light textarea,
+.admin-light select,
+.page-bg--entreprise input,
+.page-bg--entreprise textarea,
+.page-bg--entreprise select {
+  color: hsl(0 0% 10%);
+  caret-color: hsl(0 0% 10%);
+}
+.admin-light input::placeholder,
+.admin-light textarea::placeholder,
+.page-bg--entreprise input::placeholder,
+.page-bg--entreprise textarea::placeholder {
+  color: hsl(0 0% 45%);
+}
+
 /* Range slider styling */
 input[type="range"] {
   -webkit-appearance: none;

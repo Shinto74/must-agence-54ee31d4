@@ -4,7 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   MessageSquare, FileText, Mail, Users, Clock, CheckCircle2,
   Download, ChevronDown, ChevronUp, ExternalLink, CreditCard, TrendingUp, MousePointerClick,
+  Trash2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 /* ---------- helpers ---------- */
 const fmtDate = (iso: string) =>
@@ -106,6 +108,8 @@ export default function DashboardPanel() {
       if (error) throw error;
       return data || [];
     },
+    refetchInterval: 10_000,
+    refetchOnWindowFocus: true,
   });
 
   const { data: quotes = [] } = useQuery({
@@ -115,6 +119,8 @@ export default function DashboardPanel() {
       if (error) throw error;
       return data || [];
     },
+    refetchInterval: 10_000,
+    refetchOnWindowFocus: true,
   });
 
   const { data: clientsCount = 0 } = useQuery({
@@ -136,7 +142,31 @@ export default function DashboardPanel() {
       if (error) throw error;
       return data || [];
     },
-    refetchInterval: 30000,
+    refetchInterval: 10_000,
+    refetchOnWindowFocus: true,
+  });
+
+  const clearTestData = useMutation({
+    mutationFn: async () => {
+      const queries = [
+        supabase.from("request_notes").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
+        supabase.from("pack_clicks").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
+        supabase.from("contact_submissions").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
+        supabase.from("quote_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
+      ];
+      const results = await Promise.all(queries);
+      const error = results.find((r) => r.error)?.error;
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Données de test supprimées");
+      queryClient.invalidateQueries({ queryKey: ["admin_contact_submissions"] });
+      queryClient.invalidateQueries({ queryKey: ["admin_quote_requests"] });
+      queryClient.invalidateQueries({ queryKey: ["admin_pack_clicks"] });
+      queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] });
+      queryClient.invalidateQueries({ queryKey: ["admin_notifications_counts"] });
+    },
+    onError: () => toast.error("Suppression impossible"),
   });
 
   const updateContactStatus = useMutation({
@@ -209,6 +239,19 @@ export default function DashboardPanel() {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => {
+            if (window.confirm("Supprimer les clics packs, devis, contacts et notes internes de test ?")) clearTestData.mutate();
+          }}
+          disabled={clearTestData.isPending}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-red-200 bg-red-50 text-red-700 text-xs font-mono uppercase tracking-wider hover:bg-red-100 disabled:opacity-50 transition-colors"
+        >
+          <Trash2 size={13} /> {clearTestData.isPending ? "Nettoyage…" : "Clear test dashboard"}
+        </button>
+      </div>
+
       {/* KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <KpiCard label="Devis à traiter" value={String(stats.pendingQuotes)} sub="ouverts" icon={FileText} accent="amber" onClick={() => setTab("devis")} />

@@ -211,14 +211,33 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
   const paymentUrl = pack.paymentLinkUrl?.trim();
   const isQuotePack = !paymentUrl;
 
-  const trackClick = (action: "stripe" | "quote") => {
+  const buildClickPayload = (action: "stripe" | "quote") => {
     const packId = (pack as any).id || null;
-    supabase.from("pack_clicks").insert({
+    return {
       pack_id: packId && packId.length === 36 ? packId : null,
       pack_name: pack.name,
       pack_price: `${pack.price}${pack.priceSuffix ? " " + pack.priceSuffix : ""}`.trim(),
       action,
-    }).then(() => {});
+    };
+  };
+
+  const trackClick = (action: "stripe" | "quote") => {
+    supabase.from("pack_clicks").insert(buildClickPayload(action)).then(() => {});
+  };
+
+  const trackExternalClick = () => {
+    const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/pack_clicks`, {
+      method: "POST",
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(buildClickPayload("stripe")),
+      keepalive: true,
+    }).catch(() => trackClick("stripe"));
   };
 
   return (
@@ -271,7 +290,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
           href={paymentUrl}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => trackClick("stripe")}
+          onClick={() => trackExternalClick()}
           className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
             pack.featured
               ? "bg-primary text-primary-foreground hover:brightness-110"

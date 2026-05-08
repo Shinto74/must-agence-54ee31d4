@@ -3,9 +3,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
-  Search, Filter, X, Inbox, Kanban, FileText, Mail, Phone, Copy,
+  Search, Filter, X, Kanban, FileText, Mail, Phone, Copy,
   Archive, ArchiveRestore, Send, Download, Clock, ChevronRight,
-  MessageSquare, AlertCircle, Building2, CheckCircle2,
+  MessageSquare, AlertCircle, Building2, CheckCircle2, ListChecks,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -137,7 +137,8 @@ function useRequestsData(filters: {
 
       return all;
     },
-    refetchInterval: 60_000,
+    refetchInterval: 10_000,
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -169,6 +170,7 @@ function StatusPill({ value, onChange, compact = false }: { value: string; onCha
       onChange={(e) => onChange(e.target.value)}
       onClick={(e) => e.stopPropagation()}
       className={`px-2 py-0.5 rounded-full text-[10px] font-mono cursor-pointer focus:outline-none ring-1 border-0 ${meta.color} ${compact ? "" : "min-w-[110px]"}`}
+      style={{ colorScheme: "light" }}
     >
       {STATUS_OPTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
     </select>
@@ -364,13 +366,13 @@ function RequestDrawer({ req, onClose, onUpdate }: {
   );
 }
 
-/* ============== Inbox row ============== */
-function InboxRow({ req, onClick, onStatus }: { req: UnifiedRequest; onClick: () => void; onStatus: (s: string) => void }) {
+/* ============== Liste compacte ============== */
+function RequestListRow({ req, onClick, onStatus, onArchive }: { req: UnifiedRequest; onClick: () => void; onStatus: (s: string) => void; onArchive: () => void }) {
   const summary = req.kind === "quote"
     ? [req.profile, req.budget, req.expectations?.join(" · ")].filter(Boolean).join(" — ")
     : [req.type, req.sector, req.budget_estimate].filter(Boolean).join(" — ") || req.message;
   return (
-    <button onClick={onClick} className="w-full text-left flex items-start gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
+    <button onClick={onClick} className="w-full text-left grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
       <div className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 flex items-center justify-center font-medium text-xs uppercase">
         {(req.name || req.profile || "?").charAt(0)}
       </div>
@@ -383,8 +385,16 @@ function InboxRow({ req, onClick, onStatus }: { req: UnifiedRequest; onClick: ()
         <p className="text-xs text-slate-500 truncate">{summary}</p>
         <p className="text-[10px] text-slate-400 mt-0.5">{req.email || "—"} · {fmtRelative(req.created_at)}</p>
       </div>
-      <div className="shrink-0 flex flex-col items-end gap-1.5">
+      <div className="shrink-0 flex items-center gap-2">
         <StatusPill value={req.status} onChange={onStatus} compact />
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onArchive(); }}
+          title={req.archived_at ? "Désarchiver" : "Archiver"}
+          className="p-2 rounded-lg text-slate-400 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+        >
+          {req.archived_at ? <ArchiveRestore size={14} /> : <Archive size={14} />}
+        </button>
         <ChevronRight size={14} className="text-slate-300" />
       </div>
     </button>
@@ -392,7 +402,7 @@ function InboxRow({ req, onClick, onStatus }: { req: UnifiedRequest; onClick: ()
 }
 
 /* ============== Kanban card ============== */
-function KanbanCard({ req, onClick, onMove }: { req: UnifiedRequest; onClick: () => void; onMove: (s: string) => void }) {
+function KanbanCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick: () => void; onArchive: () => void }) {
   return (
     <div
       draggable
@@ -402,6 +412,14 @@ function KanbanCard({ req, onClick, onMove }: { req: UnifiedRequest; onClick: ()
     >
       <div className="flex items-center gap-1.5 mb-1.5">
         <TypeBadge kind={req.kind} />
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onArchive(); }}
+          title="Archiver"
+          className="p-1.5 rounded-md text-slate-300 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+        >
+          <Archive size={12} />
+        </button>
         <span className="text-[10px] text-slate-400 ml-auto">{fmtRelative(req.created_at)}</span>
       </div>
       <p className="text-sm font-medium text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</p>
@@ -416,7 +434,7 @@ function KanbanCard({ req, onClick, onMove }: { req: UnifiedRequest; onClick: ()
 /* ============== Main ============== */
 export default function RequestsPanel() {
   const queryClient = useQueryClient();
-  const [view, setView] = useState<"inbox" | "kanban">("inbox");
+  const [view, setView] = useState<"kanban" | "list">("kanban");
   const [search, setSearch] = useState("");
   const [types, setTypes] = useState<RequestType[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
@@ -437,6 +455,23 @@ export default function RequestsPanel() {
       if (error) throw error;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] }),
+  });
+
+  const archiveRequest = useMutation({
+    mutationFn: async (req: UnifiedRequest) => {
+      const table = req.kind === "quote" ? "quote_requests" : "contact_submissions";
+      const { error } = await supabase
+        .from(table)
+        .update({ archived_at: req.archived_at ? null : new Date().toISOString() })
+        .eq("id", req.id);
+      if (error) throw error;
+      return req;
+    },
+    onSuccess: (req) => {
+      toast.success(req.archived_at ? "Demande désarchivée" : "Demande archivée");
+      queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] });
+      queryClient.invalidateQueries({ queryKey: ["admin_notifications_counts"] });
+    },
   });
 
   const counts = useMemo(() => {
@@ -494,13 +529,13 @@ export default function RequestsPanel() {
           </div>
 
           <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100">
-            <button onClick={() => setView("inbox")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === "inbox" ? "bg-white shadow-sm text-slate-900" : "text-slate-600"}`}>
-              <Inbox size={13} /> Inbox
-            </button>
             <button onClick={() => setView("kanban")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === "kanban" ? "bg-white shadow-sm text-slate-900" : "text-slate-600"}`}>
               <Kanban size={13} /> Kanban
+            </button>
+            <button onClick={() => setView("list")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === "list" ? "bg-white shadow-sm text-slate-900" : "text-slate-600"}`}>
+              <ListChecks size={13} /> Liste action
             </button>
           </div>
 
@@ -585,13 +620,14 @@ export default function RequestsPanel() {
           <AlertCircle size={32} className="mx-auto text-slate-300 mb-2" />
           <p className="text-sm text-slate-500">Aucune demande ne correspond.</p>
         </div>
-      ) : view === "inbox" ? (
+      ) : view === "list" ? (
         <div className="rounded-xl border border-slate-200 bg-white">
           <div className="p-2 space-y-1">
             {paginated.map((r) => (
-              <InboxRow key={`${r.kind}-${r.id}`} req={r}
+              <RequestListRow key={`${r.kind}-${r.id}`} req={r}
                 onClick={() => setSelected(r)}
-                onStatus={(s) => updateStatus.mutate({ req: r, status: s })} />
+                onStatus={(s) => updateStatus.mutate({ req: r, status: s })}
+                onArchive={() => archiveRequest.mutate(r)} />
             ))}
           </div>
           {hasMore && (
@@ -626,7 +662,7 @@ export default function RequestsPanel() {
                   {items.map((r) => (
                     <KanbanCard key={`${r.kind}-${r.id}`} req={r}
                       onClick={() => setSelected(r)}
-                      onMove={(s) => updateStatus.mutate({ req: r, status: s })} />
+                      onArchive={() => archiveRequest.mutate(r)} />
                   ))}
                   {items.length === 0 && <p className="text-[11px] text-slate-400 text-center py-4">Vide</p>}
                 </div>
