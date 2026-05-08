@@ -733,7 +733,7 @@ export default function RequestsPanel() {
           <Flame size={12} /> {stats.hot} hot {stats.hot > 1 ? "leads" : "lead"}
         </span>
         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 text-red-700 ring-1 ring-red-200 font-mono">
-          <Clock size={12} /> {stats.overdue} à relancer (>24h)
+          <Clock size={12} /> {stats.overdue} à relancer (&gt;24h)
         </span>
         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-mono">
           <Target size={12} /> {stats.total} demande{stats.total > 1 ? "s" : ""} visible{stats.total > 1 ? "s" : ""}
