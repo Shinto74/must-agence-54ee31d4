@@ -30,7 +30,6 @@ const AnimatedRoutes = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
   const isGateway = location.pathname === "/";
-  const isGateway = location.pathname === "/";
 
   if (isAdmin) {
     return (
