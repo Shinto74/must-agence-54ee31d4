@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   Search, Filter, X, Kanban, FileText, Mail, Phone, Copy,
   Archive, ArchiveRestore, Send, Download, Clock, ChevronRight,
-  MessageSquare, AlertCircle, Building2, CheckCircle2, ListChecks, Trash2,
+  MessageSquare, AlertCircle, Building2, CheckCircle2, ListChecks,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -416,7 +416,7 @@ function KanbanCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick:
           type="button"
           onClick={(e) => { e.stopPropagation(); onArchive(); }}
           title="Archiver"
-          className="ml-auto p-1.5 rounded-md text-slate-300 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+          className="p-1.5 rounded-md text-slate-300 hover:text-amber-700 hover:bg-amber-50 transition-colors"
         >
           <Archive size={12} />
         </button>
