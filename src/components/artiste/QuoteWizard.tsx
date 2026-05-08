@@ -9,12 +9,20 @@ interface QuoteOption {
   icon: string;
 }
 
+interface QuoteFieldDef {
+  key: string;
+  label: string;
+  required?: boolean;
+  placeholder?: string;
+}
+
 interface QuoteStep {
   key?: string;
   title: string;
   question: string;
-  type: "radio" | "textarea" | "date" | "checkbox";
+  type: "radio" | "textarea" | "date" | "checkbox" | "fields";
   options?: QuoteOption[];
+  fields?: QuoteFieldDef[];
   placeholder?: string;
   showIf?: (answers: Record<string, any>) => boolean;
 }
@@ -132,6 +140,11 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
       setCoordsErrors({});
       return true;
     }
+    if (step?.type === "fields" && step.fields) {
+      const missing = step.fields.find((f) => f.required && !(answers[f.key] || "").toString().trim());
+      if (missing) return false;
+      return true;
+    }
     const v = answers[stepKey];
     if (!v || (Array.isArray(v) && v.length === 0) || v === "") return false;
     return true;
@@ -142,20 +155,32 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
     const expectations = answers.objective || [];
     const objective = Array.isArray(expectations) ? expectations.join(", ") : String(expectations || "");
 
+    // Identité (variable selon profil)
+    const identityName =
+      answers.artist_name || answers.label_name || answers.company_name || coords.company || "";
+    const socialBits = [
+      answers.social_instagram && `Instagram: ${answers.social_instagram}`,
+      answers.social_spotify && `Spotify: ${answers.social_spotify}`,
+      answers.social_youtube && `YouTube: ${answers.social_youtube}`,
+      answers.social_website && `Site/IG: ${answers.social_website}`,
+      answers.company_sector && `Secteur: ${answers.company_sector}`,
+    ].filter(Boolean).join(" · ");
+    const projectFull = [answers.project_desc, socialBits].filter(Boolean).join("\n\n");
+
     await supabase.from("quote_requests").insert({
       profile: answers.profile || "",
-      project_desc: answers.project_desc || "",
+      project_desc: projectFull,
       budget: answers.budget || "",
       deadline: answers.deadline || null,
       expectations: Array.isArray(expectations) ? expectations : [],
       style: answers.style || "",
-      company_size: answers.company_size || "",
+      company_size: answers.label_size || answers.company_size || "",
       objective,
       timeline: answers.timeline || "",
       name: coords.name.trim(),
       email: coords.email.trim(),
       phone: coords.phone.trim(),
-      company: coords.company.trim(),
+      company: identityName,
       source: source || "artiste",
     });
     setSending(false);
@@ -169,6 +194,7 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
   };
   const prev = () => { if (stepIndex > 0) setStepIndex(stepIndex - 1); };
   const setAnswer = (val: any) => setAnswers({ ...answers, [stepKey]: val });
+  const setFieldAnswer = (k: string, v: any) => setAnswers((a) => ({ ...a, [k]: v }));
 
   if (done) {
     return (
@@ -238,12 +264,6 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
                   </div>
                   {coordsErrors.phone && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.phone}</p>}
                 </div>
-                <div className="relative">
-                  <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <input type="text" placeholder="Entreprise / Label (facultatif)" value={coords.company}
-                    onChange={(e) => setCoords({ ...coords, company: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40" />
-                </div>
               </div>
             </>
           ) : (
@@ -277,6 +297,22 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
 
               {step!.type === "date" && (
                 <DatePickerCalendar value={answers[stepKey] || ""} onChange={(d) => setAnswer(d)} />
+              )}
+
+              {step!.type === "fields" && step!.fields && (
+                <div className="space-y-3">
+                  {step!.fields.map((f) => (
+                    <div key={f.key}>
+                      <input
+                        type="text"
+                        placeholder={f.placeholder || (f.label + (f.required ? " *" : ""))}
+                        value={answers[f.key] || ""}
+                        onChange={(e) => setFieldAnswer(f.key, e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                      />
+                    </div>
+                  ))}
+                </div>
               )}
 
               {step!.type === "checkbox" && step!.options && (

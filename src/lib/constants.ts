@@ -259,15 +259,28 @@ export const QUOTE_STEPS = [
     key: "profile",
     title: "Votre profil", question: "Qui êtes-vous ?", type: "radio" as const,
     options: [
-      { label: "Artiste Indépendant", icon: "🎤" },
+      { label: "Artiste indépendant", icon: "🎤" },
       { label: "Label", icon: "🏢" },
       { label: "Entreprise", icon: "💼" },
+    ],
+  },
+  // ── Branche ARTISTE ──────────────────────────────
+  {
+    key: "artist_info",
+    title: "Votre identité", question: "Parlez-nous de vous",
+    type: "fields" as const,
+    showIf: (a: Record<string, any>) => a.profile === "Artiste indépendant",
+    fields: [
+      { key: "artist_name", label: "Nom d'artiste", required: true },
+      { key: "social_instagram", label: "Instagram (facultatif)", placeholder: "@…" },
+      { key: "social_spotify", label: "Spotify (facultatif)", placeholder: "Lien profil" },
+      { key: "social_youtube", label: "YouTube (facultatif)", placeholder: "Lien chaîne" },
     ],
   },
   {
     key: "style",
     title: "Style musical", question: "Votre univers musical ?", type: "radio" as const,
-    showIf: (a: Record<string, any>) => a.profile === "Artiste Indépendant" || a.profile === "Label",
+    showIf: (a: Record<string, any>) => a.profile === "Artiste indépendant",
     options: [
       { label: "Rap", icon: "🎤" },
       { label: "Pop", icon: "🎧" },
@@ -277,60 +290,84 @@ export const QUOTE_STEPS = [
       { label: "Autre", icon: "✨" },
     ],
   },
+  // ── Branche LABEL ────────────────────────────────
   {
-    key: "company_size",
-    title: "Taille entreprise", question: "Votre structure ?", type: "radio" as const,
-    showIf: (a: Record<string, any>) => a.profile === "Entreprise",
-    options: [
-      { label: "Solo / Indépendant", icon: "👤" },
-      { label: "Startup", icon: "🚀" },
-      { label: "PME", icon: "🏢" },
-      { label: "Marque établie", icon: "🏛️" },
+    key: "label_info",
+    title: "Votre label", question: "Parlez-nous de votre label",
+    type: "fields" as const,
+    showIf: (a: Record<string, any>) => a.profile === "Label",
+    fields: [
+      { key: "label_name", label: "Nom du label", required: true },
+      { key: "social_instagram", label: "Instagram (facultatif)", placeholder: "@…" },
+      { key: "social_website", label: "Site web (facultatif)", placeholder: "https://…" },
     ],
+  },
+  {
+    key: "label_size",
+    title: "Taille du label", question: "Combien d'artistes accompagnez-vous ?", type: "radio" as const,
+    showIf: (a: Record<string, any>) => a.profile === "Label",
+    options: [
+      { label: "1–3", icon: "👤" },
+      { label: "4–10", icon: "👥" },
+      { label: "10+", icon: "🏛️" },
+    ],
+  },
+  // ── Branche ENTREPRISE ───────────────────────────
+  {
+    key: "company_info",
+    title: "Votre entreprise", question: "Parlez-nous de votre structure",
+    type: "fields" as const,
+    showIf: (a: Record<string, any>) => a.profile === "Entreprise",
+    fields: [
+      { key: "company_name", label: "Nom de l'entreprise", required: true },
+      { key: "company_sector", label: "Secteur d'activité (facultatif)", placeholder: "Ex. mode, food, tech…" },
+      { key: "social_website", label: "Site web ou Instagram (facultatif)", placeholder: "https://… ou @…" },
+    ],
+  },
+  // ── Commun ───────────────────────────────────────
+  {
+    key: "project_desc",
+    title: "Votre projet", question: "Décrivez votre vision", type: "textarea" as const,
+    placeholder: "Décrivez votre vision, votre univers et votre projet…",
   },
   {
     key: "objective",
     title: "Objectif principal", question: "Quel est votre objectif principal ?", type: "checkbox" as const,
     options: [
-      { label: "Gagner en visibilité", icon: "📢" },
-      { label: "Développer mon image", icon: "🎨" },
-      { label: "Obtenir plus d'écoutes", icon: "🎧" },
-      { label: "Lancer un projet", icon: "🚀" },
-      { label: "Stratégie long terme", icon: "📈" },
-      { label: "Générer des ventes", icon: "💰" },
-      { label: "Développer une communauté", icon: "🤝" },
+      { label: "Notoriété", icon: "📢" },
+      { label: "Streams / écoutes", icon: "🎧" },
+      { label: "Image de marque", icon: "🎨" },
+      { label: "Ventes", icon: "💰" },
+      { label: "Développement long terme", icon: "📈" },
+      { label: "Accompagnement humain", icon: "🤝" },
     ],
   },
   {
-    key: "project_desc",
-    title: "Votre projet", question: "Décrivez votre vision", type: "textarea" as const,
-    placeholder: "Décrivez votre projet, vos objectifs, votre univers...",
+    key: "timeline",
+    title: "Votre délai", question: "Quand souhaitez-vous lancer le projet ?", type: "radio" as const,
+    options: [
+      { label: "Dès que possible", icon: "🔥" },
+      { label: "Dans le mois", icon: "⚡" },
+      { label: "Dans 1 à 3 mois", icon: "📅" },
+      { label: "Date flexible", icon: "🔍" },
+      { label: "Choisir une date", icon: "🗓️" },
+    ],
+  },
+  {
+    key: "deadline",
+    title: "Date précise", question: "Sélectionnez une date dans l'agenda", type: "date" as const,
+    showIf: (a: Record<string, any>) => a.timeline === "Choisir une date",
   },
   {
     key: "budget",
-    title: "Votre budget", question: "Votre budget indicatif", type: "radio" as const,
+    title: "Votre budget", question: "Budget indicatif", type: "radio" as const,
     options: [
-      { label: "<1k€", icon: "💰" },
+      { label: "Moins de 1k€", icon: "💰" },
       { label: "1k€ – 3k€", icon: "💰" },
       { label: "3k€ – 5k€", icon: "💎" },
       { label: "5k€ – 10k€", icon: "🚀" },
       { label: "10k€+", icon: "👑" },
     ],
-  },
-  {
-    key: "timeline",
-    title: "Votre délai", question: "Quand souhaitez-vous démarrer ?", type: "radio" as const,
-    options: [
-      { label: "Dès que possible", icon: "🔥" },
-      { label: "Ce mois-ci", icon: "⚡" },
-      { label: "Dans 1 à 3 mois", icon: "📅" },
-      { label: "Je me renseigne", icon: "🔍" },
-    ],
-  },
-  {
-    key: "deadline",
-    title: "Date précise", question: "Date de démarrage souhaitée", type: "date" as const,
-    showIf: (a: Record<string, any>) => a.timeline === "Dès que possible" || a.timeline === "Ce mois-ci",
   },
 ];
 

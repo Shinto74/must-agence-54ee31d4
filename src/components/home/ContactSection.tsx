@@ -40,9 +40,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
   const [form, setForm] = useState({ type: "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "", objective: "", timeline: "" });
   const [sending, setSending] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
-  const [secteurOpen, setSecteurOpen] = useState(false);
-  const [objectiveOpen, setObjectiveOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(false);
+  const [openSelect, setOpenSelect] = useState<string | null>(null);
 
   // Contextual extra field options
   const isArtiste = loc.pathname === "/artiste";
@@ -128,74 +126,79 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       : "none",
   });
 
+  // Click-outside global pour fermer le select ouvert
+  useEffect(() => {
+    if (!openSelect) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest("[data-custom-select]")) setOpenSelect(null);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [openSelect]);
+
   const CustomSelect = ({
-    value, options, open, setOpen, onChange, placeholder, field
+    value, options, onChange, placeholder, field
   }: {
-    value: string; options: string[]; open: boolean; setOpen: (v: boolean) => void;
+    value: string; options: string[];
     onChange: (v: string) => void; placeholder: string; field: string;
-  }) => (
-    <div className="relative">
+  }) => {
+    const open = openSelect === field;
+    return (
+    <div className="relative" data-custom-select={field}>
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpenSelect(open ? null : field)}
         className={`${inputBase} text-left flex items-center justify-between cursor-pointer !py-3`}
         style={getInputStyle(field)}
         onFocus={() => setFocusField(field)}
-        onBlur={() => { setFocusField(null); setTimeout(() => setOpen(false), 200); }}
+        onBlur={() => setFocusField(null)}
       >
-        <span style={{ color: value ? (isEntreprise ? "hsl(0 0% 5%)" : "hsl(var(--foreground))") : (isEntreprise ? "hsl(0 0% 0% / 0.5)" : "hsl(var(--foreground) / 0.2)") }}>
+        <span style={{ color: value ? (isEntreprise ? "hsl(0 0% 5%)" : "hsl(var(--foreground))") : (isEntreprise ? "hsl(0 0% 0% / 0.5)" : "hsl(var(--foreground) / 0.4)") }}>
           {value || placeholder}
         </span>
-        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3, ease: EASE }}>
-          <ChevronDown size={18} style={{ color: "hsl(var(--foreground) / 0.35)" }} />
+        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25, ease: EASE }}>
+          <ChevronDown size={18} style={{ color: "hsl(var(--foreground) / 0.45)" }} />
         </motion.div>
       </button>
       <AnimatePresence>
         {open && (
           <motion.div
-            className="absolute top-full left-0 right-0 mt-2 rounded-2xl overflow-hidden z-50"
+            className="absolute top-full left-0 right-0 mt-2 rounded-2xl overflow-hidden z-50 max-h-[260px] overflow-y-auto"
             style={{
-              background: "hsl(var(--card))",
-              border: "1.5px solid hsl(var(--foreground) / 0.1)",
-              boxShadow: `0 25px 70px hsla(0,0%,0%,0.6), 0 0 40px hsl(${accent} / 0.04)`,
-              backdropFilter: "blur(24px)",
+              background: isEntreprise ? "hsl(40 25% 98%)" : "hsl(var(--card))",
+              border: `1.5px solid ${isEntreprise ? "hsl(0 0% 0% / 0.1)" : "hsl(var(--foreground) / 0.1)"}`,
+              boxShadow: `0 25px 70px hsla(0,0%,0%,0.35), 0 0 30px hsl(${accent} / 0.05)`,
             }}
-            initial={{ opacity: 0, y: -10, scale: 0.97 }}
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
-            transition={{ duration: 0.25, ease: EASE }}
+            transition={{ duration: 0.2, ease: EASE }}
           >
             {options.map((opt, idx) => (
-              <motion.button
+              <button
                 key={opt}
                 type="button"
-                onClick={() => { onChange(opt); setOpen(false); }}
-                className="w-full text-left px-5 py-3.5 text-sm font-outfit transition-all duration-200 flex items-center gap-3"
+                onClick={() => { onChange(opt); setOpenSelect(null); }}
+                className="w-full text-left px-5 py-3 text-sm font-outfit transition-colors duration-150 flex items-center gap-3 hover:bg-foreground/5"
                 style={{
-                  color: value === opt ? `hsl(${accent})` : "hsl(var(--foreground) / 0.65)",
-                  background: value === opt ? `hsl(${accent} / 0.07)` : "transparent",
-                  borderBottom: idx < options.length - 1 ? "1px solid hsl(var(--foreground) / 0.05)" : "none",
+                  color: value === opt ? `hsl(${accent})` : (isEntreprise ? "hsl(0 0% 15%)" : "hsl(var(--foreground) / 0.85)"),
+                  background: value === opt ? `hsl(${accent} / 0.08)` : "transparent",
+                  borderBottom: idx < options.length - 1 ? `1px solid ${isEntreprise ? "hsl(0 0% 0% / 0.05)" : "hsl(var(--foreground) / 0.05)"}` : "none",
                 }}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.03 }}
-                whileHover={{ background: value === opt ? `hsl(${accent} / 0.1)` : "hsl(var(--foreground) / 0.05)", x: 4 }}
               >
                 {value === opt && (
-                  <motion.span
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: `hsl(${accent})` }}
-                    layoutId={`select-${field}`}
-                  />
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: `hsl(${accent})` }} />
                 )}
                 {opt}
-              </motion.button>
+              </button>
             ))}
           </motion.div>
         )}
       </AnimatePresence>
     </div>
-  );
+    );
+  };
 
   const { getBool } = useSiteSettings();
   const contactItems = [
@@ -391,7 +394,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
 
             {/* Modal card */}
             <motion.div
-              className="relative w-full max-w-[520px] max-h-[92vh] overflow-y-auto z-10"
+              className="relative w-full max-w-[680px] max-h-[92vh] overflow-y-auto z-10"
               style={{
                 borderRadius: "28px",
                 background: isEntreprise
@@ -514,17 +517,17 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
                       className={inputBase} style={getInputStyle("entreprise")}
                     />
                     <CustomSelect
-                      value={form.secteur} options={secteurOptions} open={secteurOpen} setOpen={setSecteurOpen}
+                      value={form.secteur} options={secteurOptions}
                       onChange={v => setForm({ ...form, secteur: v })} placeholder={contextLabel} field="secteur"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <CustomSelect
-                      value={form.objective} options={objectiveOptions} open={objectiveOpen} setOpen={setObjectiveOpen}
+                      value={form.objective} options={objectiveOptions}
                       onChange={v => setForm({ ...form, objective: v })} placeholder="Objectif principal" field="objective"
                     />
                     <CustomSelect
-                      value={form.timeline} options={timelineOptions} open={timelineOpen} setOpen={setTimelineOpen}
+                      value={form.timeline} options={timelineOptions}
                       onChange={v => setForm({ ...form, timeline: v })} placeholder="Délai" field="timeline"
                     />
                   </div>

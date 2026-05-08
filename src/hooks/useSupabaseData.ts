@@ -227,10 +227,10 @@ export function useQuoteSteps() {
           .map((o: any) => ({ label: o.label, icon: o.icon })),
       }));
     },
-    placeholderData: QUOTE_STEPS.map((s) => ({
+    placeholderData: QUOTE_STEPS.map((s: any) => ({
       ...s,
       placeholder: s.placeholder || "",
       options: s.options || [],
-    })),
+    })) as any,
   });
 }
