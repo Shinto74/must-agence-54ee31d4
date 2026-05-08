@@ -4,9 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Search, Filter, X, Kanban, FileText, Mail, Phone, Copy,
-  Archive, ArchiveRestore, Send, Download, Clock, ChevronRight,
-  MessageSquare, AlertCircle, Building2, CheckCircle2, ListChecks,
-  LayoutGrid, Table2, Flame, Zap, TrendingUp, Inbox, Activity, Sparkles,
+  Archive, ArchiveRestore, Send, Download, ChevronRight,
+  AlertCircle, Building2, ListChecks, LayoutGrid, Flame, Music2, Briefcase,
+  Target, Clock,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -21,6 +21,7 @@ interface UnifiedRequest {
   status: string;
   archived_at: string | null;
   source: string;
+  lead_score: number;
   // contact fields
   name?: string;
   email?: string;
@@ -37,18 +38,33 @@ interface UnifiedRequest {
   budget?: string;
   deadline?: string;
   expectations?: string[];
+  // new business fields
+  style?: string;
+  company_size?: string;
+  objective?: string;
+  timeline?: string;
   raw: any;
 }
 
 const STATUS_OPTIONS = [
-  { value: "nouveau", label: "Nouveau", color: "bg-blue-500/15 text-blue-700 ring-blue-500/20" },
-  { value: "en_cours", label: "En cours", color: "bg-amber-500/15 text-amber-700 ring-amber-500/20" },
-  { value: "attente_client", label: "Attente client", color: "bg-purple-500/15 text-purple-700 ring-purple-500/20" },
-  { value: "traite", label: "Traité", color: "bg-emerald-500/15 text-emerald-700 ring-emerald-500/20" },
-  { value: "termine", label: "Terminé", color: "bg-slate-200 text-slate-600 ring-slate-300" },
+  { value: "nouveau", label: "Nouveau", color: "bg-blue-500/15 text-blue-700 ring-blue-500/20", dot: "bg-blue-500" },
+  { value: "a_rappeler", label: "À rappeler", color: "bg-amber-500/15 text-amber-700 ring-amber-500/20", dot: "bg-amber-500" },
+  { value: "en_discussion", label: "En discussion", color: "bg-indigo-500/15 text-indigo-700 ring-indigo-500/20", dot: "bg-indigo-500" },
+  { value: "client_signe", label: "Client signé", color: "bg-emerald-500/15 text-emerald-700 ring-emerald-500/20", dot: "bg-emerald-500" },
+  { value: "sans_reponse", label: "Sans réponse", color: "bg-rose-500/15 text-rose-700 ring-rose-500/20", dot: "bg-rose-500" },
 ];
-const KANBAN_COLUMNS = STATUS_OPTIONS.slice(0, 4);
-const statusMeta = (s: string) => STATUS_OPTIONS.find((x) => x.value === s) || STATUS_OPTIONS[0];
+const KANBAN_COLUMNS = STATUS_OPTIONS;
+
+// Mapping anciens statuts vers nouveaux pour compat
+const LEGACY_MAP: Record<string, string> = {
+  en_cours: "en_discussion",
+  attente_client: "a_rappeler",
+  traite: "client_signe",
+  termine: "client_signe",
+};
+const normalizeStatus = (s: string) => LEGACY_MAP[s] || s;
+
+const statusMeta = (s: string) => STATUS_OPTIONS.find((x) => x.value === normalizeStatus(s)) || STATUS_OPTIONS[0];
 
 const fmtRelative = (iso: string) => {
   const diff = Date.now() - new Date(iso).getTime();
@@ -65,7 +81,17 @@ const fmtRelative = (iso: string) => {
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleString("fr-FR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-/* ============== Hooks données ============== */
+const isArtisteSource = (s: string) => s === "artiste" || s.startsWith("pack-") || s === "home";
+const SourceIcon = ({ source }: { source: string }) =>
+  isArtisteSource(source)
+    ? <Music2 size={11} className="text-fuchsia-500" />
+    : <Briefcase size={11} className="text-amber-600" />;
+
+const isOverdue = (r: UnifiedRequest) =>
+  (normalizeStatus(r.status) === "nouveau" || normalizeStatus(r.status) === "a_rappeler") &&
+  (Date.now() - new Date(r.last_activity_at || r.created_at).getTime()) > 24 * 3600 * 1000;
+
+/* ============== Hook données ============== */
 const PAGE_SIZE = 25;
 
 function useRequestsData(filters: {
@@ -74,6 +100,7 @@ function useRequestsData(filters: {
   statuses: string[];
   period: string;
   includeArchived: boolean;
+  budgetBucket: string;
 }) {
   return useQuery({
     queryKey: ["admin_requests_unified", filters],
@@ -87,7 +114,6 @@ function useRequestsData(filters: {
       const buildContact = async () => {
         let q = supabase.from("contact_submissions").select("*").order("created_at", { ascending: false }).limit(500);
         if (since) q = q.gte("created_at", since);
-        if (filters.statuses.length) q = q.in("status", filters.statuses);
         if (!filters.includeArchived) q = q.is("archived_at", null);
         const { data, error } = await q;
         if (error) throw error;
@@ -95,16 +121,18 @@ function useRequestsData(filters: {
           id: c.id, kind: "contact", created_at: c.created_at,
           last_activity_at: c.last_activity_at || c.created_at,
           status: c.status || "nouveau", archived_at: c.archived_at,
-          source: c.source || "", name: c.name, email: c.email, phone: c.phone,
+          source: c.source || "", lead_score: c.lead_score ?? 0,
+          name: c.name, email: c.email, phone: c.phone,
           company: c.company, sector: c.sector, budget_estimate: c.budget_estimate,
-          message: c.message, type: c.type, service: c.service, raw: c,
+          message: c.message, type: c.type, service: c.service,
+          style: c.style, company_size: c.company_size, objective: c.objective, timeline: c.timeline,
+          raw: c,
         }));
       };
 
       const buildQuote = async () => {
         let q = supabase.from("quote_requests").select("*").order("created_at", { ascending: false }).limit(500);
         if (since) q = q.gte("created_at", since);
-        if (filters.statuses.length) q = q.in("status", filters.statuses);
         if (!filters.includeArchived) q = q.is("archived_at", null);
         const { data, error } = await q;
         if (error) throw error;
@@ -112,9 +140,11 @@ function useRequestsData(filters: {
           id: c.id, kind: "quote", created_at: c.created_at,
           last_activity_at: c.last_activity_at || c.created_at,
           status: c.status || "nouveau", archived_at: c.archived_at,
-          source: c.source || "", name: c.name, email: c.email, phone: c.phone,
+          source: c.source || "", lead_score: c.lead_score ?? 0,
+          name: c.name, email: c.email, phone: c.phone,
           company: c.company, profile: c.profile, project_desc: c.project_desc,
           budget: c.budget, deadline: c.deadline, expectations: c.expectations || [],
+          style: c.style, company_size: c.company_size, objective: c.objective, timeline: c.timeline,
           raw: c,
         }));
       };
@@ -127,10 +157,27 @@ function useRequestsData(filters: {
         (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
 
+      // Status filter (front, on normalized values)
+      if (filters.statuses.length) {
+        all = all.filter((r) => filters.statuses.includes(normalizeStatus(r.status)));
+      }
+
+      // Budget filter (front, simple text contains)
+      if (filters.budgetBucket && filters.budgetBucket !== "all") {
+        const bucket = filters.budgetBucket;
+        all = all.filter((r) => {
+          const t = (r.budget || r.budget_estimate || "").toLowerCase();
+          if (bucket === "low") return t.includes("<1k") || t.includes("1k") && !t.includes("10k");
+          if (bucket === "mid") return t.includes("3k") || t.includes("5k");
+          if (bucket === "high") return t.includes("10k") || t.includes("+") || t.includes("plus");
+          return true;
+        });
+      }
+
       if (filters.search.trim()) {
         const q = filters.search.toLowerCase();
         all = all.filter((r) =>
-          [r.name, r.email, r.phone, r.company, r.message, r.project_desc, r.profile, r.budget, r.budget_estimate, r.sector, r.service, r.type, r.source]
+          [r.name, r.email, r.phone, r.company, r.message, r.project_desc, r.profile, r.budget, r.budget_estimate, r.sector, r.service, r.type, r.source, r.style, r.company_size, r.objective, r.timeline]
             .filter(Boolean)
             .some((v) => String(v).toLowerCase().includes(q))
         );
@@ -167,10 +214,10 @@ function StatusPill({ value, onChange, compact = false }: { value: string; onCha
   }
   return (
     <select
-      value={value}
+      value={normalizeStatus(value)}
       onChange={(e) => onChange(e.target.value)}
       onClick={(e) => e.stopPropagation()}
-      className={`px-2 py-0.5 rounded-full text-[10px] font-mono cursor-pointer focus:outline-none ring-1 border-0 ${meta.color} ${compact ? "" : "min-w-[110px]"}`}
+      className={`px-2 py-0.5 rounded-full text-[10px] font-mono cursor-pointer focus:outline-none ring-1 border-0 ${meta.color} ${compact ? "" : "min-w-[120px]"}`}
       style={{ colorScheme: "light" }}
     >
       {STATUS_OPTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
@@ -182,6 +229,24 @@ function TypeBadge({ kind }: { kind: RequestType }) {
   return kind === "quote"
     ? <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono bg-indigo-50 text-indigo-700"><FileText size={10} />Devis</span>
     : <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono bg-sky-50 text-sky-700"><Mail size={10} />Contact</span>;
+}
+
+function HotBadge({ score }: { score: number }) {
+  if (score < 70) return null;
+  return (
+    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-700 ring-1 ring-rose-300">
+      <Flame size={9} /> HOT {score}
+    </span>
+  );
+}
+
+function OverdueBadge({ req }: { req: UnifiedRequest }) {
+  if (!isOverdue(req)) return null;
+  return (
+    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-red-600 text-white animate-pulse">
+      <Clock size={9} /> RELANCE
+    </span>
+  );
 }
 
 /* ============== Detail Drawer ============== */
@@ -201,7 +266,8 @@ function RequestDrawer({ req, onClose, onUpdate }: {
 
   const updateField = async (patch: any) => {
     const { error } = await supabase.from(table).update(patch).eq("id", req.id);
-    if (error) toast.error("Erreur"); else { onUpdate(); queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] }); }
+    if (error) toast.error("Erreur");
+    else { onUpdate(); queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] }); }
   };
 
   const addNote = async () => {
@@ -216,7 +282,6 @@ function RequestDrawer({ req, onClose, onUpdate }: {
     if (error) { toast.error("Erreur lors de l'ajout"); return; }
     setNoteBody("");
     queryClient.invalidateQueries({ queryKey: ["request_notes", req.kind, req.id] });
-    // refresh last_activity_at on the parent record
     await supabase.from(table).update({ last_activity_at: new Date().toISOString() }).eq("id", req.id);
     queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] });
   };
@@ -228,7 +293,7 @@ function RequestDrawer({ req, onClose, onUpdate }: {
 
   const replyMailto = () => {
     if (!req.email) return toast.error("Pas d'email pour ce contact");
-    const subject = `Re: votre demande Must Agence${req.kind === "quote" && req.profile ? ` (${req.profile})` : req.type ? ` (${req.type})` : ""}`;
+    const subject = `Re: votre demande Must Agence`;
     const body = `Bonjour ${req.name || ""},\n\nMerci pour votre demande reçue le ${fmtDate(req.created_at)}.\n\n--\nL'équipe Must Agence`;
     window.open(`mailto:${req.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
   };
@@ -236,15 +301,17 @@ function RequestDrawer({ req, onClose, onUpdate }: {
   const copyInfo = () => {
     const lines = [
       `Type: ${req.kind === "quote" ? "Devis" : "Contact"}`,
+      `Score: ${req.lead_score}/100`,
       `Nom: ${req.name || "—"}`, `Email: ${req.email || "—"}`,
       `Téléphone: ${req.phone || "—"}`, `Entreprise: ${req.company || "—"}`,
       req.profile && `Profil: ${req.profile}`,
+      req.style && `Style: ${req.style}`,
+      req.company_size && `Taille: ${req.company_size}`,
+      req.objective && `Objectif: ${req.objective}`,
+      req.timeline && `Délai: ${req.timeline}`,
       req.project_desc && `Projet: ${req.project_desc}`,
-      req.budget && `Budget: ${req.budget}`,
-      req.budget_estimate && `Budget: ${req.budget_estimate}`,
+      (req.budget || req.budget_estimate) && `Budget: ${req.budget || req.budget_estimate}`,
       req.deadline && `Échéance: ${req.deadline}`,
-      req.expectations?.length && `Attentes: ${req.expectations.join(", ")}`,
-      req.sector && `Secteur: ${req.sector}`,
       req.message && `Message: ${req.message}`,
     ].filter(Boolean).join("\n");
     navigator.clipboard.writeText(lines);
@@ -255,22 +322,22 @@ function RequestDrawer({ req, onClose, onUpdate }: {
     <div className="fixed inset-0 z-50 flex">
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
       <aside className="ml-auto relative w-full sm:max-w-[520px] bg-white border-l border-slate-200 shadow-2xl overflow-y-auto">
-        {/* Header */}
         <div className="sticky top-0 z-10 px-5 py-4 border-b border-slate-200 bg-white/95 backdrop-blur flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <TypeBadge kind={req.kind} />
               <StatusPill value={req.status} onChange={(s) => updateField({ status: s })} />
+              <HotBadge score={req.lead_score} />
+              <OverdueBadge req={req} />
               {req.source && <span className="text-[10px] font-mono text-slate-400 uppercase">{req.source}</span>}
               {req.archived_at && <span className="text-[10px] font-mono text-amber-600 uppercase">Archivée</span>}
             </div>
             <h3 className="font-clash text-lg font-bold text-slate-900 truncate">{req.name || req.profile || "—"}</h3>
-            <p className="text-xs text-slate-500">{fmtDate(req.created_at)}</p>
+            <p className="text-xs text-slate-500">{fmtDate(req.created_at)} · Score lead {req.lead_score}/100</p>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-md text-slate-500 hover:bg-slate-100"><X size={18} /></button>
         </div>
 
-        {/* Quick actions */}
         <div className="px-5 py-3 border-b border-slate-100 grid grid-cols-2 gap-2">
           <button onClick={replyMailto} disabled={!req.email}
             className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-mono uppercase tracking-wider hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed">
@@ -288,7 +355,6 @@ function RequestDrawer({ req, onClose, onUpdate }: {
           </button>
         </div>
 
-        {/* Coordonnées */}
         <section className="px-5 py-4 border-b border-slate-100">
           <h4 className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mb-2">Coordonnées</h4>
           <dl className="grid grid-cols-3 gap-x-3 gap-y-2 text-sm">
@@ -301,49 +367,39 @@ function RequestDrawer({ req, onClose, onUpdate }: {
           </dl>
         </section>
 
-        {/* Demande */}
         <section className="px-5 py-4 border-b border-slate-100">
-          <h4 className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mb-2">
-            {req.kind === "quote" ? "Demande de devis" : "Message"}
-          </h4>
-          {req.kind === "quote" ? (
-            <dl className="space-y-2 text-sm">
-              {req.profile && <div><dt className="text-slate-500 text-xs">Profil</dt><dd className="text-slate-900">{req.profile}</dd></div>}
-              {req.budget && <div><dt className="text-slate-500 text-xs">Budget</dt><dd className="text-slate-900 font-medium">{req.budget}</dd></div>}
-              {req.deadline && <div><dt className="text-slate-500 text-xs">Échéance</dt><dd className="text-slate-900">{req.deadline}</dd></div>}
-              {req.project_desc && <div><dt className="text-slate-500 text-xs">Projet</dt><dd className="text-slate-700 whitespace-pre-wrap">{req.project_desc}</dd></div>}
-              {req.expectations?.length ? (
-                <div>
-                  <dt className="text-slate-500 text-xs mb-1">Attentes</dt>
-                  <dd className="flex flex-wrap gap-1.5">
-                    {req.expectations.map((e) => (
-                      <span key={e} className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-mono">{e}</span>
-                    ))}
-                  </dd>
-                </div>
-              ) : null}
-            </dl>
-          ) : (
-            <dl className="space-y-2 text-sm">
-              {req.type && <div><dt className="text-slate-500 text-xs">Type de demande</dt><dd className="text-slate-900">{req.type}</dd></div>}
-              {req.sector && <div><dt className="text-slate-500 text-xs">Secteur</dt><dd className="text-slate-900">{req.sector}</dd></div>}
-              {req.budget_estimate && <div><dt className="text-slate-500 text-xs">Budget estimé</dt><dd className="text-slate-900 font-medium">{req.budget_estimate}</dd></div>}
-              {req.message && <div><dt className="text-slate-500 text-xs">Message</dt><dd className="text-slate-700 whitespace-pre-wrap">{req.message}</dd></div>}
-            </dl>
-          )}
+          <h4 className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mb-2">Qualification</h4>
+          <dl className="space-y-2 text-sm">
+            {req.profile && <div><dt className="text-slate-500 text-xs">Profil</dt><dd className="text-slate-900">{req.profile}</dd></div>}
+            {req.style && <div><dt className="text-slate-500 text-xs">Style musical</dt><dd className="text-slate-900">{req.style}</dd></div>}
+            {req.company_size && <div><dt className="text-slate-500 text-xs">Taille entreprise</dt><dd className="text-slate-900">{req.company_size}</dd></div>}
+            {req.objective && <div><dt className="text-slate-500 text-xs">Objectif</dt><dd className="text-slate-900">{req.objective}</dd></div>}
+            {req.timeline && <div><dt className="text-slate-500 text-xs">Délai</dt><dd className="text-slate-900">{req.timeline}</dd></div>}
+            {(req.budget || req.budget_estimate) && <div><dt className="text-slate-500 text-xs">Budget</dt><dd className="text-slate-900 font-medium">{req.budget || req.budget_estimate}</dd></div>}
+            {req.deadline && <div><dt className="text-slate-500 text-xs">Date précise</dt><dd className="text-slate-900">{req.deadline}</dd></div>}
+            {req.sector && <div><dt className="text-slate-500 text-xs">Secteur</dt><dd className="text-slate-900">{req.sector}</dd></div>}
+            {req.type && <div><dt className="text-slate-500 text-xs">Type de demande</dt><dd className="text-slate-900">{req.type}</dd></div>}
+          </dl>
         </section>
 
-        {/* Notes internes */}
+        <section className="px-5 py-4 border-b border-slate-100">
+          <h4 className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mb-2">{req.kind === "quote" ? "Projet" : "Message"}</h4>
+          <p className="text-sm text-slate-700 whitespace-pre-wrap">{req.project_desc || req.message || <span className="text-slate-400">—</span>}</p>
+          {req.expectations?.length ? (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {req.expectations.map((e) => (
+                <span key={e} className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-mono">{e}</span>
+              ))}
+            </div>
+          ) : null}
+        </section>
+
         <section className="px-5 py-4">
           <h4 className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mb-3">Notes internes ({notes.length})</h4>
           <div className="flex gap-2 mb-3">
-            <textarea
-              value={noteBody}
-              onChange={(e) => setNoteBody(e.target.value)}
-              placeholder="Ajouter une note privée…"
-              rows={2}
-              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:border-slate-400 resize-none"
-            />
+            <textarea value={noteBody} onChange={(e) => setNoteBody(e.target.value)}
+              placeholder="Ajouter une note privée…" rows={2}
+              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:border-slate-400 resize-none" />
             <button onClick={addNote} disabled={savingNote || !noteBody.trim()}
               className="self-end px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-mono uppercase disabled:opacity-40">
               {savingNote ? "..." : "Ajouter"}
@@ -367,33 +423,72 @@ function RequestDrawer({ req, onClose, onUpdate }: {
   );
 }
 
+/* ============== Carte lead (Kanban) ============== */
+function LeadCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick: () => void; onArchive: () => void }) {
+  const budget = req.budget || req.budget_estimate;
+  return (
+    <div
+      draggable
+      onDragStart={(e) => e.dataTransfer.setData("text/plain", JSON.stringify({ id: req.id, kind: req.kind }))}
+      onClick={onClick}
+      className="cursor-pointer p-3 rounded-lg bg-white border border-slate-200 hover:border-slate-400 hover:shadow-sm transition-all space-y-2"
+    >
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <SourceIcon source={req.source} />
+        <TypeBadge kind={req.kind} />
+        <HotBadge score={req.lead_score} />
+        <OverdueBadge req={req} />
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onArchive(); }}
+          title="Archiver"
+          className="ml-auto p-1 rounded text-slate-300 hover:text-amber-700 hover:bg-amber-50"
+        >
+          <Archive size={11} />
+        </button>
+      </div>
+      <p className="text-sm font-semibold text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</p>
+      <p className="text-[11px] text-slate-500 truncate">{req.email || "—"}</p>
+      <div className="flex flex-wrap gap-1 text-[10px] font-mono">
+        {budget && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">💰 {budget}</span>}
+        {req.timeline && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">⏱ {req.timeline}</span>}
+        {req.objective && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 truncate max-w-[160px]">🎯 {req.objective}</span>}
+      </div>
+      <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-100">
+        <span>Score {req.lead_score}</span>
+        <span>{fmtRelative(req.created_at)}</span>
+      </div>
+    </div>
+  );
+}
+
 /* ============== Liste compacte ============== */
 function RequestListRow({ req, onClick, onStatus, onArchive }: { req: UnifiedRequest; onClick: () => void; onStatus: (s: string) => void; onArchive: () => void }) {
-  const summary = req.kind === "quote"
-    ? [req.profile, req.budget, req.expectations?.join(" · ")].filter(Boolean).join(" — ")
-    : [req.type, req.sector, req.budget_estimate].filter(Boolean).join(" — ") || req.message;
+  const budget = req.budget || req.budget_estimate;
   return (
     <button onClick={onClick} className="w-full text-left grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
       <div className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 flex items-center justify-center font-medium text-xs uppercase">
         {(req.name || req.profile || "?").charAt(0)}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+        <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+          <SourceIcon source={req.source} />
           <TypeBadge kind={req.kind} />
           <span className="text-sm font-medium text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</span>
+          <HotBadge score={req.lead_score} />
+          <OverdueBadge req={req} />
           {req.archived_at && <Archive size={11} className="text-amber-500" />}
         </div>
-        <p className="text-xs text-slate-500 truncate">{summary}</p>
+        <p className="text-xs text-slate-500 truncate">
+          {[budget, req.timeline, req.objective].filter(Boolean).join(" · ") || (req.message || req.project_desc)}
+        </p>
         <p className="text-[10px] text-slate-400 mt-0.5">{req.email || "—"} · {fmtRelative(req.created_at)}</p>
       </div>
       <div className="shrink-0 flex items-center gap-2">
         <StatusPill value={req.status} onChange={onStatus} compact />
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onArchive(); }}
+        <button type="button" onClick={(e) => { e.stopPropagation(); onArchive(); }}
           title={req.archived_at ? "Désarchiver" : "Archiver"}
-          className="p-2 rounded-lg text-slate-400 hover:text-amber-700 hover:bg-amber-50 transition-colors"
-        >
+          className="p-2 rounded-lg text-slate-400 hover:text-amber-700 hover:bg-amber-50">
           {req.archived_at ? <ArchiveRestore size={14} /> : <Archive size={14} />}
         </button>
         <ChevronRight size={14} className="text-slate-300" />
@@ -402,204 +497,16 @@ function RequestListRow({ req, onClick, onStatus, onArchive }: { req: UnifiedReq
   );
 }
 
-/* ============== Kanban card ============== */
-function KanbanCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick: () => void; onArchive: () => void }) {
-  return (
-    <div
-      draggable
-      onDragStart={(e) => e.dataTransfer.setData("text/plain", JSON.stringify({ id: req.id, kind: req.kind }))}
-      onClick={onClick}
-      className="cursor-pointer p-3 rounded-lg bg-white border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all"
-    >
-      <div className="flex items-center gap-1.5 mb-1.5">
-        <TypeBadge kind={req.kind} />
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onArchive(); }}
-          title="Archiver"
-          className="p-1.5 rounded-md text-slate-300 hover:text-amber-700 hover:bg-amber-50 transition-colors"
-        >
-          <Archive size={12} />
-        </button>
-        <span className="text-[10px] text-slate-400 ml-auto">{fmtRelative(req.created_at)}</span>
-      </div>
-      <p className="text-sm font-medium text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</p>
-      <p className="text-xs text-slate-500 truncate mt-0.5">
-        {req.kind === "quote" ? (req.budget || req.project_desc) : (req.type || req.message)}
-      </p>
-      {req.company && <p className="text-[10px] text-slate-400 mt-1 truncate flex items-center gap-1"><Building2 size={9} />{req.company}</p>}
-    </div>
-  );
-}
-
-/* ============== KPI Strip ============== */
-function KpiTile({ label, value, sub, icon: Icon, accent, onClick, active }: {
-  label: string; value: number | string; sub?: string; icon: any;
-  accent: "blue" | "rose" | "emerald" | "slate"; onClick?: () => void; active?: boolean;
-}) {
-  const accents = {
-    blue: "from-blue-500/10 to-blue-500/0 text-blue-700 ring-blue-200",
-    rose: "from-rose-500/10 to-rose-500/0 text-rose-700 ring-rose-200",
-    emerald: "from-emerald-500/10 to-emerald-500/0 text-emerald-700 ring-emerald-200",
-    slate: "from-slate-500/10 to-slate-500/0 text-slate-700 ring-slate-200",
-  }[accent];
-  return (
-    <button
-      type="button" onClick={onClick}
-      className={`group relative overflow-hidden text-left rounded-2xl border bg-white p-4 transition-all w-full ${
-        active ? "border-slate-900 shadow-md" : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
-      }`}
-    >
-      <div className={`absolute inset-0 bg-gradient-to-br ${accents.split(" ").slice(0, 2).join(" ")} opacity-60 pointer-events-none`} />
-      <div className="relative flex items-center justify-between mb-3">
-        <div className={`p-2 rounded-lg bg-white ring-1 ${accents.split(" ").slice(2).join(" ")}`}><Icon size={15} /></div>
-        {sub && <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">{sub}</span>}
-      </div>
-      <p className="relative text-[10px] font-mono text-slate-500 uppercase tracking-wider mb-0.5">{label}</p>
-      <p className="relative font-clash text-3xl font-bold text-slate-900 tabular-nums leading-none">{value}</p>
-    </button>
-  );
-}
-
-/* ============== Priority widget ============== */
-function priorityScore(r: UnifiedRequest): number {
-  // Higher = more urgent. Combines age + budget + status.
-  const ageHours = (Date.now() - new Date(r.created_at).getTime()) / 3600000;
-  const ageScore = Math.min(48, ageHours) * 2; // up to 96 pts
-  const budgetTxt = r.budget || r.budget_estimate || "";
-  const num = parseInt(String(budgetTxt).replace(/[^\d]/g, "")) || 0;
-  const budgetScore = Math.min(100, num / 100); // 10k → 100 pts
-  const statusBoost = r.status === "nouveau" ? 50 : r.status === "en_cours" ? 20 : 0;
-  return ageScore + budgetScore + statusBoost;
-}
-
-function PriorityList({ requests, onSelect }: { requests: UnifiedRequest[]; onSelect: (r: UnifiedRequest) => void }) {
-  const top = useMemo(() => {
-    return [...requests]
-      .filter((r) => !r.archived_at && r.status !== "termine" && r.status !== "traite")
-      .sort((a, b) => priorityScore(b) - priorityScore(a))
-      .slice(0, 6);
-  }, [requests]);
-
-  if (top.length === 0) {
-    return <p className="text-xs text-slate-400 text-center py-8">Tout est sous contrôle ✨</p>;
-  }
-  return (
-    <ul className="space-y-1.5">
-      {top.map((r, i) => {
-        const ageH = (Date.now() - new Date(r.created_at).getTime()) / 3600000;
-        const isHot = ageH > 24 && r.status === "nouveau";
-        return (
-          <li key={`${r.kind}-${r.id}`}>
-            <button
-              onClick={() => onSelect(r)}
-              className="w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 transition-colors group"
-            >
-              <span className={`shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-mono font-bold ${
-                i === 0 ? "bg-rose-100 text-rose-700" : i < 3 ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"
-              }`}>
-                {i + 1}
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-sm font-medium text-slate-900 truncate">{r.name || r.profile || "—"}</p>
-                  {isHot && <Flame size={11} className="text-rose-500 shrink-0" />}
-                </div>
-                <p className="text-[11px] text-slate-500 truncate">
-                  {r.kind === "quote" ? (r.budget || "Devis") : (r.type || "Contact")} · {fmtRelative(r.created_at)}
-                </p>
-              </div>
-              <ChevronRight size={13} className="text-slate-300 group-hover:text-slate-500" />
-            </button>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-/* ============== Activity feed ============== */
-function ActivityFeed({ requests, onSelect }: { requests: UnifiedRequest[]; onSelect: (r: UnifiedRequest) => void }) {
-  const items = useMemo(() => {
-    return [...requests]
-      .sort((a, b) => new Date(b.last_activity_at).getTime() - new Date(a.last_activity_at).getTime())
-      .slice(0, 12);
-  }, [requests]);
-  if (items.length === 0) return <p className="text-xs text-slate-400 text-center py-6">Aucune activité.</p>;
-  return (
-    <ul className="space-y-1">
-      {items.map((r) => (
-        <li key={`${r.kind}-${r.id}`}>
-          <button onClick={() => onSelect(r)}
-            className="w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-slate-50 transition-colors">
-            <TypeBadge kind={r.kind} />
-            <span className="text-xs text-slate-700 truncate flex-1">{r.name || r.profile || "—"}</span>
-            <StatusPill value={r.status} />
-            <span className="text-[10px] font-mono text-slate-400 shrink-0 tabular-nums">{fmtRelative(r.last_activity_at)}</span>
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/* ============== Table view ============== */
-function TableView({ rows, onSelect, onStatus, onArchive }: {
-  rows: UnifiedRequest[]; onSelect: (r: UnifiedRequest) => void;
-  onStatus: (r: UnifiedRequest, s: string) => void; onArchive: (r: UnifiedRequest) => void;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-[10px] font-mono uppercase tracking-wider text-slate-500">
-            <tr>
-              <th className="px-3 py-2.5 text-left">Type</th>
-              <th className="px-3 py-2.5 text-left">Nom</th>
-              <th className="px-3 py-2.5 text-left">Email</th>
-              <th className="px-3 py-2.5 text-left">Source</th>
-              <th className="px-3 py-2.5 text-left">Budget</th>
-              <th className="px-3 py-2.5 text-left">Statut</th>
-              <th className="px-3 py-2.5 text-left">Activité</th>
-              <th className="px-3 py-2.5 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={`${r.kind}-${r.id}`} className="border-t border-slate-100 hover:bg-slate-50/60 cursor-pointer" onClick={() => onSelect(r)}>
-                <td className="px-3 py-2.5"><TypeBadge kind={r.kind} /></td>
-                <td className="px-3 py-2.5 font-medium text-slate-900 truncate max-w-[180px]">{r.name || r.profile || "—"}</td>
-                <td className="px-3 py-2.5 text-slate-600 truncate max-w-[200px]">{r.email || "—"}</td>
-                <td className="px-3 py-2.5 text-[11px] font-mono text-slate-500 uppercase">{r.source || "—"}</td>
-                <td className="px-3 py-2.5 text-slate-700 tabular-nums">{r.budget || r.budget_estimate || "—"}</td>
-                <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
-                  <StatusPill value={r.status} onChange={(s) => onStatus(r, s)} compact />
-                </td>
-                <td className="px-3 py-2.5 text-[11px] text-slate-500 tabular-nums">{fmtRelative(r.last_activity_at)}</td>
-                <td className="px-3 py-2.5 text-right" onClick={(e) => e.stopPropagation()}>
-                  <button onClick={() => onArchive(r)}
-                    className="p-1.5 rounded-md text-slate-400 hover:text-amber-700 hover:bg-amber-50">
-                    {r.archived_at ? <ArchiveRestore size={13} /> : <Archive size={13} />}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
 /* ============== Main ============== */
-type ViewMode = "bento" | "kanban" | "list" | "table";
+type ViewMode = "kanban" | "list";
 
 export default function RequestsPanel() {
   const queryClient = useQueryClient();
-  const [view, setView] = useState<ViewMode>("bento");
+  const [view, setView] = useState<ViewMode>("kanban");
   const [search, setSearch] = useState("");
   const [types, setTypes] = useState<RequestType[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
+  const [budgetBucket, setBudgetBucket] = useState("all");
   const [period, setPeriod] = useState("90");
   const [includeArchived, setIncludeArchived] = useState(false);
   const [selected, setSelected] = useState<UnifiedRequest | null>(null);
@@ -607,7 +514,7 @@ export default function RequestsPanel() {
   const [showFilters, setShowFilters] = useState(false);
 
   const { data: requests = [], isLoading } = useRequestsData({
-    search, types, statuses, period, includeArchived,
+    search, types, statuses, period, includeArchived, budgetBucket,
   });
 
   const updateStatus = useMutation({
@@ -636,19 +543,22 @@ export default function RequestsPanel() {
     },
   });
 
-  const kpis = useMemo(() => {
-    const now = Date.now();
-    const open = requests.filter((r) => !r.archived_at);
-    const nouveau = open.filter((r) => r.status === "nouveau").length;
-    const enRetard = open.filter((r) => r.status === "nouveau" && (now - new Date(r.created_at).getTime()) > 24 * 3600000).length;
-    const cetteSemaine = requests.filter((r) => (now - new Date(r.created_at).getTime()) < 7 * 86400000).length;
-    return { nouveau, enRetard, cetteSemaine, total: requests.length };
-  }, [requests]);
-
   const counts = useMemo(() => {
     const byStatus: Record<string, number> = {};
-    requests.forEach((r) => { byStatus[r.status] = (byStatus[r.status] || 0) + 1; });
+    requests.forEach((r) => {
+      const s = normalizeStatus(r.status);
+      byStatus[s] = (byStatus[s] || 0) + 1;
+    });
     return byStatus;
+  }, [requests]);
+
+  const stats = useMemo(() => {
+    const open = requests.filter((r) => !r.archived_at);
+    return {
+      hot: open.filter((r) => r.lead_score >= 70).length,
+      overdue: open.filter(isOverdue).length,
+      total: requests.length,
+    };
   }, [requests]);
 
   const paginated = useMemo(() => requests.slice(0, page * PAGE_SIZE), [requests, page]);
@@ -656,15 +566,16 @@ export default function RequestsPanel() {
 
   const exportCSV = () => {
     if (!requests.length) return;
-    const headers = ["type", "date", "statut", "source", "nom", "email", "telephone", "entreprise", "profil", "budget", "secteur", "type_demande", "echeance", "attentes", "message"];
+    const headers = ["type", "date", "score", "statut", "source", "nom", "email", "telephone", "entreprise", "profil", "style", "taille", "objectif", "delai", "budget", "message"];
     const sep = ";";
     const escape = (v: any) => `"${String(v ?? "").replace(/"/g, '""')}"`;
     const rows = requests.map((r) => [
       r.kind === "quote" ? "Devis" : "Contact",
       new Date(r.created_at).toLocaleString("fr-FR"),
+      r.lead_score,
       statusMeta(r.status).label, r.source, r.name, r.email, r.phone, r.company,
-      r.profile, r.budget || r.budget_estimate, r.sector, r.type, r.deadline,
-      r.expectations?.join(" | "), (r.message || r.project_desc || "").replace(/\n/g, " "),
+      r.profile, r.style, r.company_size, r.objective, r.timeline,
+      r.budget || r.budget_estimate, (r.message || r.project_desc || "").replace(/\n/g, " "),
     ].map(escape).join(sep));
     const csv = "\uFEFF" + [headers.join(sep), ...rows].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -676,37 +587,34 @@ export default function RequestsPanel() {
 
   const toggle = <T,>(arr: T[], v: T): T[] => arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
 
-  const renderKanban = (compact = false) => (
-    <div className={`grid grid-cols-1 md:grid-cols-2 ${compact ? "lg:grid-cols-4 gap-2.5" : "lg:grid-cols-4 gap-3"}`}>
+  const renderKanban = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
       {KANBAN_COLUMNS.map((col) => {
-        const items = requests.filter((r) => r.status === col.value && !r.archived_at);
+        const items = requests.filter((r) => normalizeStatus(r.status) === col.value && !r.archived_at);
         return (
           <div key={col.value}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               const data = JSON.parse(e.dataTransfer.getData("text/plain"));
               const req = requests.find((r) => r.id === data.id && r.kind === data.kind);
-              if (req && req.status !== col.value) updateStatus.mutate({ req, status: col.value });
+              if (req && normalizeStatus(req.status) !== col.value) updateStatus.mutate({ req, status: col.value });
             }}
-            className={`rounded-xl bg-slate-50 border border-slate-200 ${compact ? "p-2.5" : "p-3"} min-h-[180px]`}
+            className="rounded-xl bg-slate-50 border border-slate-200 p-3 min-h-[200px]"
           >
             <div className="flex items-center justify-between mb-2.5">
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ring-1 ${col.color}`}>{col.label}</span>
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${col.dot}`} />
+                <span className="text-xs font-semibold text-slate-700">{col.label}</span>
+              </div>
               <span className="text-[10px] font-mono text-slate-400 tabular-nums">{items.length}</span>
             </div>
-            <div className="space-y-1.5 max-h-[420px] overflow-y-auto pr-0.5">
-              {items.slice(0, compact ? 4 : 100).map((r) => (
-                <KanbanCard key={`${r.kind}-${r.id}`} req={r}
+            <div className="space-y-1.5 max-h-[600px] overflow-y-auto pr-0.5">
+              {items.length === 0 && <p className="text-[11px] text-slate-400 text-center py-3">Vide</p>}
+              {items.map((r) => (
+                <LeadCard key={`${r.kind}-${r.id}`} req={r}
                   onClick={() => setSelected(r)}
                   onArchive={() => archiveRequest.mutate(r)} />
               ))}
-              {items.length === 0 && <p className="text-[11px] text-slate-400 text-center py-3">Vide</p>}
-              {compact && items.length > 4 && (
-                <button onClick={() => setView("kanban")}
-                  className="w-full text-[10px] font-mono text-slate-500 hover:text-slate-900 py-1">
-                  +{items.length - 4} de plus
-                </button>
-              )}
             </div>
           </div>
         );
@@ -723,7 +631,7 @@ export default function RequestsPanel() {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Rechercher nom, email, téléphone, message…"
+              placeholder="Rechercher nom, email, message…"
               className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-slate-400 transition-colors"
             />
             {search && (
@@ -735,10 +643,8 @@ export default function RequestsPanel() {
 
           <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100">
             {([
-              { v: "bento", l: "Bento", I: LayoutGrid },
               { v: "kanban", l: "Kanban", I: Kanban },
               { v: "list", l: "Liste", I: ListChecks },
-              { v: "table", l: "Tableau", I: Table2 },
             ] as const).map(({ v, l, I }) => (
               <button key={v} onClick={() => setView(v as ViewMode)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${view === v ? "bg-white shadow-sm text-slate-900" : "text-slate-600 hover:text-slate-900"}`}>
@@ -748,8 +654,8 @@ export default function RequestsPanel() {
           </div>
 
           <button onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono border transition-all ${showFilters || types.length || statuses.length ? "border-slate-900 text-slate-900 bg-slate-50" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
-            <Filter size={13} /> Filtres {(types.length + statuses.length) > 0 && <span className="px-1.5 rounded-full bg-slate-900 text-white text-[10px]">{types.length + statuses.length}</span>}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono border transition-all ${showFilters || types.length || statuses.length || budgetBucket !== "all" ? "border-slate-900 text-slate-900 bg-slate-50" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
+            <Filter size={13} /> Filtres {(types.length + statuses.length + (budgetBucket !== "all" ? 1 : 0)) > 0 && <span className="px-1.5 rounded-full bg-slate-900 text-white text-[10px]">{types.length + statuses.length + (budgetBucket !== "all" ? 1 : 0)}</span>}
           </button>
 
           <button onClick={exportCSV}
@@ -784,6 +690,17 @@ export default function RequestsPanel() {
                 </div>
               </div>
               <div>
+                <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">Budget</p>
+                <div className="flex gap-1.5">
+                  {[{ v: "all", l: "Tous" }, { v: "low", l: "<3k" }, { v: "mid", l: "3k–10k" }, { v: "high", l: "10k+" }].map((b) => (
+                    <button key={b.v} onClick={() => { setBudgetBucket(b.v); setPage(1); }}
+                      className={`px-3 py-1 rounded-full text-xs font-mono transition-all ${budgetBucket === b.v ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>
+                      {b.l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
                 <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">Période</p>
                 <div className="flex gap-1.5">
                   {[{ v: "7", l: "7j" }, { v: "30", l: "30j" }, { v: "90", l: "90j" }, { v: "all", l: "Tout" }].map((p) => (
@@ -802,21 +719,25 @@ export default function RequestsPanel() {
                 </label>
               </div>
             </div>
-            {(types.length > 0 || statuses.length > 0) && (
-              <button onClick={() => { setTypes([]); setStatuses([]); setPage(1); }}
+            {(types.length > 0 || statuses.length > 0 || budgetBucket !== "all") && (
+              <button onClick={() => { setTypes([]); setStatuses([]); setBudgetBucket("all"); setPage(1); }}
                 className="text-xs text-slate-500 hover:text-slate-900 underline">Réinitialiser les filtres</button>
             )}
           </div>
         )}
       </div>
 
-      {/* KPI strip */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <KpiTile label="Nouveau" value={kpis.nouveau} sub="à traiter" icon={Inbox} accent="blue"
-          onClick={() => { setStatuses(["nouveau"]); setPage(1); }} active={statuses.length === 1 && statuses[0] === "nouveau"} />
-        <KpiTile label="En retard" value={kpis.enRetard} sub=">24h" icon={Flame} accent="rose" />
-        <KpiTile label="Cette semaine" value={kpis.cetteSemaine} sub="reçues" icon={TrendingUp} accent="emerald" />
-        <KpiTile label="Total visible" value={kpis.total} sub="filtré" icon={Sparkles} accent="slate" />
+      {/* Compact stats */}
+      <div className="flex flex-wrap items-center gap-3 text-xs">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 text-rose-700 ring-1 ring-rose-200 font-mono">
+          <Flame size={12} /> {stats.hot} hot {stats.hot > 1 ? "leads" : "lead"}
+        </span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 text-red-700 ring-1 ring-red-200 font-mono">
+          <Clock size={12} /> {stats.overdue} à relancer (>24h)
+        </span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-mono">
+          <Target size={12} /> {stats.total} demande{stats.total > 1 ? "s" : ""} visible{stats.total > 1 ? "s" : ""}
+        </span>
       </div>
 
       {/* Body */}
@@ -828,50 +749,6 @@ export default function RequestsPanel() {
         <div className="rounded-xl border border-dashed border-slate-200 bg-white p-12 text-center">
           <AlertCircle size={32} className="mx-auto text-slate-300 mb-2" />
           <p className="text-sm text-slate-500">Aucune demande ne correspond.</p>
-        </div>
-      ) : view === "bento" ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Big Kanban tile */}
-          <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-md bg-slate-900 text-white"><Kanban size={13} /></div>
-                <h3 className="font-clash text-sm font-bold text-slate-900">Pipeline</h3>
-              </div>
-              <button onClick={() => setView("kanban")} className="text-[10px] font-mono text-slate-500 hover:text-slate-900 uppercase tracking-wider">
-                Voir tout →
-              </button>
-            </div>
-            {renderKanban(true)}
-          </div>
-
-          {/* Priority widget */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-1.5 rounded-md bg-rose-100 text-rose-700"><Zap size={13} /></div>
-              <h3 className="font-clash text-sm font-bold text-slate-900">Priorités du jour</h3>
-            </div>
-            <PriorityList requests={requests} onSelect={setSelected} />
-          </div>
-
-          {/* Activity feed full width */}
-          <div className="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-md bg-emerald-100 text-emerald-700"><Activity size={13} /></div>
-                <h3 className="font-clash text-sm font-bold text-slate-900">Activité récente</h3>
-              </div>
-              <div className="flex gap-3 text-[10px] font-mono text-slate-500">
-                {STATUS_OPTIONS.slice(0, 4).map((s) => counts[s.value] ? (
-                  <span key={s.value} className="flex items-center gap-1">
-                    <span className={`w-1.5 h-1.5 rounded-full ${s.color.split(" ")[0]}`} />
-                    {s.label} · <span className="tabular-nums">{counts[s.value]}</span>
-                  </span>
-                ) : null)}
-              </div>
-            </div>
-            <ActivityFeed requests={requests} onSelect={setSelected} />
-          </div>
         </div>
       ) : view === "list" ? (
         <div className="rounded-xl border border-slate-200 bg-white">
@@ -892,22 +769,8 @@ export default function RequestsPanel() {
             </div>
           )}
         </div>
-      ) : view === "table" ? (
-        <>
-          <TableView rows={paginated} onSelect={setSelected}
-            onStatus={(r, s) => updateStatus.mutate({ req: r, status: s })}
-            onArchive={(r) => archiveRequest.mutate(r)} />
-          {hasMore && (
-            <div className="text-center">
-              <button onClick={() => setPage(page + 1)}
-                className="text-xs font-mono text-slate-600 hover:text-slate-900">
-                Charger plus ({requests.length - paginated.length} restant)
-              </button>
-            </div>
-          )}
-        </>
       ) : (
-        renderKanban(false)
+        renderKanban()
       )}
 
       {selected && <RequestDrawer req={selected} onClose={() => setSelected(null)} onUpdate={() => {}} />}
