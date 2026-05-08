@@ -23,6 +23,7 @@ interface Pack {
   featuresFr?: string[];
   bonus: string;
   reassurance: string;
+  paymentLinkUrl?: string;
 }
 
 interface PackCardsProps {
