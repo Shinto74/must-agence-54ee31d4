@@ -426,37 +426,62 @@ function RequestDrawer({ req, onClose, onUpdate }: {
 /* ============== Carte lead (Kanban) ============== */
 function LeadCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick: () => void; onArchive: () => void }) {
   const budget = req.budget || req.budget_estimate;
+  const meta = statusMeta(req.status);
+  const initials = (req.name || req.profile || "?").trim().split(/\s+/).slice(0, 2).map((s) => s.charAt(0)).join("").toUpperCase();
+  const isHot = req.lead_score >= 70;
   return (
     <div
       draggable
       onDragStart={(e) => e.dataTransfer.setData("text/plain", JSON.stringify({ id: req.id, kind: req.kind }))}
       onClick={onClick}
-      className="cursor-pointer p-3 rounded-lg bg-white border border-slate-200 hover:border-slate-400 hover:shadow-sm transition-all space-y-2"
+      className={`group relative cursor-grab active:cursor-grabbing rounded-xl bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-[0_8px_24px_-12px_rgba(15,23,42,0.18)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border-l-[3px] ${meta.accent}`}
     >
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <SourceIcon source={req.source} />
-        <TypeBadge kind={req.kind} />
-        <HotBadge score={req.lead_score} />
-        <OverdueBadge req={req} />
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onArchive(); }}
-          title="Archiver"
-          className="ml-auto p-1 rounded text-slate-300 hover:text-amber-700 hover:bg-amber-50"
-        >
-          <Archive size={11} />
-        </button>
-      </div>
-      <p className="text-sm font-semibold text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</p>
-      <p className="text-[11px] text-slate-500 truncate">{req.email || "—"}</p>
-      <div className="flex flex-wrap gap-1 text-[10px] font-mono">
-        {budget && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">💰 {budget}</span>}
-        {req.timeline && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">⏱ {req.timeline}</span>}
-        {req.objective && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 truncate max-w-[160px]">🎯 {req.objective}</span>}
-      </div>
-      <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-100">
-        <span>Score {req.lead_score}</span>
-        <span>{fmtRelative(req.created_at)}</span>
+      {isHot && (
+        <div className="absolute -top-px -right-px w-16 h-16 bg-gradient-to-bl from-rose-500/15 to-transparent pointer-events-none" />
+      )}
+      <div className="p-3 space-y-2.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <SourceIcon source={req.source} />
+          <TypeBadge kind={req.kind} />
+          <HotBadge score={req.lead_score} />
+          <OverdueBadge req={req} />
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onArchive(); }}
+            title="Archiver"
+            className="ml-auto p-1 rounded text-slate-300 opacity-0 group-hover:opacity-100 hover:text-amber-700 hover:bg-amber-50 transition-all"
+          >
+            <Archive size={11} />
+          </button>
+        </div>
+        <div className="flex items-center gap-2.5">
+          <div className={`shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-200/80 text-slate-700 flex items-center justify-center font-semibold text-[11px] tracking-wide`}>
+            {initials || "?"}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-slate-900 truncate leading-tight">{req.name || req.profile || "Sans nom"}</p>
+            <p className="text-[11px] text-slate-500 truncate">{req.email || "—"}</p>
+          </div>
+        </div>
+        {(budget || req.timeline || req.objective) && (
+          <div className="flex flex-wrap gap-1 text-[10px]">
+            {budget && <span className="px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100 font-mono">💰 {budget}</span>}
+            {req.timeline && <span className="px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700 ring-1 ring-amber-100 font-mono">⏱ {req.timeline}</span>}
+            {req.objective && <span className="px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 ring-1 ring-indigo-100 font-mono truncate max-w-[160px]">🎯 {req.objective}</span>}
+          </div>
+        )}
+        <div className="flex items-center justify-between text-[10px] pt-2 border-t border-dashed border-slate-200/80">
+          <div className="flex items-center gap-1.5">
+            <div className="relative w-10 h-1 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className={`absolute inset-y-0 left-0 ${req.lead_score >= 70 ? "bg-rose-500" : req.lead_score >= 40 ? "bg-amber-500" : "bg-slate-400"}`}
+                style={{ width: `${Math.min(100, req.lead_score)}%` }}
+              />
+            </div>
+            <span className="font-mono text-slate-500 tabular-nums">{req.lead_score}</span>
+          </div>
+          <span className="font-mono text-slate-400">{fmtRelative(req.created_at)}</span>
+        </div>
       </div>
     </div>
   );
@@ -465,16 +490,18 @@ function LeadCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick: (
 /* ============== Liste compacte ============== */
 function RequestListRow({ req, onClick, onStatus, onArchive }: { req: UnifiedRequest; onClick: () => void; onStatus: (s: string) => void; onArchive: () => void }) {
   const budget = req.budget || req.budget_estimate;
+  const meta = statusMeta(req.status);
+  const initials = (req.name || req.profile || "?").trim().split(/\s+/).slice(0, 2).map((s) => s.charAt(0)).join("").toUpperCase();
   return (
-    <button onClick={onClick} className="w-full text-left grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
-      <div className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 flex items-center justify-center font-medium text-xs uppercase">
-        {(req.name || req.profile || "?").charAt(0)}
+    <button onClick={onClick} className={`group w-full text-left grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent border-l-[3px] border-transparent hover:${meta.accent} transition-all`}>
+      <div className="shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-200/80 text-slate-700 flex items-center justify-center font-semibold text-[11px]">
+        {initials || "?"}
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
           <SourceIcon source={req.source} />
           <TypeBadge kind={req.kind} />
-          <span className="text-sm font-medium text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</span>
+          <span className="text-sm font-semibold text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</span>
           <HotBadge score={req.lead_score} />
           <OverdueBadge req={req} />
           {req.archived_at && <Archive size={11} className="text-amber-500" />}
@@ -482,16 +509,16 @@ function RequestListRow({ req, onClick, onStatus, onArchive }: { req: UnifiedReq
         <p className="text-xs text-slate-500 truncate">
           {[budget, req.timeline, req.objective].filter(Boolean).join(" · ") || (req.message || req.project_desc)}
         </p>
-        <p className="text-[10px] text-slate-400 mt-0.5">{req.email || "—"} · {fmtRelative(req.created_at)}</p>
+        <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{req.email || "—"} · {fmtRelative(req.created_at)}</p>
       </div>
       <div className="shrink-0 flex items-center gap-2">
         <StatusPill value={req.status} onChange={onStatus} compact />
         <button type="button" onClick={(e) => { e.stopPropagation(); onArchive(); }}
           title={req.archived_at ? "Désarchiver" : "Archiver"}
-          className="p-2 rounded-lg text-slate-400 hover:text-amber-700 hover:bg-amber-50">
+          className="p-2 rounded-lg text-slate-400 hover:text-amber-700 hover:bg-amber-50 opacity-0 group-hover:opacity-100 transition-all">
           {req.archived_at ? <ArchiveRestore size={14} /> : <Archive size={14} />}
         </button>
-        <ChevronRight size={14} className="text-slate-300" />
+        <ChevronRight size={14} className="text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all" />
       </div>
     </button>
   );
