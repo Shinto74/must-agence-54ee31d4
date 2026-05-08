@@ -155,6 +155,7 @@ export default function DashboardPanel() {
         supabase.from("pack_clicks").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
         supabase.from("contact_submissions").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
         supabase.from("quote_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
+        supabase.from("clients").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
       ];
       const results = await Promise.all(queries);
       const error = results.find((r) => r.error)?.error;
@@ -167,6 +168,8 @@ export default function DashboardPanel() {
       queryClient.invalidateQueries({ queryKey: ["admin_pack_clicks"] });
       queryClient.invalidateQueries({ queryKey: ["admin_requests_unified"] });
       queryClient.invalidateQueries({ queryKey: ["admin_notifications_counts"] });
+      queryClient.invalidateQueries({ queryKey: ["admin_dashboard_clients_count"] });
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
     onError: () => toast.error("Suppression impossible"),
   });
