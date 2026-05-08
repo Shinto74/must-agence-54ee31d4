@@ -166,18 +166,33 @@ const DatePickerCalendar = ({ value, onChange }: { value: string; onChange: (dat
   );
 };
 
-const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizardProps) => {
+const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" }: QuoteWizardProps) => {
   const ref = useScrollReveal();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, any>>({});
   const [shake, setShake] = useState(false);
   const [done, setDone] = useState(false);
   const [sending, setSending] = useState(false);
+  const [coords, setCoords] = useState({ name: "", email: "", phone: "", company: "" });
+  const [coordsErrors, setCoordsErrors] = useState<Record<string, string>>({});
 
   if (!steps.length) return null;
-  const step = steps[current];
+  const totalSteps = steps.length + 1; // +1 pour l'étape coordonnées
+  const isCoordsStep = current === steps.length;
+  const step = isCoordsStep ? null : steps[current];
 
   const validate = () => {
+    if (isCoordsStep) {
+      const result = coordsSchema.safeParse(coords);
+      if (!result.success) {
+        const errs: Record<string, string> = {};
+        result.error.issues.forEach((i) => { errs[i.path[0] as string] = i.message; });
+        setCoordsErrors(errs);
+        return false;
+      }
+      setCoordsErrors({});
+      return true;
+    }
     const val = answers[current];
     if (!val || (Array.isArray(val) && val.length === 0) || val === "") return false;
     return true;
@@ -193,6 +208,11 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizar
 
     await supabase.from("quote_requests").insert({
       profile, project_desc, budget, deadline, expectations,
+      name: coords.name.trim(),
+      email: coords.email.trim(),
+      phone: coords.phone.trim(),
+      company: coords.company.trim(),
+      source: source || "artiste",
     });
 
     setSending(false);
@@ -208,7 +228,7 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizar
       setTimeout(() => setShake(false), 400);
       return;
     }
-    if (current < steps.length - 1) {
+    if (current < totalSteps - 1) {
       setCurrent(current + 1);
     } else {
       submit();
@@ -225,6 +245,9 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false }: QuoteWizar
       `Budget: ${answers[2] || ""}`,
       answers[3] ? `Échéance: ${answers[3]}` : "",
       answers[4]?.length ? `Attentes: ${(answers[4] as string[]).join(", ")}` : "",
+      coords.name ? `Nom: ${coords.name}` : "",
+      coords.email ? `Email: ${coords.email}` : "",
+      coords.phone ? `Téléphone: ${coords.phone}` : "",
     ].filter(Boolean).join("\n");
     return `${SITE.contact.whatsappUrl}?text=${encodeURIComponent(`Demande de devis Must Agence\n\n${lines}`)}`;
   };
