@@ -125,6 +125,20 @@ export default function DashboardPanel() {
     },
   });
 
+  const { data: packClicks = [] } = useQuery({
+    queryKey: ["admin_pack_clicks"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("pack_clicks")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(500);
+      if (error) throw error;
+      return data || [];
+    },
+    refetchInterval: 30000,
+  });
+
   const updateContactStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const { error } = await supabase.from("contact_submissions").update({ status }).eq("id", id);
