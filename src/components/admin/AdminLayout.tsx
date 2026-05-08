@@ -78,7 +78,7 @@ export default function AdminLayout({ children }: Props) {
   };
 
   const currentItem = ALL_ITEMS.find((i) => i.key === tab);
-  const totalNotifs = notifs.demandes + notifs.paiements;
+  const totalNotifs = notifs.demandes;
 
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon;
