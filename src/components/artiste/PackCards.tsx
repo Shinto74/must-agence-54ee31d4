@@ -294,7 +294,7 @@ const QuoteModal = ({ steps, onClose }: { steps: any[]; onClose: () => void }) =
               Construisons votre <span className="text-primary">stratégie</span> ensemble.
             </h2>
           </div>
-          <QuoteWizard steps={steps} onSubmitComplete={onClose} hideHeader />
+          <QuoteWizard steps={steps} onSubmitComplete={onClose} hideHeader source="pack-sur-mesure" />
         </div>
       </div>
       <style>{`
