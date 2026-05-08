@@ -394,7 +394,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
 
             {/* Modal card */}
             <motion.div
-              className="relative w-full max-w-[520px] max-h-[92vh] overflow-y-auto z-10"
+              className="relative w-full max-w-[680px] max-h-[92vh] overflow-y-auto z-10"
               style={{
                 borderRadius: "28px",
                 background: isEntreprise
