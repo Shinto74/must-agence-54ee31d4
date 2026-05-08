@@ -658,6 +658,7 @@ export type Database = {
           id: string
           name: string
           number: string
+          payment_link_url: string | null
           price: string
           price_suffix: string
           reassurance: string
@@ -672,6 +673,7 @@ export type Database = {
           id?: string
           name: string
           number: string
+          payment_link_url?: string | null
           price: string
           price_suffix?: string
           reassurance?: string
@@ -686,6 +688,7 @@ export type Database = {
           id?: string
           name?: string
           number?: string
+          payment_link_url?: string | null
           price?: string
           price_suffix?: string
           reassurance?: string
