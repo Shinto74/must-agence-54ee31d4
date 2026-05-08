@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Menu, X, Search, Bell, ExternalLink,
-  LayoutDashboard, CreditCard, MessageSquare,
+  LayoutDashboard,
   Home, Music, Building2, Settings as SettingsIcon, Scale,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,26 +11,18 @@ import { useAdminNotifications } from "./useAdminNotifications";
 
 export type AdminTab =
   | "dashboard"
-  | "paiements" | "demandes"
   | "page_accueil" | "page_artiste" | "page_entreprise"
   | "identite" | "legal"
   | "settings";
 
-type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" | "paiements" };
+type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" };
 type NavGroup = { label: string; items: NavItem[] };
 
 const NAV_GROUPS: NavGroup[] = [
   {
     label: "Vue d'ensemble",
     items: [
-      { key: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-    ],
-  },
-  {
-    label: "Business",
-    items: [
-      { key: "paiements", label: "Paiements", icon: CreditCard, badge: "paiements" },
-      { key: "demandes", label: "Demandes", icon: MessageSquare, badge: "demandes" },
+      { key: "dashboard", label: "Tableau de bord", icon: LayoutDashboard, badge: "demandes" },
     ],
   },
   {
@@ -86,7 +78,7 @@ export default function AdminLayout({ children }: Props) {
   };
 
   const currentItem = ALL_ITEMS.find((i) => i.key === tab);
-  const totalNotifs = notifs.demandes + notifs.paiements;
+  const totalNotifs = notifs.demandes;
 
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon;
@@ -206,7 +198,7 @@ export default function AdminLayout({ children }: Props) {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <button onClick={() => select("demandes")} className="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors" title="Notifications">
+            <button onClick={() => select("dashboard")} className="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors" title="Notifications">
               <Bell size={16} />
               {totalNotifs > 0 && <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white" />}
             </button>
