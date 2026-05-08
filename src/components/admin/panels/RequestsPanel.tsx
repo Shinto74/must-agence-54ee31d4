@@ -47,11 +47,11 @@ interface UnifiedRequest {
 }
 
 const STATUS_OPTIONS = [
-  { value: "nouveau", label: "Nouveau", color: "bg-blue-500/15 text-blue-700 ring-blue-500/20", dot: "bg-blue-500" },
-  { value: "a_rappeler", label: "À rappeler", color: "bg-amber-500/15 text-amber-700 ring-amber-500/20", dot: "bg-amber-500" },
-  { value: "en_discussion", label: "En discussion", color: "bg-indigo-500/15 text-indigo-700 ring-indigo-500/20", dot: "bg-indigo-500" },
-  { value: "client_signe", label: "Client signé", color: "bg-emerald-500/15 text-emerald-700 ring-emerald-500/20", dot: "bg-emerald-500" },
-  { value: "sans_reponse", label: "Sans réponse", color: "bg-rose-500/15 text-rose-700 ring-rose-500/20", dot: "bg-rose-500" },
+  { value: "nouveau", label: "Nouveau", color: "bg-blue-500/10 text-blue-700 ring-blue-500/30", dot: "bg-blue-500", glow: "shadow-[0_0_0_4px_rgba(59,130,246,0.08)]", grad: "from-blue-500/8 to-transparent", accent: "border-l-blue-500" },
+  { value: "a_rappeler", label: "À rappeler", color: "bg-amber-500/10 text-amber-700 ring-amber-500/30", dot: "bg-amber-500", glow: "shadow-[0_0_0_4px_rgba(245,158,11,0.08)]", grad: "from-amber-500/8 to-transparent", accent: "border-l-amber-500" },
+  { value: "en_discussion", label: "En discussion", color: "bg-indigo-500/10 text-indigo-700 ring-indigo-500/30", dot: "bg-indigo-500", glow: "shadow-[0_0_0_4px_rgba(99,102,241,0.08)]", grad: "from-indigo-500/8 to-transparent", accent: "border-l-indigo-500" },
+  { value: "client_signe", label: "Client signé", color: "bg-emerald-500/10 text-emerald-700 ring-emerald-500/30", dot: "bg-emerald-500", glow: "shadow-[0_0_0_4px_rgba(16,185,129,0.08)]", grad: "from-emerald-500/8 to-transparent", accent: "border-l-emerald-500" },
+  { value: "sans_reponse", label: "Sans réponse", color: "bg-rose-500/10 text-rose-700 ring-rose-500/30", dot: "bg-rose-500", glow: "shadow-[0_0_0_4px_rgba(244,63,94,0.08)]", grad: "from-rose-500/8 to-transparent", accent: "border-l-rose-500" },
 ];
 const KANBAN_COLUMNS = STATUS_OPTIONS;
 
