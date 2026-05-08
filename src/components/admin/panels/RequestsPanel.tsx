@@ -366,13 +366,13 @@ function RequestDrawer({ req, onClose, onUpdate }: {
   );
 }
 
-/* ============== Inbox row ============== */
-function InboxRow({ req, onClick, onStatus }: { req: UnifiedRequest; onClick: () => void; onStatus: (s: string) => void }) {
+/* ============== Liste compacte ============== */
+function RequestListRow({ req, onClick, onStatus, onArchive }: { req: UnifiedRequest; onClick: () => void; onStatus: (s: string) => void; onArchive: () => void }) {
   const summary = req.kind === "quote"
     ? [req.profile, req.budget, req.expectations?.join(" · ")].filter(Boolean).join(" — ")
     : [req.type, req.sector, req.budget_estimate].filter(Boolean).join(" — ") || req.message;
   return (
-    <button onClick={onClick} className="w-full text-left flex items-start gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
+    <button onClick={onClick} className="w-full text-left grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
       <div className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 flex items-center justify-center font-medium text-xs uppercase">
         {(req.name || req.profile || "?").charAt(0)}
       </div>
@@ -385,8 +385,16 @@ function InboxRow({ req, onClick, onStatus }: { req: UnifiedRequest; onClick: ()
         <p className="text-xs text-slate-500 truncate">{summary}</p>
         <p className="text-[10px] text-slate-400 mt-0.5">{req.email || "—"} · {fmtRelative(req.created_at)}</p>
       </div>
-      <div className="shrink-0 flex flex-col items-end gap-1.5">
+      <div className="shrink-0 flex items-center gap-2">
         <StatusPill value={req.status} onChange={onStatus} compact />
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onArchive(); }}
+          title={req.archived_at ? "Désarchiver" : "Archiver"}
+          className="p-2 rounded-lg text-slate-400 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+        >
+          {req.archived_at ? <ArchiveRestore size={14} /> : <Archive size={14} />}
+        </button>
         <ChevronRight size={14} className="text-slate-300" />
       </div>
     </button>
@@ -394,7 +402,7 @@ function InboxRow({ req, onClick, onStatus }: { req: UnifiedRequest; onClick: ()
 }
 
 /* ============== Kanban card ============== */
-function KanbanCard({ req, onClick, onMove }: { req: UnifiedRequest; onClick: () => void; onMove: (s: string) => void }) {
+function KanbanCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick: () => void; onArchive: () => void }) {
   return (
     <div
       draggable
@@ -404,6 +412,14 @@ function KanbanCard({ req, onClick, onMove }: { req: UnifiedRequest; onClick: ()
     >
       <div className="flex items-center gap-1.5 mb-1.5">
         <TypeBadge kind={req.kind} />
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onArchive(); }}
+          title="Archiver"
+          className="ml-auto p-1.5 rounded-md text-slate-300 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+        >
+          <Archive size={12} />
+        </button>
         <span className="text-[10px] text-slate-400 ml-auto">{fmtRelative(req.created_at)}</span>
       </div>
       <p className="text-sm font-medium text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</p>
