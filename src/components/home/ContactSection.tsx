@@ -515,7 +515,17 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
                     />
                     <CustomSelect
                       value={form.secteur} options={secteurOptions} open={secteurOpen} setOpen={setSecteurOpen}
-                      onChange={v => setForm({ ...form, secteur: v })} placeholder="Secteur" field="secteur"
+                      onChange={v => setForm({ ...form, secteur: v })} placeholder={contextLabel} field="secteur"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <CustomSelect
+                      value={form.objective} options={objectiveOptions} open={objectiveOpen} setOpen={setObjectiveOpen}
+                      onChange={v => setForm({ ...form, objective: v })} placeholder="Objectif principal" field="objective"
+                    />
+                    <CustomSelect
+                      value={form.timeline} options={timelineOptions} open={timelineOpen} setOpen={setTimelineOpen}
+                      onChange={v => setForm({ ...form, timeline: v })} placeholder="Délai" field="timeline"
                     />
                   </div>
                 </motion.div>
