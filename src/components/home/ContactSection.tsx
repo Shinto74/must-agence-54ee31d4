@@ -40,9 +40,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
   const [form, setForm] = useState({ type: "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "", objective: "", timeline: "" });
   const [sending, setSending] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
-  const [secteurOpen, setSecteurOpen] = useState(false);
-  const [objectiveOpen, setObjectiveOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(false);
+  const [openSelect, setOpenSelect] = useState<string | null>(null);
 
   // Contextual extra field options
   const isArtiste = loc.pathname === "/artiste";
