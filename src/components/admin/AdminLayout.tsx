@@ -198,7 +198,7 @@ export default function AdminLayout({ children }: Props) {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <button onClick={() => select("demandes")} className="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors" title="Notifications">
+            <button onClick={() => select("dashboard")} className="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors" title="Notifications">
               <Bell size={16} />
               {totalNotifs > 0 && <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white" />}
             </button>
