@@ -41,15 +41,6 @@ const AnimatedRoutes = () => {
     );
   }
 
-  if (isCheckout) {
-    return (
-      <Routes location={location}>
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/checkout/confirmation" element={<CheckoutReturn />} />
-      </Routes>
-    );
-  }
-
   if (isGateway) {
     return (
       <Routes location={location}>
