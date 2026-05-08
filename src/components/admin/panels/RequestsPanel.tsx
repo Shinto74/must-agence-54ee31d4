@@ -319,9 +319,9 @@ function RequestDrawer({ req, onClose, onUpdate }: {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
-      <aside className="ml-auto relative w-full sm:max-w-[520px] bg-white border-l border-slate-200 shadow-2xl overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6">
+      <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={onClose} />
+      <aside className="relative w-full max-w-3xl max-h-[90vh] bg-white border border-slate-200 shadow-2xl rounded-2xl overflow-y-auto">
         <div className="sticky top-0 z-10 px-5 py-4 border-b border-slate-200 bg-white/95 backdrop-blur flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
