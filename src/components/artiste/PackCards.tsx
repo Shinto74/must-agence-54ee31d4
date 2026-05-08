@@ -201,7 +201,6 @@ const TheArtistInfoTooltip = () => {
 
 /* ─── PACK CARD ─── */
 const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; theartistText: string; onOpenQuote?: () => void; tooltips: Record<string, string> }) => {
-  const queryClient = useQuery();
   const getTooltip = (feature: string) => {
     for (const key of Object.keys(tooltips)) {
       if (feature.startsWith(key)) return tooltips[key];
