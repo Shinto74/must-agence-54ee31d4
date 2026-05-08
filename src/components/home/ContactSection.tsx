@@ -517,17 +517,17 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
                       className={inputBase} style={getInputStyle("entreprise")}
                     />
                     <CustomSelect
-                      value={form.secteur} options={secteurOptions} open={secteurOpen} setOpen={setSecteurOpen}
+                      value={form.secteur} options={secteurOptions}
                       onChange={v => setForm({ ...form, secteur: v })} placeholder={contextLabel} field="secteur"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <CustomSelect
-                      value={form.objective} options={objectiveOptions} open={objectiveOpen} setOpen={setObjectiveOpen}
+                      value={form.objective} options={objectiveOptions}
                       onChange={v => setForm({ ...form, objective: v })} placeholder="Objectif principal" field="objective"
                     />
                     <CustomSelect
-                      value={form.timeline} options={timelineOptions} open={timelineOpen} setOpen={setTimelineOpen}
+                      value={form.timeline} options={timelineOptions}
                       onChange={v => setForm({ ...form, timeline: v })} placeholder="Délai" field="timeline"
                     />
                   </div>
