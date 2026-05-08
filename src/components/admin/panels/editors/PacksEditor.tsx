@@ -30,6 +30,7 @@ export default function PacksEditor() {
         { key: "subtitle", label: "Sous-titre", type: "textarea" },
         { key: "price", label: "Prix", placeholder: "350€ ou Sur devis" },
         { key: "price_suffix", label: "Suffixe prix", placeholder: "HT" },
+        { key: "payment_link_url", label: "Lien de paiement Stripe", placeholder: "https://buy.stripe.com/...", hint: "Lien Stripe Payment Link. Laisser vide affichera le bouton « Obtenir un devis »." },
         { key: "badge", label: "Badge", placeholder: "Recommandé / Personnalisé / vide" },
         { key: "featured", label: "featured", type: "checkbox", hint: "Met le pack en avant visuellement (bordure + glow)." },
         { key: "bonus", label: "Bonus" },
