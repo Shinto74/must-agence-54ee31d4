@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { supabase } from "@/integrations/supabase/client";
 import { SITE } from "@/lib/constants";
-import { ChevronLeft, ChevronRight, Mic, Building2, Briefcase, DollarSign, TrendingUp, Gem, Rocket, Volume2, BarChart3, Palette, Handshake } from "lucide-react";
+import { ChevronLeft, ChevronRight, Mic, Building2, Briefcase, DollarSign, TrendingUp, Gem, Rocket, Volume2, BarChart3, Palette, Handshake, User, Mail, Phone } from "lucide-react";
+import { z } from "zod";
 
 interface QuoteOption {
   label: string;
