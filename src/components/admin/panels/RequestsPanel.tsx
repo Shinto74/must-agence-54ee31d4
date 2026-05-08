@@ -620,23 +620,32 @@ export default function RequestsPanel() {
         const items = requests.filter((r) => normalizeStatus(r.status) === col.value && !r.archived_at);
         return (
           <div key={col.value}
-            onDragOver={(e) => e.preventDefault()}
+            onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("ring-2", "ring-slate-900/20"); }}
+            onDragLeave={(e) => e.currentTarget.classList.remove("ring-2", "ring-slate-900/20")}
             onDrop={(e) => {
+              e.currentTarget.classList.remove("ring-2", "ring-slate-900/20");
               const data = JSON.parse(e.dataTransfer.getData("text/plain"));
               const req = requests.find((r) => r.id === data.id && r.kind === data.kind);
               if (req && normalizeStatus(req.status) !== col.value) updateStatus.mutate({ req, status: col.value });
             }}
-            className="rounded-xl bg-slate-50 border border-slate-200 p-3 min-h-[200px]"
+            className={`relative rounded-2xl bg-gradient-to-b ${col.grad} bg-white border border-slate-200/80 p-3 min-h-[220px] transition-all`}
           >
-            <div className="flex items-center justify-between mb-2.5">
+            <div className={`absolute top-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-slate-300/50 to-transparent`} />
+            <div className="flex items-center justify-between mb-3 px-0.5">
               <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${col.dot}`} />
-                <span className="text-xs font-semibold text-slate-700">{col.label}</span>
+                <span className={`relative w-2 h-2 rounded-full ${col.dot}`}>
+                  <span className={`absolute inset-0 rounded-full ${col.dot} animate-ping opacity-40`} />
+                </span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-700">{col.label}</span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400 tabular-nums">{items.length}</span>
+              <span className="text-[10px] font-mono text-slate-500 tabular-nums px-1.5 py-0.5 rounded-md bg-slate-100">{items.length}</span>
             </div>
-            <div className="space-y-1.5 max-h-[600px] overflow-y-auto pr-0.5">
-              {items.length === 0 && <p className="text-[11px] text-slate-400 text-center py-3">Vide</p>}
+            <div className="space-y-2 max-h-[640px] overflow-y-auto pr-0.5 -mr-0.5 scrollbar-thin">
+              {items.length === 0 && (
+                <div className="text-center py-6 px-2 rounded-lg border border-dashed border-slate-200">
+                  <p className="text-[11px] text-slate-400">Vide</p>
+                </div>
+              )}
               {items.map((r) => (
                 <LeadCard key={`${r.kind}-${r.id}`} req={r}
                   onClick={() => setSelected(r)}
@@ -650,7 +659,43 @@ export default function RequestsPanel() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+      {/* Hero stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-4">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-rose-500/8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5"><Flame size={11} className="text-rose-500" /> Hot leads</div>
+            <p className="text-3xl font-clash font-bold text-slate-900 tabular-nums">{stats.hot}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Score ≥ 70</p>
+          </div>
+        </div>
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-4">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-red-500/8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5"><Clock size={11} className="text-red-500" /> À relancer</div>
+            <p className="text-3xl font-clash font-bold text-slate-900 tabular-nums">{stats.overdue}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">En attente &gt; 24h</p>
+          </div>
+        </div>
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-4">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-emerald-500/8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5"><Target size={11} className="text-emerald-500" /> Pipeline actif</div>
+            <p className="text-3xl font-clash font-bold text-slate-900 tabular-nums">{requests.filter((r) => !r.archived_at && normalizeStatus(r.status) !== "client_signe").length}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Demandes ouvertes</p>
+          </div>
+        </div>
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-900 to-slate-800 p-4 text-white">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-white/60 mb-1.5"><ListChecks size={11} /> Total visible</div>
+            <p className="text-3xl font-clash font-bold tabular-nums">{stats.total}</p>
+            <p className="text-[11px] text-white/60 mt-0.5">Toutes périodes</p>
+          </div>
+        </div>
+      </div>
+
       {/* Top bar */}
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-2">
@@ -659,7 +704,7 @@ export default function RequestsPanel() {
             <input
               type="text" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder="Rechercher nom, email, message…"
-              className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-slate-400 transition-colors"
+              className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/5 transition-all"
             />
             {search && (
               <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
