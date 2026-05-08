@@ -603,6 +603,33 @@ export type Database = {
         }
         Relationships: []
       }
+      pack_clicks: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          pack_id: string | null
+          pack_name: string
+          pack_price: string
+        }
+        Insert: {
+          action?: string
+          created_at?: string
+          id?: string
+          pack_id?: string | null
+          pack_name?: string
+          pack_price?: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          pack_id?: string | null
+          pack_name?: string
+          pack_price?: string
+        }
+        Relationships: []
+      }
       pack_features: {
         Row: {
           display_order: number

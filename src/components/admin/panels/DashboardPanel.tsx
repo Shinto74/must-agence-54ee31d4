@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
   MessageSquare, FileText, Mail, Users, Clock, CheckCircle2,
-  Download, ChevronDown, ChevronUp, ExternalLink, CreditCard, TrendingUp,
+  Download, ChevronDown, ChevronUp, ExternalLink, CreditCard, TrendingUp, MousePointerClick,
 } from "lucide-react";
 
 /* ---------- helpers ---------- */
@@ -123,6 +123,20 @@ export default function DashboardPanel() {
       const { count } = await supabase.from("clients").select("id", { count: "exact", head: true });
       return count || 0;
     },
+  });
+
+  const { data: packClicks = [] } = useQuery({
+    queryKey: ["admin_pack_clicks"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("pack_clicks")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(500);
+      if (error) throw error;
+      return data || [];
+    },
+    refetchInterval: 30000,
   });
 
   const updateContactStatus = useMutation({
@@ -257,6 +271,73 @@ export default function DashboardPanel() {
           </p>
         </div>
       </div>
+
+      {/* Clics packs */}
+      {(() => {
+        const totals: Record<string, { count: number; price: string; stripe: number; quote: number }> = {};
+        packClicks.forEach((c: any) => {
+          const k = c.pack_name || "—";
+          if (!totals[k]) totals[k] = { count: 0, price: c.pack_price || "", stripe: 0, quote: 0 };
+          totals[k].count++;
+          if (c.action === "quote") totals[k].quote++; else totals[k].stripe++;
+        });
+        const ranked = Object.entries(totals).sort((a, b) => b[1].count - a[1].count);
+        const max = Math.max(1, ...ranked.map(([, v]) => v.count));
+        const last7 = packClicks.filter((c: any) => Date.now() - new Date(c.created_at).getTime() < 7 * 86400000).length;
+        return (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-lg bg-fuchsia-50 text-fuchsia-600 ring-1 ring-fuchsia-100">
+                    <MousePointerClick size={16} />
+                  </div>
+                  <div>
+                    <h3 className="font-clash text-base font-bold text-slate-900">Clics sur les packs</h3>
+                    <p className="text-xs text-slate-500 mt-0.5">{packClicks.length} clic(s) au total · {last7} sur 7j</p>
+                  </div>
+                </div>
+              </div>
+              {ranked.length === 0 ? (
+                <p className="text-xs text-slate-400 text-center py-6">Aucun clic enregistré pour le moment.</p>
+              ) : (
+                <div className="space-y-3">
+                  {ranked.map(([name, v]) => (
+                    <div key={name}>
+                      <div className="flex items-center justify-between text-xs mb-1">
+                        <span className="font-medium text-slate-900 truncate">{name} <span className="text-slate-400 font-mono">{v.price}</span></span>
+                        <span className="font-mono text-slate-600">
+                          {v.count} <span className="text-slate-400">({v.stripe} Stripe / {v.quote} devis)</span>
+                        </span>
+                      </div>
+                      <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-fuchsia-500 to-fuchsia-400 rounded-full" style={{ width: `${(v.count / max) * 100}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-5">
+              <h3 className="font-clash text-base font-bold text-slate-900 mb-3">Derniers clics</h3>
+              <div className="space-y-1.5 max-h-[320px] overflow-y-auto pr-1">
+                {packClicks.length === 0 ? (
+                  <p className="text-xs text-slate-400 text-center py-4">—</p>
+                ) : packClicks.slice(0, 30).map((c: any) => (
+                  <div key={c.id} className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-md hover:bg-slate-50">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-medium text-slate-900 truncate">{c.pack_name}</p>
+                      <p className="text-[10px] text-slate-400 font-mono uppercase">{c.action === "quote" ? "Devis" : "Stripe"}</p>
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-500 shrink-0 tabular-nums">{fmtDate(c.created_at)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Activité récente compacte */}
       <div className="rounded-2xl border border-slate-200 bg-white p-5">

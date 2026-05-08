@@ -169,7 +169,7 @@ export default function AdminLayout({ children }: Props) {
   );
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
+    <div className="admin-light min-h-screen flex bg-slate-50">
       <aside className="hidden lg:flex flex-col w-64 border-r border-slate-200 bg-white shrink-0">{sidebar}</aside>
 
       {mobileOpen && (

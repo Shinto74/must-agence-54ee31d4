@@ -201,7 +201,6 @@ const TheArtistInfoTooltip = () => {
 
 /* ─── PACK CARD ─── */
 const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; theartistText: string; onOpenQuote?: () => void; tooltips: Record<string, string> }) => {
-  // Matching: trouve le tooltip dont la feature commence par la clé
   const getTooltip = (feature: string) => {
     for (const key of Object.keys(tooltips)) {
       if (feature.startsWith(key)) return tooltips[key];
@@ -211,6 +210,16 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
 
   const paymentUrl = pack.paymentLinkUrl?.trim();
   const isQuotePack = !paymentUrl;
+
+  const trackClick = (action: "stripe" | "quote") => {
+    const packId = (pack as any).id || null;
+    supabase.from("pack_clicks").insert({
+      pack_id: packId && packId.length === 36 ? packId : null,
+      pack_name: pack.name,
+      pack_price: `${pack.price}${pack.priceSuffix ? " " + pack.priceSuffix : ""}`.trim(),
+      action,
+    }).then(() => {});
+  };
 
   return (
     <div
@@ -252,7 +261,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
       <TheArtistBonus text={theartistText} />
       <p className="text-[11px] text-muted-foreground italic mb-6">{pack.reassurance}</p>
       {isQuotePack && onOpenQuote ? (
-        <button onClick={onOpenQuote}
+        <button onClick={() => { trackClick("quote"); onOpenQuote(); }}
           className="block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 border border-border text-foreground hover:border-primary/40 hover:text-primary"
         >
           Obtenir un devis
@@ -262,6 +271,7 @@ const PackCard = ({ pack, theartistText, onOpenQuote, tooltips }: { pack: Pack; 
           href={paymentUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackClick("stripe")}
           className={`block w-full text-center py-3 rounded-pill font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
             pack.featured
               ? "bg-primary text-primary-foreground hover:brightness-110"
