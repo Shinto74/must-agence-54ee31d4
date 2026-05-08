@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Menu, X, Search, Bell, ExternalLink,
-  LayoutDashboard, CreditCard, MessageSquare,
+  LayoutDashboard,
   Home, Music, Building2, Settings as SettingsIcon, Scale,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,26 +11,18 @@ import { useAdminNotifications } from "./useAdminNotifications";
 
 export type AdminTab =
   | "dashboard"
-  | "paiements" | "demandes"
   | "page_accueil" | "page_artiste" | "page_entreprise"
   | "identite" | "legal"
   | "settings";
 
-type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" | "paiements" };
+type NavItem = { key: AdminTab; label: string; icon: React.ElementType; badge?: "demandes" };
 type NavGroup = { label: string; items: NavItem[] };
 
 const NAV_GROUPS: NavGroup[] = [
   {
     label: "Vue d'ensemble",
     items: [
-      { key: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-    ],
-  },
-  {
-    label: "Business",
-    items: [
-      { key: "paiements", label: "Paiements", icon: CreditCard, badge: "paiements" },
-      { key: "demandes", label: "Demandes", icon: MessageSquare, badge: "demandes" },
+      { key: "dashboard", label: "Tableau de bord", icon: LayoutDashboard, badge: "demandes" },
     ],
   },
   {
