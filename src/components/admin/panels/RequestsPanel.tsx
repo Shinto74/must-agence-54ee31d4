@@ -6,6 +6,7 @@ import {
   Search, Filter, X, Kanban, FileText, Mail, Phone, Copy,
   Archive, ArchiveRestore, Send, Download, Clock, ChevronRight,
   MessageSquare, AlertCircle, Building2, CheckCircle2, ListChecks,
+  LayoutGrid, Table2, Flame, Zap, TrendingUp, Inbox, Activity, Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 
