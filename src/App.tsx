@@ -68,9 +68,8 @@ const AnimatedRoutes = () => {
 const AppShell = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
-  const isCheckout = location.pathname.startsWith("/checkout");
   const isGateway = location.pathname === "/";
-  const hideChrome = isAdmin || isCheckout || isGateway;
+  const hideChrome = isAdmin || isGateway;
   useAutoTranslate();
 
   return (
@@ -81,7 +80,7 @@ const AppShell = () => {
         <AnimatedRoutes />
       </main>
       {!hideChrome && <Footer />}
-      {!isAdmin && !isCheckout && <CookieBanner />}
+      {!isAdmin && <CookieBanner />}
     </>
   );
 };
