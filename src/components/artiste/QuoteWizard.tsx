@@ -9,12 +9,20 @@ interface QuoteOption {
   icon: string;
 }
 
+interface QuoteFieldDef {
+  key: string;
+  label: string;
+  required?: boolean;
+  placeholder?: string;
+}
+
 interface QuoteStep {
   key?: string;
   title: string;
   question: string;
-  type: "radio" | "textarea" | "date" | "checkbox";
+  type: "radio" | "textarea" | "date" | "checkbox" | "fields";
   options?: QuoteOption[];
+  fields?: QuoteFieldDef[];
   placeholder?: string;
   showIf?: (answers: Record<string, any>) => boolean;
 }
