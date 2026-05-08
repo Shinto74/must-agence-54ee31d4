@@ -613,6 +613,56 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       </AnimatePresence>,
       document.body
       )}
+
+      {successOpen && createPortal(
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSuccessOpen(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: EASE }}
+            className={`relative w-full max-w-md rounded-3xl p-8 text-center shadow-2xl border ${
+              isEntreprise ? "bg-[hsl(40,15%,97%)] border-black/10" : "bg-[hsl(0,0%,8%)] border-white/10"
+            }`}
+          >
+            <button
+              onClick={() => setSuccessOpen(false)}
+              className={`absolute top-4 right-4 p-1.5 rounded-full transition-colors ${
+                isEntreprise ? "hover:bg-black/5 text-black/60" : "hover:bg-white/10 text-white/60"
+              }`}
+              aria-label="Fermer"
+            >
+              <X size={18} />
+            </button>
+            <div className={`w-16 h-16 mx-auto mb-5 rounded-full flex items-center justify-center ring-4 ${
+              isEntreprise ? "bg-[hsl(43,55%,55%)]/15 ring-[hsl(43,55%,55%)]/20" : "bg-[hsl(var(--neon))]/15 ring-[hsl(var(--neon))]/20"
+            }`}>
+              <Sparkles size={28} className={isEntreprise ? "text-[hsl(43,55%,40%)]" : "text-[hsl(var(--neon))]"} />
+            </div>
+            <h3 className={`font-clash text-2xl font-bold mb-3 ${isEntreprise ? "text-black" : "text-white"}`}>
+              Message envoyé !
+            </h3>
+            <p className={`text-sm mb-6 leading-relaxed ${isEntreprise ? "text-black/65" : "text-white/65"}`}>
+              Merci pour votre message. Notre équipe vous recontactera <strong>sous 48h maximum</strong> à l'adresse indiquée.
+            </p>
+            <button
+              onClick={() => setSuccessOpen(false)}
+              className={`w-full py-3 rounded-xl font-mono text-xs uppercase tracking-[0.18em] transition-all ${
+                isEntreprise
+                  ? "bg-[hsl(43,55%,55%)] text-white hover:brightness-110"
+                  : "bg-[hsl(var(--neon))] text-black hover:brightness-110"
+              }`}
+            >
+              Parfait, merci
+            </button>
+          </motion.div>
+        </div>,
+        document.body
+      )}
     </>
   );
 });
