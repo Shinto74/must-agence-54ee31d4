@@ -620,13 +620,14 @@ export default function RequestsPanel() {
           <AlertCircle size={32} className="mx-auto text-slate-300 mb-2" />
           <p className="text-sm text-slate-500">Aucune demande ne correspond.</p>
         </div>
-      ) : view === "inbox" ? (
+      ) : view === "list" ? (
         <div className="rounded-xl border border-slate-200 bg-white">
           <div className="p-2 space-y-1">
             {paginated.map((r) => (
-              <InboxRow key={`${r.kind}-${r.id}`} req={r}
+              <RequestListRow key={`${r.kind}-${r.id}`} req={r}
                 onClick={() => setSelected(r)}
-                onStatus={(s) => updateStatus.mutate({ req: r, status: s })} />
+                onStatus={(s) => updateStatus.mutate({ req: r, status: s })}
+                onArchive={() => archiveRequest.mutate(r)} />
             ))}
           </div>
           {hasMore && (
@@ -661,7 +662,7 @@ export default function RequestsPanel() {
                   {items.map((r) => (
                     <KanbanCard key={`${r.kind}-${r.id}`} req={r}
                       onClick={() => setSelected(r)}
-                      onMove={(s) => updateStatus.mutate({ req: r, status: s })} />
+                      onArchive={() => archiveRequest.mutate(r)} />
                   ))}
                   {items.length === 0 && <p className="text-[11px] text-slate-400 text-center py-4">Vide</p>}
                 </div>
