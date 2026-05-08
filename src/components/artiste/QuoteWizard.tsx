@@ -264,12 +264,13 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
                   </div>
                   {coordsErrors.phone && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.phone}</p>}
                 </div>
-                <div className="relative">
-                  <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <input type="text" placeholder="Entreprise / Label (facultatif)" value={coords.company}
-                    onChange={(e) => setCoords({ ...coords, company: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40" />
-                </div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
+          {!isCoordsStep && false && (
+            <div />
               </div>
             </>
           ) : (
