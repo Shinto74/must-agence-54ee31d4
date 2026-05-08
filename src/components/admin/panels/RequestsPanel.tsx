@@ -47,11 +47,11 @@ interface UnifiedRequest {
 }
 
 const STATUS_OPTIONS = [
-  { value: "nouveau", label: "Nouveau", color: "bg-blue-500/15 text-blue-700 ring-blue-500/20", dot: "bg-blue-500" },
-  { value: "a_rappeler", label: "À rappeler", color: "bg-amber-500/15 text-amber-700 ring-amber-500/20", dot: "bg-amber-500" },
-  { value: "en_discussion", label: "En discussion", color: "bg-indigo-500/15 text-indigo-700 ring-indigo-500/20", dot: "bg-indigo-500" },
-  { value: "client_signe", label: "Client signé", color: "bg-emerald-500/15 text-emerald-700 ring-emerald-500/20", dot: "bg-emerald-500" },
-  { value: "sans_reponse", label: "Sans réponse", color: "bg-rose-500/15 text-rose-700 ring-rose-500/20", dot: "bg-rose-500" },
+  { value: "nouveau", label: "Nouveau", color: "bg-blue-500/10 text-blue-700 ring-blue-500/30", dot: "bg-blue-500", glow: "shadow-[0_0_0_4px_rgba(59,130,246,0.08)]", grad: "from-blue-500/8 to-transparent", accent: "border-l-blue-500" },
+  { value: "a_rappeler", label: "À rappeler", color: "bg-amber-500/10 text-amber-700 ring-amber-500/30", dot: "bg-amber-500", glow: "shadow-[0_0_0_4px_rgba(245,158,11,0.08)]", grad: "from-amber-500/8 to-transparent", accent: "border-l-amber-500" },
+  { value: "en_discussion", label: "En discussion", color: "bg-indigo-500/10 text-indigo-700 ring-indigo-500/30", dot: "bg-indigo-500", glow: "shadow-[0_0_0_4px_rgba(99,102,241,0.08)]", grad: "from-indigo-500/8 to-transparent", accent: "border-l-indigo-500" },
+  { value: "client_signe", label: "Client signé", color: "bg-emerald-500/10 text-emerald-700 ring-emerald-500/30", dot: "bg-emerald-500", glow: "shadow-[0_0_0_4px_rgba(16,185,129,0.08)]", grad: "from-emerald-500/8 to-transparent", accent: "border-l-emerald-500" },
+  { value: "sans_reponse", label: "Sans réponse", color: "bg-rose-500/10 text-rose-700 ring-rose-500/30", dot: "bg-rose-500", glow: "shadow-[0_0_0_4px_rgba(244,63,94,0.08)]", grad: "from-rose-500/8 to-transparent", accent: "border-l-rose-500" },
 ];
 const KANBAN_COLUMNS = STATUS_OPTIONS;
 
@@ -426,37 +426,62 @@ function RequestDrawer({ req, onClose, onUpdate }: {
 /* ============== Carte lead (Kanban) ============== */
 function LeadCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick: () => void; onArchive: () => void }) {
   const budget = req.budget || req.budget_estimate;
+  const meta = statusMeta(req.status);
+  const initials = (req.name || req.profile || "?").trim().split(/\s+/).slice(0, 2).map((s) => s.charAt(0)).join("").toUpperCase();
+  const isHot = req.lead_score >= 70;
   return (
     <div
       draggable
       onDragStart={(e) => e.dataTransfer.setData("text/plain", JSON.stringify({ id: req.id, kind: req.kind }))}
       onClick={onClick}
-      className="cursor-pointer p-3 rounded-lg bg-white border border-slate-200 hover:border-slate-400 hover:shadow-sm transition-all space-y-2"
+      className={`group relative cursor-grab active:cursor-grabbing rounded-xl bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-[0_8px_24px_-12px_rgba(15,23,42,0.18)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border-l-[3px] ${meta.accent}`}
     >
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <SourceIcon source={req.source} />
-        <TypeBadge kind={req.kind} />
-        <HotBadge score={req.lead_score} />
-        <OverdueBadge req={req} />
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onArchive(); }}
-          title="Archiver"
-          className="ml-auto p-1 rounded text-slate-300 hover:text-amber-700 hover:bg-amber-50"
-        >
-          <Archive size={11} />
-        </button>
-      </div>
-      <p className="text-sm font-semibold text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</p>
-      <p className="text-[11px] text-slate-500 truncate">{req.email || "—"}</p>
-      <div className="flex flex-wrap gap-1 text-[10px] font-mono">
-        {budget && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">💰 {budget}</span>}
-        {req.timeline && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">⏱ {req.timeline}</span>}
-        {req.objective && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 truncate max-w-[160px]">🎯 {req.objective}</span>}
-      </div>
-      <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-100">
-        <span>Score {req.lead_score}</span>
-        <span>{fmtRelative(req.created_at)}</span>
+      {isHot && (
+        <div className="absolute -top-px -right-px w-16 h-16 bg-gradient-to-bl from-rose-500/15 to-transparent pointer-events-none" />
+      )}
+      <div className="p-3 space-y-2.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <SourceIcon source={req.source} />
+          <TypeBadge kind={req.kind} />
+          <HotBadge score={req.lead_score} />
+          <OverdueBadge req={req} />
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onArchive(); }}
+            title="Archiver"
+            className="ml-auto p-1 rounded text-slate-300 opacity-0 group-hover:opacity-100 hover:text-amber-700 hover:bg-amber-50 transition-all"
+          >
+            <Archive size={11} />
+          </button>
+        </div>
+        <div className="flex items-center gap-2.5">
+          <div className={`shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-200/80 text-slate-700 flex items-center justify-center font-semibold text-[11px] tracking-wide`}>
+            {initials || "?"}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-slate-900 truncate leading-tight">{req.name || req.profile || "Sans nom"}</p>
+            <p className="text-[11px] text-slate-500 truncate">{req.email || "—"}</p>
+          </div>
+        </div>
+        {(budget || req.timeline || req.objective) && (
+          <div className="flex flex-wrap gap-1 text-[10px]">
+            {budget && <span className="px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100 font-mono">💰 {budget}</span>}
+            {req.timeline && <span className="px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700 ring-1 ring-amber-100 font-mono">⏱ {req.timeline}</span>}
+            {req.objective && <span className="px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 ring-1 ring-indigo-100 font-mono truncate max-w-[160px]">🎯 {req.objective}</span>}
+          </div>
+        )}
+        <div className="flex items-center justify-between text-[10px] pt-2 border-t border-dashed border-slate-200/80">
+          <div className="flex items-center gap-1.5">
+            <div className="relative w-10 h-1 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className={`absolute inset-y-0 left-0 ${req.lead_score >= 70 ? "bg-rose-500" : req.lead_score >= 40 ? "bg-amber-500" : "bg-slate-400"}`}
+                style={{ width: `${Math.min(100, req.lead_score)}%` }}
+              />
+            </div>
+            <span className="font-mono text-slate-500 tabular-nums">{req.lead_score}</span>
+          </div>
+          <span className="font-mono text-slate-400">{fmtRelative(req.created_at)}</span>
+        </div>
       </div>
     </div>
   );
@@ -465,16 +490,18 @@ function LeadCard({ req, onClick, onArchive }: { req: UnifiedRequest; onClick: (
 /* ============== Liste compacte ============== */
 function RequestListRow({ req, onClick, onStatus, onArchive }: { req: UnifiedRequest; onClick: () => void; onStatus: (s: string) => void; onArchive: () => void }) {
   const budget = req.budget || req.budget_estimate;
+  const meta = statusMeta(req.status);
+  const initials = (req.name || req.profile || "?").trim().split(/\s+/).slice(0, 2).map((s) => s.charAt(0)).join("").toUpperCase();
   return (
-    <button onClick={onClick} className="w-full text-left grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
-      <div className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 flex items-center justify-center font-medium text-xs uppercase">
-        {(req.name || req.profile || "?").charAt(0)}
+    <button onClick={onClick} className={`group w-full text-left grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent border-l-[3px] border-transparent hover:${meta.accent} transition-all`}>
+      <div className="shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-200/80 text-slate-700 flex items-center justify-center font-semibold text-[11px]">
+        {initials || "?"}
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
           <SourceIcon source={req.source} />
           <TypeBadge kind={req.kind} />
-          <span className="text-sm font-medium text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</span>
+          <span className="text-sm font-semibold text-slate-900 truncate">{req.name || req.profile || "Sans nom"}</span>
           <HotBadge score={req.lead_score} />
           <OverdueBadge req={req} />
           {req.archived_at && <Archive size={11} className="text-amber-500" />}
@@ -482,16 +509,16 @@ function RequestListRow({ req, onClick, onStatus, onArchive }: { req: UnifiedReq
         <p className="text-xs text-slate-500 truncate">
           {[budget, req.timeline, req.objective].filter(Boolean).join(" · ") || (req.message || req.project_desc)}
         </p>
-        <p className="text-[10px] text-slate-400 mt-0.5">{req.email || "—"} · {fmtRelative(req.created_at)}</p>
+        <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{req.email || "—"} · {fmtRelative(req.created_at)}</p>
       </div>
       <div className="shrink-0 flex items-center gap-2">
         <StatusPill value={req.status} onChange={onStatus} compact />
         <button type="button" onClick={(e) => { e.stopPropagation(); onArchive(); }}
           title={req.archived_at ? "Désarchiver" : "Archiver"}
-          className="p-2 rounded-lg text-slate-400 hover:text-amber-700 hover:bg-amber-50">
+          className="p-2 rounded-lg text-slate-400 hover:text-amber-700 hover:bg-amber-50 opacity-0 group-hover:opacity-100 transition-all">
           {req.archived_at ? <ArchiveRestore size={14} /> : <Archive size={14} />}
         </button>
-        <ChevronRight size={14} className="text-slate-300" />
+        <ChevronRight size={14} className="text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all" />
       </div>
     </button>
   );
@@ -593,23 +620,32 @@ export default function RequestsPanel() {
         const items = requests.filter((r) => normalizeStatus(r.status) === col.value && !r.archived_at);
         return (
           <div key={col.value}
-            onDragOver={(e) => e.preventDefault()}
+            onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("ring-2", "ring-slate-900/20"); }}
+            onDragLeave={(e) => e.currentTarget.classList.remove("ring-2", "ring-slate-900/20")}
             onDrop={(e) => {
+              e.currentTarget.classList.remove("ring-2", "ring-slate-900/20");
               const data = JSON.parse(e.dataTransfer.getData("text/plain"));
               const req = requests.find((r) => r.id === data.id && r.kind === data.kind);
               if (req && normalizeStatus(req.status) !== col.value) updateStatus.mutate({ req, status: col.value });
             }}
-            className="rounded-xl bg-slate-50 border border-slate-200 p-3 min-h-[200px]"
+            className={`relative rounded-2xl bg-gradient-to-b ${col.grad} bg-white border border-slate-200/80 p-3 min-h-[220px] transition-all`}
           >
-            <div className="flex items-center justify-between mb-2.5">
+            <div className={`absolute top-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-slate-300/50 to-transparent`} />
+            <div className="flex items-center justify-between mb-3 px-0.5">
               <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${col.dot}`} />
-                <span className="text-xs font-semibold text-slate-700">{col.label}</span>
+                <span className={`relative w-2 h-2 rounded-full ${col.dot}`}>
+                  <span className={`absolute inset-0 rounded-full ${col.dot} animate-ping opacity-40`} />
+                </span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-700">{col.label}</span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400 tabular-nums">{items.length}</span>
+              <span className="text-[10px] font-mono text-slate-500 tabular-nums px-1.5 py-0.5 rounded-md bg-slate-100">{items.length}</span>
             </div>
-            <div className="space-y-1.5 max-h-[600px] overflow-y-auto pr-0.5">
-              {items.length === 0 && <p className="text-[11px] text-slate-400 text-center py-3">Vide</p>}
+            <div className="space-y-2 max-h-[640px] overflow-y-auto pr-0.5 -mr-0.5 scrollbar-thin">
+              {items.length === 0 && (
+                <div className="text-center py-6 px-2 rounded-lg border border-dashed border-slate-200">
+                  <p className="text-[11px] text-slate-400">Vide</p>
+                </div>
+              )}
               {items.map((r) => (
                 <LeadCard key={`${r.kind}-${r.id}`} req={r}
                   onClick={() => setSelected(r)}
@@ -623,7 +659,43 @@ export default function RequestsPanel() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+      {/* Hero stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-4">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-rose-500/8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5"><Flame size={11} className="text-rose-500" /> Hot leads</div>
+            <p className="text-3xl font-clash font-bold text-slate-900 tabular-nums">{stats.hot}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Score ≥ 70</p>
+          </div>
+        </div>
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-4">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-red-500/8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5"><Clock size={11} className="text-red-500" /> À relancer</div>
+            <p className="text-3xl font-clash font-bold text-slate-900 tabular-nums">{stats.overdue}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">En attente &gt; 24h</p>
+          </div>
+        </div>
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-4">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-emerald-500/8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5"><Target size={11} className="text-emerald-500" /> Pipeline actif</div>
+            <p className="text-3xl font-clash font-bold text-slate-900 tabular-nums">{requests.filter((r) => !r.archived_at && normalizeStatus(r.status) !== "client_signe").length}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Demandes ouvertes</p>
+          </div>
+        </div>
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-900 to-slate-800 p-4 text-white">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-white/60 mb-1.5"><ListChecks size={11} /> Total visible</div>
+            <p className="text-3xl font-clash font-bold tabular-nums">{stats.total}</p>
+            <p className="text-[11px] text-white/60 mt-0.5">Toutes périodes</p>
+          </div>
+        </div>
+      </div>
+
       {/* Top bar */}
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-2">
@@ -632,7 +704,7 @@ export default function RequestsPanel() {
             <input
               type="text" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder="Rechercher nom, email, message…"
-              className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-slate-400 transition-colors"
+              className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/5 transition-all"
             />
             {search && (
               <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -725,19 +797,6 @@ export default function RequestsPanel() {
             )}
           </div>
         )}
-      </div>
-
-      {/* Compact stats */}
-      <div className="flex flex-wrap items-center gap-3 text-xs">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 text-rose-700 ring-1 ring-rose-200 font-mono">
-          <Flame size={12} /> {stats.hot} hot {stats.hot > 1 ? "leads" : "lead"}
-        </span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 text-red-700 ring-1 ring-red-200 font-mono">
-          <Clock size={12} /> {stats.overdue} à relancer (&gt;24h)
-        </span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-mono">
-          <Target size={12} /> {stats.total} demande{stats.total > 1 ? "s" : ""} visible{stats.total > 1 ? "s" : ""}
-        </span>
       </div>
 
       {/* Body */}
