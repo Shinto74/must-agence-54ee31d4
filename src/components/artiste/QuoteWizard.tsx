@@ -217,9 +217,6 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
 
     setSending(false);
     setDone(true);
-    if (onSubmitComplete) {
-      setTimeout(onSubmitComplete, 1500);
-    }
   };
 
   const next = () => {
