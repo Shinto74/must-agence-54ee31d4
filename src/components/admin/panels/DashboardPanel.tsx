@@ -239,6 +239,19 @@ export default function DashboardPanel() {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => {
+            if (window.confirm("Supprimer les clics packs, devis, contacts et notes internes de test ?")) clearTestData.mutate();
+          }}
+          disabled={clearTestData.isPending}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-red-200 bg-red-50 text-red-700 text-xs font-mono uppercase tracking-wider hover:bg-red-100 disabled:opacity-50 transition-colors"
+        >
+          <Trash2 size={13} /> {clearTestData.isPending ? "Nettoyage…" : "Clear test dashboard"}
+        </button>
+      </div>
+
       {/* KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <KpiCard label="Devis à traiter" value={String(stats.pendingQuotes)} sub="ouverts" icon={FileText} accent="amber" onClick={() => setTab("devis")} />
