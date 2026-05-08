@@ -255,13 +255,15 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
         <div className="rv max-w-[600px] mx-auto text-center animate-fadeSlide">
           <div className="text-5xl mb-4">✅</div>
           <h3 className="font-clash text-2xl font-bold text-foreground mb-2">Demande envoyée !</h3>
-          <p className="text-muted-foreground mb-6">On revient vers vous en 24h maximum.</p>
-          <a
-            href={buildWhatsAppUrl()} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill bg-[#25D366] text-white font-mono text-sm uppercase tracking-wider hover:brightness-110 transition-all duration-300"
-          >
-            📱 Envoyer aussi par WhatsApp
-          </a>
+          <p className="text-muted-foreground mb-6">On revient vers vous en 48h maximum.</p>
+          {onSubmitComplete && (
+            <button
+              onClick={onSubmitComplete}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-border text-foreground font-mono text-sm uppercase tracking-wider hover:border-primary/40 hover:text-primary transition-all duration-300"
+            >
+              Fermer
+            </button>
+          )}
         </div>
       </section>
     );
