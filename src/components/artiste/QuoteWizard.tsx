@@ -267,13 +267,6 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
               </div>
             </>
           ) : (
-            <></>
-          )}
-          {!isCoordsStep && false && (
-            <div />
-              </div>
-            </>
-          ) : (
             <>
               <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">{step!.title}</p>
               <h3 className="font-clash text-xl font-semibold text-foreground mb-6">{step!.question}</h3>
@@ -304,6 +297,22 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
 
               {step!.type === "date" && (
                 <DatePickerCalendar value={answers[stepKey] || ""} onChange={(d) => setAnswer(d)} />
+              )}
+
+              {step!.type === "fields" && step!.fields && (
+                <div className="space-y-3">
+                  {step!.fields.map((f) => (
+                    <div key={f.key}>
+                      <input
+                        type="text"
+                        placeholder={f.placeholder || (f.label + (f.required ? " *" : ""))}
+                        value={answers[f.key] || ""}
+                        onChange={(e) => setFieldAnswer(f.key, e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                      />
+                    </div>
+                  ))}
+                </div>
               )}
 
               {step!.type === "checkbox" && step!.options && (
