@@ -37,10 +37,26 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
 
   const [modalOpen, setModalOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-  const [form, setForm] = useState({ type: "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
+  const [form, setForm] = useState({ type: "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "", objective: "", timeline: "" });
   const [sending, setSending] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
   const [secteurOpen, setSecteurOpen] = useState(false);
+  const [objectiveOpen, setObjectiveOpen] = useState(false);
+  const [timelineOpen, setTimelineOpen] = useState(false);
+
+  // Contextual extra field options
+  const isArtiste = loc.pathname === "/artiste";
+  const contextLabel = isEntreprise ? "Taille entreprise" : isArtiste ? "Style musical" : "Secteur";
+  const contextOptionsFallback = isEntreprise
+    ? ["Solo / Indépendant", "Startup", "PME", "Marque établie"]
+    : isArtiste
+      ? ["Rap", "Pop", "Afro", "Électro", "Variété", "Autre"]
+      : [];
+
+  const objectiveOptions = isEntreprise
+    ? ["Notoriété de marque", "Génération de leads", "Image / branding", "Lancement produit", "Communauté", "Stratégie long terme"]
+    : ["Visibilité", "Image", "Plus d'écoutes", "Lancer un projet", "Stratégie long terme", "Ventes", "Communauté"];
+  const timelineOptions = ["Dès que possible", "Ce mois-ci", "Dans 1 à 3 mois", "Je me renseigne"];
 
   // Initialise le type quand les options DB arrivent
   useEffect(() => {
@@ -62,7 +78,8 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
 
   // Secteurs chargés depuis la BDD (table contact_sectors), éditable depuis l'admin
   const { data: sectorRows = [] } = useContactSectors();
-  const secteurOptions = (sectorRows as any[]).map((s) => s.name);
+  const dbSectors = (sectorRows as any[]).map((s) => s.name);
+  const secteurOptions = dbSectors.length && !isArtiste && !isEntreprise ? dbSectors : contextOptionsFallback;
 
   const formatBudget = (v: number) => v >= budgetMax ? `${(v / 1000).toFixed(0)}k€ +` : `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k€`;
 
@@ -70,7 +87,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
     e.preventDefault();
     if (!form.nom.trim() || !form.email.trim() || !form.message.trim()) return;
     setSending(true);
-    const { error } = await supabase.from("contact_submissions").insert({
+    const payload: any = {
       type: form.type,
       name: `${form.prenom.trim()} ${form.nom.trim()}`.trim(),
       email: form.email.trim(),
@@ -79,14 +96,19 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(({ headin
       sector: form.secteur || "",
       budget_estimate: formatBudget(form.budget),
       service: form.secteur || form.entreprise || "",
-      source: isEntreprise ? "entreprise" : (loc.pathname === "/artiste" ? "artiste" : "home"),
+      source: isEntreprise ? "entreprise" : (isArtiste ? "artiste" : "home"),
       message: form.message.trim(),
-    });
+      objective: form.objective || "",
+      timeline: form.timeline || "",
+      style: isArtiste ? form.secteur : "",
+      company_size: isEntreprise ? form.secteur : "",
+    };
+    const { error } = await supabase.from("contact_submissions").insert(payload);
     setSending(false);
     if (error) {
       toast.error("Erreur lors de l'envoi. Réessayez.");
     } else {
-      setForm({ type: effectiveFormOptions[0] || "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "" });
+      setForm({ type: effectiveFormOptions[0] || "", nom: "", prenom: "", entreprise: "", secteur: "", email: "", phone: "", budget: 5000, message: "", objective: "", timeline: "" });
       setModalOpen(false);
       setSuccessOpen(true);
     }
