@@ -282,61 +282,114 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
           </>
         )}
         <div className="rv flex gap-1 mb-8">
-          {steps.map((_, i) => (
+          {Array.from({ length: totalSteps }).map((_, i) => (
             <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= current ? "bg-primary" : "bg-border"}`} />
           ))}
         </div>
         <div className={`animate-fadeSlide ${shake ? "animate-shake" : ""}`} key={current}>
-          <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">{step.title}</p>
-          <h3 className="font-clash text-xl font-semibold text-foreground mb-6">{step.question}</h3>
+          {isCoordsStep ? (
+            <>
+              <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">Étape finale</p>
+              <h3 className="font-clash text-xl font-semibold text-foreground mb-2">Vos coordonnées</h3>
+              <p className="text-sm text-muted-foreground mb-6">Pour vous recontacter sous 24h.</p>
+              <div className="space-y-3">
+                <div>
+                  <div className="relative">
+                    <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="text" placeholder="Nom complet *" value={coords.name}
+                      onChange={(e) => setCoords({ ...coords, name: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                    />
+                  </div>
+                  {coordsErrors.name && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.name}</p>}
+                </div>
+                <div>
+                  <div className="relative">
+                    <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="email" placeholder="Email *" value={coords.email}
+                      onChange={(e) => setCoords({ ...coords, email: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                    />
+                  </div>
+                  {coordsErrors.email && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.email}</p>}
+                </div>
+                <div>
+                  <div className="relative">
+                    <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="tel" placeholder="Téléphone *" value={coords.phone}
+                      onChange={(e) => setCoords({ ...coords, phone: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                    />
+                  </div>
+                  {coordsErrors.phone && <p className="text-xs text-red-500 mt-1 ml-1">{coordsErrors.phone}</p>}
+                </div>
+                <div className="relative">
+                  <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text" placeholder="Entreprise / Label (facultatif)" value={coords.company}
+                    onChange={(e) => setCoords({ ...coords, company: e.target.value })}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-surface text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40"
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="font-mono text-xs text-primary uppercase tracking-wider mb-1">{step!.title}</p>
+              <h3 className="font-clash text-xl font-semibold text-foreground mb-6">{step!.question}</h3>
 
-          {step.type === "radio" && step.options && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
-              {step.options.map((opt) => {
-                const IconComponent = getIconForOption(opt.label);
-                return (
-                  <button key={opt.label} onClick={() => setAnswer(opt.label)}
-                    className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
-                      answers[current] === opt.label 
-                        ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
-                        : "border-border bg-surface text-muted-foreground hover:border-primary/40"
-                    }`}>
-                    <IconComponent size={24} className={`mb-2 ${answers[current] === opt.label ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className="text-sm font-medium">{opt.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+              {step!.type === "radio" && step!.options && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+                  {step!.options.map((opt) => {
+                    const IconComponent = getIconForOption(opt.label);
+                    return (
+                      <button key={opt.label} onClick={() => setAnswer(opt.label)}
+                        className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
+                          answers[current] === opt.label 
+                            ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
+                            : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+                        }`}>
+                        <IconComponent size={24} className={`mb-2 ${answers[current] === opt.label ? "text-primary" : "text-muted-foreground"}`} />
+                        <span className="text-sm font-medium">{opt.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
-          {step.type === "textarea" && (
-            <textarea value={answers[current] || ""} onChange={(e) => setAnswer(e.target.value)} placeholder={step.placeholder} rows={4}
-              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40 resize-none" />
-          )}
+              {step!.type === "textarea" && (
+                <textarea value={answers[current] || ""} onChange={(e) => setAnswer(e.target.value)} placeholder={step!.placeholder} rows={4}
+                  className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-primary/40 resize-none" />
+              )}
 
-          {step.type === "date" && (
-            <DatePickerCalendar value={answers[current] || ""} onChange={(date) => setAnswer(date)} />
-          )}
+              {step!.type === "date" && (
+                <DatePickerCalendar value={answers[current] || ""} onChange={(date) => setAnswer(date)} />
+              )}
 
-          {step.type === "checkbox" && step.options && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-              {step.options.map((opt) => {
-                const IconComponent = getIconForOption(opt.label);
-                const selected = (answers[current] || []) as string[];
-                const isSelected = selected.includes(opt.label);
-                return (
-                  <button key={opt.label} onClick={() => setAnswer(isSelected ? selected.filter((s) => s !== opt.label) : [...selected, opt.label])}
-                    className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
-                      isSelected 
-                        ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
-                        : "border-border bg-surface text-muted-foreground hover:border-primary/40"
-                    }`}>
-                    <IconComponent size={24} className={`mb-2 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className="text-sm font-medium">{opt.label}</span>
-                  </button>
-                );
-              })}
-            </div>
+              {step!.type === "checkbox" && step!.options && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                  {step!.options.map((opt) => {
+                    const IconComponent = getIconForOption(opt.label);
+                    const selected = (answers[current] || []) as string[];
+                    const isSelected = selected.includes(opt.label);
+                    return (
+                      <button key={opt.label} onClick={() => setAnswer(isSelected ? selected.filter((s) => s !== opt.label) : [...selected, opt.label])}
+                        className={`p-4 rounded-xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center ${
+                          isSelected 
+                            ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-foreground" 
+                            : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+                        }`}>
+                        <IconComponent size={24} className={`mb-2 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
+                        <span className="text-sm font-medium">{opt.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -348,7 +401,7 @@ const QuoteWizard = ({ steps, onSubmitComplete, hideHeader = false, source = "" 
           )}
           <button onClick={next} disabled={sending}
             className="flex-1 py-3 rounded-pill bg-primary text-primary-foreground font-mono text-sm uppercase tracking-wider hover:brightness-110 transition-all duration-300 disabled:opacity-50">
-            {sending ? "Envoi..." : current === steps.length - 1 ? "Envoyer ma demande" : "Continuer"}
+            {sending ? "Envoi..." : current === totalSteps - 1 ? "Envoyer ma demande" : "Continuer"}
           </button>
         </div>
       </div>
