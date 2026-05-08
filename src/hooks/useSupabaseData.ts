@@ -114,7 +114,7 @@ export function usePacks() {
         };
       });
     },
-    placeholderData: PACKS.map((p) => ({ ...p, id: "", featuresFr: p.features })),
+    placeholderData: PACKS.map((p) => ({ ...p, id: "", featuresFr: p.features, paymentLinkUrl: "" })),
   });
 }
 
