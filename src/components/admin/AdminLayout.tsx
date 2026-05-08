@@ -3,14 +3,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
 import {
   LogOut, Menu, X, Search, Bell, ExternalLink,
-  LayoutDashboard,
+  LayoutDashboard, Inbox,
   Home, Music, Building2, Settings as SettingsIcon, Scale,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminNotifications } from "./useAdminNotifications";
 
 export type AdminTab =
-  | "dashboard"
+  | "dashboard" | "demandes"
   | "page_accueil" | "page_artiste" | "page_entreprise"
   | "identite" | "legal"
   | "settings";
@@ -22,7 +22,8 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Vue d'ensemble",
     items: [
-      { key: "dashboard", label: "Tableau de bord", icon: LayoutDashboard, badge: "demandes" },
+      { key: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
+      { key: "demandes", label: "Demandes & Contacts", icon: Inbox, badge: "demandes" },
     ],
   },
   {
